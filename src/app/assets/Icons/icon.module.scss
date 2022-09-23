@@ -1,0 +1,17 @@
+.callVideo {
+    display: flex;
+    flex-direction: column-reverse;
+    width: 100px;
+    align-items: center;
+}
+.guests {
+    display: flex;
+}
+.guest1,
+.guest5 {
+    transform: translateY(10px);
+}
+.guest2,
+.guest4 {
+    transform: translateY(2.5px);
+}

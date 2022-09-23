@@ -1,0 +1,28 @@
+.profile {
+    width: 189px;
+    height: 200px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 12px;
+    border: 1px solid #313131;
+    align-items: center;
+    justify-content: center;
+    cursor: var(--pointer);
+    color: #414547;
+    background-color: rgb(29 85 90);
+    border-radius: 5px;
+    &:hover {
+        background-color: rgb(34 71 74);
+    }
+}
+.avatar {
+    width: 90px;
+    height: 90px;
+}
+.name {
+    color: var(--color-text);
+}
+.status {
+    font-size: 11px;
+    text-align: center;
+}

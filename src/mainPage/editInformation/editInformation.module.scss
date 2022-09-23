@@ -1,0 +1,16 @@
+.editBar {
+    position: absolute;
+}
+.details {
+    display: flex;
+    align-items: center;
+    p {
+        font-size: 17px;
+        font-weight: 600;
+        margin-right: 10px;
+    }
+    input {
+        border: 0;
+        border-bottom: 1px solid;
+    }
+}

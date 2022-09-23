@@ -1,0 +1,45 @@
+.resultBar {
+    height: 500px;
+    width: 300px;
+    display: flex;
+    flex-wrap: wrap;
+    position: fixed;
+    background-color: rgb(35 214 221);
+    top: 53px;
+    right: 3px;
+    transition: var(--transition-03s);
+}
+.moveClose {
+    width: 100%;
+    display: flex;
+    height: 30px;
+    justify-content: space-between;
+    background-color: rgb(208 208 208);
+}
+.close,
+.undo,
+.move {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    font-size: 30px;
+    cursor: var(--pointer);
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    &:hover {
+        background-color: var(--background-hover);
+    }
+}
+
+.undo {
+    font-size: 25px;
+}
+
+.left {
+    right: 1234px;
+}
+
+.bottom {
+    top: 250px;
+}

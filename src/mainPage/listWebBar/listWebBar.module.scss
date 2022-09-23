@@ -1,0 +1,26 @@
+.website {
+    font-size: 50px;
+}
+.nextWebsiteBar {
+    width: 350px;
+    right: -350px;
+    top: 300px;
+    z-index: 102;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-radius: left 10px;
+    background-color: transparent;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    transition: var(--transition-03s);
+}
+.showNextWebsite {
+    right: 0 !important;
+}
+.title2 {
+    position: absolute;
+    bottom: 3px;
+}

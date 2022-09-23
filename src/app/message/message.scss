@@ -1,0 +1,39 @@
+.messages {
+    position: fixed;
+    right: 10px;
+    top: 60px;
+    display: flex;
+    flex-direction: column;
+    z-index: 101;
+}
+.send,
+.notification {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-icon);
+
+    padding: 2px;
+    position: relative;
+    border-radius: 50%;
+
+    width: 35px;
+    height: 35px;
+    cursor: var(--pointer);
+    &:hover {
+        background-color: #3c4043;
+    }
+}
+.send {
+    font-size: 25px;
+}
+.notification {
+    font-size: 30px;
+}
+
+.miss {
+    position: absolute;
+    color: rgb(239, 64, 64);
+    right: 0;
+    top: -6px;
+}

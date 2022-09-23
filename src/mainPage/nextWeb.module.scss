@@ -1,0 +1,95 @@
+.nextWebsite {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+    position: absolute;
+    background-color: rgb(22 22 22);
+    overflow: hidden;
+    p {
+        color: var(--color-text);
+    }
+}
+.personalPage {
+    width: 430px;
+    height: 150px;
+    margin: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+.avatar {
+    width: 90px;
+    height: 90px;
+    position: relative;
+
+    cursor: var(--pointer);
+    .dot {
+        right: -43px;
+        top: 3px;
+        font-size: 20px;
+        position: absolute;
+        color: var(--color-icon);
+    }
+}
+
+.name {
+    width: 100%;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--color-text);
+}
+.status {
+    font-size: 13px;
+    text-align: center;
+}
+
+.options {
+    width: 150px;
+    font-size: 50px;
+    color: #40404073;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .profile,
+    .website {
+        display: flex;
+        cursor: var(--pointer);
+    }
+}
+.list {
+    width: 80%;
+    height: 385px;
+    padding: 20px;
+    border: 1px solid rgb(74 73 73);
+
+    border-radius: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: overlay;
+}
+.listT {
+    background-color: rgb(192 192 192);
+}
+.choosed {
+    color: #505050;
+}
+.choosedD {
+    color: #2f928a;
+}
+.currentOptions {
+    width: 80%;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+.darkShining {
+    background-color: #fff;
+}
+.color {
+    color: rgb(51 51 51) !important;
+}

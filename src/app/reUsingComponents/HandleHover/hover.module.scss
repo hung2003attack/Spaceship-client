@@ -1,0 +1,129 @@
+.setting {
+    display: flex;
+    font-size: 25px;
+    cursor: pointer;
+    position: relative;
+    width: 38px;
+    justify-content: center;
+    height: 38px;
+    align-items: center;
+    color: var(--color-all);
+    font-family: 'Quicksand-VariableFont_wght', sans-serif;
+    border-radius: 50%;
+    &:hover {
+        background-color: #3c4043;
+        transition: all 0.1s linear;
+    }
+}
+
+.home {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    font-size: 30px;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.settingtitle {
+    position: absolute;
+    font-size: 15px;
+    top: 48px;
+    width: 74px;
+    display: flex;
+    justify-content: center;
+    right: -18px;
+    background-color: transparent;
+    border-radius: 5px;
+    height: 25px;
+    align-items: center;
+}
+.exchange {
+    right: 0;
+    top: 43px;
+}
+
+.avatar {
+    display: inherit;
+    justify-content: inherit;
+    width: inherit;
+    height: inherit;
+    align-items: inherit;
+    font-size: 25px;
+    .settingtitle {
+        top: 50px;
+    }
+}
+.inherit {
+    display: inherit;
+    align-items: inherit;
+    position: relative;
+}
+.logo {
+    width: 40px;
+    height: 50px;
+    margin: 0 97px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    img {
+        width: 100%;
+        object-fit: center;
+        overflow: hidden;
+        background-repeat: no-repeat;
+    }
+    .settingtitle {
+        top: 54px;
+    }
+}
+.send,
+.notification {
+    position: relative;
+    .settingtitle {
+        top: 7px;
+        right: 36px;
+        background-color: #202124;
+        color: var(--color-text);
+        width: 46px;
+    }
+}
+.logoLGBT {
+    width: 30px;
+    top: 55px;
+    right: 50px;
+    position: absolute;
+    cursor: var(--pointer);
+    .settingtitle {
+        background-color: var(--color-text);
+    }
+    img {
+        width: 100%;
+    }
+    .lgbtTitle {
+        width: 400px;
+        height: 400px;
+        right: left;
+        left: 89px;
+        top: -2px;
+    }
+}
+.nextBar {
+    .settingtitle {
+        top: 40px;
+        left: -91px;
+        color: var(--color-text);
+    }
+}
+.friend {
+    position: relative;
+    .settingtitle {
+        right: -25px;
+    }
+}
+.callVideo {
+    position: relative;
+    .settingtitle {
+        right: 12px;
+    }
+}

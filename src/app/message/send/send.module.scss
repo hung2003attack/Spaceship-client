@@ -1,0 +1,169 @@
+.close,
+.undo,
+.move,
+.resultList,
+.closeSearch {
+    position: absolute;
+}
+.hideResultBar,
+.close,
+.undo,
+.move,
+.resultList,
+.resultSearch,
+.fullname,
+.nickname,
+.user {
+    display: flex;
+}
+
+.hideResultBar {
+    flex-direction: column;
+    height: 600px;
+    position: fixed;
+    background-color: #202124;
+    width: 320px;
+    right: 0px;
+    z-index: 101;
+    top: 0px;
+    transition: var(--transition-03s);
+    box-shadow: 0 0 10px;
+}
+
+.close {
+    width: 30px;
+    height: 30px;
+
+    align-items: center;
+    justify-content: center;
+    left: 20px;
+    top: 10px;
+    font-size: 25px;
+    cursor: var(--pointer);
+    border-radius: 50%;
+    transition: var(--transition-03s);
+    &:hover {
+        background-color: var(--background-hover);
+    }
+}
+.search {
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 0 5px;
+    color: var(--color-text);
+    padding: 13px 0;
+}
+.searchInput {
+    padding: 5px 15px 5px 10px;
+    border-radius: 5px;
+    border: 0;
+    background: transparent;
+    color: var(--color-text);
+}
+.bar {
+    width: 180px;
+    height: 2px;
+    background-color: #8c8c8c;
+    position: absolute;
+    right: 69px;
+}
+.undo {
+    top: 16.5px;
+    font-size: 20px;
+    right: 38px;
+}
+.move {
+    top: 16.5px;
+    right: 12px;
+    font-size: 20px;
+    cursor: var(--pointer);
+}
+.resultList {
+    left: -304px;
+    width: 300px;
+    flex-wrap: wrap;
+    top: 0;
+    padding: 5px;
+    box-shadow: 0 0 10px #0a0b0b;
+    background-color: #202124;
+}
+.resultSearch {
+    width: 100%;
+    z-index: 9999;
+    align-items: center;
+    padding: 3px 10px;
+    margin: 5px;
+    background-color: #202124;
+
+    cursor: var(--pointer);
+    &:hover {
+        background-color: var(--background-hover);
+    }
+}
+.avatarSearch {
+    width: 40px;
+    height: 40px;
+}
+.nameSearch {
+    margin: 0 10px;
+    color: var(--color-text);
+}
+.fullname {
+    height: 15px;
+    color: var(--color-text);
+
+    align-items: center;
+}
+
+.userList {
+    overflow-y: overlay;
+    height: 100%;
+    padding: 10px 0;
+}
+.user {
+    width: 100%;
+    margin: 5px 0;
+    padding: 5px 10px 5px 15px;
+    cursor: var(--pointer);
+    &:hover {
+        background-color: #3c4043;
+    }
+}
+.avatar {
+    width: 43px;
+    height: 43px;
+}
+
+.name {
+    display: flex;
+
+    flex-wrap: wrap;
+    margin: 0 10px;
+    .sendUserName,
+    .message {
+        width: 100%;
+        display: flex;
+        height: 20px;
+        color: var(--color-text);
+        font-size: 14px;
+
+        align-items: center;
+    }
+    .message {
+        font-size: 12px;
+    }
+}
+.closeSearch {
+    top: 16.5px;
+    right: 80px;
+    cursor: var(--pointer);
+}
+.leftMove {
+    right: 1212px;
+    .resultList {
+        left: 320px;
+    }
+}
+.bottomMove {
+    top: 150px;
+}
