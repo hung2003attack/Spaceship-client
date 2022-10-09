@@ -9,7 +9,7 @@ const Account: React.FC<any> = ({ data }) => {
     return (
         <>
             {data.map((res: any) => (
-                <Link key={res.id} to={`/@${res.nickname}`} className={clsx(styles.userSearch)}>
+                <Link key={res.id} to={`/@${res.id}`} className={clsx(styles.userSearch)}>
                     <div className={clsx(styles.avatar)}>
                         <Avatar src={res.avatar} alt={res.last_name} />
                     </div>

@@ -1,6 +1,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import AllStore from './reducer';
+import AllStore from './authenRD';
 import news from './storeSocial_network/home';
+import changeLanguage from './languageRD'
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 const persistConfig = {
@@ -8,7 +9,7 @@ const persistConfig = {
     version: 1,
     storage,
 };
-const rootReducer = combineReducers({ auth: AllStore, home: news });
+const rootReducer = combineReducers({ auth: AllStore, home: news, language: changeLanguage });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
     reducer: persistedReducer,

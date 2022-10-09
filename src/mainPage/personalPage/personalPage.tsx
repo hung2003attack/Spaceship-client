@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 import styles from './personalPage.module.scss';
 import { useDispatch } from 'react-redux';
-import { offPersonalPage } from '~/redux/reducer';
+import { offPersonalPage } from '~/redux/authenRD';
 import Avatar from '~/reUsingComponents/Avatars&Edeter/Avatar';
 import Button from '~/reUsingComponents/Buttoms/ListButton/Buttons';
 import { CloseI, DotI } from '~/assets/Icons/Icons';

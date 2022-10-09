@@ -1,3 +1,6 @@
+import { Dispatch, AnyAction } from '@reduxjs/toolkit';
+import { AxiosError, AxiosInstance } from 'axios';
+import { logOutSuccess } from '~/redux/authenRD';
 import { Request } from './httpRequest';
 
 class HttpRequest {
@@ -23,28 +26,45 @@ class HttpRequest {
     ) => {
         try {
             const reponse = await Request.post(path, options);
-            console.log('re', reponse);
             return reponse;
         } catch (error) {
             console.log('register', error);
         }
     };
-    postLogOut = async (path: string) => {
+
+    postLogOut = async (path: string, accessToken: string, axiosJWTss: AxiosInstance) => {
+        console.log(accessToken);
+
         try {
-            await Request.post(path);
+            const data: any = await Request.post(path, {
+                headers: {
+                    notcall: 'Bearer ' + accessToken,
+                }
+            });
+            return data.data?.result
         } catch (error) {
-            console.log('logout', error);
+            console.log(error);
+            const err: any = error as AxiosError
+            const errStatus = err.response?.data
+            if (errStatus) {
+                if (errStatus.status === 0) {
+                    return { status: errStatus.status, message: 'You does not Allow' }
+                }
+            }
         }
     };
     refreshToken = async (path: string) => {
         try {
             const res = await Request.post(path, {
                 withCredentials: true,
+
             });
             return res.data;
         } catch (error) {
+
             console.log(error, 'refresh');
         }
     };
 }
 export default new HttpRequest();
+

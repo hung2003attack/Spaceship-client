@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Key, memo, useEffect, useRef, useState } from 'react';
+import { Fragment, Key, memo, useEffect, useRef, useState } from 'react';
 import { ImageI, SignatureI } from '~/assets/Icons/Icons';
 import styles from './home.module.scss';
 import React, { useCallback } from 'react';
@@ -7,23 +7,32 @@ import { useDispatch, useSelector } from 'react-redux';
 import Move from '~/reUsingComponents/Bar/MoveBar';
 import * as httpRequest from '~/restAPI/requestGetDate/socialNetwork/home';
 import httpRequestHome from '~/restAPI/requestGetDate/socialNetwork/home';
-import { authFailed, logOutSuccess } from '~/redux/reducer';
+import { authFailed, logOutSuccess } from '~/redux/authenRD';
 import refreshToken from '~/refreshToken/refreshToken';
+import { useCookies } from 'react-cookie';
+import Cookies from 'universal-cookie';
+
+const cookiesq = new Cookies();
 const Home: React.FC = () => {
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: any) => state.auth.login);
     const user = currentUser?.user;
-
+    const [cookies, setCookie] = useCookies(['tks'])
+    const token = cookiesq.get('tks')
     useEffect(() => {
-        if (!user) {
+        console.log('cookie token', token);
+
+        if (token) {
+            const axiosJWTss = refreshToken.axiosJWTs(currentUser, dispatch, setCookie);
+            const data = httpRequestHome.news(token, dispatch, axiosJWTss);
+        } else {
+
             dispatch(logOutSuccess());
             dispatch(authFailed());
-            return;
-        } else if (user?.accessToken) {
-            const axiosJWTss = refreshToken.axiosJWTs(currentUser, dispatch);
-            httpRequestHome.news(user?.accessToken, dispatch, axiosJWTss);
         }
-    }, []);
+    }, [])
+
+
     const [userList, setUserList] = useState();
     const upLoadRef = useRef<any>();
     const [upLoad, setUpLoad] = useState<any>([]);
@@ -46,6 +55,7 @@ const Home: React.FC = () => {
     console.log('home');
 
     return (
+
         <div className={clsx(styles.home)}>
             <div className={clsx(styles.form, { [styles.scroll]: scroll, [styles.move]: moveForm })}>
                 <form encType="multipart/form-data" className={clsx({ [styles.formChildren]: scroll })}>
@@ -70,6 +80,7 @@ const Home: React.FC = () => {
             <div className={clsx(styles.news)}>Xin chào mọi nguòi</div>
             <div className={clsx(styles.news)}>Xin chào mọi nguòi</div>
         </div>
+
     );
 };
 

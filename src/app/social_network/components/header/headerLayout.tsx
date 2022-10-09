@@ -6,7 +6,7 @@ import { routeheaders } from '~/routes/routeSocialNetwork/routes';
 import styles from './header.module.scss';
 
 import Buttons from '~/reUsingComponents/Buttoms/Buttom';
-import { logOutSuccess, onsettingOpacity, userData } from '~/redux/reducer';
+import { logOutSuccess, onsettingOpacity, userData } from '~/redux/authenRD';
 
 import Search from './layout/Search/Search';
 import Images from '~/assets/images';

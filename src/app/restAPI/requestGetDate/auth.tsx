@@ -1,13 +1,18 @@
 import HttpRequest from '~/restAPI/requestServers/authHttpRequest';
-import { userData, registerSuccessful, authSuccessful, authFailed, registerFailed } from '~/redux/reducer';
+import Cookies from 'universal-cookie';
+import { userData, registerSuccessful, authSuccessful, authFailed, registerFailed, logOutSuccess } from '~/redux/authenRD';
 import { Dispatch, AnyAction } from '@reduxjs/toolkit';
+import { AxiosInstance } from 'axios';
+const cookies = new Cookies();
+
 class Authentication {
     login = async (phoneNumberEmail: string, password: string, dispatch: any) => {
         try {
-            const user = await HttpRequest.postLogin('/login', {
+            const user = await HttpRequest.postLogin('login/', {
                 phoneNumberEmail,
                 password,
             });
+            console.log(user);
 
             if (user?.user.hasOwnProperty('id') && user?.user) {
                 dispatch(authSuccessful());
@@ -15,16 +20,27 @@ class Authentication {
             } else {
                 dispatch(authFailed());
                 dispatch(userData(user));
+
             }
+
 
             return user;
         } catch (err) {
             dispatch(authFailed());
         }
     };
-    logOut = async () => {
+    logOut = async (accessToken: string, dispatch: Dispatch<AnyAction>, axiosJWTss: AxiosInstance,) => {
         try {
-            await HttpRequest.postLogOut('/logout');
+            console.log('dfw', accessToken);
+
+            const data = await HttpRequest.postLogOut('/logout', accessToken, axiosJWTss);
+            console.log(data, '33');
+            if (data?.status === 1) {
+                dispatch(logOutSuccess());
+                localStorage.clear();
+
+
+            }
         } catch (error) {
             console.log(error);
         }
@@ -55,7 +71,7 @@ class Authentication {
     };
     refreshToken = async () => {
         try {
-            const data = await HttpRequest.refreshToken('/refresh');
+            const data = await HttpRequest.refreshToken('refresh/');
             return data;
         } catch (error) {
             console.log(error);

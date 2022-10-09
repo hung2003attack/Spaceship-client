@@ -13,7 +13,7 @@ import { DotI, ProfileI, WebsiteI } from '~/assets/Icons/Icons';
 import Profile from './profiles/profile';
 import Background from 'src/backbround/background';
 import { useDispatch, useSelector } from 'react-redux';
-import { onPersonalPage } from '~/redux/reducer';
+import { onPersonalPage } from '~/redux/authenRD';
 import GetFriend from '~/restAPI/requestGetDate/friends';
 const Website: React.FC = () => {
     const dispatch = useDispatch();
@@ -24,7 +24,7 @@ const Website: React.FC = () => {
         return store.darkShiningMain;
     });
     useEffect(() => {
-        const data = GetFriend.friend();
+        // const data = GetFriend.friend(dispatch);
     }, []);
     useEffect(() => {
         localStorage.setItem('darkShining', JSON.stringify({ darkShiningMain: darkShining }));
@@ -90,9 +90,9 @@ const Website: React.FC = () => {
     console.log(`${localhostRef.current}/`, hrefRef.current);
     console.log(
         `${hrefRef.current}` === `${hrefRef.current.slice(ref.current + isFinite(ref.current) && 0)}` &&
-            `${hrefRef.current}` !== `${localhostRef.current}/` &&
-            `${hrefRef.current}` !== `${localhostRef.current}/SD` &&
-            `${hrefRef.current}` !== `${localhostRef.current}/W`,
+        `${hrefRef.current}` !== `${localhostRef.current}/` &&
+        `${hrefRef.current}` !== `${localhostRef.current}/SD` &&
+        `${hrefRef.current}` !== `${localhostRef.current}/W`,
         hrefRef.current === `${localhostRef.current}/SN`,
     );
 

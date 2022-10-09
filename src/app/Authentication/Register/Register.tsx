@@ -241,7 +241,7 @@ const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
             <form onSubmit={handleSubmit}>
                 <div className={clsx(styles.formGroup)}>
                     <Input
-                        color={clsx(checkAll.username ? 'true' : 'false')}
+                        color={clsx(checkAll.username ? 'rgba(255,255,255,0.83)' : '')}
                         type="text"
                         placeholder="your name"
                         name="fullName"
@@ -257,7 +257,7 @@ const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
                 </div>
                 <div className={clsx(styles.formGroup)}>
                     <Input
-                        color={clsx(checkAll.phoneNumberEmail ? 'true' : 'false')}
+                        color={clsx(checkAll.phoneNumberEmail ? 'rgba(255,255,255,0.83)' : '')}
                         type="text"
                         placeholder="email or phone number"
                         name="PhoneNumberEmail"
@@ -275,14 +275,14 @@ const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
                 <div className={clsx(styles.formGroup)}>
                     <div className={clsx(styles.password)}>
                         <Input
-                            color={clsx(checkAll.password1 ? 'true' : 'false')}
+                            color={clsx(checkAll.password1 ? 'rgba(255,255,255,0.83)' : '')}
                             type="text"
                             placeholder="password"
                             name="Password"
                             onChange={handleValuePassword1}
                         />
                         <Input
-                            color={clsx(checkAll.password2 ? 'true' : 'false')}
+                            color={clsx(checkAll.password2 ? 'rgba(255,255,255,0.83)' : '')}
                             type="text"
                             placeholder="please re-enter password"
                             onChange={handleValuePassword2}
@@ -333,7 +333,7 @@ const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
                 </div>
                 <div className={clsx(styles.formGroup)}>
                     <Input
-                        color={clsx(checkAll.date ? 'true' : 'false')}
+                        color={clsx(checkAll.date ? 'rgba(255,255,255,0.83)' : '')}
                         type="text"
                         placeholder="BirthDate       DD / MM / YY"
                         onChange={handleBirthDate}

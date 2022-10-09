@@ -1,27 +1,35 @@
 import { Dispatch, AnyAction } from '@reduxjs/toolkit';
 import httpRequest from '~/restAPI/requestServers/socialNetwork/home';
 import { getNewsFailed, getNewsStart, getNewsCurrent } from '~/redux/storeSocial_network/home';
-import { AxiosInstance } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
+import { authFailed } from '~/redux/authenRD';
 class httpRequestHome {
-    news = async (accessToken: string, dispatch: Dispatch<AnyAction>, axiosJWT: AxiosInstance) => {
-        console.log(accessToken);
+    news = async (accessToken: string, dispatch: Dispatch<AnyAction>, axiosJWTss: AxiosInstance) => {
+        console.log(accessToken, 'loo');
 
         dispatch(getNewsStart());
 
         try {
-            const res = await axiosJWT.get('/SN/', {
-                baseURL: process.env.REACT_APP_AUTH,
+            const res = await axiosJWTss.get('/SN', {
                 headers: { notcall: 'Bearer ' + accessToken },
             });
             console.log(res, 'res Home');
-
             dispatch(getNewsCurrent(res.data));
         } catch (error) {
             console.log(error);
 
-            dispatch(getNewsFailed());
+            const err: any = error as AxiosError
+            const errStatus = err.response?.data
+            if (errStatus) {
+                if (errStatus.status === 0) {
+                    dispatch(getNewsFailed());
+                    dispatch(authFailed())
+                }
+            }
         }
     };
 }
 
 export default new httpRequestHome();
+
+

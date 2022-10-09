@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { logOutSuccess, onsettingOpacity, offsettingOpacity } from '~/redux/reducer';
+import { logOutSuccess, onsettingOpacity, offsettingOpacity } from '~/redux/authenRD';
 
 import { CloseI } from '~/assets/Icons/Icons';
 import Authentication from '~/restAPI/requestGetDate/auth';
@@ -9,13 +9,18 @@ import styles from './setting.module.scss';
 import Bar from '~/reUsingComponents/Bar/Bar';
 import { Setting } from './interface';
 import { useNavigate } from 'react-router-dom';
+import refreshToken from '~/refreshToken/refreshToken';
+import { useCookies } from 'react-cookie';
 
 const Settingcbl: React.FC<Setting> = ({ data }) => {
     const showHideSettingn = useSelector((state: any) => state.auth.showHideSettingn);
+    const [cookies, setCookie, removeCookie] = useCookies(['tks'])
 
     const [showresult, setShowresult] = useState<ReactNode>();
     const [resultoption, setResultoption] = useState<boolean>(false);
     const dispatch = useDispatch();
+    const { currentUser } = useSelector((state: any) => state.auth.login);
+    const user = currentUser?.user;
     useEffect(() => {
         if (!showHideSettingn) setResultoption(false);
     }, [showHideSettingn]);
@@ -36,9 +41,10 @@ const Settingcbl: React.FC<Setting> = ({ data }) => {
         });
     };
     const handleLogOut = async () => {
-        await Authentication.logOut();
-        dispatch(logOutSuccess());
-        localStorage.clear();
+        const axiosJWTss = refreshToken.axiosJWTs(currentUser, dispatch, setCookie);
+
+        await Authentication.logOut(user?.accessToken, dispatch, axiosJWTss);
+
         //  window.history.go();
     };
 
