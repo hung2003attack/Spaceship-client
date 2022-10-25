@@ -1,10 +1,9 @@
 @import 'normalize.css';
 
-
 :root {
     --color-icon: #aeaeae;
-    --color-text: #cbcbcb;
-
+    --color-text-light: #cbcbcb;
+    --color-text-dark: #333;
     --border-radius-50: 50%;
     --pointer: pointer;
 
@@ -20,7 +19,7 @@ html {
     font-size: 62.5%;
 }
 body {
-    font-family: 'Quicksand', sans-serif;
+    font-family: 'Raleway', sans-serif;
     font-size: 1.6rem;
     line-height: 1.5;
     text-rendering: optimizeSpeed;
@@ -28,20 +27,24 @@ body {
 }
 
 @font-face {
-    font-family: Quicksand;
-    src: url('../assets/font-texts/Quicksand-Medium.ttf');
+    font-family: Raleway;
+    src: url('../assets/font-texts/Raleway-Regular.ttf');
     font-weight: 400;
 }
 
 @font-face {
-    font-family: NunitoSans;
-    src: url('../assets/font-texts/NunitoSans-Regular.ttf');
+    font-family: Arima;
+    src: url('../assets/font-texts/ArimaMadurai-Regular.ttf');
     font-weight: 400;
 }
 @font-face {
     font-family: Saira;
     src: url('../assets/font-texts/Saira-VariableFont_wdth,wght.ttf');
     font-weight: 400;
+}
+@font-face {
+    font-family: Item;
+    src: url(../assets/font-texts/Itim-Regular.ttf);
 }
 button {
     border: none;
@@ -50,12 +53,11 @@ input {
     outline: none;
 }
 p {
-    font-family: 'QuicksandRegular', sans-serif;
     font-size: 16px;
 }
 a {
     text-decoration: none;
-    color: var(--color-text);
+    color: var(--color-text-light);
 }
 ul {
     list-style-type: none;

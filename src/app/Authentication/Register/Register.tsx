@@ -1,19 +1,84 @@
-import clsx from 'clsx';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import styles from './register.module.scss';
-import { CheckI, CloseI, EmailI, LGBTI, PhoneI, UndoIRegister } from '~/assets/Icons/Icons';
+import { EmailI, LGBTI, PhoneI, UndoIRegister } from '~/assets/Icons/Icons';
 import Images from '~/assets/images';
 import Hovertitle from '~/reUsingComponents/HandleHover/Hover';
+import { Input, TitleAuth } from '~/reUsingComponents/styleComponents/styleComponents';
+import {
+    DivForm,
+    DivFormGroup,
+    DivGenderC,
+    DivGenderP,
+    DivLGBT,
+    PcontentPassword,
+    Pcontent,
+    PnextLogin,
+    SpanIconPhoneMail,
+    Pmessage,
+} from './styleRegister';
+import Language from 'src/Language/Language';
+import { changeRegister } from '~/redux/languageRD';
+import { ButtonSubmit, DivLanguage } from '../Login/styleLogin';
 import Authentication from '~/restAPI/requestGetDate/auth';
-import { useNavigate } from 'react-router-dom';
-import { Input } from '~/reUsingComponents/styleComponents/styleComponents';
-interface Rgt {
-    setTransfer: any;
-    transfer: boolean;
+
+export interface PropsRegister {
+    [VN: string]: {
+        title: string;
+        input: {
+            id: number;
+            type?: string;
+            gender?: {
+                id: number;
+                type: string;
+            }[];
+            placeholder?: string;
+            role?: string;
+        }[];
+        submit: string;
+        messagePhoneEmail: string[];
+        messagePassword: string;
+        messageDate: string;
+        messageName: string;
+    };
+    EN: {
+        title: string;
+        input: {
+            id: number;
+            type?: string;
+            gender?: {
+                id: number;
+                type: string;
+            }[];
+            placeholder?: string;
+            role?: string;
+        }[];
+        submit: string;
+        messagePhoneEmail: string[];
+        messagePassword: string;
+        messageDate: string;
+        messageName: string;
+    };
 }
-const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
+interface PropsState {
+    language: {
+        register: string;
+    };
+}
+const Register: React.FC<{
+    setTransfer: React.Dispatch<React.SetStateAction<boolean>>;
+    transfer: boolean;
+    dataRegister: PropsRegister;
+}> = ({ setTransfer, transfer, dataRegister }) => {
+    //dataLanguage
+    const dataLanguages = useSelector((state: PropsState) => state.language?.register);
+
+    const [language, setLanguage] = useState<boolean>(false);
+    const { title, input, submit, messagePhoneEmail, messagePassword, messageDate, messageName } =
+        dataRegister[dataLanguages];
+    console.log(dataRegister[dataLanguages]);
+
+    // const {} = dataRegister;
     const dispatch = useDispatch();
     //value
     const [valueUserName, setValueUserName] = useState<string>('');
@@ -25,11 +90,17 @@ const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
         password1: '',
         password2: '',
     });
+    console.log('valuePassword', valuePassword);
+
     const [valueGender, setValueGender] = useState<number | null>(null);
     const [valueDate, setValueDate] = useState<string>('');
 
     //check
-
+    const [checkUserName, setCheckUserName] = useState<{ title: string; check: boolean }>({ title: '', check: false });
+    const [registerStatus, setRegisterStatus] = useState<{ title: string; status: boolean }>({
+        title: '',
+        status: false,
+    });
     const [checkPhoneNumberEmail, setCheckPhoneNumberEmail] = useState<{
         check: boolean;
         icon: React.ReactElement | string;
@@ -45,7 +116,7 @@ const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
         check: boolean;
         icon: React.ReactElement | string;
     }>({ check: false, icon: '' });
-
+    //check all feild
     const [checkAll, setCheckAll] = useState<{
         username: boolean;
         phoneNumberEmail: boolean;
@@ -66,6 +137,7 @@ const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
         password2: false,
         date: false,
     });
+
     const handlePhoneNumberEmail = (e: { target: any }) => {
         setCheckAll({ ...checkAll, phoneNumberEmail: false });
         if (isNaN(e.target.value)) {
@@ -78,7 +150,7 @@ const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
                 setCheckPhoneNumberEmail({
                     ...checkPhoneNumberEmail,
                     check: true,
-                    icon: 'Email không hợp lệ.',
+                    icon: messagePhoneEmail[0],
                     title: '',
                 });
             }
@@ -90,7 +162,7 @@ const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
             if (e.target.value.length <= 11 && e.target.value.length >= 9) {
                 setCheckPhoneNumberEmail({ check: false, icon: '', title: '' });
             } else {
-                setCheckPhoneNumberEmail({ check: true, icon: '', title: 'số điện thoại phải từ 9 - 11 ký tự số.' });
+                setCheckPhoneNumberEmail({ check: true, icon: '', title: messagePhoneEmail[1] });
             }
             setPhoneNumberEmail({ value: e.target.value, icon: <PhoneI /> });
         }
@@ -100,7 +172,7 @@ const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
         setValuePassword({ ...valuePassword, password1: e.target.value });
         setCheckAll({ ...checkAll, password1: false });
         if (e.target.value !== valuePassword.password2 && e.target.value !== '') {
-            setCheckPassword({ check: true, icon: 'password không đúng.' });
+            setCheckPassword({ check: true, icon: messagePassword });
         } else if (e.target.value === '') {
             setCheckPassword({ check: false, icon: '' });
             setCheckAll({ ...checkAll, password1: true });
@@ -112,26 +184,19 @@ const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
     const handleValuePassword2 = (e: { target: any }) => {
         setValuePassword({ ...valuePassword, password2: e.target.value });
         if (e.target.value !== valuePassword.password1 && e.target.value !== '') {
-            setCheckPassword({ check: true, icon: 'password không đúng.' });
+            setCheckPassword({ check: true, icon: messagePassword });
         } else if (e.target.value === '') {
             setCheckPassword({ check: false, icon: '' });
             setCheckAll({ ...checkAll, password2: true });
         } else {
             setCheckPassword({ check: false, icon: '' });
+            setCheckAll({ ...checkAll, password2: false });
         }
-        setCheckAll({ ...checkAll, password2: false });
     };
 
-    const handleValueMale = () => {
-        setValueGender(0);
-    };
-    const handleValueFemale = () => {
-        setValueGender(1);
-    };
-    const handleValueOther = () => {
-        setValueGender(2);
-    };
     const handleBirthDate = (e: { target: any }) => {
+        console.log(e.target.value);
+
         const date = e.target.value.includes('/', 1);
         const month = e.target.value.includes('/', 3);
 
@@ -159,18 +224,19 @@ const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
                 setValueDate(e.target.value);
                 setCheckDate({ check: false, icon: '' });
             } else {
-                setCheckDate({ check: true, icon: 'Ngày sinh không hợp lệ.' });
+                setCheckDate({ check: true, icon: messageDate });
             }
         } else if (e.target.value === '') {
             setCheckDate({ check: false, icon: '' });
             setCheckAll({ ...checkAll, date: true });
         } else {
-            setCheckDate({ check: true, icon: 'Ngày sinh không hợp lệ.' });
+            setCheckDate({ check: true, icon: messageDate });
         }
         if (e.target.value !== '') {
             setCheckAll({ ...checkAll, date: false });
         }
     };
+
     const handleSubmit = async (e: { preventDefault: any }) => {
         e.preventDefault();
         if (
@@ -180,20 +246,29 @@ const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
             valueDate !== ''
         ) {
             setCheckAll({ username: false, phoneNumberEmail: false, password1: false, password2: false, date: false });
-            if (checkPhoneNumberEmail.check === false && checkPassword.check === false && checkDate.check === false) {
+            if (
+                checkPhoneNumberEmail.check === false &&
+                checkPassword.check === false &&
+                checkDate.check === false &&
+                checkUserName.check === false
+            ) {
                 delete valuePhoneNumberEmail.icon;
                 delete valuePassword.password2;
-                console.log(valueUserName, valuePhoneNumberEmail, valuePassword, valueGender, valueDate);
-                await Authentication.register(
+                console.log('value', valueUserName, valuePhoneNumberEmail, valuePassword, valueGender, valueDate);
+                const data = await Authentication.register(
                     valueUserName,
                     valuePhoneNumberEmail.value,
                     valuePassword.password1,
                     valueGender,
                     valueDate,
-
                     dispatch,
                 );
-                setTransfer(!transfer);
+                if (data.check === 1) {
+                    setRegisterStatus({ title: data.result, status: false });
+                    setTransfer(!transfer);
+                } else if (data.check === 3) {
+                    setRegisterStatus({ title: data.result, status: true });
+                }
             }
         } else if (
             valueUserName === '' &&
@@ -204,7 +279,7 @@ const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
         ) {
             setCheckAll({ username: true, phoneNumberEmail: true, password1: true, password2: true, date: true });
         }
-        if (!valueUserName) {
+        if (!valueUserName || !checkUserName.check) {
             checkAllRef.current.username = true;
         } else {
             checkAllRef.current.username = false;
@@ -215,6 +290,7 @@ const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
             checkAllRef.current.password1 = false;
         }
         if (!valuePassword.password2) {
+            console.log('valuePassword.password2', valuePassword.password2);
             checkAllRef.current.password2 = true;
         } else {
             checkAllRef.current.password2 = false;
@@ -233,129 +309,129 @@ const Register: React.FC<Rgt> = ({ setTransfer, transfer }) => {
 
         setCheckAll({ ...checkAllRef.current });
     };
+    const handleValueUserName = (e: { target: { value: string } }) => {
+        setValueUserName(e.target.value);
+        if (e.target.value === '' || e.target.value.length >= 30 || e.target.value.length < 1) {
+            setCheckUserName({ title: messageName, check: true });
+            setCheckAll({ ...checkAll, username: true });
+        } else {
+            console.log(e.target.value.length, e.target.value.length >= 30);
 
+            setCheckUserName({ title: '', check: false });
+            setCheckAll({ ...checkAll, username: false });
+        }
+    };
+
+    const handleValueMale = () => {
+        setValueGender(0);
+    };
+    const handleValueFemale = () => {
+        setValueGender(1);
+    };
+    const handleValueOther = () => {
+        setValueGender(2);
+    };
+
+    //input
+    const eventsOnChange = [
+        handleValueUserName,
+        handlePhoneNumberEmail,
+        handleValuePassword1,
+        handleValuePassword2,
+        handleBirthDate,
+        handleBirthDate,
+    ];
+    const colorInput = [
+        checkAll.username,
+        checkAll.phoneNumberEmail,
+        checkAll.password1,
+        checkAll.password2,
+        '',
+        checkAll.date,
+    ];
+    const handlelanguage = () => {
+        setLanguage(!language);
+    };
+    const optionGender = [valueGender === 0, valueGender === 1, valueGender === 2];
+    const eventsOnClickGender = [handleValueMale, handleValueFemale];
     return (
-        <div className={clsx(styles.formRegister)}>
-            <p className={clsx(styles.title)}>Register</p>
-
-            <form onSubmit={handleSubmit}>
-                <div className={clsx(styles.formGroup)}>
-                    <Input
-                        color={clsx(checkAll.username ? 'rgba(255,255,255,0.83)' : '')}
-                        type="text"
-                        placeholder="your name"
-                        name="fullName"
-                        onChange={(e) => {
-                            setValueUserName(e.target.value);
-                            if (e.target.value === '') {
-                                setCheckAll({ ...checkAll, username: true });
-                            } else {
-                                setCheckAll({ ...checkAll, username: false });
-                            }
-                        }}
-                    />
-                </div>
-                <div className={clsx(styles.formGroup)}>
-                    <Input
-                        color={clsx(checkAll.phoneNumberEmail ? 'rgba(255,255,255,0.83)' : '')}
-                        type="text"
-                        placeholder="email or phone number"
-                        name="PhoneNumberEmail"
-                        onChange={handlePhoneNumberEmail}
-                    />
-                    <span className={clsx(styles.phoneEmailI)}>{valuePhoneNumberEmail.icon}</span>
-                    <p
-                        className={clsx({
-                            [styles.checkInvalid]: checkPhoneNumberEmail.check || checkPhoneNumberEmail.title,
-                        })}
-                    >
-                        {checkPhoneNumberEmail.icon || checkPhoneNumberEmail.title}
-                    </p>
-                </div>
-                <div className={clsx(styles.formGroup)}>
-                    <div className={clsx(styles.password)}>
-                        <Input
-                            color={clsx(checkAll.password1 ? 'rgba(255,255,255,0.83)' : '')}
-                            type="text"
-                            placeholder="password"
-                            name="Password"
-                            onChange={handleValuePassword1}
-                        />
-                        <Input
-                            color={clsx(checkAll.password2 ? 'rgba(255,255,255,0.83)' : '')}
-                            type="text"
-                            placeholder="please re-enter password"
-                            onChange={handleValuePassword2}
-                        />
-                    </div>
-                    <p
-                        className={clsx({
-                            [styles.checkInvalidP]: checkPassword.check,
-                        })}
-                    >
-                        {checkPassword.icon}
-                    </p>
-                </div>{' '}
-                <div className={clsx(styles.formGroup)}>
-                    <div className={clsx(styles.gender)}>
-                        <div
-                            className={clsx(styles.male, { [styles.option]: valueGender === 0 })}
-                            onClick={handleValueMale}
-                        >
-                            Male
-                        </div>
-
-                        <div
-                            className={clsx(styles.female, { [styles.option]: valueGender === 1 })}
-                            onClick={handleValueFemale}
-                        >
-                            Female
-                        </div>
-                    </div>
-                    <div
-                        className={clsx(styles.lgbt, { [styles.option]: valueGender === 2 })}
-                        onClick={handleValueOther}
-                    >
-                        <p>LGBT+</p>
-                        <p>
-                            <LGBTI />
-                        </p>
-                    </div>
-                    <Hovertitle
-                        anyTags="div"
-                        title="let's be confident, Life's ours, whoever you are or what do you, then let's live your way "
-                        Tags="img"
-                        src={Images.lgbt}
-                        alt="LGBT+ or LGBTQ+"
-                        logoLGBTCL
-                        lgbtTitleCL
-                    />
-                </div>
-                <div className={clsx(styles.formGroup)}>
-                    <Input
-                        color={clsx(checkAll.date ? 'rgba(255,255,255,0.83)' : '')}
-                        type="text"
-                        placeholder="BirthDate       DD / MM / YY"
-                        onChange={handleBirthDate}
-                        name="birtDate"
-                    />
-                    <p
-                        className={clsx({
-                            [styles.checkInvalid]: checkDate.check,
-                            [styles.checkValid]: !checkDate.check,
-                        })}
-                    >
-                        {checkDate.icon}
-                    </p>
-                </div>
-                <button className={clsx(styles.btnSubmit)}>
-                    Register
-                    <p className={clsx(styles.undo)} onClick={() => setTransfer(!transfer)}>
-                        <UndoIRegister />
-                    </p>
-                </button>
+        <DivForm>
+            <TitleAuth>{title}</TitleAuth>
+            <DivLanguage onClick={handlelanguage}>
+                <Language change={dispatch} language={language} changeLanguage={changeRegister} />
+            </DivLanguage>
+            <form onSubmit={handleSubmit} style={{ position: 'relative' }}>
+                {input.map((val) => {
+                    if (val.id === 4) {
+                        return (
+                            <DivFormGroup key={val.id}>
+                                <DivGenderP>
+                                    {val.gender?.map((valC) => {
+                                        return valC.id !== 2 ? (
+                                            <DivGenderC
+                                                key={valC.id}
+                                                color={optionGender[valC.id] ? 'rgb(99, 99, 99)' : ''}
+                                                onClick={eventsOnClickGender[valC.id]}
+                                            >
+                                                {valC.type}
+                                            </DivGenderC>
+                                        ) : (
+                                            <div key={valC.id}>
+                                                <DivLGBT
+                                                    key={valC.id}
+                                                    color={optionGender[valC.id] ? 'rgb(99, 99, 99)' : ''}
+                                                    onClick={handleValueOther}
+                                                >
+                                                    {valC.type}
+                                                    <p>
+                                                        <LGBTI />
+                                                    </p>
+                                                </DivLGBT>
+                                                {/* <Hovertitle
+                                                    anyTags="div"
+                                                    title="let's be confident, Life's ours, whoever you are or what do you, then let's live your way "
+                                                    Tags="img"
+                                                    src={Images.lgbt}
+                                                    alt="LGBT+ or LGBTQ+"
+                                                    logoLGBTCL
+                                                    lgbtTitleCL
+                                                /> */}
+                                            </div>
+                                        );
+                                    })}
+                                </DivGenderP>
+                            </DivFormGroup>
+                        );
+                    }
+                    return (
+                        <DivFormGroup key={val.id}>
+                            <Input
+                                color={colorInput[val.id] ? 'rgb(255 97 97 / 83%)' : ''}
+                                type={val.type}
+                                placeholder={val.placeholder}
+                                onChange={eventsOnChange[val.id]}
+                            />
+                            {val.role === 'name' && <PcontentPassword>{checkUserName.title}</PcontentPassword>}
+                            {val.role === 'password2' && <PcontentPassword>{checkPassword.icon}</PcontentPassword>}
+                            {val.role === 'phoneEmail' && (
+                                <>
+                                    <SpanIconPhoneMail>{valuePhoneNumberEmail.icon}</SpanIconPhoneMail>
+                                    <Pcontent>{checkPhoneNumberEmail.icon || checkPhoneNumberEmail.title}</Pcontent>
+                                </>
+                            )}
+                            {val.role === 'date' && <Pcontent>{checkDate.icon}</Pcontent>}
+                        </DivFormGroup>
+                    );
+                })}
+                <PnextLogin onClick={() => setTransfer(!transfer)}>
+                    <UndoIRegister />
+                </PnextLogin>
+                <ButtonSubmit>{submit}</ButtonSubmit>
+                <Pmessage color={registerStatus.status ? '#fa5f5f' : 'rgb(102 239 120)'}>
+                    {registerStatus.title}
+                </Pmessage>
             </form>
-        </div>
+        </DivForm>
     );
 };
 

@@ -12,15 +12,12 @@ interface _Avatar {
     fallback?: any;
     gender?: any;
     onClick?: () => void;
-
     imageEditor?: boolean;
-
     image?: any;
     width?: number;
     height?: number;
     border?: number;
     borderRadius?: number;
-
     moveAvatar?: boolean;
     background?: boolean;
 }

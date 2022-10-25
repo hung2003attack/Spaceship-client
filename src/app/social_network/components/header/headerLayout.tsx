@@ -5,12 +5,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import { routeheaders } from '~/routes/routeSocialNetwork/routes';
 import styles from './header.module.scss';
 
-import Buttons from '~/reUsingComponents/Buttoms/Buttom';
 import { logOutSuccess, onsettingOpacity, userData } from '~/redux/authenRD';
 
 import Search from './layout/Search/Search';
 import Images from '~/assets/images';
 import Hovertitle from '~/reUsingComponents/HandleHover/Hover';
+import { CameraI, ExchangeI, HomeI, ImageI, SettingI, VideoI } from '~/assets/Icons/Icons';
+import {
+    Alogo,
+    ButtonSt,
+    DivHeader,
+    DivHollow,
+    DivWrapper,
+    LinkCall,
+    LinkExchange,
+    LinkHome,
+    Plogo,
+    SpanX,
+} from './styleHeader';
+import { Img, Span } from '~/reUsingComponents/styleComponents/styleComponents';
 //button
 // to = Link tag, href = a tag
 //classNames = name và chữ Cl phía sau, Icons = chữ cái đầu viết thường, Events [onClick],
@@ -32,25 +45,40 @@ const Header: React.FC = () => {
 
     return (
         <>
-            <div className={clsx(styles.header)}>
+            <DivHollow></DivHollow>
+            <DivHeader>
                 <Search />
-                <div className={clsx(styles.homeExhangePersonal)}>
-                    <Buttons to="/SN/" h homeCl onDoubleClick={handleReload} />
-                    <Buttons to="/SN/exchange" e exchangeCl />
-                    <Buttons to="/SN/callVideo" cv callVideo />
-                </div>
-                <Buttons s settingCl onClick={handleSetting} />
-
+                <DivWrapper>
+                    <Hovertitle Tags={LinkHome} to="/SN/" children={<HomeI />} title="Home" size="28px" />
+                    <Hovertitle
+                        Tags={LinkExchange}
+                        to="/SN/exchange"
+                        title="Exchange"
+                        children={<ExchangeI />}
+                        size="23px"
+                    />
+                    <Hovertitle
+                        Tags={LinkCall}
+                        to="/SN/callVideo"
+                        children={<CameraI />}
+                        title="Call Video"
+                        size="30px"
+                    />
+                </DivWrapper>
                 <Hovertitle
-                    title="Start"
-                    anyTags="a"
-                    href="/"
-                    Tags="img"
-                    src={Images.logo}
-                    alt="socailNetworld"
-                    logoCL
+                    Tags={ButtonSt}
+                    children={<SettingI />}
+                    title="Setting"
+                    onClick={handleSetting}
+                    size="28px"
+                    color="var(--color-text-light)"
                 />
-            </div>
+
+                <Hovertitle title="Start" Tags={Alogo} href="/">
+                    <Img src={Images.logo} alt="d" width="30px" height="30px" about="none" />
+                    <Plogo>Universe</Plogo>
+                </Hovertitle>
+            </DivHeader>
 
             <Routes>
                 {routeheaders.map(({ path, Component }, key) => (

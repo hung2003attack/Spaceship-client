@@ -1,12 +1,12 @@
-import { AnyAction } from "@reduxjs/toolkit"
+import { ActionCreatorWithPayload, AnyAction } from "@reduxjs/toolkit"
 import { LanguageI } from "~/assets/Icons/Icons"
-import { changeLanguage } from "~/redux/languageRD"
 import { MenuLanguage, OptionLanguage, StyleLanguage } from "./styleElements"
 interface PropsChange {
-    change: React.Dispatch<AnyAction>
-    language: boolean
+    change: React.Dispatch<AnyAction>;
+    language: boolean;
+    changeLanguage: ActionCreatorWithPayload<any, string>
 }
-const Language: React.FC<PropsChange> = ({ change, language }) => {
+const Language: React.FC<PropsChange> = ({ change, language, changeLanguage }) => {
     const handleClick = (data: string) => {
         change(changeLanguage(data));
     }

@@ -33,6 +33,6 @@ export const OptionLanguage = styled.button`
     padding: 5px;
     cursor: pointer;
     &:hover{
-        background-color: #787777;;
+        background-color: #787777;
     }
 `

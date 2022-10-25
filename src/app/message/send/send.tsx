@@ -7,7 +7,8 @@ import React, { useState } from 'react';
 import Hovertitle from '~/reUsingComponents/HandleHover/Hover';
 import Move from '~/reUsingComponents/Bar/MoveBar';
 import * as userService from '~/restAPI/requestGetDate/socialNetwork/searchService';
-import useDebounce from '~/social_network/components/Header/layout/hook/useDebounce';
+import useDebounce from '~/reUsingComponents/hook/useDebounce';
+import { DivIconMs } from '../styleMessage';
 const Send: React.FC = () => {
     const [send, setSend] = useState(false);
 
@@ -49,11 +50,15 @@ const Send: React.FC = () => {
     return (
         <>
             {!send && (
-                <Hovertitle title="Send" sendCL>
-                    <div className={clsx('send')} onClick={handleShowHide}>
-                        <SendI />
-                        <p className={clsx('miss')}>+</p>
-                    </div>
+                <Hovertitle
+                    Tags={DivIconMs}
+                    title="Send"
+                    size="23px"
+                    color="var(--color-text-dark)"
+                    onClick={handleShowHide}
+                >
+                    <SendI />
+                    <p className={clsx('miss')}>+</p>
                 </Hovertitle>
             )}
             {send && (

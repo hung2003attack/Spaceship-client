@@ -4,6 +4,8 @@ import Avatar from '~/reUsingComponents/Avatars&Edeter/Avatar';
 import styles from './profile.module.scss';
 import { useDispatch } from 'react-redux';
 import { onPersonalPage } from '~/redux/authenRD';
+import { DivProfile, Pname } from './styleProfile';
+import { Pstatus } from './styleProfile';
 const Profile: React.FC = () => {
     const dispatch = useDispatch();
     const handlePersonalPage = () => {
@@ -11,25 +13,23 @@ const Profile: React.FC = () => {
     };
     return (
         <>
-            <div className={clsx(styles.profile)} onClick={handlePersonalPage}>
+            <DivProfile onClick={handlePersonalPage}>
                 <div className={clsx(styles.avatar)}>
                     <Avatar src="" alt="" />
                 </div>
-                <div className={clsx(styles.name)}>Nguyễn Trọng Hùng</div>
-                <p className={clsx(styles.status)}> I love you or I'll hate you</p>
-            </div>
-            <div className={clsx(styles.profile)} onClick={handlePersonalPage}>
+                <Pname>Nguyễn Trọng Hùng</Pname>
+                <Pstatus> I love you or I'll hate you</Pstatus>
+            </DivProfile>
+            <DivProfile onClick={handlePersonalPage}>
                 <div className={clsx(styles.avatar)}>
                     <Avatar
                         src="https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-xinh-cuc-dep.jpg"
                         alt=""
                     />
                 </div>
-                <div className={clsx(styles.name)}>Trần thì mỹ Đinh</div>
-                <p className={clsx(styles.status)}>
-                    what do you love and fuck the rest and I love you or I'll hate you
-                </p>
-            </div>
+                <Pname>Trần thì mỹ Đinh</Pname>
+                <Pstatus>what do you love and fuck the rest and I love you or I'll hate you</Pstatus>
+            </DivProfile>
         </>
     );
 };

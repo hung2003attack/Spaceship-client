@@ -7,8 +7,7 @@ export const Input = styled.input`
     margin: 10px 0;
     background-color: rgba(255, 255, 255, 0);
     color: #fff;
-    border-color: ${(props: any) => props.color
-    };
+    border-color: ${(props: { color: string }) => props.color};
 `;
 export const Eye = styled.p`
     width: 30px;
@@ -23,4 +22,18 @@ export const Eye = styled.p`
     position: absolute;
     background-color: transparent;
     cursor: pointer;
-`
+`;
+export const TitleAuth = styled.h3`
+    margin-top: 30px;
+    color: #fff;
+`;
+export const Span = styled.span`
+    display: flex;
+`;
+export const Img = styled.img`
+    width: ${(props) => props.width};
+    height: ${(props) => props.height};
+    @media (max-width: 600px) {
+        display: ${(props) => props.about};
+    }
+`;

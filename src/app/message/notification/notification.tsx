@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import React, { memo, useState } from 'react';
 import styles from './notification.module.scss';
 import Move from '~/reUsingComponents/Bar/MoveBar';
+import { DivIconMs } from '../styleMessage';
 const Notification: React.FC = () => {
     const [left, setlLeft] = useState<boolean>(false);
     const [bottom, setBottom] = useState<boolean>(false);
@@ -25,11 +26,15 @@ const Notification: React.FC = () => {
     return (
         <>
             {!notification && (
-                <Hovertitle title="NoTi" notificationCL>
-                    <div className={clsx('notification')} onClick={handleShowHide}>
-                        <NotificationI />
-                        <p className={clsx('miss')}>+</p>
-                    </div>
+                <Hovertitle
+                    Tags={DivIconMs}
+                    title="NoTi"
+                    size="29px"
+                    color="var(--color-text-dark)"
+                    onClick={handleShowHide}
+                >
+                    <NotificationI />
+                    <p className={clsx('miss')}>+</p>
                 </Hovertitle>
             )}
 

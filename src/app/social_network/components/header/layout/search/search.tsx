@@ -2,7 +2,7 @@ import React, { InputHTMLAttributes, LegacyRef, memo, useEffect, useRef, useStat
 import clsx from 'clsx';
 
 import * as userService from '~/restAPI/requestGetDate/socialNetwork/searchService';
-import useDebounce from '../hook/useDebounce';
+import useDebounce from '../../../../../reUsingComponents/hook/useDebounce';
 
 import { CloseI } from '~/assets/Icons/Icons';
 import Account from '~/social_network/Accoutns/Account';
@@ -46,7 +46,7 @@ const Search: React.FC = () => {
     const handleShowHide = () => {
         setHide(false);
     };
-
+    const a = [{ id: 1, last_name: 'hung', full_name: 'hung nguyen' }];
     return (
         <div className={clsx(styles.search)}>
             <input
@@ -66,7 +66,7 @@ const Search: React.FC = () => {
                     <div className={clsx(styles.resultBar, hide && styles.showHide)}>
                         <div className={clsx(styles.resultBar1)}>
                             <div className={clsx(styles.useResult)}>
-                                <Account data={resultSearch} />
+                                <Account data={a} />
                             </div>
                         </div>
                         <Bar onClick={() => setHide(!hide)} hideResultSearch />

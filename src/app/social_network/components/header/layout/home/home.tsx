@@ -10,28 +10,24 @@ import httpRequestHome from '~/restAPI/requestGetDate/socialNetwork/home';
 import { authFailed, logOutSuccess } from '~/redux/authenRD';
 import refreshToken from '~/refreshToken/refreshToken';
 import { useCookies } from 'react-cookie';
-import Cookies from 'universal-cookie';
 
-const cookiesq = new Cookies();
 const Home: React.FC = () => {
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: any) => state.auth.login);
     const user = currentUser?.user;
-    const [cookies, setCookie] = useCookies(['tks'])
-    const token = cookiesq.get('tks')
+    const [cookies, setCookie] = useCookies(['tks']);
+    const token = cookies.tks;
     useEffect(() => {
-        console.log('cookie token', token);
+        console.log('cookie token', cookies.tks);
 
         if (token) {
-            const axiosJWTss = refreshToken.axiosJWTs(currentUser, dispatch, setCookie);
+            const axiosJWTss = refreshToken.axiosJWTs(token, currentUser, dispatch, setCookie);
             const data = httpRequestHome.news(token, dispatch, axiosJWTss);
         } else {
-
             dispatch(logOutSuccess());
             dispatch(authFailed());
         }
-    }, [])
-
+    }, []);
 
     const [userList, setUserList] = useState();
     const upLoadRef = useRef<any>();
@@ -55,9 +51,8 @@ const Home: React.FC = () => {
     console.log('home');
 
     return (
-
         <div className={clsx(styles.home)}>
-            <div className={clsx(styles.form, { [styles.scroll]: scroll, [styles.move]: moveForm })}>
+            {/* <div className={clsx(styles.form, { [styles.scroll]: scroll, [styles.move]: moveForm })}>
                 <form encType="multipart/form-data" className={clsx({ [styles.formChildren]: scroll })}>
                     <div className={clsx(styles.upNews)}>
                         <input type="text" placeholder="breaking news" className={clsx(styles.input)} />
@@ -70,17 +65,16 @@ const Home: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* <input type="file" name="file[]" onChange={handleUpload} multiple /> */}
+                         <input type="file" name="file[]" onChange={handleUpload} multiple /> 
                     </div>
                     {scroll && <Move setMoveForm={setMoveForm} moveForm={moveForm} scrollUpNews />}
                 </form>
-            </div>
-            {/* {upLoad.length > 0 &&
-                upLoad.map((image: any, index: Key | null | undefined) => <img key={index} src={image[0].name} />)} */}
-            <div className={clsx(styles.news)}>Xin chào mọi nguòi</div>
-            <div className={clsx(styles.news)}>Xin chào mọi nguòi</div>
+            </div>  
+            {upLoad.length > 0 &&
+                upLoad.map((image: any, index: Key | null | undefined) => <img key={index} src={image[0].name} />)}
+            // <div className={clsx(styles.news)}>Xin chào mọi nguòi</div>
+            // <div className={clsx(styles.news)}>Xin chào mọi nguòi</div> */}
         </div>
-
     );
 };
 

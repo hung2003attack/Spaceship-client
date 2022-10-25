@@ -3,14 +3,15 @@ import Notification from './Notification/Notification';
 
 import './message.scss';
 import Send from './Send/Send';
+import { DivMs } from './styleMessage';
 
 const Message: React.FC = () => {
     console.log('not');
     return (
-        <div className={clsx('messages')}>
-            <Send />
+        <DivMs>
             <Notification />
-        </div>
+            <Send />
+        </DivMs>
     );
 };
 

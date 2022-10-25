@@ -1,6 +1,6 @@
 export interface hover {
     children?: React.ReactNode | any;
-    onClick?: () => void;
+    onClick?: (e?: any) => void;
     anyTags?: any;
     Tags?: any;
     child?: any;
@@ -9,19 +9,10 @@ export interface hover {
     alt?: string;
     to?: string;
     title: string | undefined;
+    size?: string;
+    color?: string;
     //class
-    settingCL?: boolean;
-    homeCL?: boolean;
-    logoLGBTCL?: boolean;
-    lgbtTitleCL?: boolean;
-    exchangeCL?: boolean;
-    sendCL?: boolean;
-    notificationCL?: boolean;
-    avatarCL?: boolean;
-    inheritCL?: boolean;
-    logoCL?: boolean;
-    nextBarCL?: boolean;
-    friendCL?: boolean;
+
     //call videos
     callVideo?: boolean;
 }

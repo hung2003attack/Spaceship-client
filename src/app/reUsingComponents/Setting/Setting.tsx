@@ -14,13 +14,12 @@ import { useCookies } from 'react-cookie';
 
 const Settingcbl: React.FC<Setting> = ({ data }) => {
     const showHideSettingn = useSelector((state: any) => state.auth.showHideSettingn);
-    const [cookies, setCookie, removeCookie] = useCookies(['tks'])
-
+    const [cookies, setCookie] = useCookies(['tks']);
+    const token = cookies.tks;
     const [showresult, setShowresult] = useState<ReactNode>();
     const [resultoption, setResultoption] = useState<boolean>(false);
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: any) => state.auth.login);
-    const user = currentUser?.user;
     useEffect(() => {
         if (!showHideSettingn) setResultoption(false);
     }, [showHideSettingn]);
@@ -41,9 +40,9 @@ const Settingcbl: React.FC<Setting> = ({ data }) => {
         });
     };
     const handleLogOut = async () => {
-        const axiosJWTss = refreshToken.axiosJWTs(currentUser, dispatch, setCookie);
+        const axiosJWTss = refreshToken.axiosJWTs(token, currentUser, dispatch, setCookie);
 
-        await Authentication.logOut(user?.accessToken, dispatch, axiosJWTss);
+        await Authentication.logOut(token, dispatch, axiosJWTss);
 
         //  window.history.go();
     };

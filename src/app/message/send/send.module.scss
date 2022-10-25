@@ -50,7 +50,7 @@
     width: 100%;
     text-align: center;
     box-shadow: 0 0 5px;
-    color: var(--color-text);
+    color: var(--color-text-light);
     padding: 13px 0;
 }
 .searchInput {
@@ -58,7 +58,7 @@
     border-radius: 5px;
     border: 0;
     background: transparent;
-    color: var(--color-text);
+    color: var(--color-text-light);
 }
 .bar {
     width: 180px;
@@ -106,11 +106,11 @@
 }
 .nameSearch {
     margin: 0 10px;
-    color: var(--color-text);
+    color: var(--color-text-light);
 }
 .fullname {
     height: 15px;
-    color: var(--color-text);
+    color: var(--color-text-light);
 
     align-items: center;
 }

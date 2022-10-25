@@ -1,7 +1,6 @@
 import React from 'react';
-import clsx from 'clsx';
 import Images from '../app/assets/images';
-import styles from './background.module.scss';
+import { DivBackground, Img } from './styleBackground';
 interface Props {
     setDarkShining?: any;
 }
@@ -15,12 +14,11 @@ const Background: React.FC<Props> = ({ setDarkShining }) => {
 
         console.log('dark');
     };
-
     return (
-        <div className={clsx(styles.background)}>
-            <img src={Images.light} alt="light" onClick={handleLight} />
-            <img src={Images.dark} alt="dark" onClick={handleDark} />
-        </div>
+        <DivBackground>
+            <Img src={Images.light} alt="light" onClick={handleLight} ></Img>
+            <Img src={Images.dark} alt="dark" onClick={handleDark} ></Img>
+        </DivBackground>
     );
 };
 export default Background;

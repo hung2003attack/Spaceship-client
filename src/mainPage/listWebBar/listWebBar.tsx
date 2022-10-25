@@ -19,7 +19,7 @@ const ListWebBar: React.FC<Props> = ({ nextWebsite, hanNextWebsite1, hanNextWebs
     };
     return (
         <div className={clsx({ [styles.nextWebsiteBar]: nextWebsite, [styles.showNextWebsite]: showNextWebsite })}>
-            <Hovertitle title="Websites" nextBarCL>
+            <Hovertitle title="Websites">
                 <Bar nextBarWebsite onClick={handleshowNextBar} />
             </Hovertitle>
             <Button to={!nextWebsite ? undefined : '/SN'} onClick={hanNextWebsite1} connectworld2>

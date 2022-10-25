@@ -1,15 +1,15 @@
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { offPersonalPage, offsettingOpacity } from './app/redux/authenRD';
-import { useEffect, useLayoutEffect, useState } from 'react';
 
 import Website from './mainPage/nextWeb';
 import Settingcbl from '~/reUsingComponents/Setting/Setting';
 import { LanguageI } from '~/assets/Icons/Icons';
 import Message from '~/Message/message';
-import Login from './app/Authentication/Login/Login';
 import Personalpage from './mainPage/personalPage/personalPage';
-import { EN, VN } from './dataMark/data'
+import { login } from './dataMark/dataLogin';
+import { register } from './dataMark/dataRegister';
+import Authentication from '~/Authentication/Auth';
 const setting = [
     {
         title: 'Language',
@@ -49,7 +49,7 @@ function App() {
                     {store && <Personalpage user={currentUser?.user} />}
                 </>
             ) : (
-                <Login data={{ EN, VN }} />
+                <Authentication dataLogin={{ EN: login.EN, VN: login.VN }} dataRegister={{ VN: register.VN, EN: register.EN }} />
             )}
         </>
     );

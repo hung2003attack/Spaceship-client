@@ -1,22 +1,24 @@
 .search {
-    width: 265px;
+    width: 100%;
     height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    position: relative;
     color: #e7e2e2;
+    position: fixed;
     &::before {
         display: block;
         content: '';
         width: inherit;
         height: 0.5px;
-        background-color: var(--color-text);
+        background-color: var(--color-text-light);
         position: absolute;
         bottom: 7px;
         left: 1px;
     }
+    right: -100%;
+    z-index: 10;
 }
 .searchInput {
     width: 100%;
@@ -25,6 +27,7 @@
     background: #202124;
     transition: var(--transition-03s);
     color: #e7e2e2;
+    height: 100%;
 }
 .resultBar {
     width: 100%;

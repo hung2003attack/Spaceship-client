@@ -3,7 +3,7 @@ import React from 'react';
 import clsx from 'clsx';
 
 import styles from './buttom.module.scss';
-import CallVideoI, { ExchangeI, FriendI, HomeI, ImageI, SettingI, VideoI } from '~/assets/Icons/Icons';
+import { ExchangeI, FriendI, HomeI, ImageI, SettingI, VideoI } from '~/assets/Icons/Icons';
 import Avatar from '~/reUsingComponents/Avatars&Edeter/Avatar';
 import Hovertitle from '~/reUsingComponents/HandleHover/Hover';
 import { Props } from './interfaceButton';
@@ -23,22 +23,12 @@ const Button: React.FC<Props> = ({
     userName,
     //-------------ClassName----------------
     //auth
-    login = false,
-    signUp = false,
     //socialNetWork
-    homeCl = false,
-    exchangeCl = false,
-    personalPageCl = false,
-    settingCl = false,
     connectworld = false,
     connectworld2 = false,
     callVideo = false,
     darkShining,
     //------------Render Icon---------------
-    h = false,
-    e = false,
-    p = false,
-    s = false,
 
     f = false,
     post = false,
@@ -49,10 +39,6 @@ const Button: React.FC<Props> = ({
     Buttonany = 'button';
     console.log(darkShining);
     const className = clsx({
-        [styles.homeCl]: homeCl,
-        [styles.exchangeCl]: exchangeCl,
-        [styles.personalPageCl]: personalPageCl,
-        [styles.settingCl]: settingCl,
         [styles.connectworld]: connectworld,
         [styles.connectworld2]: connectworld2,
         [styles.darkShining]: darkShining,
@@ -75,19 +61,8 @@ const Button: React.FC<Props> = ({
 
     return (
         <Buttonany className={className} {...propsEvents}>
-            {h && <Hovertitle Tags={HomeI} title="Home" homeCL />}
-            {e && (
-                <Hovertitle title="Exchange" inheritCL exchangeCL>
-                    {e && <span>{<ImageI />}</span>}
-                    {e && <span className={clsx(styles.exchangeI)}> {<ExchangeI />}</span>}
-                    {e && <span>{<VideoI />}</span>}
-                </Hovertitle>
-            )}
             {children}
-            {cv && <Hovertitle callVideo title="Call Video" Tags={CallVideoI} />}
-
-            {s && <Hovertitle Tags={SettingI} title="Setting" settingCL />}
-            {f && <Hovertitle Tags={FriendI} title="Friend" friendCL />}
+            {/* {f && <Hovertitle Tags={FriendI} title="Friend" friendCL />} */}
         </Buttonany>
     );
 };
