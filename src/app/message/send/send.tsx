@@ -103,7 +103,7 @@ const Send: React.FC = () => {
                     </div>
 
                     <div className={clsx(styles.userList)}>
-                        <div className={clsx(styles.user)}>
+                        {/* <div className={clsx(styles.user)}>
                             <div className={clsx(styles.avatar)}>
                                 <Avatar
                                     src="https://thuthuatnhanh.com/wp-content/uploads/2019/05/gai-xinh-toc-ngan-facebook.jpg"
@@ -114,106 +114,7 @@ const Send: React.FC = () => {
                                 <p className={clsx(styles.sendUserName)}>Nguyễn hùng</p>
                                 <p className={clsx(styles.message)}>da nhan</p>
                             </div>
-                        </div>
-                        <div className={clsx(styles.user)}>
-                            <div className={clsx(styles.avatar)}>
-                                <Avatar src="" alt="de" />
-                            </div>
-                            <div className={clsx(styles.name)}>
-                                <p className={clsx(styles.sendUserName)}>đâSd đá</p>
-                                <p className={clsx(styles.message)}>da nhan</p>
-                            </div>
-                        </div>
-                        <div className={clsx(styles.user)}>
-                            <div className={clsx(styles.avatar)}>
-                                <Avatar src="" alt="de" />
-                            </div>
-                            <div className={clsx(styles.name)}>
-                                <p>thu</p>
-                                <p className={clsx(styles.message)}>da nhan</p>
-                            </div>
-                        </div>
-                        <div className={clsx(styles.user)}>
-                            <div className={clsx(styles.avatar)}>
-                                <Avatar src="" alt="de" />
-                            </div>
-                            <div className={clsx(styles.name)}>
-                                <p className={clsx(styles.sendUserName)}>Nguyễn ha</p>
-                                <p className={clsx(styles.message)}>da nhan</p>
-                            </div>
-                        </div>
-                        <div className={clsx(styles.user)}>
-                            <div className={clsx(styles.avatar)}>
-                                <Avatar src="" alt="de" />
-                            </div>
-                            <div className={clsx(styles.name)}>
-                                <p className={clsx()}>Nguyễn hùng</p>
-                                <p className={clsx(styles.message)}>da nhan</p>
-                            </div>
-                        </div>
-                        <div className={clsx(styles.user)}>
-                            <div className={clsx(styles.avatar)}>
-                                <Avatar src="" alt="de" />
-                            </div>
-                            <div className={clsx(styles.name)}>
-                                <p className={clsx()}>Nguyễn hùng</p>
-                                <p className={clsx(styles.message)}>da nhan</p>
-                            </div>
-                        </div>
-                        <div className={clsx(styles.user)}>
-                            <div className={clsx(styles.avatar)}>
-                                <Avatar src="" alt="de" />
-                            </div>
-                            <div className={clsx(styles.name)}>
-                                <p className={clsx()}>Nguyễn hùng</p>
-                                <p className={clsx(styles.message)}>da nhan</p>
-                            </div>
-                        </div>
-                        <div className={clsx(styles.user)}>
-                            <div className={clsx(styles.avatar)}>
-                                <Avatar src="" alt="de" />
-                            </div>
-                            <div className={clsx(styles.name)}>
-                                <p className={clsx()}>Nguyễn hùng</p>
-                                <p className={clsx(styles.message)}>da nhan</p>
-                            </div>
-                        </div>
-                        <div className={clsx(styles.user)}>
-                            <div className={clsx(styles.avatar)}>
-                                <Avatar src="" alt="de" />
-                            </div>
-                            <div className={clsx(styles.name)}>
-                                <p className={clsx()}>Nguyễn hùng</p>
-                                <p className={clsx(styles.message)}>da nhan</p>
-                            </div>
-                        </div>
-                        <div className={clsx(styles.user)}>
-                            <div className={clsx(styles.avatar)}>
-                                <Avatar src="" alt="de" />
-                            </div>
-                            <div className={clsx(styles.name)}>
-                                <p className={clsx()}>Nguyễn hùng</p>
-                                <p className={clsx(styles.message)}>da nhan</p>
-                            </div>
-                        </div>
-                        <div className={clsx(styles.user)}>
-                            <div className={clsx(styles.avatar)}>
-                                <Avatar src="" alt="de" />
-                            </div>
-                            <div className={clsx(styles.name)}>
-                                <p className={clsx()}>Nguyễn hùng</p>
-                                <p className={clsx(styles.message)}>da nhan</p>
-                            </div>
-                        </div>
-                        <div className={clsx(styles.user)}>
-                            <div className={clsx(styles.avatar)}>
-                                <Avatar src="" alt="de" />
-                            </div>
-                            <div className={clsx(styles.name)}>
-                                <p className={clsx()}>Nguyễn hùng</p>
-                                <p className={clsx(styles.message)}>da nhan</p>
-                            </div>
-                        </div>
+                        </div> */}
                     </div>
                     {move && <Move setlLeft={setlLeft} setBottom={setBottom} left={left} bottom={bottom} send />}
                 </div>

@@ -1,6 +1,5 @@
 import React from 'react';
 import clsx from 'clsx';
-import styles from './icon.module.scss';
 import { BsThreeDotsVertical, BsBook, BsCheck2, BsPhone, BsFillCameraVideoFill, BsMessenger } from 'react-icons/bs';
 import {
     IoImagesOutline,
@@ -9,15 +8,15 @@ import {
     IoLanguageOutline,
     IoArrowUndoCircleOutline,
 } from 'react-icons/io5';
-import { IoMdNotifications } from 'react-icons/io';
-import { BiDotsHorizontalRounded, BiUser } from 'react-icons/bi';
+import { IoMdNotifications, IoIosSend } from 'react-icons/io';
+import { BiDotsHorizontalRounded, BiUser, BiMailSend } from 'react-icons/bi';
 import { FcSignature } from 'react-icons/fc';
 import { SiExpertsexchange } from 'react-icons/si';
-import { AiOutlineSetting, AiOutlineHome, AiOutlineEye, AiOutlineEyeInvisible, AiOutlineMail } from 'react-icons/ai';
+import { AiOutlineSetting, AiOutlineHome, AiOutlineEye, AiOutlineEyeInvisible, AiOutlineLoading } from 'react-icons/ai';
 import { GiNewspaper } from 'react-icons/gi';
-import { MdWorkOutline, MdEmojiPeople } from 'react-icons/md';
+import { MdWorkOutline, MdEmojiPeople, MdRestartAlt } from 'react-icons/md';
 import { FaPeopleArrows, FaAddressCard, FaUserFriends } from 'react-icons/fa';
-import { RiDragMoveFill } from 'react-icons/ri';
+import { RiDragMoveFill, RiMailSendLine } from 'react-icons/ri';
 import { TbArrowNarrowLeft } from 'react-icons/tb';
 import { CgWebsite } from 'react-icons/cg';
 
@@ -41,7 +40,7 @@ export const EyedI = () => <AiOutlineEyeInvisible />;
 export const NotificationI = () => <IoMdNotifications />;
 export const SignatureI = () => <FcSignature />;
 export const CheckI = () => <BsCheck2 />;
-export const EmailI = () => <AiOutlineMail />;
+export const EmailI = () => <RiMailSendLine />;
 export const PhoneI = () => <BsPhone />;
 export const LGBTI = () => <FaPeopleArrows />;
 export const UndoIRegister = () => <TbArrowNarrowLeft />;
@@ -52,3 +51,6 @@ export const FriendI = () => <FaUserFriends />;
 export const PeopleI = () => <MdEmojiPeople />;
 export const UserI = () => <BiUser />;
 export const CameraI = () => <BsFillCameraVideoFill />;
+export const SendOPTI = () => <IoIosSend />;
+export const LoadingI = () => <AiOutlineLoading />;
+export const ResTartI = () => <MdRestartAlt />;

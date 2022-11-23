@@ -1,25 +1,25 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { logOutSuccess, onsettingOpacity, offsettingOpacity } from '~/redux/authenRD';
+import { offsettingOpacity } from '~/redux/hideShow';
 
 import { CloseI } from '~/assets/Icons/Icons';
-import Authentication from '~/restAPI/requestGetDate/auth';
 import styles from './setting.module.scss';
 import Bar from '~/reUsingComponents/Bar/Bar';
 import { Setting } from './interface';
 import { useNavigate } from 'react-router-dom';
 import refreshToken from '~/refreshToken/refreshToken';
 import { useCookies } from 'react-cookie';
+import authHttpRequest from '~/restAPI/requestServers/authHttpRequest';
 
 const Settingcbl: React.FC<Setting> = ({ data }) => {
-    const showHideSettingn = useSelector((state: any) => state.auth.showHideSettingn);
-    const [cookies, setCookie] = useCookies(['tks']);
+    const showHideSettingn = useSelector((state: any) => state.hideShow?.setting);
+    const [cookies, setCookie, removeCookie] = useCookies(['tks', 'k_user']);
     const token = cookies.tks;
+    const k_user = cookies.k_user;
     const [showresult, setShowresult] = useState<ReactNode>();
     const [resultoption, setResultoption] = useState<boolean>(false);
     const dispatch = useDispatch();
-    const { currentUser } = useSelector((state: any) => state.auth.login);
     useEffect(() => {
         if (!showHideSettingn) setResultoption(false);
     }, [showHideSettingn]);
@@ -40,10 +40,7 @@ const Settingcbl: React.FC<Setting> = ({ data }) => {
         });
     };
     const handleLogOut = async () => {
-        const axiosJWTss = refreshToken.axiosJWTs(token, currentUser, dispatch, setCookie);
-
-        await Authentication.logOut(token, dispatch, axiosJWTss);
-
+        await authHttpRequest.postLogOut(token, k_user, removeCookie);
         //  window.history.go();
     };
 

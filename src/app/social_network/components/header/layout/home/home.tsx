@@ -1,32 +1,21 @@
 import clsx from 'clsx';
 import { Fragment, Key, memo, useEffect, useRef, useState } from 'react';
-import { ImageI, SignatureI } from '~/assets/Icons/Icons';
 import styles from './home.module.scss';
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Move from '~/reUsingComponents/Bar/MoveBar';
-import * as httpRequest from '~/restAPI/requestGetDate/socialNetwork/home';
-import httpRequestHome from '~/restAPI/requestGetDate/socialNetwork/home';
-import { authFailed, logOutSuccess } from '~/redux/authenRD';
-import refreshToken from '~/refreshToken/refreshToken';
 import { useCookies } from 'react-cookie';
+import HttpRequestHome from '~/restAPI/requestServers/socialNetwork/home';
 
 const Home: React.FC = () => {
     const dispatch = useDispatch();
-    const { currentUser } = useSelector((state: any) => state.auth.login);
-    const user = currentUser?.user;
-    const [cookies, setCookie] = useCookies(['tks']);
+    const [cookies, setCookie, removeCookie] = useCookies(['tks', 'k_user']);
     const token = cookies.tks;
+    const k_user = cookies.k_user;
+    // if (!k_user) removeCookie('tks');
     useEffect(() => {
         console.log('cookie token', cookies.tks);
-
-        if (token) {
-            const axiosJWTss = refreshToken.axiosJWTs(token, currentUser, dispatch, setCookie);
-            const data = httpRequestHome.news(token, dispatch, axiosJWTss);
-        } else {
-            dispatch(logOutSuccess());
-            dispatch(authFailed());
-        }
+        const data = HttpRequestHome.news(token, dispatch);
     }, []);
 
     const [userList, setUserList] = useState();

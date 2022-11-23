@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 import styles from './personalPage.module.scss';
 import { useDispatch } from 'react-redux';
-import { offPersonalPage } from '~/redux/authenRD';
+import { offPersonalPage } from '~/redux/hideShow';
 import Avatar from '~/reUsingComponents/Avatars&Edeter/Avatar';
 import Button from '~/reUsingComponents/Buttoms/ListButton/Buttons';
 import { CloseI, DotI } from '~/assets/Icons/Icons';
@@ -32,7 +32,7 @@ const Personalpage: React.FC<any> = ({ user }) => {
                 <CloseI />
             </div> */}
             <div className={clsx(styles.avatar)}>
-                <Avatar
+                {/* <Avatar
                     imageEditor
                     image={user.avatar ? user.avatar : 'nothing'}
                     width={150}
@@ -40,7 +40,7 @@ const Personalpage: React.FC<any> = ({ user }) => {
                     border={0}
                     borderRadius={150}
                     moveAvatar
-                />
+                /> */}
             </div>
             <div className={clsx(styles.fullName)}>
                 {user.fullName}

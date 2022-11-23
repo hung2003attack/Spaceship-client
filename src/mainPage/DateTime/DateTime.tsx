@@ -23,8 +23,8 @@ const Time = () => {
 
     // const time = today.toLocaleTimeString(locale, { hour: 'numeric', hour12: true, minute: 'numeric' });
 
-    const day = today.getUTCDate();
-    const month = today.getUTCMonth() + 1;
+    const day = today.getUTCDate() > 9 ? today.getUTCDate() : '0' + today.getUTCDate();
+    const month = today.getUTCMonth() + 1 > 9 ? today.getUTCMonth() + 1 : '0' + today.getUTCMonth();
     const year = today.getUTCFullYear();
     const hours = today.getHours() > 9 ? today.getHours() : '0' + today.getHours();
     const minutes = today.getMinutes() > 9 ? today.getMinutes() : '0' + today.getMinutes();

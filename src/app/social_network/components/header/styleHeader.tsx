@@ -1,18 +1,6 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Links } from '~/reUsingComponents/styleComponents/styleDefault';
 
-const Links = styled(Link)`
-    width: 50px;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #aeaeae;
-    position: relative;
-    &:hover {
-        background-color: #383838;
-    }
-`;
 export const DivHeader = styled.div`
     min-width: 100%;
     height: 40px;
@@ -60,8 +48,9 @@ export const Plogo = styled.p`
 export const DivHollow = styled.div`
     width: 100%;
     height: 40px;
-    background-color: #202124;
     position: fixed;
+    top: 0;
+    background-color: #202124;
 `;
 export const Alogo = styled.a`
     position: fixed;

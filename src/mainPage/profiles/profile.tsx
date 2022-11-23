@@ -3,7 +3,7 @@ import React from 'react';
 import Avatar from '~/reUsingComponents/Avatars&Edeter/Avatar';
 import styles from './profile.module.scss';
 import { useDispatch } from 'react-redux';
-import { onPersonalPage } from '~/redux/authenRD';
+import { onPersonalPage } from '~/redux/hideShow';
 import { DivProfile, Pname } from './styleProfile';
 import { Pstatus } from './styleProfile';
 const Profile: React.FC = () => {
@@ -13,7 +13,7 @@ const Profile: React.FC = () => {
     };
     return (
         <>
-            <DivProfile onClick={handlePersonalPage}>
+            {/* <DivProfile onClick={handlePersonalPage}>
                 <div className={clsx(styles.avatar)}>
                     <Avatar src="" alt="" />
                 </div>
@@ -29,7 +29,7 @@ const Profile: React.FC = () => {
                 </div>
                 <Pname>Trần thì mỹ Đinh</Pname>
                 <Pstatus>what do you love and fuck the rest and I love you or I'll hate you</Pstatus>
-            </DivProfile>
+            </DivProfile> */}
         </>
     );
 };

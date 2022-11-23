@@ -3,12 +3,11 @@ import React from 'react';
 import clsx from 'clsx';
 
 import styles from './buttom.module.scss';
-import { ExchangeI, FriendI, HomeI, ImageI, SettingI, VideoI } from '~/assets/Icons/Icons';
-import Avatar from '~/reUsingComponents/Avatars&Edeter/Avatar';
-import Hovertitle from '~/reUsingComponents/HandleHover/Hover';
 import { Props } from './interfaceButton';
+import { ButtonA, ButtonLink, ButtonStyle } from './styleButtons';
 // Button Props[children, to = Link , href = 'a', class, icon = 1 ký tự đầu viết thường]
 const Button: React.FC<Props> = ({
+    propsStyles,
     //ReactElement
     children,
     //Link va a
@@ -36,7 +35,7 @@ const Button: React.FC<Props> = ({
     cv = false,
 }) => {
     let Buttonany: string | React.ForwardRefExoticComponent<any & React.RefAttributes<HTMLAnchorElement>>;
-    Buttonany = 'button';
+    Buttonany = ButtonStyle;
     console.log(darkShining);
     const className = clsx({
         [styles.connectworld]: connectworld,
@@ -52,15 +51,15 @@ const Button: React.FC<Props> = ({
     };
     if (to) {
         propsEvents.to = to;
-        Buttonany = Link;
+        Buttonany = ButtonLink;
     } else if (href) {
         propsEvents.href = href;
-        Buttonany = 'a';
+        Buttonany = ButtonA;
     }
     console.log('d');
 
     return (
-        <Buttonany className={className} {...propsEvents}>
+        <Buttonany className={className} {...propsEvents} css={propsStyles}>
             {children}
             {/* {f && <Hovertitle Tags={FriendI} title="Friend" friendCL />} */}
         </Buttonany>

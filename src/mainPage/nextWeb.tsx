@@ -1,5 +1,4 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
-import Socialnetwork from '~/social_network';
 import Avatar from '~/reUsingComponents/Avatars&Edeter/Avatar';
 
 import Button from '~/reUsingComponents/Buttoms/ListButton/Buttons';
@@ -7,10 +6,9 @@ import Study from '../app/study';
 import NextListWeb from './listWebs/ListWebs';
 import ListWebBar from './listWebBar/listWebBar';
 import { BookI, DotI, NewI, ProfileI, WebsiteI, WorkI } from '~/assets/Icons/Icons';
-import Profile from './profiles/profile';
 import Background from 'src/backbround/background';
 import { useDispatch, useSelector } from 'react-redux';
-import { onPersonalPage } from '~/redux/authenRD';
+import { onPersonalPage } from '~/redux/hideShow';
 import GetFriend from '~/restAPI/requestGetDate/friends';
 
 import {
@@ -32,24 +30,24 @@ import {
     DivContainerChangeP,
 } from './styleNextWeb';
 import Time from './DateTime/DateTime';
+import currentPageL from './CurrentPage';
+import CurrentOptions from './CurrentOption';
+import { changeMain } from '~/redux/background';
+import Cookies from 'universal-cookie';
+const cooke = new Cookies();
 const Website: React.FC = () => {
     const dispatch = useDispatch();
-    const user = useSelector((state: any) => state.auth.login.currentUser?.user);
-
-    const [darkShining, setDarkShining] = useState<boolean>(() => {
-        const store = JSON.parse(localStorage.getItem('darkShining') || '{}') || false;
-        return store.darkShiningMain;
-    });
+    const backgr = useSelector((state: any) => state?.background?.main);
+    const [darkShining, setDarkShining] = useState<boolean>(backgr);
     useEffect(() => {
         // const data = GetFriend.friend(dispatch);
     }, []);
     useEffect(() => {
-        localStorage.setItem('darkShining', JSON.stringify({ darkShiningMain: darkShining }));
+        dispatch(changeMain(darkShining));
     }, [darkShining]);
-
-    const [nextWebsite, setNextWebsite] = useState<boolean>(false);
-    const [threeWebsites, setThreeWebsites] = useState<number>(() => {
-        return JSON.parse(localStorage.getItem('threeWebsites') || '{}').currentWeb;
+    const [optionWebsite, setOptionWebsite] = useState<boolean>(false);
+    const [currentPage, setCurrentPage] = useState<number>(() => {
+        return JSON.parse(localStorage.getItem('currentPage') || '{}').currentWeb;
     });
 
     const [option, setOption] = useState<boolean>(false);
@@ -77,61 +75,58 @@ const Website: React.FC = () => {
         ) {
             hanNextWebsite3();
         } else {
-            setThreeWebsites(0);
-            setNextWebsite(false);
+            setCurrentPage(0);
+            setOptionWebsite(false);
         }
     }
 
     useEffect(() => {
-        localStorage.setItem('threeWebsites', JSON.stringify({ currentWeb: threeWebsites }));
+        localStorage.setItem('currentPage', JSON.stringify({ currentWeb: currentPage }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [threeWebsites]);
+    }, [currentPage]);
     window.addEventListener('popstate', reload);
     function reload() {
         setHrefState(document.location.href);
-        // setThreeWebsites(0);
-        // window.history.go();
-        console.log('ok ok ok', hrefState, threeWebsites);
         reTap();
     }
 
-    console.log('threeWebsites', threeWebsites);
+    console.log('currentPage', currentPage);
 
     const hanNextWebsite1 = () => {
-        setNextWebsite(true);
-        setThreeWebsites(1);
+        setOptionWebsite(true);
+        setCurrentPage(1);
         TagRef1.current = 'div';
     };
     const hanNextWebsite2 = () => {
-        setNextWebsite(true);
-        setThreeWebsites(2);
+        setOptionWebsite(true);
+        setCurrentPage(2);
         TagRef2.current = 'header';
     };
     const hanNextWebsite3 = () => {
-        setNextWebsite(true);
-        setThreeWebsites(3);
+        setOptionWebsite(true);
+        setCurrentPage(3);
         TagRef3.current = 'div';
     };
     useLayoutEffect(() => {
         reTap();
-        console.log('setThreeWebsites(0);');
+        console.log('setCurrentPage(0);');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hrefState]);
     const Tag1 = TagRef1.current;
     const Tag2 = TagRef2.current;
     const Tag3 = TagRef3.current;
-    const props1 = {
-        Tag1,
-        Tag2,
-        Tag3,
-        nextWebsite,
-        hanNextWebsite1,
-        hanNextWebsite2,
-        hanNextWebsite3,
-        darkShining,
-    };
+    // const props1 = {
+    //     Tag1,
+    //     Tag2,
+    //     Tag3,
+    //     nextWebsite,
+    //     hanNextWebsite1,
+    //     hanNextWebsite2,
+    //     hanNextWebsite3,
+    //     darkShining,
+    // };
     const props2 = {
-        nextWebsite,
+        optionWebsite,
         hanNextWebsite1,
         hanNextWebsite2,
         hanNextWebsite3,
@@ -168,21 +163,30 @@ const Website: React.FC = () => {
             icon: <WorkI />,
         },
     ];
-    console.log(user);
-
+    const changeColor = {
+        profile: () => {
+            return darkShining ? '#fff' : 'rgb(22, 22, 22)';
+        },
+        dark: () => {
+            return darkShining ? 'var(--color-text-dark)' : 'var(--color-text-light)';
+        },
+        elementOp: () => {
+            return {
+                one: darkShining ? (option ? '#2f928a' : ' #929292') : option ? '#2f928a' : '#7e7e7e',
+                two: darkShining ? (!option ? '#2f928a' : ' #929292') : !option ? '#2f928a' : '#7e7e7e',
+            };
+        },
+        optionTitle: () => {
+            return option ? 'Family' : 'Tap';
+        },
+    };
     return (
         <>
             <DivMainPage>
-                {nextWebsite && (
-                    <>
-                        {threeWebsites === 1 && <Socialnetwork />}
-                        {threeWebsites === 2 && <Study />}
-                        {threeWebsites === 3 && <div>hello personal</div>}
-                    </>
-                )}
-                {!nextWebsite && (
-                    <DivListWebProfile color={darkShining ? '#fff' : 'rgb(22, 22, 22)'}>
-                        <DivDate color={darkShining ? 'var(--color-text-dark)' : 'var(--color-text-light)'}>
+                {currentPageL(currentPage, optionWebsite)}
+                {!optionWebsite && (
+                    <DivListWebProfile color={changeColor.profile()}>
+                        <DivDate color={changeColor.dark()}>
                             <Time />
                         </DivDate>
                         <DivPersonalPage>
@@ -192,71 +196,36 @@ const Website: React.FC = () => {
                                     src="https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-xinh-cuc-dep.jpg"
                                     alt=""
                                 /> */}
-                                <Avatar
-                                    imageEditor
-                                    image={user?.avatar ? user.avatar : 'nothing'}
-                                    width={90}
-                                    height={90}
-                                    border={0}
-                                    borderRadius={500}
-                                    moveAvatar
-                                />
-                                <DivDot color={darkShining ? 'rgb(51, 51, 51)' : '#cbcbcb'} onClick={handleProfileMain}>
+
+                                <DivDot color={changeColor.dark()} onClick={handleProfileMain}>
                                     <DotI />
                                 </DivDot>
                             </DivAvatar>
-                            <HfullName color={darkShining ? 'var(--color-text-dark)' : 'var(--color-text-light)'}>
-                                {user?.fullName}
-                            </HfullName>
-                            <Pstatus color={darkShining ? 'rgb(51, 51, 51)' : '#cbcbcb'}>dang cam thay buon</Pstatus>
+                            <HfullName color={changeColor.dark()}>Nguyen Trong Hung</HfullName>
+                            <Pstatus color={changeColor.dark()}>dang cam thay buon</Pstatus>
                         </DivPersonalPage>
                         <DivChangeColorBG>
                             <Background setDarkShining={setDarkShining} />
                         </DivChangeColorBG>
                         <DivContainerChangeP>
                             <DivContainerChangeC>
-                                <PtitleOptions color={darkShining ? '#333' : '#cbcbcb'}>
-                                    {option ? 'Family' : 'Tap'}
-                                </PtitleOptions>
+                                <PtitleOptions color={changeColor.dark()}>{changeColor.optionTitle()}</PtitleOptions>
                                 <DivOptions>
-                                    <DivElements
-                                        color={
-                                            darkShining
-                                                ? option
-                                                    ? '#2f928a'
-                                                    : ' #929292'
-                                                : option
-                                                ? '#2f928a'
-                                                : '#7e7e7e'
-                                        }
-                                        onClick={handleProfile}
-                                    >
+                                    <DivElements color={changeColor.elementOp().one} onClick={handleProfile}>
                                         <ProfileI />
                                     </DivElements>
-                                    <DivElements
-                                        color={
-                                            darkShining
-                                                ? !option
-                                                    ? '#2f928a'
-                                                    : ' #929292'
-                                                : !option
-                                                ? '#2f928a'
-                                                : '#7e7e7e'
-                                        }
-                                        onClick={handleWebsite}
-                                    >
+                                    <DivElements color={changeColor.elementOp().two} onClick={handleWebsite}>
                                         <WebsiteI />
                                     </DivElements>
                                 </DivOptions>
                             </DivContainerChangeC>
-
-                            <DivContainer color={darkShining ? '' : 'rgb(192 192 192)'}>
-                                {option ? <Profile /> : <NextListWeb data={buttonPage} darkShining={darkShining} />}
+                            <DivContainer>
+                                <CurrentOptions options={option} data={buttonPage} darkShining={darkShining} />
                             </DivContainer>
                         </DivContainerChangeP>
                     </DivListWebProfile>
                 )}
-                {nextWebsite && <ListWebBar {...props2} />}
+                {optionWebsite && <ListWebBar {...props2} />}
             </DivMainPage>
         </>
     );

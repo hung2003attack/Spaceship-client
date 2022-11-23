@@ -10,16 +10,10 @@ export const DivForm = styled.div`
     box-shadow: 0 0 20px #0a0a0a;
     background-image: linear-gradient(345deg, #7474740a, #00000021);
     @media (max-width: 400px) {
-        max-width: 350px;
+        max-width: 320px;
     }
 `;
-export const PnextLogin = styled.p`
-    font-size: 2rem;
-    color: white;
-    cursor: var(--pointer);
-    position: absolute;
-    bottom: 22px;
-`;
+
 export const DivFormGroup = styled.div`
     width: 100%;
     margin: 10px 0;
@@ -27,16 +21,18 @@ export const DivFormGroup = styled.div`
 `;
 export const PcontentPassword = styled.p`
     color: rgb(255, 142, 142);
-    font-size: 12px;
+    font-size: 1.2rem;
     width: 100%;
 `;
 export const Pcontent = styled.p`
+    width: 100%;
     font-size: 1.1rem;
     text-align: left;
     color: rgb(255, 142, 142);
+    font-family: 'Arima', sans-serif;
 `;
 export const SpanIconPhoneMail = styled.span`
-    right: 12px;
+    right: ${(props: { right?: string }) => props.right || '12px'};
     top: 13px;
     font-size: 2.5rem;
     position: absolute;

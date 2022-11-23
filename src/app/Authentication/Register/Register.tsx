@@ -1,10 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { EmailI, LGBTI, PhoneI, UndoIRegister } from '~/assets/Icons/Icons';
-import Images from '~/assets/images';
-import Hovertitle from '~/reUsingComponents/HandleHover/Hover';
-import { Input, TitleAuth } from '~/reUsingComponents/styleComponents/styleComponents';
+import { EmailI, LGBTI, PhoneI } from '~/assets/Icons/Icons';
+import { ButtonSubmit, Htitle } from '~/reUsingComponents/styleComponents/styleComponents';
 import {
     DivForm,
     DivFormGroup,
@@ -13,63 +11,17 @@ import {
     DivLGBT,
     PcontentPassword,
     Pcontent,
-    PnextLogin,
     SpanIconPhoneMail,
     Pmessage,
 } from './styleRegister';
 import Language from 'src/Language/Language';
 import { changeRegister } from '~/redux/languageRD';
-import { ButtonSubmit, DivLanguage } from '../Login/styleLogin';
-import Authentication from '~/restAPI/requestGetDate/auth';
+import { DivLanguage } from '../Login/styleLogin';
+import authHttpRequest from '~/restAPI/requestServers/authHttpRequest';
+import { PropsRegister, PropsState } from './interfaceType';
+import { Input } from '~/reUsingComponents/styleComponents/styleDefault';
 
-export interface PropsRegister {
-    [VN: string]: {
-        title: string;
-        input: {
-            id: number;
-            type?: string;
-            gender?: {
-                id: number;
-                type: string;
-            }[];
-            placeholder?: string;
-            role?: string;
-        }[];
-        submit: string;
-        messagePhoneEmail: string[];
-        messagePassword: string;
-        messageDate: string;
-        messageName: string;
-    };
-    EN: {
-        title: string;
-        input: {
-            id: number;
-            type?: string;
-            gender?: {
-                id: number;
-                type: string;
-            }[];
-            placeholder?: string;
-            role?: string;
-        }[];
-        submit: string;
-        messagePhoneEmail: string[];
-        messagePassword: string;
-        messageDate: string;
-        messageName: string;
-    };
-}
-interface PropsState {
-    language: {
-        register: string;
-    };
-}
-const Register: React.FC<{
-    setTransfer: React.Dispatch<React.SetStateAction<boolean>>;
-    transfer: boolean;
-    dataRegister: PropsRegister;
-}> = ({ setTransfer, transfer, dataRegister }) => {
+const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
     //dataLanguage
     const dataLanguages = useSelector((state: PropsState) => state.language?.register);
 
@@ -82,15 +34,14 @@ const Register: React.FC<{
     const dispatch = useDispatch();
     //value
     const [valueUserName, setValueUserName] = useState<string>('');
-    const [valuePhoneNumberEmail, setPhoneNumberEmail] = useState<{
-        value: string;
+    const [valuePhoneNumberEmail, setValuePhoneNumberEmail] = useState<{
+        value: any;
         icon?: string | React.ReactElement;
-    }>({ value: '', icon: '' });
+    }>({ value: 'nevergiveupstartup@gmail.com', icon: '' });
     const [valuePassword, setValuePassword] = useState<{ password1: string; password2?: string }>({
         password1: '',
         password2: '',
     });
-    console.log('valuePassword', valuePassword);
 
     const [valueGender, setValueGender] = useState<number | null>(null);
     const [valueDate, setValueDate] = useState<string>('');
@@ -103,9 +54,8 @@ const Register: React.FC<{
     });
     const [checkPhoneNumberEmail, setCheckPhoneNumberEmail] = useState<{
         check: boolean;
-        icon: React.ReactElement | string;
         title: string;
-    }>({ check: false, icon: '', title: '' });
+    }>({ check: false, title: '' });
 
     const [checkDate, setCheckDate] = useState<{
         check: boolean;
@@ -137,69 +87,74 @@ const Register: React.FC<{
         password2: false,
         date: false,
     });
-
-    const handlePhoneNumberEmail = (e: { target: any }) => {
-        setCheckAll({ ...checkAll, phoneNumberEmail: false });
-        if (isNaN(e.target.value)) {
+    useEffect(() => {
+        if (isNaN(valuePhoneNumberEmail.value)) {
             const validateEmail = /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,5})+$/;
-            setPhoneNumberEmail({ value: e.target.value, icon: <EmailI /> });
+            setValuePhoneNumberEmail({ ...valuePhoneNumberEmail, icon: <EmailI /> });
 
-            if (validateEmail.test(e.target.value) === true) {
-                setCheckPhoneNumberEmail({ ...checkPhoneNumberEmail, check: false, icon: '' });
+            if (validateEmail.test(valuePhoneNumberEmail.value) === true) {
+                setCheckPhoneNumberEmail({ ...checkPhoneNumberEmail, check: false });
             } else {
                 setCheckPhoneNumberEmail({
                     ...checkPhoneNumberEmail,
                     check: true,
-                    icon: messagePhoneEmail[0],
-                    title: '',
+                    title: messagePhoneEmail[0],
                 });
             }
-        } else if (e.target.value === '') {
+        } else if (valuePhoneNumberEmail.value === '') {
             setCheckAll({ ...checkAll, phoneNumberEmail: true });
-            setPhoneNumberEmail({ value: '', icon: '' });
-            setCheckPhoneNumberEmail({ check: false, icon: '', title: '' });
+            setValuePhoneNumberEmail({ value: '', icon: '' });
+            setCheckPhoneNumberEmail({ check: false, title: '' });
         } else {
-            if (e.target.value.length <= 11 && e.target.value.length >= 9) {
-                setCheckPhoneNumberEmail({ check: false, icon: '', title: '' });
+            if (valuePhoneNumberEmail.value.length <= 11 && valuePhoneNumberEmail.value.length >= 9) {
+                setCheckPhoneNumberEmail({ check: false, title: '' });
             } else {
-                setCheckPhoneNumberEmail({ check: true, icon: '', title: messagePhoneEmail[1] });
+                setCheckPhoneNumberEmail({ check: true, title: messagePhoneEmail[1] });
             }
-            setPhoneNumberEmail({ value: e.target.value, icon: <PhoneI /> });
+            setValuePhoneNumberEmail({ ...valuePhoneNumberEmail, icon: <PhoneI /> });
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const handleValueUserName = (e: { target: { value: string } }) => {
+        checkAllRef.current.username = false;
+        if (e.target.value.length <= 30) setValueUserName(e.target.value);
+        if (e.target.value.length >= 30 || e.target.value.length < 1) {
+            setCheckUserName({ title: messageName, check: true });
+        } else {
+            setCheckUserName({ title: '', check: false });
+        }
+        setCheckAll({ ...checkAllRef.current });
     };
 
     const handleValuePassword1 = (e: { target: any }) => {
         setValuePassword({ ...valuePassword, password1: e.target.value });
-        setCheckAll({ ...checkAll, password1: false });
-        if (e.target.value !== valuePassword.password2 && e.target.value !== '') {
+        checkAllRef.current.password1 = false;
+        if (e.target.value === valuePassword.password2) {
+            setCheckPassword({ check: false, icon: '' });
+            checkAllRef.current.password2 = false;
+        } else {
             setCheckPassword({ check: true, icon: messagePassword });
-        } else if (e.target.value === '') {
-            setCheckPassword({ check: false, icon: '' });
-            setCheckAll({ ...checkAll, password1: true });
-        } else if (e.target.value === valuePassword.password2) {
-            setCheckPassword({ check: false, icon: '' });
         }
+        setCheckAll({ ...checkAllRef.current });
     };
 
     const handleValuePassword2 = (e: { target: any }) => {
         setValuePassword({ ...valuePassword, password2: e.target.value });
-        if (e.target.value !== valuePassword.password1 && e.target.value !== '') {
-            setCheckPassword({ check: true, icon: messagePassword });
-        } else if (e.target.value === '') {
+        setCheckAll({ ...checkAll, password2: false });
+
+        if (e.target.value === valuePassword.password1) {
             setCheckPassword({ check: false, icon: '' });
-            setCheckAll({ ...checkAll, password2: true });
         } else {
-            setCheckPassword({ check: false, icon: '' });
-            setCheckAll({ ...checkAll, password2: false });
+            setCheckPassword({ check: true, icon: messagePassword });
         }
     };
 
     const handleBirthDate = (e: { target: any }) => {
-        console.log(e.target.value);
-
         const date = e.target.value.includes('/', 1);
         const month = e.target.value.includes('/', 3);
-
+        setValueDate(e.target.value);
         if (
             date &&
             month &&
@@ -221,24 +176,23 @@ const Register: React.FC<{
                 e.target.value.slice(3, 5) <= 12 &&
                 e.target.value.slice(3, 5) > 0
             ) {
-                setValueDate(e.target.value);
                 setCheckDate({ check: false, icon: '' });
             } else {
                 setCheckDate({ check: true, icon: messageDate });
             }
         } else if (e.target.value === '') {
             setCheckDate({ check: false, icon: '' });
-            setCheckAll({ ...checkAll, date: true });
         } else {
             setCheckDate({ check: true, icon: messageDate });
         }
-        if (e.target.value !== '') {
-            setCheckAll({ ...checkAll, date: false });
-        }
+        checkAllRef.current.date = false;
+        setCheckAll({ ...checkAllRef.current });
     };
 
-    const handleSubmit = async (e: { preventDefault: any }) => {
+    const handleSubmit = async (e: { preventDefault: () => void; target: any }) => {
         e.preventDefault();
+        const formData = new FormData(e.target);
+        console.log(formData);
         if (
             valueUserName !== '' &&
             valuePhoneNumberEmail.value !== '' &&
@@ -253,19 +207,19 @@ const Register: React.FC<{
                 checkUserName.check === false
             ) {
                 delete valuePhoneNumberEmail.icon;
-                delete valuePassword.password2;
                 console.log('value', valueUserName, valuePhoneNumberEmail, valuePassword, valueGender, valueDate);
-                const data = await Authentication.register(
-                    valueUserName,
-                    valuePhoneNumberEmail.value,
-                    valuePassword.password1,
-                    valueGender,
-                    valueDate,
-                    dispatch,
-                );
+                const params = {
+                    name: valueUserName,
+                    phoneMail: valuePhoneNumberEmail.value,
+                    password: valuePassword.password1,
+                    gender: valueGender,
+                    date: valueDate,
+                };
+                const data = await authHttpRequest.postRegister(params);
+                console.log('register', data);
+
                 if (data.check === 1) {
                     setRegisterStatus({ title: data.result, status: false });
-                    setTransfer(!transfer);
                 } else if (data.check === 3) {
                     setRegisterStatus({ title: data.result, status: true });
                 }
@@ -279,47 +233,12 @@ const Register: React.FC<{
         ) {
             setCheckAll({ username: true, phoneNumberEmail: true, password1: true, password2: true, date: true });
         }
-        if (!valueUserName || !checkUserName.check) {
-            checkAllRef.current.username = true;
-        } else {
-            checkAllRef.current.username = false;
-        }
-        if (!valuePassword.password1) {
-            checkAllRef.current.password1 = true;
-        } else {
-            checkAllRef.current.password1 = false;
-        }
-        if (!valuePassword.password2) {
-            console.log('valuePassword.password2', valuePassword.password2);
-            checkAllRef.current.password2 = true;
-        } else {
-            checkAllRef.current.password2 = false;
-        }
-        if (!valuePhoneNumberEmail.value) {
-            checkAllRef.current.phoneNumberEmail = true;
-        } else {
-            checkAllRef.current.phoneNumberEmail = false;
-        }
-        if (!valueDate) {
-            checkAllRef.current.date = true;
-        } else {
-            checkAllRef.current.date = false;
-        }
-        console.log(checkAllRef.current);
-
+        checkAllRef.current.username = !valueUserName ? true : false;
+        checkAllRef.current.password1 = !valuePassword.password1 ? true : false;
+        checkAllRef.current.password2 = !valuePassword.password2 ? true : false;
+        checkAllRef.current.phoneNumberEmail = !valuePhoneNumberEmail.value ? true : false;
+        checkAllRef.current.date = !valueDate ? true : false;
         setCheckAll({ ...checkAllRef.current });
-    };
-    const handleValueUserName = (e: { target: { value: string } }) => {
-        setValueUserName(e.target.value);
-        if (e.target.value === '' || e.target.value.length >= 30 || e.target.value.length < 1) {
-            setCheckUserName({ title: messageName, check: true });
-            setCheckAll({ ...checkAll, username: true });
-        } else {
-            console.log(e.target.value.length, e.target.value.length >= 30);
-
-            setCheckUserName({ title: '', check: false });
-            setCheckAll({ ...checkAll, username: false });
-        }
     };
 
     const handleValueMale = () => {
@@ -333,6 +252,7 @@ const Register: React.FC<{
     };
 
     //input
+    const handlePhoneNumberEmail = () => {};
     const eventsOnChange = [
         handleValueUserName,
         handlePhoneNumberEmail,
@@ -341,22 +261,52 @@ const Register: React.FC<{
         handleBirthDate,
         handleBirthDate,
     ];
-    const colorInput = [
-        checkAll.username,
-        checkAll.phoneNumberEmail,
-        checkAll.password1,
-        checkAll.password2,
-        '',
-        checkAll.date,
-    ];
+    const colorInput = (id: number) => {
+        const colorInputs = [
+            checkAll.username,
+            checkAll.phoneNumberEmail,
+            checkAll.password1,
+            checkAll.password2,
+            '',
+            checkAll.date,
+        ];
+        return colorInputs[id] ? 'rgb(255 97 97 / 83%)' : '';
+    };
     const handlelanguage = () => {
         setLanguage(!language);
     };
     const optionGender = [valueGender === 0, valueGender === 1, valueGender === 2];
     const eventsOnClickGender = [handleValueMale, handleValueFemale];
+    console.log(checkAll);
+
+    const error = (val: string | undefined) => {
+        return (
+            <>
+                {val === 'name' && <PcontentPassword>{checkUserName.title}</PcontentPassword>}
+                {val === 'password2' && <PcontentPassword>{checkPassword.icon}</PcontentPassword>}
+                {val === 'phoneEmail' && (
+                    <>
+                        <SpanIconPhoneMail>{valuePhoneNumberEmail.icon}</SpanIconPhoneMail>
+                        <Pcontent>{checkPhoneNumberEmail.title}</Pcontent>
+                    </>
+                )}
+                {val === 'date' && <Pcontent>{checkDate.icon}</Pcontent>}
+            </>
+        );
+    };
+    const value = [
+        valueUserName,
+        valuePhoneNumberEmail.value,
+        valuePassword.password1,
+        valuePassword.password2,
+        valueDate,
+    ];
     return (
         <DivForm>
-            <TitleAuth>{title}</TitleAuth>
+            <Htitle>
+                {title}
+                {Next}
+            </Htitle>
             <DivLanguage onClick={handlelanguage}>
                 <Language change={dispatch} language={language} changeLanguage={changeRegister} />
             </DivLanguage>
@@ -387,15 +337,6 @@ const Register: React.FC<{
                                                         <LGBTI />
                                                     </p>
                                                 </DivLGBT>
-                                                {/* <Hovertitle
-                                                    anyTags="div"
-                                                    title="let's be confident, Life's ours, whoever you are or what do you, then let's live your way "
-                                                    Tags="img"
-                                                    src={Images.lgbt}
-                                                    alt="LGBT+ or LGBTQ+"
-                                                    logoLGBTCL
-                                                    lgbtTitleCL
-                                                /> */}
                                             </div>
                                         );
                                     })}
@@ -406,26 +347,16 @@ const Register: React.FC<{
                     return (
                         <DivFormGroup key={val.id}>
                             <Input
-                                color={colorInput[val.id] ? 'rgb(255 97 97 / 83%)' : ''}
+                                color={colorInput(val.id)}
+                                value={value[val.id]}
                                 type={val.type}
                                 placeholder={val.placeholder}
                                 onChange={eventsOnChange[val.id]}
                             />
-                            {val.role === 'name' && <PcontentPassword>{checkUserName.title}</PcontentPassword>}
-                            {val.role === 'password2' && <PcontentPassword>{checkPassword.icon}</PcontentPassword>}
-                            {val.role === 'phoneEmail' && (
-                                <>
-                                    <SpanIconPhoneMail>{valuePhoneNumberEmail.icon}</SpanIconPhoneMail>
-                                    <Pcontent>{checkPhoneNumberEmail.icon || checkPhoneNumberEmail.title}</Pcontent>
-                                </>
-                            )}
-                            {val.role === 'date' && <Pcontent>{checkDate.icon}</Pcontent>}
+                            {error(val.role)}
                         </DivFormGroup>
                     );
                 })}
-                <PnextLogin onClick={() => setTransfer(!transfer)}>
-                    <UndoIRegister />
-                </PnextLogin>
                 <ButtonSubmit>{submit}</ButtonSubmit>
                 <Pmessage color={registerStatus.status ? '#fa5f5f' : 'rgb(102 239 120)'}>
                     {registerStatus.title}

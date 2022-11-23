@@ -1,20 +1,11 @@
 import styled from 'styled-components';
-export const Input = styled.input`
-    width: 100%;
-    padding: 10px 30px 10px 10px;
-    border: 1px solid rgba(255, 255, 255, 0.83);
-    border-radius: 5px;
-    margin: 10px 0;
-    background-color: rgba(255, 255, 255, 0);
-    color: #fff;
-    border-color: ${(props: { color: string }) => props.color};
-`;
-export const Eye = styled.p`
+
+export const Peye = styled.p`
     width: 30px;
     height: 30px;
     display: flex;
-    right: 49px;
-    top: 87px;
+    right: 10px;
+    top: ${(props: { top: string }) => props.top};
     font-size: 20px;
     color: #aeaeae;
     align-items: center;
@@ -23,17 +14,62 @@ export const Eye = styled.p`
     background-color: transparent;
     cursor: pointer;
 `;
-export const TitleAuth = styled.h3`
-    margin-top: 30px;
+export const Htitle = styled.h3`
+    margin-bottom: 20px;
     color: #fff;
+    position: relative;
 `;
-export const Span = styled.span`
-    display: flex;
-`;
-export const Img = styled.img`
-    width: ${(props) => props.width};
-    height: ${(props) => props.height};
-    @media (max-width: 600px) {
-        display: ${(props) => props.about};
+export const ButtonSubmit = styled.button`
+    padding: 5px 20px;
+    margin: 30px;
+    color: #ddd8d8;
+    border: 1px solid #a2a2a2;
+    cursor: pointer;
+    background-color: transparent;
+    border-radius: 5px;
+    &:hover {
+        box-shadow: 0 0 5px #dcd7d7;
     }
+    @media (min-width: 400px) {
+        padding: 5px 23px;
+    }
+`;
+interface PropsDivContainer {
+    width?: string;
+    height?: string;
+    wrap?: string;
+    content?: string;
+    bk?: string;
+    css?: string;
+    padding?: string;
+    margin?: string;
+}
+export const DivContainer = styled.div<PropsDivContainer>`
+    width: ${(props) => props.width || '100%'};
+    height: ${(props) => props.height};
+    background-color: ${(props) => props.bk || 'transparent'};
+    display: flex;
+    flex-wrap: ${(props) => props.wrap || 'nowrap'};
+    align-items: center;
+    justify-content: ${(props) => props.content || 'center'};
+    padding: ${(props) => props.padding || '10px'};
+    margin: ${(props) => props.margin || ''};
+    border-radius: 5px;
+    ${(props) => props.css};
+`;
+export const DivImg = styled.div<PropsDivContainer>`
+    width: ${(props) => props.width || '100%'};
+    height: ${(props) => props.height};
+`;
+export const DivUserBar = styled.div`
+    width: ${(props: { width?: string }) => props.width || '100%'};
+`;
+
+export const Hname = styled.h3`
+    font-size: 1rem;
+    display: -webkit-box;
+    height: 16px;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 `;

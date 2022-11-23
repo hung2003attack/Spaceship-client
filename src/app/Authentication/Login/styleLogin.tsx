@@ -2,10 +2,11 @@ import styled from 'styled-components';
 export const DivLanguage = styled.div`
     position: absolute;
     right: 18px;
-    top: 41px;
+    top: 0px;
 `;
 export const DivForm = styled.div`
-    width: 350px;
+    width: 330px;
+    padding: 15px;
     margin: auto;
     display: flex;
     align-items: center;
@@ -14,8 +15,8 @@ export const DivForm = styled.div`
     flex-wrap: wrap;
     position: relative;
     box-shadow: 0 0 20px #0a0a0a;
-    background-image: linear-gradient(345deg,#7474740a,#00000021);
-    @media (min-width: 400px){
+    background-image: linear-gradient(345deg, #7474740a, #00000021);
+    @media (min-width: 400px) {
         width: 400px;
     }
 `;
@@ -40,23 +41,11 @@ export const DivRegister = styled.div`
     &:hover {
         text-decoration: underline;
     }
-     @media (max-width: 400px){
-       font-size: 12px;
+    @media (max-width: 400px) {
+        font-size: 12px;
     }
 `;
-export const ButtonSubmit = styled.button`
-    padding: 5px 50px;
-    margin: 30px;
-    color: #ddd8d8;
-    border: 1px solid #fff;
-    cursor: pointer;
-    background-color: transparent;
-    &:hover {
-        box-shadow: 0 0 5px #dcd7d7;
-    }
-`;
+
 export const DivAccount = styled.div`
-    margin: 10px;
-    padding: 15px 20px;
     position: relative;
 `;

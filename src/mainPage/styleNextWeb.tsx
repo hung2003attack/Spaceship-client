@@ -11,7 +11,7 @@ export const DivContainer = styled.div`
     flex-wrap: wrap;
     overflow-y: overlay;
     justify-content: center;
-    color: ${(props) => props.color};
+
     @media (min-width: 375px) {
         justify-content: unset;
     }

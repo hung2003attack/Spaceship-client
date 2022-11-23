@@ -2,13 +2,15 @@ import React, { useState, useRef } from 'react';
 import Cookies from 'universal-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { EyemI, EyedI } from '~/assets/Icons/Icons';
-import Authentication from '~/restAPI/requestGetDate/auth';
-import { Eye, Input, TitleAuth } from '~/reUsingComponents/styleComponents/styleComponents';
+import { ButtonSubmit, Htitle } from '~/reUsingComponents/styleComponents/styleComponents';
 import Language from 'src/Language/Language';
 import { changeLogin } from '~/redux/languageRD';
 
-import { A, DivForm, DivLanguage, Perror, DivRegister, ButtonSubmit, DivAccount } from './styleLogin';
+import { A, DivForm, DivLanguage, Perror, DivRegister, DivAccount } from './styleLogin';
+import { useCookies } from 'react-cookie';
+import authHttpRequest from '~/restAPI/requestServers/authHttpRequest';
+import Eyes from '~/reUsingComponents/Eys/Eye';
+import { Input } from '~/reUsingComponents/styleComponents/styleDefault';
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export interface PropsLogin {
     [EN: string]: {
@@ -41,13 +43,11 @@ interface PropsState {
         login: string;
     };
 }
-const cookiesq = new Cookies();
-
 const Login: React.FC<{
     data: PropsLogin;
-    transfer: boolean;
-    setTransfer: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ data, setTransfer, transfer }) => {
+    setWhatKind: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ data, setWhatKind }) => {
+    const [, setCookies] = useCookies(['tks', 'k_user']);
     const dataLanguages = useSelector((state: PropsState) => state.language?.login);
     const [language, setLanguage] = useState<boolean>(false);
     const { title, input, changePassword, submit, register } = data[dataLanguages];
@@ -56,7 +56,6 @@ const Login: React.FC<{
     //server
     const [errText, setErrText] = useState<string>('');
     //client
-    const [show, setShow] = useState<{ icon: boolean; check: number }>({ icon: false, check: 1 });
     const [value, setValue] = useState<{ nameAccount: string; password: string }>({
         nameAccount: '',
         password: '',
@@ -66,6 +65,8 @@ const Login: React.FC<{
         nameAccount: false,
         password: false,
     });
+    const [show, setShow] = useState<{ icon: boolean; check: number }>({ icon: false, check: 1 });
+
     const handleInputChangeN = (e: { target: { value: string } }) => {
         setValue({ ...value, nameAccount: e.target.value });
     };
@@ -88,7 +89,13 @@ const Login: React.FC<{
             } else if (!value.password) {
                 setInvalid({ ...invalid, nameAccount: false, password: true });
             } else {
-                const data = await Authentication.login(value.nameAccount, value.password, dispatch, cookiesq);
+                const params = {
+                    nameAccount: value.nameAccount,
+                    password: value.password,
+                };
+                const data = await authHttpRequest.postLogin(params, setCookies);
+                console.log('res', data);
+
                 if (data.errCode === 3) setErrText(data.errMessage);
             }
         } catch (e) {
@@ -104,7 +111,7 @@ const Login: React.FC<{
         setErrText('');
     };
     const handleRegister = () => {
-        setTransfer(!transfer);
+        setWhatKind('register');
     };
     console.log(invalid, value);
     const handlelanguage = () => {
@@ -114,13 +121,14 @@ const Login: React.FC<{
     const eventsOnChange = [handleInputChangeN, handleInputChangeP];
     const checkInput = [value.nameAccount, value.password];
     const colorInput = [invalid.nameAccount, invalid.password];
+
     return (
         <>
             <DivForm>
                 <DivLanguage onClick={handlelanguage}>
                     <Language change={dispatch} language={language} changeLanguage={changeLogin} />
                 </DivLanguage>
-                <TitleAuth>{title}</TitleAuth>
+                <Htitle>{title}</Htitle>
                 <form method="POST" onSubmit={handleSubmit}>
                     <DivAccount>
                         {input.map((val) => {
@@ -136,22 +144,8 @@ const Login: React.FC<{
                                 />
                             );
                         })}
-                        <A href="/SN" target="_blank">
-                            {changePassword}
-                        </A>
-                        {show.icon && (
-                            <>
-                                {show.check && value.password ? (
-                                    <Eye onClick={() => setShow({ ...show, check: 0 })}>
-                                        <EyemI />
-                                    </Eye>
-                                ) : (
-                                    <Eye onClick={() => setShow({ ...show, check: 1 })}>
-                                        <EyedI />
-                                    </Eye>
-                                )}
-                            </>
-                        )}
+                        <Eyes value={value.password} setShow={setShow} show={show} top="73px" />
+                        <A onClick={() => setWhatKind('changePassword')}>{changePassword}</A>
                     </DivAccount>
                     {errText && <Perror> {errText}</Perror>}
                     <DivRegister onClick={handleRegister}>{register}</DivRegister>

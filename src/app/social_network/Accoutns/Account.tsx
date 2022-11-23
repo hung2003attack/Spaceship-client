@@ -6,11 +6,9 @@ import styles from './account.module.scss';
 import Avatar from '~/reUsingComponents/Avatars&Edeter/Avatar';
 
 const Account: React.FC<any> = ({ data }) => {
-
-
     return (
         <>
-            {data.map((res: any) => (
+            {/* {data.map((res: any) => (
                 <Link key={res.id} to={`/SN/@${res.id}`} target="_self" className={clsx(styles.userSearch)}>
                     <div className={clsx(styles.avatar)}>
                         <Avatar src={res.avatar} alt={res.last_name} />
@@ -21,7 +19,7 @@ const Account: React.FC<any> = ({ data }) => {
                         <p className={clsx(styles.nickname)}>{res.nickname}</p>
                     </div>
                 </Link>
-            ))}
+            ))} */}
         </>
     );
 };
