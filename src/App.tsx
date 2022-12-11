@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
-import { offPersonalPage, offsettingOpacity } from './app/redux/hideShow';
+import { offPersonalPage, offsettingOpacity, onPersonalPage, onsettingOpacity } from './app/redux/hideShow';
 
 import Website from './mainPage/nextWeb';
 import Settingcbl from '~/reUsingComponents/Setting/Setting';
@@ -11,7 +11,10 @@ import { login } from './dataMark/dataLogin';
 import { register } from './dataMark/dataRegister';
 import Authentication from '~/Authentication/Auth';
 import { useCookies } from 'react-cookie';
-const setting = [
+import { useEffect, useState } from 'react';
+import searchAPI from '~/restAPI/requestServers/socialNetwork/searchAPI_SN';
+import { DivContainer } from '~/reUsingComponents/styleComponents/styleComponents';
+const settingData = [
     {
         title: 'Language',
         icon: <LanguageI />,
@@ -24,13 +27,16 @@ const setting = [
 ];
 function App() {
     const dispatch = useDispatch();
-    const showHideSettingn = useSelector((state: any) => state.hideShow?.setting);
+    const [user, setUser] = useState<any>();
+    const { setting, personalPage } = useSelector((state: any) => state.hideShow);
 
     const handleClick = (e: { stopPropagation: () => void }) => {
         e.stopPropagation();
         dispatch(offsettingOpacity());
+        setUser(null);
         dispatch(offPersonalPage());
     };
+
     const [cookies, setCookie] = useCookies(['tks', 'k_user', 'sn']);
     //   document.cookie.addListener("change", (event) => {
     //   console.log("1 change event");
@@ -50,6 +56,30 @@ function App() {
     // const employees = ['Ron', 'April', 'Andy', 'Leslie'];
 
     // console.log(Object.getPrototypeOf(employees));
+    useEffect(() => {
+        const search = async () => {
+            const search = window.location.search;
+            if (search) {
+                const id = search.split('id=');
+                console.log('id', id);
+
+                if (id.length < 4 && id.length > 0) {
+                    const arrayDate = [];
+                    for (let i = 1; i < id.length; i++) {
+                        const res = await searchAPI.user(id[i], cookies.tks);
+                        if (res.status === 1) {
+                            arrayDate.push(res.data);
+                        }
+                    }
+                    if (arrayDate.length > 0) {
+                        setUser(arrayDate);
+                        dispatch(onPersonalPage());
+                    }
+                }
+            }
+        };
+        search();
+    }, []);
 
     const home = {
         id: 0,
@@ -153,17 +183,96 @@ function App() {
         ],
     };
     // console.log(Math.round(Math.random() * 9573), 'heress');
+    const leng = user?.length;
+    const css = `
+        position: fixed;
+        right: 78px;
+        top: 50%;
+        left: 50%;
+        z-index: 11;
+        overflow-y: overlay;
+        transform: translate(-50%, -50%);
+        
+`;
+    const css2 = `
+    min-width: 100%;
+    height: var(--full);
+    overflow-y: overlay;
+     @media (min-width: 1100px){
+        min-width: ${100 / leng + '%;'}
+    }
+    @media (max-width: 600px){
+        min-width: 100%;
+    }
+        .personalPage{
+            width: var(--full);
+            height: auto;
+            border-left: 1px solid;
+            border-right: 1px solid;
+        }
+        .fullName{
+            margin-bottom: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: start;
+            text-align: start;
+            margin-left: 16px;
+            @media (min-width: 600px){
+                margin-bottom: 20px;
+            }
+        }
+        .avatar{
+            min-width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            padding: 5px;
+            box-shadow: 0 0 1px var(--color-text-dark);
+            background-color: rgb(231 62 62 / 67%);
+            @media (min-width: 600px){
+                min-width: ${150 / (leng > 1 ? leng - 0.5 : leng) + 'px;'}
+                height: ${150 / (leng > 1 ? leng - 0.5 : leng) + 'px;'}
+            }@media (min-width: 1000px){
+                min-width: ${150 / (leng > 1 ? leng - 0.7 : leng) + 'px;'}
+                height: ${150 / (leng > 1 ? leng - 0.7 : leng) + 'px;'}
+            }
+        }
+        .background{
+            width: 90%;
+            height: 230px;
+            margin: 15px auto;
+            border-radius: 5px;
+            background-color: rgb(200 200 200);
+            img {
+                border-radius: 5px;
+            }
+            @media (min-width: 400px){
+                 height: 270px;
+            }
+            @media (min-width: 600px){
+                  height: ${400 / (leng > 1 ? leng - 0.7 : leng) + 'px'};
+            }
+        }
+        
+
+`;
     if (token && k_user) {
         return (
             <>
                 <Website />
                 <div
-                    className={clsx((showHideSettingn && 'opacity') || (false && 'opacity'))}
+                    className={clsx((setting && 'opacity') || (personalPage && 'opacity') || (false && 'opacity'))}
                     onClick={handleClick}
                 ></div>
-                <Settingcbl data={setting} />
+                <Settingcbl data={settingData} />
                 {/* <Message />  */}
-                {/* {store && <Personalpage user={currentUser?.user} />*/}
+                {user?.length > 0 && (
+                    <DivContainer width="100%" height="100%" css={css} bg="#fff" content="start">
+                        {user?.map((data: any, index: number) => (
+                            <Personalpage user={data} key={index} css={css2} />
+                        ))}
+                    </DivContainer>
+                )}
             </>
         );
     }

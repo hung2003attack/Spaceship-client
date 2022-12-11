@@ -1,14 +1,17 @@
 import styled from 'styled-components';
 
 export const DivHover = styled.div`
-    width: 100%;
+    width: max-content;
     height: 80%;
-    display: flex;
+    display: none;
     font-size: 30px;
     align-items: center;
     justify-content: center;
     position: absolute;
     bottom: -34px;
+    @media (min-width: 1111px) {
+        display: flex;
+    }
 `;
 
 export const DivIcon = styled.div`

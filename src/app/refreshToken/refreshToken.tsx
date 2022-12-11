@@ -2,7 +2,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 
 import Cookies from 'universal-cookie';
-import authHttpRequest from '~/restAPI/requestServers/authHttpRequest';
+import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
 const axiosJWT = axios.create({
     baseURL: process.env.REACT_APP_AUTH,
 });
@@ -27,13 +27,15 @@ class refreshToken {
 
                         number++;
                         if (data) {
-                            cookies.set('tks', data.newAccessToken, {
+                            const newToken = 'Bearer ' + data.newAccessToken;
+                            console.log(newToken);
+
+                            cookies.set('tks', newToken, {
                                 path: '/',
                                 secure: false,
                                 sameSite: 'strict',
                                 expires: new Date(new Date().getTime() + 30 * 86409000),
                             });
-                            config.headers.notcall = 'Bearer ' + data.newAccessToken;
                         }
                     }
                 }

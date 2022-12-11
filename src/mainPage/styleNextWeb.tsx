@@ -10,10 +10,10 @@ export const DivContainer = styled.div`
     display: flex;
     flex-wrap: wrap;
     overflow-y: overlay;
-    justify-content: center;
+    justify-content: var(--justify-content-start);
 
     @media (min-width: 375px) {
-        justify-content: unset;
+        justify-content: center;
     }
 `;
 
@@ -31,21 +31,33 @@ export const DivListWebProfile = styled.div`
     background-color: ${(props) => props.color};
     overflow: hidden;
 `;
-export const DivPersonalPage = styled.div`
-    width: 430px;
-    height: 150px;
-    margin: 10px;
+interface PropsPersonal {
+    width: string;
+    height: string;
+    margin?: string;
+    wrap?: string;
+    content?: string;
+    css?: string;
+}
+export const DivPersonalPage = styled.div<PropsPersonal>`
+    width: ${(props) => props.width};
+    height: ${(props) => props.height};
+    margin: ${(props) => props.margin};
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: ${(props) => props.wrap};
+    justify-content: ${(props) => props.content};
     align-items: center;
     border-radius: 5px;
+    ${(props) => props.css}
 `;
 export const DivAvatar = styled.div`
-    width: 90px;
-    height: 90px;
+    width: 110px;
+    height: 110px;
     position: relative;
     cursor: pointer;
+    border-radius: 50%;
+    padding: 5px;
+    border: 1px solid var(--background-hover);
 `;
 export const DivDot = styled.div`
     right: -43px;
@@ -69,7 +81,7 @@ export const Pstatus = styled.p`
 `;
 export const DivChangeColorBG = styled.div`
     top: 35px;
-    left: 52px;
+    left: 16px;
     position: absolute;
     @media (min-width: 800px) {
         right: 93px;
@@ -77,14 +89,14 @@ export const DivChangeColorBG = styled.div`
     }
 `;
 export const Apage = styled(Link)`
-    width: 115px;
+    width: 111px;
     height: 130px;
     display: flex;
     font-size: 100px;
     margin: 0 10px 20px;
     padding: 0 30px 30px;
-    background-color: ${(props) => props.color};
-    box-shadow: -9px 10px 14px black;
+    background-color: ${(props: { color: string }) => props.color};
+    box-shadow: -5px 7px 5px #00000082;
     align-items: center;
     justify-content: center;
     cursor: var(--pointer);
@@ -96,7 +108,7 @@ export const Apage = styled(Link)`
         box-shadow: 0 0 1px transparent;
     }
     @media (min-width: 837px) {
-        width: 189px;
+        width: 180px;
         height: 200px;
     }
 `;
@@ -104,6 +116,7 @@ export const DivContainerChangeP = styled.div`
     //parent
     width: 540px;
     margin-top: 40px;
+    padding-left: 10px;
     @media (min-width: 1220px) {
         width: 670px;
         margin-top: 80px;
@@ -123,6 +136,7 @@ export const PtitleOptions = styled.p`
     color: ${(props) => props.color};
     font-family: 'Item', sans-serif;
     font-size: 2.2rem;
+    padding-left: 15px;
 `;
 export const DivDate = styled.div`
     position: absolute;

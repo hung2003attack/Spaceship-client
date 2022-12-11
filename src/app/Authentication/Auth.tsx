@@ -26,14 +26,12 @@ const Authentication: React.FC<{ dataLogin: PropsLogin; dataRegister: PropsRegis
     dataLogin,
     dataRegister,
 }) => {
-    const [transfer, setTransfer] = useState<boolean>(false);
     const [enable, setEnable] = useState<boolean>(false);
     const [account, setAccount] = useState<string | number>('');
     const [whatKind, setWhatKind] = useState<string>('');
     const Next: ReactNode = (
         <Pnext
             onClick={() => {
-                setTransfer(false);
                 setEnable(false);
                 setWhatKind('');
             }}

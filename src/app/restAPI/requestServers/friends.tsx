@@ -1,10 +1,9 @@
-import { Request } from './httpRequest';
 import { AnyAction, Dispatch } from '@reduxjs/toolkit';
-
-class HttpRequest {
+import { HttpRequest } from './httpRequest';
+class FriendRequest {
     getFriend = async (path: string) => {
         try {
-            const data = await Request.get(path);
+            const data = await HttpRequest.get(path);
             console.log(data);
         } catch (error) {
             console.log(error);
@@ -12,4 +11,4 @@ class HttpRequest {
     };
 }
 
-export default new HttpRequest();
+export default new FriendRequest();

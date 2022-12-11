@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 
 import styles from './account.module.scss';
-import Avatar from '~/reUsingComponents/Avatars&Edeter/Avatar';
+import Avatar from '~/reUsingComponents/Avatars/Avatar';
 
 const Account: React.FC<any> = ({ data }) => {
     return (

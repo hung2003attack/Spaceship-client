@@ -1,6 +1,6 @@
 import { ReactNode, SetStateAction, useEffect, useState } from 'react';
 
-import authHttpRequest from '~/restAPI/requestServers/authHttpRequest';
+import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
 
 import { Htitle } from '~/reUsingComponents/styleComponents/styleComponents';
 import { EmailI, LoadingI, PhoneI, SendOPTI, ResTartI, UndoIRegister } from '~/assets/Icons/Icons';
@@ -86,24 +86,30 @@ const Verify: React.FC<PropsVerify> = ({ setEnable, setAccount, Next }) => {
                 }
             }
             if (!valuePhoneNumberEmail.value)
-                setCheckPhoneNumberEmail({ check: true, title: 'Please Enter your data!' });
+                setCheckPhoneNumberEmail({ check: true, title: 'Please Enter Your Data!' });
         } else {
-            if (otp.length === 6) {
-                const params = {
-                    phoneMail: valuePhoneNumberEmail.value,
-                    otp: otp,
-                };
-                const res = await authHttpRequest.postVerifyOTP(params);
-                console.log('wrong', res);
+            if (otp) {
+                if (otp.length === 6) {
+                    const params = {
+                        phoneMail: valuePhoneNumberEmail.value,
+                        otp: otp,
+                    };
+                    const res = await authHttpRequest.postVerifyOTP(params);
+                    console.log('wrong', res);
 
-                if (res?.status === 200 && res?.data?.status === 1) {
-                    setError({ otp: '', mail: '' });
-                    setEnable(true);
-                    setOtpStatus(false);
-                    setOtpTime(0);
+                    if (res?.status === 200 && res?.data?.status === 1) {
+                        setError({ otp: '', mail: '' });
+                        setEnable(true);
+                        setOtpStatus(false);
+                        setOtpTime(0);
+                    } else {
+                        setError({ ...error, otp: res?.data.message });
+                    }
                 } else {
-                    setError({ ...error, otp: res?.data.message });
+                    setError({ ...error, otp: 'Please otp code must 6 characters!' });
                 }
+            } else {
+                setError({ ...error, otp: 'Please Enter Your Data!' });
             }
         }
     };

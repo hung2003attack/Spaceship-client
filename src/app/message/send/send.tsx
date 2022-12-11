@@ -2,11 +2,10 @@ import { CloseI, SendI, MoveI, UndoI } from '~/assets/Icons/Icons';
 import { memo, useEffect } from 'react';
 import clsx from 'clsx';
 import styles from './send.module.scss';
-import Avatar from '~/reUsingComponents/Avatars&Edeter/Avatar';
+import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import React, { useState } from 'react';
 import Hovertitle from '~/reUsingComponents/HandleHover/Hover';
 import Move from '~/reUsingComponents/Bar/MoveBar';
-import * as userService from '~/restAPI/requestGetDate/socialNetwork/searchService';
 import useDebounce from '~/reUsingComponents/hook/useDebounce';
 import { DivIconMs } from '../styleMessage';
 const Send: React.FC = () => {
@@ -35,8 +34,8 @@ const Send: React.FC = () => {
             return;
         }
         const fechApi = async () => {
-            const results = await userService.search(searchUser);
-            setResultSearch(results);
+            // const results = await userService.search(searchUser);
+            // setResultSearch(results);
         };
 
         fechApi();

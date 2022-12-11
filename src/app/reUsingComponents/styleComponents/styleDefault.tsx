@@ -51,3 +51,9 @@ export const Button = styled.button<Propss>`
         padding: ${(props) => props.repP || props.padding || '2px 22px'};
     }
 `;
+export const Img = styled.img`
+    border-radius: ${(props: { radius?: string }) => {
+        console.log('css', props);
+        return props.radius || '0';
+    }};
+`;

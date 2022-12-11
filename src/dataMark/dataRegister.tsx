@@ -4,8 +4,8 @@ export const register = {
         input: [
             { id: 0, type: 'text', placeholder: 'Tên', role: 'name' },
             { id: 1, type: 'text', placeholder: 'Số Điện Thoại Hoặc Email', role: 'phoneEmail' },
-            { id: 2, type: 'password', placeholder: 'Mật Khẩu', role: 'password1' },
-            { id: 3, type: 'text', placeholder: 'Nhập Lại Mật khẩu', role: 'password2' },
+            { id: 2, type: ['text', 'password'], placeholder: 'Mật Khẩu', role: 'password1' },
+            { id: 3, type: ['text', 'password'], placeholder: 'Nhập Lại Mật khẩu', role: 'password2' },
             {
                 id: 4,
                 gender: [
@@ -13,6 +13,7 @@ export const register = {
                     { id: 1, type: 'Gái' },
                     { id: 2, type: 'LGBT+' },
                 ],
+                role: 'gender',
             },
             { id: 5, type: 'text', placeholder: 'Ngày Sinh  DD/MM/YY', role: 'date' },
         ],
@@ -27,8 +28,8 @@ export const register = {
         input: [
             { id: 0, type: 'text', placeholder: 'your name', role: 'name' },
             { id: 1, type: 'text', placeholder: 'email or phone number', role: 'phoneEmail' },
-            { id: 2, type: 'password', placeholder: 'password', role: 'password1' },
-            { id: 3, type: 'text', placeholder: 'please password repeat', role: 'password2' },
+            { id: 2, type: ['text', 'password'], placeholder: 'password', role: 'password1' },
+            { id: 3, type: ['text', 'password'], placeholder: 'please password repeat', role: 'password2' },
             {
                 id: 4,
                 gender: [
@@ -36,6 +37,7 @@ export const register = {
                     { id: 1, type: 'Femail' },
                     { id: 2, type: 'LGBT+' },
                 ],
+                role: 'gender',
             },
             { id: 5, type: 'text', placeholder: 'BirthDate  DD/MM/YY', role: 'date' },
         ],

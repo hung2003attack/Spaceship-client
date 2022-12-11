@@ -5,13 +5,13 @@ export interface PropsRegisterLanguage {
         title: string;
         input: {
             id: number;
-            type?: string;
+            type?: string | string[];
             gender?: {
                 id: number;
                 type: string;
             }[];
             placeholder?: string;
-            role?: string;
+            role: string;
         }[];
         submit: string;
         messagePhoneEmail: string[];
@@ -23,13 +23,13 @@ export interface PropsRegisterLanguage {
         title: string;
         input: {
             id: number;
-            type?: string;
+            type?: string | string[];
             gender?: {
                 id: number;
                 type: string;
             }[];
             placeholder?: string;
-            role?: string;
+            role: string;
         }[];
         submit: string;
         messagePhoneEmail: string[];

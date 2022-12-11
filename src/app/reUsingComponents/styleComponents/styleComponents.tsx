@@ -19,41 +19,108 @@ export const Htitle = styled.h3`
     color: #fff;
     position: relative;
 `;
-export const ButtonSubmit = styled.button`
-    padding: 5px 20px;
-    margin: 30px;
-    color: #ddd8d8;
-    border: 1px solid #a2a2a2;
-    cursor: pointer;
-    background-color: transparent;
+
+const Button = styled.button`
+    width: 96%;
+    height: 96%;
+    background: #202124;
+    position: absolute;
+    top: 50%;
+    bottom: 50%;
+    right: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
     border-radius: 5px;
-    &:hover {
-        box-shadow: 0 0 5px #dcd7d7;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--color-text-light);
+`;
+const Div = styled.div`
+    width: 100px;
+    height: 35px;
+    margin: 28px auto 8px;
+    padding: 3px;
+    border-radius: 5px;
+    border-radius: 5px;
+    overflow: hidden;
+    color: #ddd8d8;
+    position: relative;
     @media (min-width: 400px) {
-        padding: 5px 23px;
+        /* padding: 5px 23px; */
+    }
+    &::before {
+        width: 53px;
+        height: 84px;
+        display: block;
+        content: '';
+        position: absolute;
+        right: 50%;
+        bottom: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-image: ${(props: { bg?: string }) =>
+            props.bg || 'linear-gradient(270deg, transparent, #fcfcfc4d, #fdfcfc)'};
+        transform-origin: top left;
+        animation: rotate 3s linear infinite;
+        border-top-right-radius: 100%;
+    }
+    &::after {
+        width: 53px;
+        height: 84px;
+        display: block;
+        content: '';
+        position: absolute;
+        right: 50%;
+        bottom: 50%;
+        transform: translate(-50%, -50%);
+        background-image: linear-gradient(90deg, transparent, #fcfcfc4d, #fdfcfc);
+        transform-origin: bottom right;
+        animation: rotate 3s linear infinite;
+        border-bottom-left-radius: 100%;
+    }
+    @keyframes rotate {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
     }
 `;
+// transparent, #ff37374d, #ff3737;
+export const ButtonSubmit: React.FC<{ title: string; bg?: string }> = ({ title, bg }) => {
+    return (
+        <>
+            <Div bg={bg}>
+                <Button>{title}</Button>
+            </Div>
+        </>
+    );
+};
 interface PropsDivContainer {
     width?: string;
     height?: string;
     wrap?: string;
     content?: string;
-    bk?: string;
+    bg?: string;
     css?: string;
     padding?: string;
     margin?: string;
 }
 export const DivContainer = styled.div<PropsDivContainer>`
-    width: ${(props) => props.width || '100%'};
+    width: ${(props) => props.width};
     height: ${(props) => props.height};
-    background-color: ${(props) => props.bk || 'transparent'};
+    background-color: ${(props) => props.bg || 'transparent'};
     display: flex;
-    flex-wrap: ${(props) => props.wrap || 'nowrap'};
+    flex-wrap: ${(props) => props.wrap};
     align-items: center;
-    justify-content: ${(props) => props.content || 'center'};
-    padding: ${(props) => props.padding || '10px'};
-    margin: ${(props) => props.margin || ''};
+    justify-content: ${(props) => props.content};
+    padding: ${(props) => props.padding};
+    margin: ${(props) => props.margin};
     border-radius: 5px;
     ${(props) => props.css};
 `;
@@ -63,13 +130,18 @@ export const DivImg = styled.div<PropsDivContainer>`
 `;
 export const DivUserBar = styled.div`
     width: ${(props: { width?: string }) => props.width || '100%'};
+    height: 100%;
 `;
-
-export const Hname = styled.h3`
-    font-size: 1rem;
+interface PropsHname {
+    size?: string;
+    css?: string;
+}
+export const Hname = styled.h3<PropsHname>`
+    width: 100%;
+    font-size: 1.4rem;
     display: -webkit-box;
-    height: 16px;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    ${(props) => props.css}
 `;

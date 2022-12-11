@@ -2,7 +2,7 @@ import styled from 'styled-components';
 export const DivLanguage = styled.div`
     position: absolute;
     right: 18px;
-    top: 0px;
+    top: 22px;
 `;
 export const DivForm = styled.div`
     width: 330px;

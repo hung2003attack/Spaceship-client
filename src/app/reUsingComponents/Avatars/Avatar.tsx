@@ -6,21 +6,26 @@ import { FaUserCircle } from 'react-icons/fa';
 import Images from '../../assets/images';
 import AvatarEditor from 'react-avatar-editor';
 import { DivUserBar } from '../styleComponents/styleComponents';
+import { Img } from '../styleComponents/styleDefault';
 
 interface _Avatar {
     src?: string | undefined;
     alt?: string | undefined;
     fallback?: any;
     width?: string;
+    radius?: string;
     gender?: any;
+    onClick?: () => void;
 }
 
 const Avatar: React.FC<_Avatar> = ({
     src,
     alt,
     width,
+    radius,
     gender = false,
     fallback: Fallback = gender === 0 ? Images.defaultAvatarMale : gender === 1 ? Images.defaultAvatarFemale : '',
+    onClick,
 }) => {
     console.log('av', src);
 
@@ -38,15 +43,18 @@ const Avatar: React.FC<_Avatar> = ({
             setAvatar(false);
         }
     };
-    console.log(avatarFallback, src, avatar);
+    const events = {
+        onClick,
+    };
+    console.log('1', avatarFallback, src, avatar);
     useEffect(() => {
         if (!src) setAvatarFallback(Fallback);
     }, []);
     return avatar ? (
         <FaUserCircle />
     ) : (
-        <DivUserBar width={width}>
-            <img src={avatarFallback || src} alt={alt} onError={handleErrorImage} />
+        <DivUserBar width={width} {...events}>
+            <Img src={avatarFallback || src} alt={alt} onError={handleErrorImage} radius={radius} />
         </DivUserBar>
     );
 };

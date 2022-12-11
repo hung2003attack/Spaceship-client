@@ -27,7 +27,7 @@ const NextListWeb: React.FC<PropsListWeb> = ({ data, darkShining }) => {
                         key={V.name}
                         to={V.link}
                         onClick={V.next}
-                        color={darkShining ? 'rgb(144 144 144)' : 'rgb(22, 22, 22)'}
+                        color={darkShining ? 'rgb(144 144 144 / 39%)' : 'rgb(22, 22, 22)'}
                     >
                         <DivPage>{V.icon}</DivPage>
                         <Ptitle>{V.name}</Ptitle>

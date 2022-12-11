@@ -1,5 +1,5 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
-import Avatar from '~/reUsingComponents/Avatars&Edeter/Avatar';
+import Avatar from '~/reUsingComponents/Avatars/Avatar';
 
 import Button from '~/reUsingComponents/Buttoms/ListButton/Buttons';
 import Study from '../app/study';
@@ -9,7 +9,6 @@ import { BookI, DotI, NewI, ProfileI, WebsiteI, WorkI } from '~/assets/Icons/Ico
 import Background from 'src/backbround/background';
 import { useDispatch, useSelector } from 'react-redux';
 import { onPersonalPage } from '~/redux/hideShow';
-import GetFriend from '~/restAPI/requestGetDate/friends';
 
 import {
     DivAvatar,
@@ -189,13 +188,9 @@ const Website: React.FC = () => {
                         <DivDate color={changeColor.dark()}>
                             <Time />
                         </DivDate>
-                        <DivPersonalPage>
+                        <DivPersonalPage width="430px" height="150px" margin="10px" wrap="wrap" content="center">
                             <DivAvatar>
-                                {/* <Avatar
-                                    onClick={handleProfileMain}
-                                    src="https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-xinh-cuc-dep.jpg"
-                                    alt=""
-                                /> */}
+                                <Avatar onClick={handleProfileMain} src="" alt="" gender={0} radius="50%" />
 
                                 <DivDot color={changeColor.dark()} onClick={handleProfileMain}>
                                     <DotI />

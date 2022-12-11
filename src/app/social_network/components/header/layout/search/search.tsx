@@ -1,7 +1,6 @@
 import React, { InputHTMLAttributes, LegacyRef, memo, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
-import * as userService from '~/restAPI/requestGetDate/socialNetwork/searchService';
 import useDebounce from '../../../../../reUsingComponents/hook/useDebounce';
 
 import { CloseI } from '~/assets/Icons/Icons';
@@ -23,8 +22,8 @@ const Search: React.FC = () => {
         }
         const fechApi = async () => {
             try {
-                const results = await userService.search(searchUser);
-                setResultSearch(results);
+                // const results = await userService.search(searchUser);
+                // setResultSearch(results);
             } catch (err) {
                 console.log(err);
             }

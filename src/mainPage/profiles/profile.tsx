@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
-import Avatar from '~/reUsingComponents/Avatars&Edeter/Avatar';
+import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import styles from './profile.module.scss';
 import { useDispatch } from 'react-redux';
 import { onPersonalPage } from '~/redux/hideShow';

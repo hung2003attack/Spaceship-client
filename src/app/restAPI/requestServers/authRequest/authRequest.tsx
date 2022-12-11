@@ -1,24 +1,26 @@
 import { AxiosError } from 'axios';
 import { CookieSetOptions } from 'universal-cookie/cjs/types';
 import refreshToken from '~/refreshToken/refreshToken';
-import { Request } from './httpRequest';
+import { HttpRequest } from '../httpRequest';
 
-class HttpRequest {
+class AuthRequest {
     postLogin = async (
         params: { nameAccount: string; password: string },
         setCookies: (name: 'tks' | 'k_user', value: any, options?: CookieSetOptions | undefined) => void,
     ) => {
         try {
-            const reponse = await Request.post('login', { params });
-            if (reponse.data?.user.hasOwnProperty('id') && reponse.data?.user) {
-                setCookies('tks', reponse.data.user?.accessToken, {
+            const reponse = await HttpRequest.post('login', { params });
+            const { id, accessToken } = reponse.data.user;
+            if (id && accessToken) {
+                const token = 'Bearer ' + accessToken;
+                setCookies('tks', token, {
                     path: '/',
                     secure: false,
                     sameSite: 'strict',
                     expires: new Date(new Date().getTime() + 30 * 86409000),
                 });
                 delete reponse.data?.user.accessToken;
-                setCookies('k_user', reponse.data.user?.id, {
+                setCookies('k_user', id, {
                     path: '/',
                     secure: false,
                     sameSite: 'strict',
@@ -33,7 +35,7 @@ class HttpRequest {
     postSendOTP = async (params: { phoneMail: string | number }) => {
         try {
             const path = 'otp/send';
-            const response = await Request.post(path, { params });
+            const response = await HttpRequest.post(path, { params });
             return response;
         } catch (error) {
             console.log('sendOTP', error);
@@ -42,7 +44,7 @@ class HttpRequest {
     postVerifyOTP = async (params: { phoneMail: string; otp: string }) => {
         try {
             const path = 'otp/verify';
-            const res = await Request.post(path, { params });
+            const res = await HttpRequest.post(path, { params });
             console.log('rés', res);
 
             return res;
@@ -58,7 +60,7 @@ class HttpRequest {
         date: string;
     }) => {
         try {
-            const reponse = await Request.post('register', { params });
+            const reponse = await HttpRequest.post('register', { params });
             return reponse?.data;
         } catch (error) {
             console.log('register', error);
@@ -70,8 +72,10 @@ class HttpRequest {
         k_user: string,
         removeCookie: (name: 'tks' | 'k_user', options?: CookieSetOptions | undefined) => void,
     ) => {
-        const axiosJWTss = refreshToken.axiosJWTs(accessToken);
+        console.log(accessToken, '123');
+
         try {
+            const axiosJWTss = refreshToken.axiosJWTs(accessToken);
             const data: any = await axiosJWTss.post('logout', {
                 params: {
                     id: k_user,
@@ -82,7 +86,6 @@ class HttpRequest {
             });
             const { status } = data.data;
             if (status === 1 && data.status === 200) {
-                removeCookie('tks');
                 removeCookie('tks');
                 localStorage.clear();
             }
@@ -99,7 +102,7 @@ class HttpRequest {
     };
     refreshToken = async () => {
         try {
-            const res = await Request.post('refresh', {
+            const res = await HttpRequest.post('refresh', {
                 withCredentials: true,
             });
             return res.data;
@@ -107,15 +110,5 @@ class HttpRequest {
             console.log(error, 'refresh');
         }
     };
-    getUser = async (params: { phoneMail: string | number }) => {
-        try {
-            const res = await Request.post('account/get', {
-                params,
-            });
-            return res;
-        } catch (error) {
-            console.log('getUser', error);
-        }
-    };
 }
-export default new HttpRequest();
+export default new AuthRequest();

@@ -8,7 +8,7 @@ import { changeLogin } from '~/redux/languageRD';
 
 import { A, DivForm, DivLanguage, Perror, DivRegister, DivAccount } from './styleLogin';
 import { useCookies } from 'react-cookie';
-import authHttpRequest from '~/restAPI/requestServers/authHttpRequest';
+import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
 import Eyes from '~/reUsingComponents/Eys/Eye';
 import { Input } from '~/reUsingComponents/styleComponents/styleDefault';
 // eslint-disable-next-line @typescript-eslint/no-redeclare
@@ -65,17 +65,18 @@ const Login: React.FC<{
         nameAccount: false,
         password: false,
     });
-    const [show, setShow] = useState<{ icon: boolean; check: number }>({ icon: false, check: 1 });
+    const [showPass, setShowPass] = useState<{ icon: boolean; check: number }>({ icon: false, check: 1 });
 
     const handleInputChangeN = (e: { target: { value: string } }) => {
         setValue({ ...value, nameAccount: e.target.value });
     };
     const handleInputChangeP = (e: { target: any }) => {
         setValue({ ...value, password: e.target.value });
+        setInvalid({ ...invalid, password: false });
         if (e.target.value) {
-            setShow({ ...show, icon: true });
+            setShowPass({ ...showPass, icon: true });
         } else {
-            setShow({ ...show, icon: false });
+            setShowPass({ ...showPass, icon: false });
         }
     };
     const handleSubmit = async (e: { preventDefault: () => void }) => {
@@ -96,7 +97,7 @@ const Login: React.FC<{
                 const data = await authHttpRequest.postLogin(params, setCookies);
                 console.log('res', data);
 
-                if (data.errCode === 3) setErrText(data.errMessage);
+                if (data.errCode === 0) setErrText('Account is not exist or password wrong!');
             }
         } catch (e) {
             console.log('errorLogin', e);
@@ -121,7 +122,6 @@ const Login: React.FC<{
     const eventsOnChange = [handleInputChangeN, handleInputChangeP];
     const checkInput = [value.nameAccount, value.password];
     const colorInput = [invalid.nameAccount, invalid.password];
-
     return (
         <>
             <DivForm>
@@ -135,7 +135,7 @@ const Login: React.FC<{
                             return (
                                 <Input
                                     key={val.id}
-                                    type={Array.isArray(val.type) ? val.type[show.check] : val.type}
+                                    type={Array.isArray(val.type) ? val.type[showPass.check] : val.type}
                                     value={checkInput[val.id]}
                                     color={colorInput[val.id] ? 'rgb(255 97 97 / 83%)' : ''}
                                     placeholder={val.placeholder}
@@ -144,12 +144,12 @@ const Login: React.FC<{
                                 />
                             );
                         })}
-                        <Eyes value={value.password} setShow={setShow} show={show} top="73px" />
+                        <Eyes value={value.password} setShow={setShowPass} show={showPass} top="73px" />
                         <A onClick={() => setWhatKind('changePassword')}>{changePassword}</A>
                     </DivAccount>
                     {errText && <Perror> {errText}</Perror>}
                     <DivRegister onClick={handleRegister}>{register}</DivRegister>
-                    <ButtonSubmit>{submit}</ButtonSubmit>
+                    <ButtonSubmit title={submit} />
                 </form>
             </DivForm>
         </>

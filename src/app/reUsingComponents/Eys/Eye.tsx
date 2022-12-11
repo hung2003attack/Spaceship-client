@@ -16,6 +16,8 @@ interface PropsEye {
     top: string;
 }
 const Eyes: React.FC<PropsEye> = ({ value, setShow, show, top }) => {
+    console.log('eye', value);
+
     return (
         <>
             {show.icon && (

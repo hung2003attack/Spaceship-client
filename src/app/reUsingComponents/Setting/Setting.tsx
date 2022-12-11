@@ -10,7 +10,7 @@ import { Setting } from './interface';
 import { useNavigate } from 'react-router-dom';
 import refreshToken from '~/refreshToken/refreshToken';
 import { useCookies } from 'react-cookie';
-import authHttpRequest from '~/restAPI/requestServers/authHttpRequest';
+import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
 
 const Settingcbl: React.FC<Setting> = ({ data }) => {
     const showHideSettingn = useSelector((state: any) => state.hideShow?.setting);
@@ -40,6 +40,7 @@ const Settingcbl: React.FC<Setting> = ({ data }) => {
         });
     };
     const handleLogOut = async () => {
+        
         await authHttpRequest.postLogOut(token, k_user, removeCookie);
         //  window.history.go();
     };

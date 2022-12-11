@@ -1,5 +1,5 @@
 import React from 'react';
 const CallVideo: React.FC = () => {
-    return <div>hello work</div>;
+    return <div>callVideo</div>;
 };
 export default CallVideo;

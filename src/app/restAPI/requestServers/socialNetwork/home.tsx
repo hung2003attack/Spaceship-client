@@ -1,4 +1,4 @@
-import { Request } from '../httpRequest';
+import { HttpRequest } from '../httpRequest';
 import { Dispatch, AnyAction } from '@reduxjs/toolkit';
 import { getNewsFailed, getNewsStart, getNewsCurrent } from '~/redux/storeSocial_network/home';
 import { AxiosError } from 'axios';

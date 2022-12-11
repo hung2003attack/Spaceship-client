@@ -17,9 +17,10 @@ import {
 import Language from 'src/Language/Language';
 import { changeRegister } from '~/redux/languageRD';
 import { DivLanguage } from '../Login/styleLogin';
-import authHttpRequest from '~/restAPI/requestServers/authHttpRequest';
+import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
 import { PropsRegister, PropsState } from './interfaceType';
 import { Input } from '~/reUsingComponents/styleComponents/styleDefault';
+import Eyes from '~/reUsingComponents/Eys/Eye';
 
 const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
     //dataLanguage
@@ -38,10 +39,12 @@ const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
         value: any;
         icon?: string | React.ReactElement;
     }>({ value: 'nevergiveupstartup@gmail.com', icon: '' });
-    const [valuePassword, setValuePassword] = useState<{ password1: string; password2?: string }>({
+    const [valuePassword, setValuePassword] = useState<{ [password1: string]: string; password2: string }>({
         password1: '',
         password2: '',
     });
+    const [showPass1, setShowPass1] = useState<{ icon: boolean; check: number }>({ icon: false, check: 1 });
+    const [showPass2, setShowPass2] = useState<{ icon: boolean; check: number }>({ icon: false, check: 1 });
 
     const [valueGender, setValueGender] = useState<number | null>(null);
     const [valueDate, setValueDate] = useState<string>('');
@@ -129,6 +132,11 @@ const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
     };
 
     const handleValuePassword1 = (e: { target: any }) => {
+        if (e.target.value) {
+            setShowPass1({ ...showPass1, icon: true });
+        } else {
+            setShowPass1({ ...showPass1, icon: false });
+        }
         setValuePassword({ ...valuePassword, password1: e.target.value });
         checkAllRef.current.password1 = false;
         if (e.target.value === valuePassword.password2) {
@@ -143,7 +151,11 @@ const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
     const handleValuePassword2 = (e: { target: any }) => {
         setValuePassword({ ...valuePassword, password2: e.target.value });
         setCheckAll({ ...checkAll, password2: false });
-
+        if (e.target.value) {
+            setShowPass2({ ...showPass2, icon: true });
+        } else {
+            setShowPass2({ ...showPass2, icon: false });
+        }
         if (e.target.value === valuePassword.password1) {
             setCheckPassword({ check: false, icon: '' });
         } else {
@@ -301,6 +313,7 @@ const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
         valuePassword.password2,
         valueDate,
     ];
+    const pass = [];
     return (
         <DivForm>
             <Htitle>
@@ -349,15 +362,35 @@ const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
                             <Input
                                 color={colorInput(val.id)}
                                 value={value[val.id]}
-                                type={val.type}
+                                type={
+                                    Array.isArray(val.type)
+                                        ? val.type[val.role === 'password1' ? showPass1.check : showPass2.check]
+                                        : val.type
+                                }
                                 placeholder={val.placeholder}
                                 onChange={eventsOnChange[val.id]}
                             />
+                            {val.role === 'password1' && (
+                                <Eyes
+                                    setShow={setShowPass1}
+                                    show={showPass1}
+                                    top="15px"
+                                    value={valuePassword[val.role]}
+                                />
+                            )}
+                            {val.role === 'password2' && (
+                                <Eyes
+                                    setShow={setShowPass2}
+                                    show={showPass2}
+                                    top="15px"
+                                    value={valuePassword[val.role]}
+                                />
+                            )}
                             {error(val.role)}
                         </DivFormGroup>
                     );
                 })}
-                <ButtonSubmit>{submit}</ButtonSubmit>
+                <ButtonSubmit title={submit} />
                 <Pmessage color={registerStatus.status ? '#fa5f5f' : 'rgb(102 239 120)'}>
                     {registerStatus.title}
                 </Pmessage>
