@@ -1,4 +1,5 @@
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
+import { NavigateFunction } from 'react-router-dom';
 import { CookieSetOptions } from 'universal-cookie/cjs/types';
 import refreshToken from '~/refreshToken/refreshToken';
 import { HttpRequest } from '../httpRequest';
@@ -9,7 +10,7 @@ class AuthRequest {
         setCookies: (name: 'tks' | 'k_user', value: any, options?: CookieSetOptions | undefined) => void,
     ) => {
         try {
-            const reponse = await HttpRequest.post('login', { params });
+            const reponse = await HttpRequest.post('/account/login', { params });
             const { id, accessToken } = reponse.data.user;
             if (id && accessToken) {
                 const token = 'Bearer ' + accessToken;
@@ -60,34 +61,22 @@ class AuthRequest {
         date: string;
     }) => {
         try {
-            const reponse = await HttpRequest.post('register', { params });
+            const reponse = await HttpRequest.post('/account/register', { params });
             return reponse?.data;
         } catch (error) {
             console.log('register', error);
         }
     };
 
-    postLogOut = async (
-        accessToken: string,
-        k_user: string,
-        removeCookie: (name: 'tks' | 'k_user', options?: CookieSetOptions | undefined) => void,
-    ) => {
+    postLogOut = async (accessToken: string) => {
         console.log(accessToken, '123');
 
         try {
-            const axiosJWTss = refreshToken.axiosJWTs(accessToken);
-            const data: any = await axiosJWTss.post('logout', {
-                params: {
-                    id: k_user,
-                },
-                headers: {
-                    notcall: 'Bearer ' + accessToken,
-                },
-            });
+            const axiosJWTss: any = refreshToken.axiosJWTs(accessToken);
+            const data: any = await axiosJWTss.post('/account/logout');
             const { status } = data.data;
             if (status === 1 && data.status === 200) {
-                removeCookie('tks');
-                localStorage.clear();
+                return status;
             }
         } catch (error) {
             console.log(error);
@@ -102,7 +91,7 @@ class AuthRequest {
     };
     refreshToken = async () => {
         try {
-            const res = await HttpRequest.post('refresh', {
+            const res = await HttpRequest.post('/account/refresh', {
                 withCredentials: true,
             });
             return res.data;

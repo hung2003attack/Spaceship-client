@@ -39,8 +39,10 @@ export interface PropsRegisterLanguage {
     };
 }
 export interface PropsState {
-    language: {
-        register: string;
+    persistedReducer: {
+        language: {
+            register: string;
+        };
     };
 }
 

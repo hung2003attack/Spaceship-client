@@ -24,7 +24,7 @@ import Eyes from '~/reUsingComponents/Eys/Eye';
 
 const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
     //dataLanguage
-    const dataLanguages = useSelector((state: PropsState) => state.language?.register);
+    const dataLanguages = useSelector((state: PropsState) => state.persistedReducer.language?.register);
 
     const [language, setLanguage] = useState<boolean>(false);
     const { title, input, submit, messagePhoneEmail, messagePassword, messageDate, messageName } =

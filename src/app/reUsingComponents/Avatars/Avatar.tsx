@@ -5,10 +5,14 @@ import styles from './avatar.module.scss';
 import { FaUserCircle } from 'react-icons/fa';
 import Images from '../../assets/images';
 import AvatarEditor from 'react-avatar-editor';
-import { DivUserBar } from '../styleComponents/styleComponents';
 import { Img } from '../styleComponents/styleDefault';
+import { useDispatch } from 'react-redux';
+import { onPersonalPage, onSetting, setIdUser } from '~/redux/hideShow';
+import styled from 'styled-components';
+import { DivImg } from '../styleComponents/styleComponents';
 
 interface _Avatar {
+    id?: string;
     src?: string | undefined;
     alt?: string | undefined;
     fallback?: any;
@@ -19,6 +23,7 @@ interface _Avatar {
 }
 
 const Avatar: React.FC<_Avatar> = ({
+    id,
     src,
     alt,
     width,
@@ -28,7 +33,7 @@ const Avatar: React.FC<_Avatar> = ({
     onClick,
 }) => {
     console.log('av', src);
-
+    const dispatch = useDispatch();
     const [avatar, setAvatar] = useState<boolean>(false);
     const [avatarFallback, setAvatarFallback] = useState<string>('');
     const [repetitions, setRepetitions] = useState<number>(0);
@@ -46,16 +51,25 @@ const Avatar: React.FC<_Avatar> = ({
     const events = {
         onClick,
     };
-    console.log('1', avatarFallback, src, avatar);
+    const handleOpentProfile = () => {
+        dispatch(setIdUser([id]));
+        dispatch(onPersonalPage());
+    };
     useEffect(() => {
         if (!src) setAvatarFallback(Fallback);
     }, []);
     return avatar ? (
         <FaUserCircle />
     ) : (
-        <DivUserBar width={width} {...events}>
-            <Img src={avatarFallback || src} alt={alt} onError={handleErrorImage} radius={radius} />
-        </DivUserBar>
+        <DivImg width={width} {...events}>
+            <Img
+                src={avatarFallback || src}
+                alt={alt}
+                onError={handleErrorImage}
+                radius={radius}
+                onClick={handleOpentProfile}
+            />
+        </DivImg>
     );
 };
 

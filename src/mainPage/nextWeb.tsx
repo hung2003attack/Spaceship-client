@@ -34,9 +34,16 @@ import CurrentOptions from './CurrentOption';
 import { changeMain } from '~/redux/background';
 import Cookies from 'universal-cookie';
 const cooke = new Cookies();
+interface propsState {
+    persistedReducer: {
+        background: {
+            main: boolean;
+        };
+    };
+}
 const Website: React.FC = () => {
     const dispatch = useDispatch();
-    const backgr = useSelector((state: any) => state?.background?.main);
+    const backgr = useSelector((state: any) => state.persistedReducer.background?.main);
     const [darkShining, setDarkShining] = useState<boolean>(backgr);
     useEffect(() => {
         // const data = GetFriend.friend(dispatch);
@@ -179,6 +186,7 @@ const Website: React.FC = () => {
             return option ? 'Family' : 'Tap';
         },
     };
+
     return (
         <>
             <DivMainPage>
@@ -190,7 +198,13 @@ const Website: React.FC = () => {
                         </DivDate>
                         <DivPersonalPage width="430px" height="150px" margin="10px" wrap="wrap" content="center">
                             <DivAvatar>
-                                <Avatar onClick={handleProfileMain} src="" alt="" gender={0} radius="50%" />
+                                <Avatar
+                                    src=""
+                                    alt=""
+                                    gender={0}
+                                    radius="50%"
+                                    id="3f132816-bb9d-4579-a396-02ab5680f4f4"
+                                />
 
                                 <DivDot color={changeColor.dark()} onClick={handleProfileMain}>
                                     <DotI />

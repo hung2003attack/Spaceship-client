@@ -3,8 +3,9 @@ import jwt_decode from 'jwt-decode';
 
 import Cookies from 'universal-cookie';
 import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
+axios.defaults.withCredentials = true;
 const axiosJWT = axios.create({
-    baseURL: process.env.REACT_APP_AUTH,
+    baseURL: process.env.REACT_APP_SPACESHIP,
 });
 const cookies = new Cookies();
 class refreshToken {
@@ -20,7 +21,7 @@ class refreshToken {
                 const decodeToken: any = jwt_decode(token);
 
                 if (decodeToken.exp < date.getTime() / 1000 + 5 && number === 1) {
-                    console.log(decodeToken.exp, date.getTime() / 1000 + 5, token, 'hhhh');
+                    console.log(decodeToken.exp, date.getTime() / 1000 + 2, token, 'hhhh');
                     if (number === 1) {
                         const data = await authHttpRequest.refreshToken();
                         console.log(data, 'dataToke', number);
@@ -42,6 +43,8 @@ class refreshToken {
                 return config;
             },
             (err) => {
+                console.log('error Axios');
+
                 return Promise.reject(err);
             },
         );

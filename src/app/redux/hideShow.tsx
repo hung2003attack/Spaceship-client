@@ -1,35 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-interface InitialState {
+export interface InitialStateHideShow {
     setting: boolean;
     personalPage: boolean;
-    login: {
-        error: boolean;
-    };
-    register: {
-        error: boolean;
-        Successful: boolean;
-    };
+    idUser: string[];
 }
-const initialState: InitialState = {
+const initialState: InitialStateHideShow = {
     setting: false,
     personalPage: false,
-    login: {
-        error: false,
-    },
-    register: {
-        error: false,
-        Successful: false,
-    },
+    idUser: [],
 };
 const hideShowSlice = createSlice({
-    name: 'auth',
+    name: 'hideShow',
     initialState,
     reducers: {
-        onsettingOpacity: (state) => {
+        onSetting: (state) => {
             state.setting = true;
         },
-        offsettingOpacity: (state) => {
+        offSetting: (state) => {
             state.setting = false;
         },
         onPersonalPage: (state) => {
@@ -38,7 +26,14 @@ const hideShowSlice = createSlice({
         offPersonalPage: (state) => {
             state.personalPage = false;
         },
+        offAll: (state) => {
+            state.personalPage = false;
+            state.setting = false;
+        },
+        setIdUser: (state, action) => {
+            state.idUser = action.payload;
+        },
     },
 });
-export const { onsettingOpacity, offsettingOpacity, onPersonalPage, offPersonalPage } = hideShowSlice.actions;
+export const { onSetting, offSetting, onPersonalPage, offPersonalPage, setIdUser, offAll } = hideShowSlice.actions;
 export default hideShowSlice.reducer;

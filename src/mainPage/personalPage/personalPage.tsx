@@ -31,6 +31,7 @@ const Personalpage: React.FC<any> = ({ user, css }) => {
         height: 80px;
     }
 `;
+
     return (
         <DivContainer css={css} wrap="wrap">
             <div className="personalPage">

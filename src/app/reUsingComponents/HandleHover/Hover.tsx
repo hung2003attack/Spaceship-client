@@ -53,7 +53,7 @@ const Hovertitle: React.FC<hover> = ({
                     {children}
                 </DivIcon>
                 {showHidetitle && (
-                    <DivHover>
+                    <DivHover color={color}>
                         <p>{title}</p>
                     </DivHover>
                 )}

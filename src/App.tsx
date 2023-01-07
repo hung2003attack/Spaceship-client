@@ -1,6 +1,14 @@
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
-import { offPersonalPage, offsettingOpacity, onPersonalPage, onsettingOpacity } from './app/redux/hideShow';
+import {
+    InitialStateHideShow,
+    offAll,
+    offPersonalPage,
+    offSetting,
+    onPersonalPage,
+    onSetting,
+    setIdUser,
+} from './app/redux/hideShow';
 
 import Website from './mainPage/nextWeb';
 import Settingcbl from '~/reUsingComponents/Setting/Setting';
@@ -14,27 +22,16 @@ import { useCookies } from 'react-cookie';
 import { useEffect, useState } from 'react';
 import searchAPI from '~/restAPI/requestServers/socialNetwork/searchAPI_SN';
 import { DivContainer } from '~/reUsingComponents/styleComponents/styleComponents';
-const settingData = [
-    {
-        title: 'Language',
-        icon: <LanguageI />,
-        children: { data: [{ name: 'English' }, { name: 'English' }, { name: 'VietNamese' }] },
-    },
-    {
-        title: 'Log Out',
-        logout: true,
-    },
-];
+import styled from 'styled-components';
+
 function App() {
     const dispatch = useDispatch();
-    const [user, setUser] = useState<any>();
     const { setting, personalPage } = useSelector((state: any) => state.hideShow);
-
+    const user = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow?.idUser);
     const handleClick = (e: { stopPropagation: () => void }) => {
         e.stopPropagation();
-        dispatch(offsettingOpacity());
-        setUser(null);
-        dispatch(offPersonalPage());
+        dispatch(offAll());
+        dispatch(setIdUser([]));
     };
 
     const [cookies, setCookie] = useCookies(['tks', 'k_user', 'sn']);
@@ -72,10 +69,13 @@ function App() {
                         }
                     }
                     if (arrayDate.length > 0) {
-                        setUser(arrayDate);
+                        dispatch(setIdUser(arrayDate));
                         dispatch(onPersonalPage());
                     }
                 }
+            } else {
+                dispatch(setIdUser([]));
+                dispatch(offAll());
             }
         };
         search();
@@ -186,12 +186,11 @@ function App() {
     const leng = user?.length;
     const css = `
         position: fixed;
-        right: 78px;
-        top: 50%;
-        left: 50%;
+        right: 0;
+        bottom: 0;
         z-index: 11;
         overflow-y: overlay;
-        transform: translate(-50%, -50%);
+  
         
 `;
     const css2 = `
@@ -256,18 +255,24 @@ function App() {
         
 
 `;
+    const DivOpacity = styled.div`
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        background-color: #686767a1;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+    `;
     if (token && k_user) {
         return (
             <>
                 <Website />
-                <div
-                    className={clsx((setting && 'opacity') || (personalPage && 'opacity') || (false && 'opacity'))}
-                    onClick={handleClick}
-                ></div>
-                <Settingcbl data={settingData} />
+                {(setting || personalPage) && <DivOpacity onClick={handleClick} />}
                 {/* <Message />  */}
                 {user?.length > 0 && (
-                    <DivContainer width="100%" height="100%" css={css} bg="#fff" content="start">
+                    <DivContainer width="90%" height="88%" css={css} bg="#fff" content="start" display="flex">
                         {user?.map((data: any, index: number) => (
                             <Personalpage user={data} key={index} css={css2} />
                         ))}
@@ -276,7 +281,6 @@ function App() {
             </>
         );
     }
-
     return (
         <>
             <Authentication

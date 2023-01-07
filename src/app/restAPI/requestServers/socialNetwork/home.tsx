@@ -5,14 +5,13 @@ import { AxiosError } from 'axios';
 import refreshToken from '~/refreshToken/refreshToken';
 import { CookieSetOptions } from 'universal-cookie';
 import Cookies from 'universal-cookie';
-const co = new Cookies();
 class HttpRequestHome {
     news = async (accessToken: string, dispatch: Dispatch<AnyAction>) => {
         const axiosJWTss = refreshToken.axiosJWTs(accessToken);
         dispatch(getNewsStart());
         try {
-            const res = await axiosJWTss.get('/SN', {
-                headers: { notcall: 'Bearer ' + accessToken },
+            const res = await axiosJWTss.get('/SN/home', {
+                withCredentials: true,
             });
             console.log(res, 'res Home');
             dispatch(getNewsCurrent(res.data));

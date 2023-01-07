@@ -1,28 +1,34 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { offsettingOpacity } from '~/redux/hideShow';
+import { InitialStateHideShow, offAll, offSetting } from '~/redux/hideShow';
 
 import { CloseI } from '~/assets/Icons/Icons';
 import styles from './setting.module.scss';
 import Bar from '~/reUsingComponents/Bar/Bar';
-import { Setting } from './interface';
+import { PropsSetting } from './interface';
 import { useNavigate } from 'react-router-dom';
-import refreshToken from '~/refreshToken/refreshToken';
 import { useCookies } from 'react-cookie';
 import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
+import { DivClose, DivContainer } from '../styleComponents/styleComponents';
 
-const Settingcbl: React.FC<Setting> = ({ data }) => {
-    const showHideSettingn = useSelector((state: any) => state.hideShow?.setting);
+const Settingcbl: React.FC<PropsSetting> = ({ data }) => {
+    const showHideSettingn = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow?.setting);
     const [cookies, setCookie, removeCookie] = useCookies(['tks', 'k_user']);
     const token = cookies.tks;
     const k_user = cookies.k_user;
+    console.log(token, 'setting');
+    const navigate = useNavigate();
     const [showresult, setShowresult] = useState<ReactNode>();
     const [resultoption, setResultoption] = useState<boolean>(false);
     const dispatch = useDispatch();
     useEffect(() => {
         if (!showHideSettingn) setResultoption(false);
     }, [showHideSettingn]);
+    const handleChangeLanguage = (lg: string) => {
+        console.log(lg);
+    };
+
     const handleResult = (data: any) => {
         setShowresult(() => {
             if (data) {
@@ -31,7 +37,7 @@ const Settingcbl: React.FC<Setting> = ({ data }) => {
                 return data.data.map((title: any, index: number) => {
                     return (
                         <div key={index} className={clsx(styles.title)}>
-                            <p>{title.name}</p>
+                            <p onClick={() => handleChangeLanguage(title.lg)}>{title.name}</p>
                         </div>
                     );
                 });
@@ -40,42 +46,76 @@ const Settingcbl: React.FC<Setting> = ({ data }) => {
         });
     };
     const handleLogOut = async () => {
-        
-        await authHttpRequest.postLogOut(token, k_user, removeCookie);
-        //  window.history.go();
+        const res = await authHttpRequest.postLogOut(token);
+        if (res === 1) {
+            navigate('/');
+            dispatch(offAll());
+            removeCookie('tks');
+            localStorage.clear();
+        }
     };
-
+    const css1 = `
+        min-width: 270px;
+        position: fixed;
+        top: 0px;
+        right: 9px;
+        box-shadow: 0 0 4px rgb(108 106 106);
+        transition: all 0.3s linear;
+        z-index: 9999;
+        color: var(--color-text-light);
+    `;
+    const css2 = `
+        margin-top: 49px;
+        box-shadow: 0 0 1px;
+    `;
+    //
+    // height: 500px;
+    // background-color:;
+    //
+    //
+    //
+    // border-radius: 5px;
+    //
+    //
+    // display: none;
+    //
+    // ;
     return (
         <>
-            <div
-                className={clsx(styles.option, showHideSettingn && styles.showOption)}
+            <DivContainer
+                height="500px"
+                display="flex"
+                bg=" #202124"
+                radius="5px"
+                css={css1}
                 onClick={(e) => e.stopPropagation()}
             >
-                <div
-                    className={clsx(styles.closeOption)}
+                <DivClose
+                    size="25px"
+                    top="11px"
+                    left="11px"
                     onClick={() => {
                         setResultoption(false);
-                        dispatch(offsettingOpacity());
+                        dispatch(offSetting());
                     }}
                 >
                     <CloseI />
-                </div>
-                <div className={clsx(styles.optionsALL)}>
+                </DivClose>
+                <DivContainer width="250px" css={css2}>
                     {data.map((setting: any, index: number) => {
                         if (setting.logout) {
                         }
                         return (
-                            <div
-                                key={index}
-                                className={clsx(styles.options)}
-                                onClick={() => handleResult(setting.children)}
-                            >
+                            <div key={index}>
                                 {setting.logout ? (
                                     <div className={clsx(styles.language)} onClick={handleLogOut}>
                                         <p className={clsx(styles.title)}>{setting.title}</p>
                                     </div>
                                 ) : (
-                                    <div className={clsx(styles.language)}>
+                                    <div
+                                        className={clsx(styles.language)}
+                                        onClick={() => handleResult(setting.children)}
+                                    >
                                         <p className={clsx(styles.title)}>{setting.title}</p>
                                         {setting.title === 'Language' && (
                                             <p className={clsx(styles.currentLanguage)}>( English ){setting.icon}</p>
@@ -85,10 +125,10 @@ const Settingcbl: React.FC<Setting> = ({ data }) => {
                             </div>
                         );
                     })}
-                </div>
+                </DivContainer>
                 {resultoption && <Bar onClick={() => setResultoption(false)} hideResultSetting />}
                 {resultoption && <div className={clsx(styles.results)}> {showresult}</div>}
-            </div>
+            </DivContainer>
         </>
     );
 };

@@ -1,6 +1,6 @@
 import { DivChangePass } from './styleChangePassword';
 import { DivAccount } from '../Login/styleLogin';
-import { ButtonSubmit, DivContainer, DivUserBar, Htitle } from '~/reUsingComponents/styleComponents/styleComponents';
+import { ButtonSubmit, DivContainer, Htitle } from '~/reUsingComponents/styleComponents/styleComponents';
 import Eyes from '~/reUsingComponents/Eys/Eye';
 import { ReactNode, useRef, useState, useEffect, useCallback } from 'react';
 import { Button, Input } from '~/reUsingComponents/styleComponents/styleDefault';

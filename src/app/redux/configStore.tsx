@@ -11,14 +11,13 @@ const persistConfig = {
     storage,
 };
 const rootReducer = combineReducers({
-    hideShow: hideShow,
     home: news,
     language: changeLanguage,
     background: background,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
-    reducer: persistedReducer,
+    reducer: { persistedReducer, hideShow },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: {
@@ -27,4 +26,4 @@ export const store = configureStore({
         }),
 });
 
-export let persistor = persistStore(store);
+export const persistor = persistStore(store);

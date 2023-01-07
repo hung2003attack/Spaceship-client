@@ -13,8 +13,9 @@ const Home: React.FC = () => {
     const token = cookies.tks;
     const k_user = cookies.k_user;
     // if (!k_user) removeCookie('tks');
+    console.log('cookie token home', cookies.tks);
+
     useEffect(() => {
-        console.log('cookie token', cookies.tks);
         const data = HttpRequestHome.news(token, dispatch);
     }, []);
 

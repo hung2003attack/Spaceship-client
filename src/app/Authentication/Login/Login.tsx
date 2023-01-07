@@ -12,35 +12,27 @@ import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
 import Eyes from '~/reUsingComponents/Eys/Eye';
 import { Input } from '~/reUsingComponents/styleComponents/styleDefault';
 // eslint-disable-next-line @typescript-eslint/no-redeclare
+interface InLogin {
+    title: string;
+
+    input: {
+        id: number;
+        type: string | string[];
+        placeholder: string;
+    }[];
+    changePassword: string;
+    submit: string;
+    register: string;
+}
 export interface PropsLogin {
-    [EN: string]: {
-        title: string;
-
-        input: {
-            id: number;
-            type: string | string[];
-            placeholder: string;
-        }[];
-        changePassword: string;
-        submit: string;
-        register: string;
-    };
-    VN: {
-        title: string;
-
-        input: {
-            id: number;
-            type: string | string[];
-            placeholder: string;
-        }[];
-        changePassword: string;
-        submit: string;
-        register: string;
-    };
+    [EN: string]: InLogin;
+    VN: InLogin;
 }
 interface PropsState {
-    language: {
-        login: string;
+    persistedReducer: {
+        language: {
+            login: string;
+        };
     };
 }
 const Login: React.FC<{
@@ -48,8 +40,10 @@ const Login: React.FC<{
     setWhatKind: React.Dispatch<React.SetStateAction<string>>;
 }> = ({ data, setWhatKind }) => {
     const [, setCookies] = useCookies(['tks', 'k_user']);
-    const dataLanguages = useSelector((state: PropsState) => state.language?.login);
+    const dataLanguages = useSelector((state: PropsState) => state.persistedReducer?.language.login);
     const [language, setLanguage] = useState<boolean>(false);
+    console.log(dataLanguages);
+
     const { title, input, changePassword, submit, register } = data[dataLanguages];
 
     const dispatch = useDispatch();

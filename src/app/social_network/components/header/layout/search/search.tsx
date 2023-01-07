@@ -45,7 +45,10 @@ const Search: React.FC = () => {
     const handleShowHide = () => {
         setHide(false);
     };
-    const a = [{ id: 1, last_name: 'hung', full_name: 'hung nguyen' }];
+    const a = [
+        { id: '70363514-1ebe-424e-a722-b1bbda7bbfc3', last_name: 'hung', full_name: 'hung nguyen' },
+        { id: '3f132816-bb9d-4579-a396-02ab5680f4f4', last_name: 'hung', full_name: 'hung nguyen' },
+    ];
     return (
         <div className={clsx(styles.search)}>
             <input

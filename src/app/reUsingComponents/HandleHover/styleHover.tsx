@@ -9,6 +9,11 @@ export const DivHover = styled.div`
     justify-content: center;
     position: absolute;
     bottom: -34px;
+    right: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: ${(props) => props.color || 'var(--color-text-light)'};
+
     @media (min-width: 1111px) {
         display: flex;
     }
@@ -22,4 +27,5 @@ export const DivIcon = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: var(--pointer);
 `;

@@ -15,7 +15,7 @@ export const DivHeader = styled.div`
 `;
 export const DivWrapper = styled.div`
     width: 100%;
-    height: 100%;
+    height: 50%;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -36,9 +36,7 @@ export const SpanX = styled.span`
 `;
 export const ButtonSt = styled.button`
     background-color: transparent;
-    position: fixed;
-    right: 125px;
-    top: 4px;
+    position: relative;
 `;
 export const Plogo = styled.p`
     font-weight: bold;
@@ -47,16 +45,13 @@ export const Plogo = styled.p`
 `;
 export const DivHollow = styled.div`
     width: 100%;
-    height: 40px;
-    position: fixed;
-    top: 0;
-    background-color: #202124;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
 `;
 export const Alogo = styled.a`
-    position: fixed;
-    top: 7px;
-    left: 0px;
-    width: 100px;
+    width: 30px;
     div {
         align-items: end;
     }

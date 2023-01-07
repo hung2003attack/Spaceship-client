@@ -20,24 +20,6 @@ export const Htitle = styled.h3`
     position: relative;
 `;
 
-const Button = styled.button`
-    width: 96%;
-    height: 96%;
-    background: #202124;
-    position: absolute;
-    top: 50%;
-    bottom: 50%;
-    right: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 5;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--color-text-light);
-`;
 const Div = styled.div`
     width: 100px;
     height: 35px;
@@ -92,6 +74,24 @@ const Div = styled.div`
     }
 `;
 // transparent, #ff37374d, #ff3737;
+const Button = styled.button`
+    width: 96%;
+    height: 96%;
+    background: #202124;
+    position: absolute;
+    top: 50%;
+    bottom: 50%;
+    right: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--color-text-light);
+`;
 export const ButtonSubmit: React.FC<{ title: string; bg?: string }> = ({ title, bg }) => {
     return (
         <>
@@ -110,28 +110,32 @@ interface PropsDivContainer {
     css?: string;
     padding?: string;
     margin?: string;
+    display?: string;
+    align?: string;
+    radius?: string;
 }
 export const DivContainer = styled.div<PropsDivContainer>`
     width: ${(props) => props.width};
     height: ${(props) => props.height};
     background-color: ${(props) => props.bg || 'transparent'};
-    display: flex;
+    display: ${(props) => props.display};
     flex-wrap: ${(props) => props.wrap};
-    align-items: center;
+    align-items: ${(props) => props.align};
     justify-content: ${(props) => props.content};
-    padding: ${(props) => props.padding};
+    ${(props) => {
+        console.log('padding here');
+
+        return props.padding;
+    }};
     margin: ${(props) => props.margin};
-    border-radius: 5px;
+    border-radius: ${(props) => props.radius};
     ${(props) => props.css};
 `;
 export const DivImg = styled.div<PropsDivContainer>`
     width: ${(props) => props.width || '100%'};
-    height: ${(props) => props.height};
-`;
-export const DivUserBar = styled.div`
-    width: ${(props: { width?: string }) => props.width || '100%'};
     height: 100%;
 `;
+
 interface PropsHname {
     size?: string;
     css?: string;
@@ -144,4 +148,24 @@ export const Hname = styled.h3<PropsHname>`
     -webkit-box-orient: vertical;
     overflow: hidden;
     ${(props) => props.css}
+`;
+interface PropsClose {
+    size: string;
+    top: string;
+    left: string;
+}
+export const DivClose = styled.div<PropsClose>`
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: ${(props) => props.size};
+    cursor: pointer;
+    top: ${(props) => props.top};
+    left: ${(props) => props.left};
+    border-radius: 50%;
+    &:hover {
+        transition: all 0.1s linear;
+        background-color: #3c4043;
+    }
 `;
