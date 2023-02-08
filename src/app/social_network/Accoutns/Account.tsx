@@ -4,22 +4,42 @@ import { Link } from 'react-router-dom';
 
 import styles from './account.module.scss';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
+import { useDispatch } from 'react-redux';
+import { offPersonalPage, onPersonalPage, setIdUser } from '~/redux/hideShow';
+import { profile } from 'console';
 
 const Account: React.FC<any> = ({ data }) => {
+    console.log(window.location.host, 'data');
+    const dispatch = useDispatch();
     return (
         <>
-            {/* {data.map((res: any) => (
-                <Link key={res.id} to={`/SN/@${res.id}`} target="_self" className={clsx(styles.userSearch)}>
+            {data.map((res: any) => (
+                <div
+                    key={res.id}
+                    onMouseOver={(e) => {
+                        dispatch(setIdUser([res.id]));
+                        dispatch(onPersonalPage());
+                    }}
+                    onMouseLeave={() => {
+                        dispatch(offPersonalPage());
+                    }}
+                    onClick={() => {
+                        dispatch(setIdUser([res.id]));
+                        dispatch(onPersonalPage());
+                        window.history.replaceState(null, 'perspnalPage', `/profile?id=${res.id}`);
+                    }}
+                    className={clsx(styles.userSearch)}
+                >
                     <div className={clsx(styles.avatar)}>
-                        <Avatar src={res.avatar} alt={res.last_name} />
+                        <Avatar src={res.avatar || ''} alt={res.fullName} gender={res.gender} />
                     </div>
                     <div className={clsx(styles.title)}>
-                        <h5 className={clsx(styles.fullname)}>{res.full_name}</h5>
+                        <h5 className={clsx(styles.fullname)}>{res.fullName}</h5>
 
-                        <p className={clsx(styles.nickname)}>{res.nickname}</p>
+                        <p className={clsx(styles.nickname)}>{res.nickName}</p>
                     </div>
-                </Link>
-            ))} */}
+                </div>
+            ))}
         </>
     );
 };

@@ -1,7 +1,7 @@
 import { HttpRequest } from '../httpRequest';
 
 class AccountRequest {
-    get = async (params: { phoneMail: string | number }) => {
+    getPhoneMail = async (params: { phoneMail: string | number }) => {
         try {
             const res = await HttpRequest.post('account/get', {
                 params,
@@ -11,6 +11,7 @@ class AccountRequest {
             console.log('getUser', error);
         }
     };
+
     changePassword = async (params: { id: string; password: string }) => {
         try {
             const res = await HttpRequest.post('account/changePassword', {

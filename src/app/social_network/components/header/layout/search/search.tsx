@@ -3,12 +3,15 @@ import clsx from 'clsx';
 
 import useDebounce from '../../../../../reUsingComponents/hook/useDebounce';
 
+import HttpRequestUser from '~/restAPI/requestServers/socialNetwork/user';
 import { CloseI } from '~/assets/Icons/Icons';
 import Account from '~/social_network/Accoutns/Account';
 import styles from './search.module.scss';
 import Bar from '~/reUsingComponents/Bar/Bar';
+import { useCookies } from 'react-cookie';
 
-const Search: React.FC = () => {
+const Search: React.FC<{ title: string }> = ({ title }) => {
+    const [cookies, setCookie] = useCookies(['tks']);
     const [searchUser, setSearchUser] = useState<string>('');
     const [resultSearch, setResultSearch] = useState<any>([]);
     const [hide, setHide] = useState<boolean>(false);
@@ -22,8 +25,16 @@ const Search: React.FC = () => {
         }
         const fechApi = async () => {
             try {
-                // const results = await userService.search(searchUser);
-                // setResultSearch(results);
+                const results = await HttpRequestUser.getByName(cookies.tks, searchUser, {
+                    id: 'id',
+                    avatar: 'avatar',
+                    fullName: 'fullName',
+                    nickName: 'nickName',
+                    gender: 'gender',
+                });
+                console.log(results, 'results');
+
+                setResultSearch(results);
             } catch (err) {
                 console.log(err);
             }
@@ -55,7 +66,7 @@ const Search: React.FC = () => {
                 ref={closeRef}
                 type="text"
                 value={searchUser}
-                placeholder="Search"
+                placeholder={title}
                 className={clsx(styles.searchInput)}
                 onChange={(e) => handleResultSearch(e)}
                 onFocus={handleShowHide}
@@ -68,7 +79,7 @@ const Search: React.FC = () => {
                     <div className={clsx(styles.resultBar, hide && styles.showHide)}>
                         <div className={clsx(styles.resultBar1)}>
                             <div className={clsx(styles.useResult)}>
-                                <Account data={a} />
+                                <Account data={resultSearch} />
                             </div>
                         </div>
                         <Bar onClick={() => setHide(!hide)} hideResultSearch />

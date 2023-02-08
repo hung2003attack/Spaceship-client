@@ -122,7 +122,7 @@ export const DivContainer = styled.div<PropsDivContainer>`
     flex-wrap: ${(props) => props.wrap};
     align-items: ${(props) => props.align};
     justify-content: ${(props) => props.content};
-    ${(props) => {
+    padding: ${(props) => {
         console.log('padding here');
 
         return props.padding;

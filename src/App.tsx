@@ -190,8 +190,7 @@ function App() {
         bottom: 0;
         z-index: 11;
         overflow-y: overlay;
-  
-        
+
 `;
     const css2 = `
     min-width: 100%;
@@ -252,7 +251,6 @@ function App() {
                   height: ${400 / (leng > 1 ? leng - 0.7 : leng) + 'px'};
             }
         }
-        
 
 `;
     const DivOpacity = styled.div`

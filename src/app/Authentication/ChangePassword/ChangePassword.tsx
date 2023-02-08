@@ -125,7 +125,7 @@ const ChangePassword: React.FC<PropsChangeP> = ({ phoneMail, Next }) => {
     useEffect(() => {
         const get = async () => {
             const params = { phoneMail: 'nevergiveupstartup@gmail.com' };
-            const res: any = await accountRequest.get(params);
+            const res: any = await accountRequest.getPhoneMail(params);
             const { status, data } = res;
             if (status === 200 && data.status === 1) return setDataAccount(data.user);
             window.location.reload();

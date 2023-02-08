@@ -1,11 +1,13 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useDeferredValue, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { LanguageI } from '~/assets/Icons/Icons';
 import { InitialStateHideShow } from '~/redux/hideShow';
 import { PropsSetting } from '~/reUsingComponents/Setting/interface';
 import Settingcbl from '~/reUsingComponents/Setting/Setting';
-
+import HttpRequestUser from '~/restAPI/requestServers/socialNetwork/user';
 import Header from './components/Header/HeaderLayout';
+import { useCookies } from 'react-cookie';
+import { MdAirlineSeatLegroomExtra } from 'react-icons/md';
 const settingData = [
     {
         title: 'Language',
@@ -25,14 +27,14 @@ const settingData = [
 interface InNetWork {
     header: {
         logo: string;
-        sett: {
-            hover: string;
-            data: PropsSetting;
-        };
+        sett: string;
         home: string;
         exchange: string;
         video: string;
         search: string;
+    };
+    sett: {
+        data: PropsSetting;
     };
     body: {};
 }
@@ -42,14 +44,26 @@ interface PropsDataNetWork {
         EN: InNetWork;
     };
 }
+interface PropsLanguage {
+    persistedReducer: {
+        language: {
+            sn: string;
+        };
+    };
+}
+
 const Socialnetwork: React.FC<PropsDataNetWork> = ({ data }) => {
+    const language = useSelector((state: PropsLanguage) => state.persistedReducer.language.sn);
+    const [lg, setLg] = useState<string>(language);
+    const { header, sett } = data[lg];
+
     const turnSetting = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow?.setting);
-    console.log('social');
+    console.log('social', lg);
 
     return (
         <>
-            <Header />
-            {turnSetting && <Settingcbl data={settingData} />}
+            <Header title={header} />
+            {turnSetting && <Settingcbl dataO={sett.data} setLg={setLg} LgNow={lg} />}
         </>
     );
 };

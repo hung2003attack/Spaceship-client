@@ -7,14 +7,14 @@ import { CookieSetOptions } from 'universal-cookie';
 import Cookies from 'universal-cookie';
 class HttpRequestHome {
     news = async (accessToken: string, dispatch: Dispatch<AnyAction>) => {
-        const axiosJWTss = refreshToken.axiosJWTs(accessToken);
-        dispatch(getNewsStart());
+        // dispatch(getNewsStart());
         try {
+            const axiosJWTss = refreshToken.axiosJWTs(accessToken);
             const res = await axiosJWTss.get('/SN/home', {
                 withCredentials: true,
             });
             console.log(res, 'res Home');
-            dispatch(getNewsCurrent(res.data));
+            // dispatch(getNewsCurrent(res.data));
         } catch (error) {
             console.log(error, 'dawfawfwa');
             const err: any = error as AxiosError;

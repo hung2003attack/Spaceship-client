@@ -52,6 +52,7 @@ export const DivHollow = styled.div`
 `;
 export const Alogo = styled.a`
     width: 30px;
+    position: relative;
     div {
         align-items: end;
     }

@@ -1,15 +1,17 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
-import Avatar from '~/reUsingComponents/Avatars/Avatar';
+import Cookies from 'universal-cookie';
+import { useCookies } from 'react-cookie';
+import { useDispatch, useSelector } from 'react-redux';
 
+import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import Button from '~/reUsingComponents/Buttoms/ListButton/Buttons';
 import Study from '../app/study';
 import NextListWeb from './listWebs/ListWebs';
 import ListWebBar from './listWebBar/listWebBar';
 import { BookI, DotI, NewI, ProfileI, WebsiteI, WorkI } from '~/assets/Icons/Icons';
 import Background from 'src/backbround/background';
-import { useDispatch, useSelector } from 'react-redux';
 import { onPersonalPage } from '~/redux/hideShow';
-
+import HttpRequestUser, { PropsParamsById } from '~/restAPI/requestServers/socialNetwork/user';
 import {
     DivAvatar,
     DivPersonalPage,
@@ -32,8 +34,8 @@ import Time from './DateTime/DateTime';
 import currentPageL from './CurrentPage';
 import CurrentOptions from './CurrentOption';
 import { changeMain } from '~/redux/background';
-import Cookies from 'universal-cookie';
-const cooke = new Cookies();
+import { changeThree } from '~/redux/languageRD';
+
 interface propsState {
     persistedReducer: {
         background: {
@@ -41,12 +43,37 @@ interface propsState {
         };
     };
 }
+interface PropsRes {
+    avatar: string;
+    fullName: string;
+    status: string;
+    sn: string;
+    l: string;
+    w: string;
+}
 const Website: React.FC = () => {
     const dispatch = useDispatch();
     const backgr = useSelector((state: any) => state.persistedReducer.background?.main);
+    const [cookies, setCookie] = useCookies(['tks', 'k_user']);
     const [darkShining, setDarkShining] = useState<boolean>(backgr);
+    const [user, setUser] = useState<PropsParamsById>();
     useEffect(() => {
-        // const data = GetFriend.friend(dispatch);
+        //  const data = GetFriend.friend(dispatch);
+        async function fectData() {
+            const res: PropsRes = await HttpRequestUser.getById(cookies.tks, cookies.k_user, {
+                avatar: 'avatar',
+                fullName: 'fullname',
+                status: 'status',
+                sn: 'sn',
+                l: 'l',
+                w: 'w',
+            });
+            if (res) {
+                dispatch(changeThree(res));
+                setUser(res);
+            }
+        }
+        fectData();
     }, []);
     useEffect(() => {
         dispatch(changeMain(darkShining));
@@ -118,19 +145,7 @@ const Website: React.FC = () => {
         console.log('setCurrentPage(0);');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hrefState]);
-    const Tag1 = TagRef1.current;
-    const Tag2 = TagRef2.current;
-    const Tag3 = TagRef3.current;
-    // const props1 = {
-    //     Tag1,
-    //     Tag2,
-    //     Tag3,
-    //     nextWebsite,
-    //     hanNextWebsite1,
-    //     hanNextWebsite2,
-    //     hanNextWebsite3,
-    //     darkShining,
-    // };
+
     const props2 = {
         optionWebsite,
         hanNextWebsite1,
@@ -199,19 +214,19 @@ const Website: React.FC = () => {
                         <DivPersonalPage width="430px" height="150px" margin="10px" wrap="wrap" content="center">
                             <DivAvatar>
                                 <Avatar
-                                    src=""
-                                    alt=""
+                                    src={user?.avatar || ''}
+                                    alt={user?.fullName}
                                     gender={0}
                                     radius="50%"
-                                    id="3f132816-bb9d-4579-a396-02ab5680f4f4"
+                                    id={cookies.k_user}
                                 />
 
                                 <DivDot color={changeColor.dark()} onClick={handleProfileMain}>
                                     <DotI />
                                 </DivDot>
                             </DivAvatar>
-                            <HfullName color={changeColor.dark()}>Nguyen Trong Hung</HfullName>
-                            <Pstatus color={changeColor.dark()}>dang cam thay buon</Pstatus>
+                            <HfullName color={changeColor.dark()}>{user?.fullName}</HfullName>
+                            <Pstatus color={changeColor.dark()}>{user?.status}</Pstatus>
                         </DivPersonalPage>
                         <DivChangeColorBG>
                             <Background setDarkShining={setDarkShining} />
