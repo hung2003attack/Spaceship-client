@@ -12,12 +12,19 @@ import { IoMdNotifications, IoIosSend } from 'react-icons/io';
 import { BiDotsHorizontalRounded, BiUser, BiMailSend } from 'react-icons/bi';
 import { FcSignature } from 'react-icons/fc';
 import { SiExpertsexchange } from 'react-icons/si';
-import { AiOutlineSetting, AiOutlineHome, AiOutlineEye, AiOutlineEyeInvisible, AiOutlineLoading } from 'react-icons/ai';
+import {
+    AiOutlineSetting,
+    AiOutlineHome,
+    AiOutlineEye,
+    AiOutlineEyeInvisible,
+    AiOutlineLoading,
+    AiOutlineFileText,
+} from 'react-icons/ai';
 import { GiNewspaper } from 'react-icons/gi';
 import { MdWorkOutline, MdEmojiPeople, MdRestartAlt } from 'react-icons/md';
 import { FaPeopleArrows, FaAddressCard, FaUserFriends } from 'react-icons/fa';
 import { RiDragMoveFill, RiMailSendLine } from 'react-icons/ri';
-import { TbArrowNarrowLeft } from 'react-icons/tb';
+import { TbArrowNarrowLeft, TbTextResize } from 'react-icons/tb';
 import { CgWebsite } from 'react-icons/cg';
 
 export const HomeI = () => <AiOutlineHome />;
@@ -54,3 +61,5 @@ export const CameraI = () => <BsFillCameraVideoFill />;
 export const SendOPTI = () => <IoIosSend />;
 export const LoadingI = () => <AiOutlineLoading />;
 export const ResTartI = () => <MdRestartAlt />;
+// icon at home
+export const TextI = () => <TbTextResize />;

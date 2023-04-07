@@ -26,8 +26,9 @@ export const Perror = styled.p`
     text-shadow: 0px 0px 0px #cdcdcd;
 `;
 export const A = styled.a`
-    color: #fff;
+    color: ${(props) => props.color};
     font-size: 12px;
+    cursor: pointer;
     &:hover {
         text-decoration: underline;
     }

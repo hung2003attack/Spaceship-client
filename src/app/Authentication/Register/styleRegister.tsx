@@ -71,7 +71,7 @@ export const DivLGBT = styled(DivGenderC)`
     border-radius: 5px;
     p {
         display: flex;
-        color: var(--color-text-light);
+        color: var(--color-light);
     }
     &:hover {
         background-color: rgb(99, 99, 99);

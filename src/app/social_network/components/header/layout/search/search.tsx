@@ -3,14 +3,23 @@ import clsx from 'clsx';
 
 import useDebounce from '../../../../../reUsingComponents/hook/useDebounce';
 
-import HttpRequestUser from '~/restAPI/requestServers/socialNetwork/user';
+import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
 import { CloseI } from '~/assets/Icons/Icons';
 import Account from '~/social_network/Accoutns/Account';
 import styles from './search.module.scss';
 import Bar from '~/reUsingComponents/Bar/Bar';
 import { useCookies } from 'react-cookie';
+import { DivSearch, Input } from './styleSearch';
+import { useSelector } from 'react-redux';
+import { PropsBg } from 'src/mainPage/nextWeb';
+import { DivClose } from '~/reUsingComponents/styleComponents/styleComponents';
 
-const Search: React.FC<{ title: string }> = ({ title }) => {
+const Search: React.FC<{ title: string; location: string; colorBg: string; colorText: string }> = ({
+    title,
+    location,
+    colorBg,
+    colorText,
+}) => {
     const [cookies, setCookie] = useCookies(['tks']);
     const [searchUser, setSearchUser] = useState<string>('');
     const [resultSearch, setResultSearch] = useState<any>([]);
@@ -61,32 +70,49 @@ const Search: React.FC<{ title: string }> = ({ title }) => {
         { id: '3f132816-bb9d-4579-a396-02ab5680f4f4', last_name: 'hung', full_name: 'hung nguyen' },
     ];
     return (
-        <div className={clsx(styles.search)}>
-            <input
+        <DivSearch bg={colorText}>
+            <Input
                 ref={closeRef}
                 type="text"
+                color={colorText}
                 value={searchUser}
                 placeholder={title}
-                className={clsx(styles.searchInput)}
                 onChange={(e) => handleResultSearch(e)}
                 onFocus={handleShowHide}
             />
-            <div className={clsx(styles.closeSearch)} onClick={handleCloseSearch}>
+            <DivClose
+                width="30px"
+                size="1.8rem"
+                top="1.5px"
+                right="-4px"
+                color={colorText}
+                className={clsx(styles.closeSearch)}
+                onClick={handleCloseSearch}
+            >
                 <CloseI />
-            </div>
+            </DivClose>
             {resultSearch?.length > 0 && (
                 <>
                     <div className={clsx(styles.resultBar, hide && styles.showHide)}>
                         <div className={clsx(styles.resultBar1)}>
                             <div className={clsx(styles.useResult)}>
-                                <Account data={resultSearch} />
+                                <Account data={resultSearch} location={location} />
                             </div>
                         </div>
-                        <Bar onClick={() => setHide(!hide)} hideResultSearch />
+                        <Bar
+                            onClick={() => setHide(!hide)}
+                            css="  position: absolute;
+                                    height: 100%;
+                                    width: 5px;
+                                    right: -7px;
+                                    top: 0;
+                                    border-radius: 5px;
+                                    cursor: var(--pointer);"
+                        />
                     </div>
                 </>
             )}
-        </div>
+        </DivSearch>
     );
 };
 

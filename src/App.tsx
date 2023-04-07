@@ -19,7 +19,7 @@ import { login } from './dataMark/dataLogin';
 import { register } from './dataMark/dataRegister';
 import Authentication from '~/Authentication/Auth';
 import { useCookies } from 'react-cookie';
-import { useEffect, useState } from 'react';
+import { useDeferredValue, useEffect, useState } from 'react';
 import searchAPI from '~/restAPI/requestServers/socialNetwork/searchAPI_SN';
 import { DivContainer } from '~/reUsingComponents/styleComponents/styleComponents';
 import styled from 'styled-components';
@@ -225,7 +225,7 @@ function App() {
             height: 80px;
             border-radius: 50%;
             padding: 5px;
-            box-shadow: 0 0 1px var(--color-text-dark);
+            box-shadow: 0 0 1px var(--color-dark);
             background-color: rgb(231 62 62 / 67%);
             @media (min-width: 600px){
                 min-width: ${150 / (leng > 1 ? leng - 0.5 : leng) + 'px;'}
@@ -263,6 +263,7 @@ function App() {
         right: 0;
         z-index: 10;
     `;
+
     if (token && k_user) {
         return (
             <>

@@ -2,6 +2,8 @@ import React, { ReactElement, ReactNode } from 'react';
 import { DivPage, Ptitle } from './styleListWeb';
 import { StyledComponent } from 'styled-components';
 import { LinkProps } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { PropsBg } from '../nextWeb';
 
 export interface PropsListWeb {
     data: {
@@ -16,19 +18,14 @@ export interface PropsListWeb {
         name: string;
         icon: JSX.Element;
     }[];
-    darkShining: boolean;
 }
-const NextListWeb: React.FC<PropsListWeb> = ({ data, darkShining }) => {
+const NextListWeb: React.FC<PropsListWeb> = ({ data }) => {
+    const { colorBg } = useSelector((state: PropsBg) => state.persistedReducer.background);
     return (
         <>
             {data.map((V) => {
                 return (
-                    <V.Tag
-                        key={V.name}
-                        to={V.link}
-                        onClick={V.next}
-                        color={darkShining ? 'rgb(144 144 144 / 39%)' : 'rgb(22, 22, 22)'}
-                    >
+                    <V.Tag key={V.name} to={V.link} onClick={V.next} color={colorBg}>
                         <DivPage>{V.icon}</DivPage>
                         <Ptitle>{V.name}</Ptitle>
                     </V.Tag>

@@ -11,7 +11,7 @@ export const DivContainer = styled.div`
     flex-wrap: wrap;
     overflow-y: overlay;
     justify-content: var(--justify-content-start);
-
+    background-color: ${(props: { bg: string }) => (props.bg === '#ffffffb8' ? '#efefef' : props.bg)};
     @media (min-width: 375px) {
         justify-content: center;
     }
@@ -28,7 +28,7 @@ export const DivListWebProfile = styled.div`
     align-items: center;
     justify-content: space-around;
     position: absolute;
-    background-color: ${(props) => props.color};
+    background-color: ${(props: { backgr: string }) => props.backgr};
     overflow: hidden;
 `;
 interface PropsPersonal {
@@ -95,7 +95,7 @@ export const Apage = styled(Link)`
     font-size: 100px;
     margin: 0 10px 20px;
     padding: 0 30px 30px;
-    background-color: ${(props: { color: string }) => props.color};
+    background-color: ${(props: { color: string }) => (props.color === '#ffffffb8' ? '#cbcbcb ' : props.color)};
     box-shadow: -5px 7px 5px #00000082;
     align-items: center;
     justify-content: center;

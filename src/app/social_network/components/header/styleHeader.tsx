@@ -11,7 +11,6 @@ export const DivHeader = styled.div`
     align-items: center;
     justify-content: center;
     position: fixed;
-    background: #202124;
 `;
 export const DivWrapper = styled.div`
     width: 100%;
@@ -53,6 +52,7 @@ export const DivHollow = styled.div`
 export const Alogo = styled.a`
     width: 30px;
     position: relative;
+
     div {
         align-items: end;
     }

@@ -4,14 +4,35 @@ import clsx from 'clsx';
 import { InitialStateHideShow, offAll, offSetting } from '~/redux/hideShow';
 
 import { CloseI } from '~/assets/Icons/Icons';
-import styles from './setting.module.scss';
 import Bar from '~/reUsingComponents/Bar/Bar';
 import { PropsSetting } from './interface';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
 import { DivClose, DivContainer } from '../styleComponents/styleComponents';
-import HttpRequestUser from '~/restAPI/requestServers/socialNetwork/user';
+import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
+import { DivLanguages, DivResults } from './styleSetting';
+import { P } from '../styleComponents/styleDefault';
+
+const css1 = `
+        min-width: 270px;
+        position: fixed;
+        top: 0px;
+        right: 9px;
+        box-shadow: 0 0 4px rgb(108 106 106);
+        z-index: 9999;
+        color: var(--color-light);
+    `;
+const css2 = `
+        margin-top: 49px;
+        box-shadow: 0 0 1px;
+    `;
+const css3 = `
+        font-size: 12px;
+        margin: 3px 0 0 3px;
+        display: flex;
+        align-items: self-end;
+    `;
 const Settingcbl: React.FC<{
     dataO: PropsSetting;
     setLg: React.Dispatch<React.SetStateAction<string>>;
@@ -41,14 +62,24 @@ const Settingcbl: React.FC<{
         }
     };
     const handleResult = (data: any) => {
+        const cssR = `
+                transition: all 0.1s linear;
+                width: 100%;
+                padding: 5px;
+                text-align: center;
+                cursor: pointer;
+                &:hover {
+                    background-color: rgba(176, 176, 176, 0.08);
+                }
+        `;
         setShowresult(() => {
             if (data) {
                 setResultoption(true);
                 return data.data.map((title: any, index: number) => {
                     return (
-                        <div key={index} className={clsx(styles.title)}>
-                            <p onClick={() => handleChangeLanguage(title.lg)}>{title.name}</p>
-                        </div>
+                        <P css={cssR} key={index} onClick={() => handleChangeLanguage(title.lg)}>
+                            {title.name}
+                        </P>
                     );
                 });
             }
@@ -64,21 +95,6 @@ const Settingcbl: React.FC<{
             localStorage.clear();
         }
     };
-    const css1 = `
-        min-width: 270px;
-        position: fixed;
-        top: 0px;
-        right: 9px;
-        box-shadow: 0 0 4px rgb(108 106 106);
-        transition: all 0.3s linear;
-        z-index: 9999;
-        color: var(--color-text-light);
-    `;
-    const css2 = `
-        margin-top: 49px;
-        box-shadow: 0 0 1px;
-    `;
-
     return (
         <>
             <DivContainer
@@ -107,26 +123,21 @@ const Settingcbl: React.FC<{
                         return (
                             <div key={index}>
                                 {setting.logout ? (
-                                    <div className={clsx(styles.language)} onClick={handleLogOut}>
-                                        <p className={clsx(styles.title)}>{setting.title}</p>
-                                    </div>
+                                    <DivLanguages onClick={handleLogOut}>
+                                        <P css=" margin-left: 15px;">{setting.title}</P>
+                                    </DivLanguages>
                                 ) : (
-                                    <div
-                                        className={clsx(styles.language)}
-                                        onClick={() => handleResult(setting.children)}
-                                    >
-                                        <p className={clsx(styles.title)}>{setting.title}</p>
-                                        {setting.title === 'Language' && (
-                                            <p className={clsx(styles.currentLanguage)}>( English ){setting.icon}</p>
-                                        )}
-                                    </div>
+                                    <DivLanguages onClick={() => handleResult(setting.children)}>
+                                        <P css=" margin-left: 15px;">{setting.title}</P>
+                                        {setting.title === 'Language' && <P css={css3}>( English ){setting.icon}</P>}
+                                    </DivLanguages>
                                 )}
                             </div>
                         );
                     })}
                 </DivContainer>
-                {resultoption && <Bar onClick={() => setResultoption(false)} hideResultSetting />}
-                {resultoption && <div className={clsx(styles.results)}> {showresult}</div>}
+                {resultoption && <Bar onClick={() => setResultoption(false)} css="width: 5px;" />}
+                {resultoption && <DivResults> {showresult}</DivResults>}
             </DivContainer>
         </>
     );

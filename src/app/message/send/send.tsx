@@ -5,7 +5,6 @@ import styles from './send.module.scss';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import React, { useState } from 'react';
 import Hovertitle from '~/reUsingComponents/HandleHover/Hover';
-import Move from '~/reUsingComponents/Bar/MoveBar';
 import useDebounce from '~/reUsingComponents/hook/useDebounce';
 import { DivIconMs } from '../styleMessage';
 const Send: React.FC = () => {
@@ -53,7 +52,7 @@ const Send: React.FC = () => {
                     Tags={DivIconMs}
                     title="Send"
                     size="23px"
-                    color="var(--color-text-dark)"
+                    color="var(--color-dark)"
                     onClick={handleShowHide}
                 >
                     <SendI />
@@ -115,7 +114,6 @@ const Send: React.FC = () => {
                             </div>
                         </div> */}
                     </div>
-                    {move && <Move setlLeft={setlLeft} setBottom={setBottom} left={left} bottom={bottom} send />}
                 </div>
             )}
         </>

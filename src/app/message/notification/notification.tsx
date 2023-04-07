@@ -3,7 +3,6 @@ import Hovertitle from '~/reUsingComponents/HandleHover/Hover';
 import clsx from 'clsx';
 import React, { memo, useState } from 'react';
 import styles from './notification.module.scss';
-import Move from '~/reUsingComponents/Bar/MoveBar';
 import { DivIconMs } from '../styleMessage';
 const Notification: React.FC = () => {
     const [left, setlLeft] = useState<boolean>(false);
@@ -30,7 +29,7 @@ const Notification: React.FC = () => {
                     Tags={DivIconMs}
                     title="NoTi"
                     size="29px"
-                    color="var(--color-text-dark)"
+                    color="var(--color-dark)"
                     onClick={handleShowHide}
                 >
                     <NotificationI />
@@ -60,10 +59,6 @@ const Notification: React.FC = () => {
                             </div>
                         </div>
                         <div>results</div>
-
-                        {move && (
-                            <Move setlLeft={setlLeft} setBottom={setBottom} left={left} bottom={bottom} notification />
-                        )}
                     </div>
                 </>
             )}

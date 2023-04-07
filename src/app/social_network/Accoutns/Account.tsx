@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { offPersonalPage, onPersonalPage, setIdUser } from '~/redux/hideShow';
 import { profile } from 'console';
 
-const Account: React.FC<any> = ({ data }) => {
+const Account: React.FC<any> = ({ data, location }) => {
     console.log(window.location.host, 'data');
     const dispatch = useDispatch();
     return (
@@ -16,17 +16,10 @@ const Account: React.FC<any> = ({ data }) => {
             {data.map((res: any) => (
                 <div
                     key={res.id}
-                    onMouseOver={(e) => {
-                        dispatch(setIdUser([res.id]));
-                        dispatch(onPersonalPage());
-                    }}
-                    onMouseLeave={() => {
-                        dispatch(offPersonalPage());
-                    }}
                     onClick={() => {
                         dispatch(setIdUser([res.id]));
                         dispatch(onPersonalPage());
-                        window.history.replaceState(null, 'perspnalPage', `/profile?id=${res.id}`);
+                        window.history.replaceState(null, 'perspnalPage', `/${location}/profile?id=${res.id}`);
                     }}
                     className={clsx(styles.userSearch)}
                 >

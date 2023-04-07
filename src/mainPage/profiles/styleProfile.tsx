@@ -21,7 +21,7 @@ export const DivProfile = styled.div`
 `;
 export const Pname = styled.p`
     font-size: 1.3rem;
-    color: var(--color-text-light);
+    color: var(--color-light);
     @media (min-width: 837px) {
         font-size: 1.6rem;
     }

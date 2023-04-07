@@ -1,14 +1,11 @@
 import clsx from 'clsx';
 import React, { memo, useState, useEffect } from 'react';
 
-import styles from './avatar.module.scss';
 import { FaUserCircle } from 'react-icons/fa';
 import Images from '../../assets/images';
-import AvatarEditor from 'react-avatar-editor';
 import { Img } from '../styleComponents/styleDefault';
 import { useDispatch } from 'react-redux';
 import { onPersonalPage, onSetting, setIdUser } from '~/redux/hideShow';
-import styled from 'styled-components';
 import { DivImg } from '../styleComponents/styleComponents';
 
 interface _Avatar {

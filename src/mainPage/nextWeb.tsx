@@ -11,7 +11,7 @@ import ListWebBar from './listWebBar/listWebBar';
 import { BookI, DotI, NewI, ProfileI, WebsiteI, WorkI } from '~/assets/Icons/Icons';
 import Background from 'src/backbround/background';
 import { onPersonalPage } from '~/redux/hideShow';
-import HttpRequestUser, { PropsParamsById } from '~/restAPI/requestServers/socialNetwork/user';
+import HttpRequestUser, { PropsParamsById } from '~/restAPI/requestServers/accountRequest/user';
 import {
     DivAvatar,
     DivPersonalPage,
@@ -33,16 +33,8 @@ import {
 import Time from './DateTime/DateTime';
 import currentPageL from './CurrentPage';
 import CurrentOptions from './CurrentOption';
-import { changeMain } from '~/redux/background';
 import { changeThree } from '~/redux/languageRD';
 
-interface propsState {
-    persistedReducer: {
-        background: {
-            main: boolean;
-        };
-    };
-}
 interface PropsRes {
     avatar: string;
     fullName: string;
@@ -51,11 +43,19 @@ interface PropsRes {
     l: string;
     w: string;
 }
+export interface PropsBg {
+    persistedReducer: {
+        background: {
+            colorText: string;
+            colorBg: string;
+        };
+    };
+}
 const Website: React.FC = () => {
     const dispatch = useDispatch();
-    const backgr = useSelector((state: any) => state.persistedReducer.background?.main);
+    const { colorText, colorBg } = useSelector((state: PropsBg) => state.persistedReducer.background);
     const [cookies, setCookie] = useCookies(['tks', 'k_user']);
-    const [darkShining, setDarkShining] = useState<boolean>(backgr);
+    // const [darkShining, setDarkShining] = useState<boolean>(backgr);
     const [user, setUser] = useState<PropsParamsById>();
     useEffect(() => {
         //  const data = GetFriend.friend(dispatch);
@@ -68,6 +68,8 @@ const Website: React.FC = () => {
                 l: 'l',
                 w: 'w',
             });
+            console.log(user, 'user');
+
             if (res) {
                 dispatch(changeThree(res));
                 setUser(res);
@@ -75,9 +77,7 @@ const Website: React.FC = () => {
         }
         fectData();
     }, []);
-    useEffect(() => {
-        dispatch(changeMain(darkShining));
-    }, [darkShining]);
+
     const [optionWebsite, setOptionWebsite] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(() => {
         return JSON.parse(localStorage.getItem('currentPage') || '{}').currentWeb;
@@ -184,31 +184,14 @@ const Website: React.FC = () => {
             icon: <WorkI />,
         },
     ];
-    const changeColor = {
-        profile: () => {
-            return darkShining ? '#fff' : 'rgb(22, 22, 22)';
-        },
-        dark: () => {
-            return darkShining ? 'var(--color-text-dark)' : 'var(--color-text-light)';
-        },
-        elementOp: () => {
-            return {
-                one: darkShining ? (option ? '#2f928a' : ' #929292') : option ? '#2f928a' : '#7e7e7e',
-                two: darkShining ? (!option ? '#2f928a' : ' #929292') : !option ? '#2f928a' : '#7e7e7e',
-            };
-        },
-        optionTitle: () => {
-            return option ? 'Family' : 'Tap';
-        },
-    };
 
     return (
         <>
             <DivMainPage>
                 {currentPageL(currentPage, optionWebsite)}
                 {!optionWebsite && (
-                    <DivListWebProfile color={changeColor.profile()}>
-                        <DivDate color={changeColor.dark()}>
+                    <DivListWebProfile backgr={colorBg}>
+                        <DivDate color={colorText}>
                             <Time />
                         </DivDate>
                         <DivPersonalPage width="430px" height="150px" margin="10px" wrap="wrap" content="center">
@@ -220,31 +203,27 @@ const Website: React.FC = () => {
                                     radius="50%"
                                     id={cookies.k_user}
                                 />
-
-                                <DivDot color={changeColor.dark()} onClick={handleProfileMain}>
-                                    <DotI />
-                                </DivDot>
                             </DivAvatar>
-                            <HfullName color={changeColor.dark()}>{user?.fullName}</HfullName>
-                            <Pstatus color={changeColor.dark()}>{user?.status}</Pstatus>
+                            <HfullName color={colorText}>{user?.fullName}</HfullName>
+                            <Pstatus color={colorText}>{user?.status}</Pstatus>
                         </DivPersonalPage>
                         <DivChangeColorBG>
-                            <Background setDarkShining={setDarkShining} />
+                            <Background dispatch={dispatch} />
                         </DivChangeColorBG>
                         <DivContainerChangeP>
                             <DivContainerChangeC>
-                                <PtitleOptions color={changeColor.dark()}>{changeColor.optionTitle()}</PtitleOptions>
+                                <PtitleOptions color={colorText}>{option ? 'Family' : 'Tap'}</PtitleOptions>
                                 <DivOptions>
-                                    <DivElements color={changeColor.elementOp().one} onClick={handleProfile}>
+                                    <DivElements color={colorText} onClick={handleProfile}>
                                         <ProfileI />
                                     </DivElements>
-                                    <DivElements color={changeColor.elementOp().two} onClick={handleWebsite}>
+                                    <DivElements color={colorText} onClick={handleWebsite}>
                                         <WebsiteI />
                                     </DivElements>
                                 </DivOptions>
                             </DivContainerChangeC>
-                            <DivContainer>
-                                <CurrentOptions options={option} data={buttonPage} darkShining={darkShining} />
+                            <DivContainer bg={colorBg}>
+                                <CurrentOptions options={option} data={buttonPage} />
                             </DivContainer>
                         </DivContainerChangeP>
                     </DivListWebProfile>

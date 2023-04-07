@@ -11,6 +11,7 @@ import { useCookies } from 'react-cookie';
 import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
 import Eyes from '~/reUsingComponents/Eys/Eye';
 import { Input } from '~/reUsingComponents/styleComponents/styleDefault';
+import { PropsBg } from 'src/mainPage/nextWeb';
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 interface InLogin {
     title: string;
@@ -41,8 +42,8 @@ const Login: React.FC<{
 }> = ({ data, setWhatKind }) => {
     const [, setCookies] = useCookies(['tks', 'k_user']);
     const dataLanguages = useSelector((state: PropsState) => state.persistedReducer?.language.login);
+    const { colorBg, colorText } = useSelector((state: PropsBg) => state.persistedReducer.background);
     const [language, setLanguage] = useState<boolean>(false);
-    console.log(dataLanguages);
 
     const { title, input, changePassword, submit, register } = data[dataLanguages];
 
@@ -139,7 +140,9 @@ const Login: React.FC<{
                             );
                         })}
                         <Eyes value={value.password} setShow={setShowPass} show={showPass} top="73px" />
-                        <A onClick={() => setWhatKind('changePassword')}>{changePassword}</A>
+                        <A onClick={() => setWhatKind('changePassword')} color={colorText}>
+                            {changePassword}
+                        </A>
                     </DivAccount>
                     {errText && <Perror> {errText}</Perror>}
                     <DivRegister onClick={handleRegister}>{register}</DivRegister>

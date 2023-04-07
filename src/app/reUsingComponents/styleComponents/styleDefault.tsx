@@ -11,7 +11,7 @@ export const Links = styled(Link)`
     color: #aeaeae;
     position: relative;
     &:hover {
-        background-color: #383838;
+        background-color: ${(props: { bg: string }) => (props.bg === '#ffffffb8' ? '#bebbbb94' : ' #202124')};
     }
 `;
 
@@ -56,4 +56,12 @@ export const Img = styled.img`
         console.log('css', props);
         return props.radius || '0';
     }};
+`;
+export const P = styled.p`
+    ${(props: { css: string }) => props.css}
+`;
+export const Div = styled.div`
+    ${(props: { css: string }) => {
+        return props.css;
+    }}
 `;

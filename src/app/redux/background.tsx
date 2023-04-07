@@ -1,19 +1,24 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 interface Props {
-    main: boolean;
+    colorText: string;
+    colorBg: string;
 }
 const initialState: Props = {
-    main: false,
+    colorText: '#cbcbcb',
+    colorBg: '#202124',
 };
 const backgroundSilde = createSlice({
     name: 'background',
     initialState: initialState,
     reducers: {
-        changeMain: (state, action) => {
-            state.main = action.payload;
+        changeText: (state, action) => {
+            state.colorText = action.payload;
+        },
+        changeBg: (state, action) => {
+            state.colorBg = action.payload;
         },
     },
 });
-export const { changeMain } = backgroundSilde.actions;
+export const { changeBg, changeText } = backgroundSilde.actions;
 export default backgroundSilde.reducer;

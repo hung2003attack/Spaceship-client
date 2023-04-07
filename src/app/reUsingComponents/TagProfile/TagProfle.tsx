@@ -31,7 +31,7 @@ const TagProfle: React.FC<PropsTagP> = ({ data, onClick, button = false, margin,
                         size="1.2rem"
                         padding="3.5px 9.5px"
                         bk="#f6f6f6"
-                        color="var(--color-text-dark)"
+                        color="var(--color-dark)"
                         onClick={() => onClick(data.id)}
                     >
                         View
@@ -40,7 +40,7 @@ const TagProfle: React.FC<PropsTagP> = ({ data, onClick, button = false, margin,
                         size="1.2rem"
                         padding="3.5px 9.5px"
                         bk="#f6f6f6"
-                        color="var(--color-text-dark)"
+                        color="var(--color-dark)"
                         onClick={() => onClick(data.id)}
                     >
                         Select

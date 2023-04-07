@@ -22,6 +22,7 @@ const Hovertitle: React.FC<hover> = ({
     title,
     size,
     color,
+    colorBg,
 }) => {
     const [showHidetitle, setShowHideetitle] = useState<boolean>(false);
 
@@ -46,9 +47,11 @@ const Hovertitle: React.FC<hover> = ({
     };
     const Propstag = Tags || 'div';
     useEffect(() => {}, []);
+    console.log('color bg home', colorBg);
+
     return (
         <>
-            <Propstag {...propLink} onMouseEnter={handleHover} onMouseLeave={removeHover} {...propEvents}>
+            <Propstag {...propLink} bg={colorBg} onMouseEnter={handleHover} onMouseLeave={removeHover} {...propEvents}>
                 <DivIcon size={size} color={color}>
                     {children}
                 </DivIcon>

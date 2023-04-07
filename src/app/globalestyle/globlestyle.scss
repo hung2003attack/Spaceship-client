@@ -1,9 +1,8 @@
 @import 'normalize.css';
 
 :root {
-    --color-icon: #aeaeae;
-    --color-text-light: #cbcbcb;
-    --color-text-dark: #333;
+    --color-light: #cbcbcb;
+    --color-dark: #333;
     --border-radius-50: 50%;
     --pointer: pointer;
     --background: 100%;
@@ -64,7 +63,7 @@ p {
 }
 a {
     text-decoration: none;
-    color: var(--color-text-light);
+    color: var(--color-light);
 }
 ul {
     list-style-type: none;

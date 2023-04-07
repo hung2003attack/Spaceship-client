@@ -34,7 +34,13 @@ const ListWebBar: React.FC<Props> = ({ optionWebsite, hanNextWebsite1, hanNextWe
     return (
         <div className={clsx({ [styles.nextWebsiteBar]: optionWebsite, [styles.showNextWebsite]: showNextWebsite })}>
             <Hovertitle title="Websites">
-                <Bar nextBarWebsite onClick={handleshowNextBar} />
+                <Bar
+                    css="position: absolute;
+                    left: 0;
+                    top: 56px;
+                    transform: rotate(180deg);"
+                    onClick={handleshowNextBar}
+                />
             </Hovertitle>
             {elements()}
         </div>

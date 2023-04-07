@@ -1,5 +1,4 @@
 import { LanguageI } from '~/assets/Icons/Icons';
-import { PropsSetting } from '~/reUsingComponents/Setting/interface';
 
 export const socialnetwork = {
     VN: {
@@ -11,6 +10,7 @@ export const socialnetwork = {
             exchange: ' Giao Lưu',
             video: 'Gọi Video',
             search: 'Tìm kiếm',
+            location: 'SN',
         },
         sett: {
             data: {
@@ -40,9 +40,11 @@ export const socialnetwork = {
             sett: 'Setting',
 
             home: 'Home',
+
             exchange: 'Exchange',
             video: 'Call Video',
             search: 'Search',
+            location: 'SN',
         },
         sett: {
             data: {

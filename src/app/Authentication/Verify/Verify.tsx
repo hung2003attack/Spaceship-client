@@ -171,7 +171,7 @@ const Verify: React.FC<PropsVerify> = ({ setEnable, setAccount, Next }) => {
         <Form action="" onSubmit={handleSubmit}>
             <DivVerifymail>
                 <Htitle>
-                    Verify Email
+                    Verify Email or Phone Number
                     {Next}
                 </Htitle>
                 <DivSendMail>

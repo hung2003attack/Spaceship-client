@@ -11,6 +11,7 @@ export interface hover {
     title: string | undefined;
     size?: string;
     color?: string;
+    colorBg?: string;
     //class
 
     //call videos

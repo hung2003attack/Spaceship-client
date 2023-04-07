@@ -90,7 +90,7 @@ const Button = styled.button`
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: var(--color-text-light);
+    color: var(--color-light);
 `;
 export const ButtonSubmit: React.FC<{ title: string; bg?: string }> = ({ title, bg }) => {
     return (
@@ -152,20 +152,28 @@ export const Hname = styled.h3<PropsHname>`
 interface PropsClose {
     size: string;
     top: string;
-    left: string;
+    left?: string;
+    width?: string;
+    bg?: string;
+    right?: string;
 }
 export const DivClose = styled.div<PropsClose>`
+    width: ${(props) => props.width};
+    height: ${(props) => props.width};
+    top: ${(props) => props.top};
+    left: ${(props) => props.left};
+    right: ${(props) => props.right};
+    color: ${(props) => props.color};
     position: absolute;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: ${(props) => props.size};
-    cursor: pointer;
-    top: ${(props) => props.top};
-    left: ${(props) => props.left};
+    cursor: var(--pointer);
+
     border-radius: 50%;
     &:hover {
         transition: all 0.1s linear;
-        background-color: #3c4043;
+        background-color: ${(props) => props.bg};
     }
 `;

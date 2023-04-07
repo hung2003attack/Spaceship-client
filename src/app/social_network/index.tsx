@@ -4,7 +4,6 @@ import { LanguageI } from '~/assets/Icons/Icons';
 import { InitialStateHideShow } from '~/redux/hideShow';
 import { PropsSetting } from '~/reUsingComponents/Setting/interface';
 import Settingcbl from '~/reUsingComponents/Setting/Setting';
-import HttpRequestUser from '~/restAPI/requestServers/socialNetwork/user';
 import Header from './components/Header/HeaderLayout';
 import { useCookies } from 'react-cookie';
 import { MdAirlineSeatLegroomExtra } from 'react-icons/md';
@@ -32,6 +31,7 @@ interface InNetWork {
         exchange: string;
         video: string;
         search: string;
+        location: string;
     };
     sett: {
         data: PropsSetting;
