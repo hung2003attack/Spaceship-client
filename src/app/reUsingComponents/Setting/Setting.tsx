@@ -136,7 +136,9 @@ const Settingcbl: React.FC<{
                         );
                     })}
                 </DivContainer>
-                {resultoption && <Bar onClick={() => setResultoption(false)} css="width: 5px;" />}
+                {resultoption && (
+                    <Bar top="calc(50% - 10px);" onClick={() => setResultoption(false)} css="width: 5px;" />
+                )}
                 {resultoption && <DivResults> {showresult}</DivResults>}
             </DivContainer>
         </>

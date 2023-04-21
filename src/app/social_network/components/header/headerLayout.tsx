@@ -7,7 +7,7 @@ import { onSetting } from '~/redux/hideShow';
 
 import Search from './layout/Search/Search';
 import Images from '~/assets/images';
-import Hovertitle from '~/reUsingComponents/HandleHover/Hover';
+import Hovertitle from '~/reUsingComponents/HandleHover/HoverTitle';
 import { CameraI, ExchangeI, HomeI, LanguageI, SettingI } from '~/assets/Icons/Icons';
 import {
     Alogo,
@@ -59,7 +59,7 @@ const Header: React.FC<PropsTitle> = ({ title }) => {
         position: fixed;
         top: 0;
         right: 0;
-        z-index: 1;
+        z-index: 3;
     `;
     console.log(title.exchange, 'home', colorBg);
 

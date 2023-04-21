@@ -1,6 +1,15 @@
 import React from 'react';
 import clsx from 'clsx';
-import { BsThreeDotsVertical, BsBook, BsCheck2, BsPhone, BsFillCameraVideoFill, BsMessenger } from 'react-icons/bs';
+import {
+    BsThreeDotsVertical,
+    BsBook,
+    BsCheck2,
+    BsPhone,
+    BsFillCameraVideoFill,
+    BsMessenger,
+    BsEmojiSmile,
+    BsEmojiSmileFill,
+} from 'react-icons/bs';
 import {
     IoImagesOutline,
     IoLogoYoutube,
@@ -26,11 +35,10 @@ import { FaPeopleArrows, FaAddressCard, FaUserFriends } from 'react-icons/fa';
 import { RiDragMoveFill, RiMailSendLine } from 'react-icons/ri';
 import { TbArrowNarrowLeft, TbTextResize } from 'react-icons/tb';
 import { CgWebsite } from 'react-icons/cg';
+import { VscPreview } from 'react-icons/vsc';
 
-export const HomeI = () => <AiOutlineHome />;
 export const ImageI = () => <IoImagesOutline />;
-export const ExchangeI = () => <SiExpertsexchange />;
-export const VideoI = () => <IoLogoYoutube />;
+
 export const FixI = () => <BsThreeDotsVertical />;
 export const CloseI = () => <IoCloseOutline />;
 export const SettingI = () => <AiOutlineSetting />;
@@ -62,4 +70,9 @@ export const SendOPTI = () => <IoIosSend />;
 export const LoadingI = () => <AiOutlineLoading />;
 export const ResTartI = () => <MdRestartAlt />;
 // icon at home
+export const HomeI = () => <AiOutlineHome />;
+export const ExchangeI = () => <SiExpertsexchange />;
+export const VideoI = () => <IoLogoYoutube />;
 export const TextI = () => <TbTextResize />;
+export const PreviewI = () => <VscPreview />;
+export const IconI = () => <BsEmojiSmileFill />;

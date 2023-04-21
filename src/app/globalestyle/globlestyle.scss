@@ -10,6 +10,9 @@
     --transition-03s: all 0.3s linear;
     --justify-content-start: start;
     --full: 100%;
+    #pickerB {
+        --rgb-background: 26 27 30 !important;
+    }
 }
 
 * {
@@ -33,24 +36,45 @@ body {
     height: var(--background);
 }
 @font-face {
-    font-family: Raleway;
+    font-family: Raleway Straight;
     src: url('../assets/font-texts/Raleway-Regular.ttf');
     font-weight: 400;
 }
 
 @font-face {
-    font-family: Arima;
+    font-family: Arima Straight;
     src: url('../assets/font-texts/ArimaMadurai-Regular.ttf');
     font-weight: 400;
 }
 @font-face {
-    font-family: Saira;
+    font-family: Saira Straight;
     src: url('../assets/font-texts/Saira-VariableFont_wdth,wght.ttf');
     font-weight: 400;
 }
 @font-face {
-    font-family: Item;
+    font-family: RobotoL Straight;
+    src: url('../assets/font-texts/Roboto-Light.ttf');
+    font-weight: 400;
+}
+@font-face {
+    font-family: RobotoL Italics;
+    src: url('../assets/font-texts/Roboto-LightItalic.ttf');
+    font-weight: 400;
+}
+@font-face {
+    font-family: Item Straight;
     src: url(../assets/font-texts/Itim-Regular.ttf);
+    font-weight: 400;
+}
+@font-face {
+    font-family: Noto Sans Straight;
+    src: url(../assets/font-texts/NotoSans-Medium.ttf);
+    font-weight: 400;
+}
+@font-face {
+    font-family: Noto Sans Italics;
+    src: url(../assets/font-texts/NotoSans-MediumItalic.ttf);
+    font-weight: 400;
 }
 button {
     border: none;

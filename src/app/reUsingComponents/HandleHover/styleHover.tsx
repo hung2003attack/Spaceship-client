@@ -1,16 +1,27 @@
 import styled from 'styled-components';
-
-export const DivHover = styled.div`
+interface PropsDivHover {
+    right?: string;
+    left?: string;
+    top?: string;
+    bottom?: string;
+    bg?: string;
+}
+export const DivHover = styled.div<PropsDivHover>`
     width: max-content;
     height: 80%;
+    padding: 10px;
     display: none;
     font-size: 30px;
     align-items: center;
     justify-content: center;
     position: absolute;
-    bottom: -34px;
-    right: 50%;
-    left: 50%;
+    border-radius: 5px;
+    color: ${(props) => props.color};
+    background-color: ${(props) => props.bg};
+    top: ${(props) => props.top};
+    bottom: ${(props) => props.bottom || '-34px'};
+    right: ${(props) => props.right || '50%'};
+    left: ${(props) => props.left || '50%'};
     transform: translateX(-50%);
     color: ${(props) => props.color || 'var(--color-light)'};
 

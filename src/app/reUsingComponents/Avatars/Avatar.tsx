@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo, useState, useEffect, useLayoutEffect } from 'react';
 
 import { FaUserCircle } from 'react-icons/fa';
 import Images from '../../assets/images';
@@ -17,6 +17,8 @@ interface _Avatar {
     radius?: string;
     gender?: any;
     onClick?: () => void;
+    css?: string;
+    profile?: boolean;
 }
 
 const Avatar: React.FC<_Avatar> = ({
@@ -26,10 +28,12 @@ const Avatar: React.FC<_Avatar> = ({
     width,
     radius,
     gender = false,
-    fallback: Fallback = gender === 0 ? Images.defaultAvatarMale : gender === 1 ? Images.defaultAvatarFemale : '',
+    fallback: Fallback = gender === 0 ? Images.defaultAvatarMale : gender === 1 ? Images.defaultAvatarFemale : null,
     onClick,
+    css,
+    profile = true,
 }) => {
-    console.log('av', src);
+    console.log('av', gender, Fallback);
     const dispatch = useDispatch();
     const [avatar, setAvatar] = useState<boolean>(false);
     const [avatarFallback, setAvatarFallback] = useState<string>('');
@@ -49,18 +53,24 @@ const Avatar: React.FC<_Avatar> = ({
         onClick,
     };
     const handleOpentProfile = () => {
-        dispatch(setIdUser([id]));
-        dispatch(onPersonalPage());
+        if (profile) {
+            dispatch(setIdUser([id]));
+            dispatch(onPersonalPage());
+        }
     };
     useEffect(() => {
-        if (!src) setAvatarFallback(Fallback);
-    }, []);
+        if (!src) {
+            setAvatarFallback(Fallback);
+        }
+    }, [gender]);
+    console.log(gender, avatarFallback, Fallback, '++');
+
     return avatar ? (
         <FaUserCircle />
     ) : (
-        <DivImg width={width} {...events}>
+        <DivImg width={width} css={css} {...events}>
             <Img
-                src={avatarFallback || src}
+                src={src || avatarFallback}
                 alt={alt}
                 onError={handleErrorImage}
                 radius={radius}

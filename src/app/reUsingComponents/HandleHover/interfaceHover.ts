@@ -3,7 +3,6 @@ export interface hover {
     onClick?: (e?: any) => void;
     anyTags?: any;
     Tags?: any;
-    child?: any;
     href?: string;
     src?: string;
     alt?: string;
@@ -16,6 +15,10 @@ export interface hover {
 
     //call videos
     callVideo?: boolean;
+    top?: string;
+    bottom?: string;
+    right?: string;
+    left?: string;
 }
 export interface PropsImg {
     src: string | undefined;

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import styles from './send.module.scss';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import React, { useState } from 'react';
-import Hovertitle from '~/reUsingComponents/HandleHover/Hover';
+import Hovertitle from '~/reUsingComponents/HandleHover/HoverTitle';
 import useDebounce from '~/reUsingComponents/hook/useDebounce';
 import { DivIconMs } from '../styleMessage';
 const Send: React.FC = () => {

@@ -34,16 +34,16 @@ interface Propss {
     css?: string;
     repP?: string;
     padding?: string;
-    bk?: string;
+    bg?: string;
 }
 export const Button = styled.button<Propss>`
     display: flex;
     padding: ${(props) => props.padding || '2px 10px'};
-    background-color: ${(props) => props.bk || 'transparent'};
+    background-color: ${(props) => props.bg || 'transparent'};
     color: ${(props) => props.color || '#fff'};
     cursor: var(--pointer);
     border-radius: 5px;
-    box-shadow: 0 0 3px #ffffff9c;
+    box-shadow: 0 0 1px #ffffff9c;
     font-size: ${(props) => props.size || '1.6rem'};
     font-weight: bold;
     ${(props) => props.css}
@@ -51,17 +51,42 @@ export const Button = styled.button<Propss>`
         padding: ${(props) => props.repP || props.padding || '2px 22px'};
     }
 `;
+interface PropsButtons {
+    text: string[];
+    padding?: string;
+    color?: string;
+    background?: string;
+    size?: string;
+    css?: string;
+    onClick?: () => void;
+}
+export const Buttons: React.FC<PropsButtons | any> = ({ text, padding, color, background, size, css, onClick }) => {
+    const propsEvents = {
+        onClick,
+    };
+    return text.map((vl: any) => (
+        <Button padding={padding} color={color} bg={background} size={size} css={css} key={vl} {...propsEvents}>
+            {vl}
+        </Button>
+    ));
+};
 export const Img = styled.img`
-    border-radius: ${(props: { radius?: string }) => {
-        console.log('css', props);
-        return props.radius || '0';
-    }};
+    border-radius: ${(props: { radius?: string }) => props.radius || '0'};
 `;
 export const P = styled.p`
-    ${(props: { css: string }) => props.css}
+    color: ${(props) => props.color};
+    ${(props: { css?: string }) => props.css}
 `;
-export const Div = styled.div`
-    ${(props: { css: string }) => {
-        return props.css;
-    }}
+export const H3 = styled.h3`
+    color: ${(props) => props.color};
+    ${(props: { css?: string }) => props.css}
+`;
+interface PropsDiv {
+    wrap?: string;
+    css: string;
+}
+export const Div = styled.div<PropsDiv>`
+    display: flex;
+    flex-wrap: ${(props) => props.wrap || 'none'};
+    ${(props) => props.css}
 `;

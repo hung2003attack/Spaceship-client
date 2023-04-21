@@ -1,6 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import hideShow from './hideShow';
-import news from './storeSocial_network/home';
+import home from './storeSocial_network/home';
 import background from './background';
 import changeLanguage from './languageRD';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
@@ -11,13 +11,12 @@ const persistConfig = {
     storage,
 };
 const rootReducer = combineReducers({
-    home: news,
     language: changeLanguage,
     background: background,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
-    reducer: { persistedReducer, hideShow },
+    reducer: { persistedReducer, hideShow, home },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: {

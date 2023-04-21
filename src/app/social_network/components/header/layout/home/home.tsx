@@ -1,105 +1,120 @@
 import clsx from 'clsx';
-import { Fragment, Key, memo, useEffect, useRef, useState } from 'react';
-import {
-    Div,
-    DivForm,
-    DivNews,
-    DivSignature,
-    DivOptions,
-    DivUpImage,
-    DivUpNews,
-    Form,
-    Input,
-    Label,
-    DivItems,
-} from './styleHome';
+import { createRef, Fragment, Key, memo, useEffect, useRef, useState } from 'react';
+import { DivHome } from './styleHome';
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import HttpRequestHome from '~/restAPI/requestServers/socialNetwork/home';
-import { ImageI, SignatureI, TextI } from '~/assets/Icons/Icons';
-import { PropsBg } from 'src/mainPage/nextWeb';
-import Bar from '~/reUsingComponents/Bar/Bar';
-
+import FormUpNews from './Layout/FormUpNews/FormUpNews';
+import Posts from './Layout/DataPosts/Posts';
+import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
+import { Div, H3, P } from '~/reUsingComponents/styleComponents/styleDefault';
+import Avatar from '~/reUsingComponents/Avatars/Avatar';
+export interface PropsUserHome {
+    avatar: string;
+    fullName: string;
+    gender: number;
+}
 const Home: React.FC<{ colorBg: string; colorText: string }> = ({ colorBg, colorText }) => {
     const dispatch = useDispatch();
     const [cookies, setCookie, removeCookie] = useCookies(['tks', 'k_user']);
+    const [user, setUser] = useState<PropsUserHome>();
     const token = cookies.tks;
-    const k_user = cookies.k_user;
-    // if (!k_user) removeCookie('tks');
-    console.log('cookie token home', cookies.tks);
 
     useEffect(() => {
         const data = HttpRequestHome.news(token, dispatch);
     }, []);
+    useEffect(() => {
+        //  const data = GetFriend.friend(dispatch);
+        async function fectData() {
+            const res: PropsUserHome = await HttpRequestUser.getById(cookies.tks, cookies.k_user, {
+                avatar: 'avatar',
+                fullName: 'fullname',
+                gender: 'gender',
+            });
+            setUser(res);
+        }
+        fectData();
+    }, []);
 
     const [userList, setUserList] = useState();
-    const upLoadRef = useRef<any>();
-    const [upLoad, setUpLoad] = useState<any>([]);
     const [moveForm, setMoveForm] = useState<boolean>(false);
-    const handleUpload = (e: any) => {
-        const file = e.target.files;
-        console.log(e.target.files.length);
-        if (file.length > 0) {
-            for (let i = 0; i < file.length; i++) {
-                console.log(file[i]);
-                const url = URL.createObjectURL(file[i]);
-                console.log(url);
-                if (url) {
-                    if (upLoad.length < 1) {
-                        setUpLoad([url]);
-                        console.log(upLoad.length);
-                    }
-                    if (upLoad.length >= 1) {
-                        console.log(upLoad.length + '2');
-                        upLoad.push(url);
-                    }
-                }
-            }
-        }
+    const handleOpenForm = () => {
+        console.log('ok very good');
     };
-    console.log(upLoad);
-
-    console.log('home');
-
+    const minWidth1 = '400px';
     return (
-        <Div bg={colorBg}>
-            <DivForm top="12px">
-                <Form encType="multipart/form-data">
-                    <DivUpNews>
-                        <DivOptions>
-                            <DivItems color={colorText}>
-                                <TextI />
-                            </DivItems>
-                            <DivItems>
-                                <input id="upload" type="file" name="file[]" onChange={handleUpload} multiple hidden />
-                                <Label htmlFor="upload" color={colorText}>
-                                    <ImageI />
-                                </Label>
-                            </DivItems>
-                            {/* <DivSignature>
-                                <SignatureI />
-                            </DivSignature> */}
-                        </DivOptions>
-                    </DivUpNews>
-                    <Bar
-                        css="
-                        position: absolute;
-                        bottom: 0;
-                        right: 50%;
-                        left: 50%;
-                        transform: rotate(90deg) translate(-50%, -50%);
-                    "
-                    />
-                </Form>
-            </DivForm>
-            {upLoad.length > 0 &&
-                upLoad.map((image: any, index: Key | null | undefined) => <img key={index} src={image[0].name} />)}
-            <DivNews>Xin chào mọi nguòi</DivNews>
-            <DivNews>Xin chào mọi nguòi</DivNews>
-            <DivNews>Xin chào mọi nguòi</DivNews>
-            <DivNews>Xin chào mọi nguòi</DivNews>
-        </Div>
+        <DivHome bg={colorBg}>
+            <Div
+                css={`
+                    width: 277px;
+                    margin-top: 18px;
+                    border-radius: 10px;
+                    background-color: #494c54cf;
+                    @media (min-width: ${minWidth1}) {
+                        width: 370px;
+                    }
+                `}
+                onClick={handleOpenForm}
+            >
+                <Avatar
+                    src={user?.avatar}
+                    alt={user?.fullName}
+                    gender={user?.gender}
+                    width="38px"
+                    radius="50%"
+                    css={`
+                        margin: 5px;
+                        @media (min-width: ${minWidth1}) {
+                            width: 50px;
+                            height: 50px;
+                            margin: 7px 7px 7px 10px;
+                        }
+                    `}
+                    profile={false}
+                />
+                <Div
+                    css={`
+                        width: 75%;
+                        height: fit-content;
+                        color: ${colorText};
+                        margin-top: 2px;
+                        @media (min-width: ${minWidth1}) {
+                            margin-top: 7px;
+                        }
+                    `}
+                    wrap="wrap"
+                >
+                    <H3
+                        css={`
+                            font-size: 1.5rem;
+                            height: fit-content;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            @media (min-width: ${minWidth1}) {
+                                font-size: 1.8rem;
+                            }
+                        `}
+                    >
+                        {user?.fullName}
+                    </H3>
+                    <P
+                        css={`
+                            font-size: 1.2rem;
+                            height: fit-content;
+                            @media (min-width: ${minWidth1}) {
+                                font-size: 1.3rem;
+                            }
+                        `}
+                    >
+                        What's on your mind? <span style={{ fontSize: '1rem' }}>( click here to post )</span>
+                    </P>
+                </Div>
+            </Div>
+            <FormUpNews colorBg={colorBg} colorText={colorText} dataUser={user} />
+            <Posts colorBg={colorBg} colorText={colorText} />
+        </DivHome>
     );
 };
 

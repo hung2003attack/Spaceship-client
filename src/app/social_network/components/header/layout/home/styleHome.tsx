@@ -1,77 +1,72 @@
 import styled from 'styled-components';
 
-export const Div = styled.div`
+export const DivHome = styled.div`
     display: flex;
     flex-direction: column;
     margin-top: 50px;
     align-items: center;
     justify-content: center;
     margin-top: 75px;
+    font-family: 'Noto Sans', sans-serif;
     background: ${(props: { bg: string }) => (props.bg === '#202124' ? '#202124f5' : props.bg)};
 `;
-interface PropsDivfrom {
-    top: string;
-}
-export const DivForm = styled.div<PropsDivfrom>`
-    margin-top: 60px;
-    background-color: rgb(26 27 30);
-    border-radius: 5px;
-    transition: var(--transition-03s);
-    top: ${(props) => props.top};
-    position: fixed;
-`;
-export const Form = styled.form`
-    position: relative;
-`;
-export const DivUpNews = styled.div`
-    width: 511px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`;
-export const DivNews = styled.div`
-    width: 511px;
-    height: 600px;
-    margin: 50px;
-    border-radius: 5px;
-    background-color: rgb(26 27 30);
-`;
-export const Input = styled.input`
-    width: 350px;
-    padding: 11px 11px 11px 20px;
-    color: #d5cdcd;
-    border: 0;
-    margin: 20px;
-    background-color: rgb(52, 52, 52);
-    border-radius: 50px;
-`;
-export const DivOptions = styled.div`
-    display: flex;
-    width: 70px;
-    height: 50px;
-    align-items: center;
-    justify-content: space-between;
-`;
-export const DivUpImage = styled.div`
-    display: flex;
-    font-size: 25px;
-    cursor: var(--pointer);
-`;
-export const DivSignature = styled.div`
-    display: flex;
-    align-items: center;
-    font-size: 30px;
-    cursor: var(--pointer);
-`;
-export const Label = styled.label`
-    color: ${(props) => props.color};
-    cursor: pointer;
-`;
-export const DivItems = styled.div`
-    cursor: pointer;
-    color: ${(props) => props.color};
-`;
 
+//   <DivForm top="12px">
+//       <Form encType="multipart/form-data">
+//           <DivUpNews>
+//               <DivOptions>
+//                   <DivItems color={colorText}>
+//                       <TextI />
+//                   </DivItems>
+//                   <DivItems>
+//                       <input id="upload" type="file" name="file[]" onChange={handleUpload} multiple hidden />
+//                       <Label htmlFor="upload" color={colorText}>
+//                           <ImageI />
+//                       </Label>
+//                   </DivItems>
+//                   <DivItems>
+//                       <Input
+//                           placeholder="What's on your mind?"
+//                           // onKeyDown={(e) => keyboarHandle(e)}
+//                           onChange={(e) => setInputValue(e.target.value)}
+//                       />
+//                   </DivItems>
+//                   {/* <DivSignature>
+//                                 <SignatureI />
+//                             </DivSignature> */}
+//               </DivOptions>
+//               <DivDataFake>
+//                   <Textarea
+//                       color={colorText}
+//                       bg={colorBg}
+//                       onKeyUp={handleOnKeyup}
+//                       onChange={(e) => setInputValue(e.target.value)}
+//                       placeholder="What's on your mind?"
+//                   ></Textarea>
+//                   {upload.length > 0 && (
+//                       <Div css={cssImage}>
+//                           {upload.map((e: string) => (
+//                               <DivImage
+//                                   key={e}
+//                                   src={e}
+//                                   border={upload.length > 1 ? '1px solid #fff' : 'none'}
+//                               ></DivImage>
+//                           ))}
+//                       </Div>
+//                   )}
+//               </DivDataFake>
+//           </DivUpNews>
+//           <Bar
+//               css="
+//                             width: 100%;
+//                             display: flex;
+//                             justify-content: center;
+//                             "
+//               top="calc(95% - 10px);"
+//               rotate="90deg"
+//           />
+//       </Form>
+//   </DivForm>;
 // export const css = {
 //     home: `
 

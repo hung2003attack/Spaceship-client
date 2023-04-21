@@ -3,7 +3,7 @@ import Bar from '~/reUsingComponents/Bar/Bar';
 import clsx from 'clsx';
 import { BookI, WorkI, NewI } from '~/assets/Icons/Icons';
 import Button from '~/reUsingComponents/Buttoms/ListButton/Buttons';
-import Hovertitle from '~/reUsingComponents/HandleHover/Hover';
+import Hovertitle from '~/reUsingComponents/HandleHover/HoverTitle';
 import styles from './listWebBar.module.scss';
 import { ButtonLink } from './styleListWeb';
 interface Props {

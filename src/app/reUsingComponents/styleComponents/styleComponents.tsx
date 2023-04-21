@@ -122,18 +122,15 @@ export const DivContainer = styled.div<PropsDivContainer>`
     flex-wrap: ${(props) => props.wrap};
     align-items: ${(props) => props.align};
     justify-content: ${(props) => props.content};
-    padding: ${(props) => {
-        console.log('padding here');
-
-        return props.padding;
-    }};
+    padding: ${(props) => props.padding};
     margin: ${(props) => props.margin};
     border-radius: ${(props) => props.radius};
     ${(props) => props.css};
 `;
 export const DivImg = styled.div<PropsDivContainer>`
     width: ${(props) => props.width || '100%'};
-    height: 100%;
+    height: ${(props) => props.width || '100%'};
+    ${(props) => props.css};
 `;
 
 interface PropsHname {
@@ -151,11 +148,12 @@ export const Hname = styled.h3<PropsHname>`
 `;
 interface PropsClose {
     size: string;
-    top: string;
+    top?: string;
     left?: string;
     width?: string;
     bg?: string;
     right?: string;
+    css?: string;
 }
 export const DivClose = styled.div<PropsClose>`
     width: ${(props) => props.width};
@@ -170,6 +168,7 @@ export const DivClose = styled.div<PropsClose>`
     justify-content: center;
     font-size: ${(props) => props.size};
     cursor: var(--pointer);
+    ${(props) => props.css}
 
     border-radius: 50%;
     &:hover {

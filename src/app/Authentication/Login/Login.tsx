@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import Cookies from 'universal-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ButtonSubmit, Htitle } from '~/reUsingComponents/styleComponents/styleComponents';

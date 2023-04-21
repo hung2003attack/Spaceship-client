@@ -39,6 +39,7 @@ interface PropsRes {
     avatar: string;
     fullName: string;
     status: string;
+    gender: number;
     sn: string;
     l: string;
     w: string;
@@ -56,7 +57,7 @@ const Website: React.FC = () => {
     const { colorText, colorBg } = useSelector((state: PropsBg) => state.persistedReducer.background);
     const [cookies, setCookie] = useCookies(['tks', 'k_user']);
     // const [darkShining, setDarkShining] = useState<boolean>(backgr);
-    const [user, setUser] = useState<PropsParamsById>();
+    const [user, setUser] = useState<PropsRes>();
     useEffect(() => {
         //  const data = GetFriend.friend(dispatch);
         async function fectData() {
@@ -64,6 +65,7 @@ const Website: React.FC = () => {
                 avatar: 'avatar',
                 fullName: 'fullname',
                 status: 'status',
+                gender: 'gender',
                 sn: 'sn',
                 l: 'l',
                 w: 'w',
@@ -71,8 +73,8 @@ const Website: React.FC = () => {
             console.log(user, 'user');
 
             if (res) {
-                dispatch(changeThree(res));
                 setUser(res);
+                dispatch(changeThree(res));
             }
         }
         fectData();
@@ -122,9 +124,6 @@ const Website: React.FC = () => {
         setHrefState(document.location.href);
         reTap();
     }
-
-    console.log('currentPage', currentPage);
-
     const hanNextWebsite1 = () => {
         setOptionWebsite(true);
         setCurrentPage(1);
@@ -142,7 +141,6 @@ const Website: React.FC = () => {
     };
     useLayoutEffect(() => {
         reTap();
-        console.log('setCurrentPage(0);');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hrefState]);
 
@@ -199,7 +197,7 @@ const Website: React.FC = () => {
                                 <Avatar
                                     src={user?.avatar || ''}
                                     alt={user?.fullName}
-                                    gender={0}
+                                    gender={user?.gender}
                                     radius="50%"
                                     id={cookies.k_user}
                                 />

@@ -15,20 +15,21 @@ const Hovertitle: React.FC<hover> = ({
     //danh cho Image
     src,
     alt,
+    //tag
     Tags,
-    //con của Tags
-    child,
     // bắt buộc phải có title để làm tiêu đề hiển thi
     title,
     size,
     color,
     colorBg,
+    top,
+    bottom,
+    right,
+    left,
 }) => {
     const [showHidetitle, setShowHideetitle] = useState<boolean>(false);
 
-    const tagRef = useRef<any>('div');
     console.log('hover');
-
     const handleHover = () => {
         setShowHideetitle(true);
     };
@@ -36,8 +37,6 @@ const Hovertitle: React.FC<hover> = ({
     const removeHover = () => {
         setShowHideetitle(false);
     };
-    const onMouse = [];
-
     const propEvents = {
         onClick,
     };
@@ -47,8 +46,6 @@ const Hovertitle: React.FC<hover> = ({
     };
     const Propstag = Tags || 'div';
     useEffect(() => {}, []);
-    console.log('color bg home', colorBg);
-
     return (
         <>
             <Propstag {...propLink} bg={colorBg} onMouseEnter={handleHover} onMouseLeave={removeHover} {...propEvents}>
@@ -56,7 +53,7 @@ const Hovertitle: React.FC<hover> = ({
                     {children}
                 </DivIcon>
                 {showHidetitle && (
-                    <DivHover color={color}>
+                    <DivHover color={colorBg} bg={color} left={left} right={right} top={top} bottom={bottom}>
                         <p>{title}</p>
                     </DivHover>
                 )}

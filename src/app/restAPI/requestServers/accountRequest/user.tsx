@@ -28,6 +28,8 @@ class HttpRequestUser {
                 id: id,
                 params: params,
             });
+            console.log(res, 'ressssss');
+
             return res.data;
         } catch (error) {
             console.log(error);

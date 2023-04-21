@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import Avatar from '../Avatars/Avatar';
 import { DivContainer, DivImg, Hname } from '../styleComponents/styleComponents';
-import { Button } from '../styleComponents/styleDefault';
+import { Button, Buttons } from '../styleComponents/styleDefault';
 interface PropsTagP {
     data: {
         id: string;
@@ -27,24 +27,14 @@ const TagProfle: React.FC<PropsTagP> = ({ data, onClick, button = false, margin,
             </DivContainer>
             {button && (
                 <DivContainer padding="10px 0 0 0" content="space-evenly">
-                    <Button
+                    <Buttons
+                        text={['View', 'Select']}
                         size="1.2rem"
                         padding="3.5px 9.5px"
-                        bk="#f6f6f6"
+                        bg="#f6f6f6"
                         color="var(--color-dark)"
                         onClick={() => onClick(data.id)}
-                    >
-                        View
-                    </Button>
-                    <Button
-                        size="1.2rem"
-                        padding="3.5px 9.5px"
-                        bk="#f6f6f6"
-                        color="var(--color-dark)"
-                        onClick={() => onClick(data.id)}
-                    >
-                        Select
-                    </Button>
+                    />
                 </DivContainer>
             )}
         </DivContainer>

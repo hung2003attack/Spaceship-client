@@ -1,5 +1,5 @@
 import { CloseI, MoveI, NotificationI, UndoI } from '~/assets/Icons/Icons';
-import Hovertitle from '~/reUsingComponents/HandleHover/Hover';
+import Hovertitle from '~/reUsingComponents/HandleHover/HoverTitle';
 import clsx from 'clsx';
 import React, { memo, useState } from 'react';
 import styles from './notification.module.scss';
