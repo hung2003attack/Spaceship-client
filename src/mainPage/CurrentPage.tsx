@@ -1,4 +1,4 @@
-import { socialnetwork } from 'src/dataMark/dateSocialNetWork';
+import { socialnetwork } from 'src/dataMark/dateTextSocialNetWork';
 import Socialnetwork from '~/social_network';
 import Study from '~/study';
 

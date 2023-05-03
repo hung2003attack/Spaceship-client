@@ -6,7 +6,30 @@ export const socialnetwork = {
             logo: 'Trang Chính',
             sett: 'Cài Đặt',
 
-            home: 'Trang Chủ',
+            home: {
+                title: 'Trang Chủ',
+                children: {
+                    userBar: {
+                        contentFirst: 'Chào mừng bạn quay lại!',
+                        contentTwo: '',
+                    },
+                    form: {
+                        textarea: 'Bạn đang nghĩ gì?',
+                        buttonOne: 'Huỷ bỏ',
+                        buttonTwo: 'Tiếp tục',
+                        emoji: 'vi',
+                        preView: {
+                            time: {
+                                hour: 'giờ',
+                                minute: 'phút',
+                                second: 'giây',
+                            },
+                            buttonFirst: 'Huỷ bỏ',
+                            buttonTwo: 'Tiếp tục',
+                        },
+                    },
+                },
+            },
             exchange: ' Giao Lưu',
             video: 'Gọi Video',
             search: 'Tìm kiếm',
@@ -39,8 +62,30 @@ export const socialnetwork = {
             logo: 'Spaceship',
             sett: 'Setting',
 
-            home: 'Home',
-
+            home: {
+                title: 'Home',
+                children: {
+                    userBar: {
+                        contentFirst: 'Welcome back!',
+                        contentTwo: 'We are always by your side',
+                    },
+                    form: {
+                        textarea: "What's on your mind?",
+                        buttonOne: 'Abolish',
+                        buttonTwo: 'Continue',
+                        emoji: 'en',
+                        preView: {
+                            time: {
+                                hour: 'h',
+                                minute: 'm',
+                                second: 's',
+                            },
+                            buttonFirst: 'Abolish',
+                            buttonTwo: 'Continue',
+                        },
+                    },
+                },
+            },
             exchange: 'Exchange',
             video: 'Call Video',
             search: 'Search',

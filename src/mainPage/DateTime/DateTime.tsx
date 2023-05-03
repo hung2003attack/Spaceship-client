@@ -27,7 +27,7 @@ const Time = () => {
     const month = today.getUTCMonth() + 1 > 9 ? today.getUTCMonth() + 1 : '0' + (today.getUTCMonth() + 1);
 
     const year = today.getUTCFullYear();
-    const hours = today.getHours() > 9 ? today.getHours() : '0' + today.getHours();
+    const hours = Number(today.getHours() > 9 ? today.getHours() : '0' + today.getHours());
     const minutes = today.getMinutes() > 9 ? today.getMinutes() : '0' + today.getMinutes();
     const seconds = today.getSeconds() > 9 ? today.getSeconds() : '0' + today.getSeconds();
     const title = hours < 12 ? 'Morning' : hours < 17 ? 'Afternoon' : 'Evening';

@@ -1,0 +1,17 @@
+#swiperS .swiper-slide,
+swiper-slide {
+    width: 38% !important;
+}
+#swiperS .swiper,
+swiper-container {
+    position: unset !important;
+    overflow: unset !important;
+}
+#swiperS .swiper-pagination {
+    top: unset !important;
+    bottom: -1px;
+    height: 1px;
+}
+#swiperS .swiper-wrapper {
+    align-items: center;
+}

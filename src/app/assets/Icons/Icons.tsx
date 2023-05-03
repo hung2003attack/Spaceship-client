@@ -1,5 +1,3 @@
-import React from 'react';
-import clsx from 'clsx';
 import {
     BsThreeDotsVertical,
     BsBook,
@@ -7,8 +5,9 @@ import {
     BsPhone,
     BsFillCameraVideoFill,
     BsMessenger,
-    BsEmojiSmile,
     BsEmojiSmileFill,
+    BsTypeItalic,
+    BsClockHistory,
 } from 'react-icons/bs';
 import {
     IoImagesOutline,
@@ -18,7 +17,7 @@ import {
     IoArrowUndoCircleOutline,
 } from 'react-icons/io5';
 import { IoMdNotifications, IoIosSend } from 'react-icons/io';
-import { BiDotsHorizontalRounded, BiUser, BiMailSend } from 'react-icons/bi';
+import { BiBullseye, BiDotsHorizontalRounded, BiUser } from 'react-icons/bi';
 import { FcSignature } from 'react-icons/fc';
 import { SiExpertsexchange } from 'react-icons/si';
 import {
@@ -27,16 +26,17 @@ import {
     AiOutlineEye,
     AiOutlineEyeInvisible,
     AiOutlineLoading,
-    AiOutlineFileText,
+    AiOutlineHeart,
 } from 'react-icons/ai';
 import { GiNewspaper } from 'react-icons/gi';
-import { MdWorkOutline, MdEmojiPeople, MdRestartAlt } from 'react-icons/md';
+import { MdWorkOutline, MdEmojiPeople, MdRestartAlt, MdStraighten, MdOutlineNavigateNext } from 'react-icons/md';
 import { FaPeopleArrows, FaAddressCard, FaUserFriends } from 'react-icons/fa';
 import { RiDragMoveFill, RiMailSendLine } from 'react-icons/ri';
 import { TbArrowNarrowLeft, TbTextResize } from 'react-icons/tb';
 import { CgWebsite } from 'react-icons/cg';
 import { VscPreview } from 'react-icons/vsc';
-
+import { CiHeart, CiPaperplane } from 'react-icons/ci';
+import { SlLike } from 'react-icons/sl';
 export const ImageI = () => <IoImagesOutline />;
 
 export const FixI = () => <BsThreeDotsVertical />;
@@ -76,3 +76,11 @@ export const VideoI = () => <IoLogoYoutube />;
 export const TextI = () => <TbTextResize />;
 export const PreviewI = () => <VscPreview />;
 export const IconI = () => <BsEmojiSmileFill />;
+export const ItalicI = () => <BsTypeItalic />;
+export const StraightI = () => <MdStraighten />;
+export const LockI = () => <BsClockHistory />;
+export const LikeI = () => <SlLike />;
+export const HeartI = () => <CiHeart />;
+export const ShareI = () => <CiPaperplane />;
+export const Bullseye = () => <BiBullseye />;
+export const NextI = () => <MdOutlineNavigateNext />;

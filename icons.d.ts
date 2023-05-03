@@ -1,19 +1,4 @@
-// import original module declarations
-import 'styled-components';
-
-// and extend them!
-declare module 'styled-components' {
-    export interface DefaultTheme {
-        borderRadius: string;
-        colors: {
-            main: string;
-            secondary: string;
-        };
-    }
-}
-// iconscout
-
-declare module '@iconscout/react-unicons/icons/uil-react' {
+declare module '@iconscout/react-unicons' {
     import { SVGProps } from 'react';
 
     export type IconProps = {

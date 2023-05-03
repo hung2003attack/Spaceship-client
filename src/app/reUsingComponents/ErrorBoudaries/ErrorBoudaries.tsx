@@ -15,10 +15,7 @@ function ErrorBoudaries(props: {
     if (props.check)
         return (
             <DivMessage bg="#202124b8" onClick={() => props.setError({ error: false, content: '' })}>
-                <P
-                    color="#ff5252;"
-                    css="width: 100%; height: 100%; font-size: 2rem; font-weight: bold; border-radius: 5px; text-align: center; margin-top: 50%"
-                >
+                <P color="#ff5252;" css=" font-size: 2rem; font-weight: bold; border-radius: 5px; text-align: center; ">
                     {props.message}
                     <br></br>
                     <span style={{ fontSize: '1.3rem' }}>( Click anywhere on the screen to out of the message. )</span>

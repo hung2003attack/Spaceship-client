@@ -1,14 +1,12 @@
+/* eslint-disable array-callback-return */
 import { DivChangePass } from './styleChangePassword';
 import { DivAccount } from '../Login/styleLogin';
 import { ButtonSubmit, DivContainer, Htitle } from '~/reUsingComponents/styleComponents/styleComponents';
 import Eyes from '~/reUsingComponents/Eys/Eye';
 import { ReactNode, useRef, useState, useEffect, useCallback } from 'react';
-import { Button, Input } from '~/reUsingComponents/styleComponents/styleDefault';
-import { Pcontent, Pmessage } from '../Register/styleRegister';
-import Avatar from '~/reUsingComponents/Avatars/Avatar';
-import UserBar from '~/reUsingComponents/Avatars/Avatar';
+import { Input } from '~/reUsingComponents/styleComponents/styleDefault';
+import { Pmessage } from '../Register/styleRegister';
 import TagProfle from '~/reUsingComponents/TagProfile/TagProfle';
-import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
 import accountRequest from '~/restAPI/requestServers/accountRequest/accountRequest';
 interface PropsChangeP {
     Next: ReactNode;

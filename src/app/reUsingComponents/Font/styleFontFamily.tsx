@@ -4,20 +4,27 @@ interface PropsDivFonts {
 }
 /* ${(props) => props.the}: -221px;the={displayEmoji ? 'right' : 'left'} */
 export const DivFonts = styled.div<PropsDivFonts>`
-    width: 210px;
-    position: fixed;
-    bottom: 0px;
-    background-color: ${(props: { bg: string }) => props.bg};
-    padding: 9px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 9px 0;
     border-radius: 5px;
-    z-index: 2;
+    overflow-y: overlay;
+    position: relative;
+    background-color: ${(props: { bg: string }) => props.bg};
 `;
 export const DivList = styled.div`
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
-    color: ${(props) => props.color};
     text-align: center;
+    font-size: 1.3rem;
+    color: ${(props) => props.color};
+    &::-webkit-scrollbar {
+        height: 4px !important;
+    }
+    &::-webkit-scrollbar-button {
+        height: 4px !important;
+    }
 `;
 interface PropsDivName {
     position?: string;
@@ -32,7 +39,7 @@ export const DivName = styled.div<PropsDivName>`
     cursor: pointer;
     border-radius: 5px;
     position: ${(props) => props.position};
-    background-color: ${(props) => props.bg || '#292a2d'};
+    background-color: ${(props) => props.bg || '#43464c'};
     ${(props) => props.css}
     &:hover:not(:has(*:hover)) {
         background-color: #345fccdb;
@@ -40,9 +47,14 @@ export const DivName = styled.div<PropsDivName>`
 `;
 export const PItems = styled.p`
     width: 100%;
-    padding: 3px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    padding: 3px 12px;
     margin: 3px;
-    font-size: 1.3rem;
+    font-size: 20px;
     z-index: 1;
     background-color: ${(props: { bg: string }) => props.bg || '#292a2d'};
 

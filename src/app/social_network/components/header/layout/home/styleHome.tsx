@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
-export const DivHome = styled.div`
+export const DivPost = styled.div`
+    width: 100%;
     display: flex;
     flex-direction: column;
     margin-top: 50px;
@@ -8,7 +9,10 @@ export const DivHome = styled.div`
     justify-content: center;
     margin-top: 75px;
     font-family: 'Noto Sans', sans-serif;
-    background: ${(props: { bg: string }) => (props.bg === '#202124' ? '#202124f5' : props.bg)};
+
+    @media (min-width: 520px) {
+        width: 520px;
+    }
 `;
 
 //   <DivForm top="12px">

@@ -27,6 +27,7 @@ export const Input = styled.input`
 `;
 export const Span = styled.span`
     display: flex;
+    ${(props: { css?: string }) => props.css}
 `;
 
 interface Propss {
@@ -83,10 +84,13 @@ export const H3 = styled.h3`
 `;
 interface PropsDiv {
     wrap?: string;
-    css: string;
+    css?: string;
+    width?: string;
+    display?: string;
 }
 export const Div = styled.div<PropsDiv>`
-    display: flex;
+    width: ${(props) => props.width};
+    display: ${(props) => props.display || 'flex'};
     flex-wrap: ${(props) => props.wrap || 'none'};
     ${(props) => props.css}
 `;

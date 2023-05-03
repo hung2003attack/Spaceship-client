@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import dataEmoji from '@emoji-mart/data/sets/14/facebook.json';
 import Picker from '@emoji-mart/react';
 import imageCompression from 'browser-image-compression';
@@ -6,7 +6,7 @@ import parse from 'html-react-parser';
 import 'video-react/dist/video-react.css';
 import './formUpNews.scss';
 
-import { CloseI, IconI, ImageI, PreviewI, TextI } from '~/assets/Icons/Icons';
+import { CloseI, IconI, ImageI, PreviewI, TextI, VideoI } from '~/assets/Icons/Icons';
 
 import {
     DivDataFake,
@@ -30,38 +30,78 @@ import FontFamilys from '~/reUsingComponents/Font/FontFamilys';
 import { Player } from 'video-react';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import { PropsUserHome } from '../../Home';
+import PreviewPost, { PropsPreViewFormHome } from './PreView';
+export interface PropsFormHome {
+    textarea: string;
+    buttonOne: string;
+    buttonTwo: string;
+    emoji: string;
+    preView: PropsPreViewFormHome;
+}
 interface PropsFormUpNews {
     colorText: string;
     colorBg: string;
-    dataUser?: PropsUserHome;
+    user?: PropsUserHome;
+    form: PropsFormHome;
 }
-const FormUpNews: React.FC<PropsFormUpNews> = ({ colorText, colorBg, dataUser }) => {
+const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user }) => {
     const [displayEmoji, setdisplayEmoji] = useState<boolean>(false);
     const [displayFontText, setDisplayFontText] = useState<boolean>(false);
-    const [upload, setupload] = useState<{ link: string; type: string }[]>([]);
     const [error, setError] = useState<{ error: boolean; content: string }>({ error: false, content: '' });
+    const mRef = useRef<any>(0);
+
+    const [preView, setPreView] = useState<ReactNode>();
+    const [upload, setupload] = useState<{ link: string; type: string }[]>([]);
     const [inputValue, setInputValue] = useState<any>('');
     const uploadRef = useRef<{ link: string; type: string }[]>([]);
     const [fontFamily, setFontFamily] = useState<{ name: string; type: string }>({
         name: 'Noto Sans',
         type: 'Straight',
     });
+
+    const { textarea, buttonOne, buttonTwo, preView: dataTextPreView } = form;
+
     const handleOnKeyup = (e: any) => {
         e.target.setAttribute('style', 'height: auto');
-        e.target.setAttribute('style', `height: ${70 + e.target.scrollHeight}px`);
+        e.target.setAttribute('style', `height: ${e.target.scrollHeight}px`);
     };
+
+    useEffect(() => {
+        return clearInterval(mRef.current);
+    }, [mRef.current]);
+    console.log(form);
+    let fileAmount = 15;
     const handleImageUpload = async (e: any) => {
         uploadRef.current = [];
         const file = e.target.files;
         const options = {
             maxSizeMB: 10,
         };
-        if (file.length > 0 && file.length < 5) {
+
+        if (file.length > 0 && file.length < fileAmount) {
             for (let i = 0; i < file.length; i++) {
                 console.log(file[i]);
+                if (
+                    file[i].type.includes('video/mp4') ||
+                    file[i].type.includes('video/mov') ||
+                    file[i].type.includes('video/x-matroska')
+                ) {
+                    const url = URL.createObjectURL(file[i]);
+                    const vid = document.createElement('video');
+                    // create url to use as the src of the video
+                    vid.src = url;
+                    // wait for duration to change from NaN to the actual duration
+                    // eslint-disable-next-line no-loop-func
+                    vid.ondurationchange = function () {
+                        console.log(vid.duration);
 
-                if (file[i].type.includes('video/mp4') || file[i].type.includes('video/mov')) {
-                    uploadRef.current.push({ link: URL.createObjectURL(file[i]), type: 'video' });
+                        vid.duration <= 15
+                            ? uploadRef.current.push({ link: url, type: 'video' })
+                            : setError({
+                                  error: true,
+                                  content: 'Our length of the video must be less than 16 seconds!',
+                              });
+                    };
                 } else if (
                     file[i].type.includes('image/jpg') ||
                     file[i].type.includes('image/jpeg') ||
@@ -72,7 +112,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ colorText, colorBg, dataUser })
                         console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
                         console.log(`compressedFile size ${(compressedFile.size / 1024 / 1024).toFixed(1)} MB`); // smaller than maxSizeMB
                         const sizeImage = Number((compressedFile.size / 1024 / 1024).toFixed(1));
-                        if (sizeImage <= 8) {
+                        if (sizeImage / 1024 / 1024 <= 8) {
                             uploadRef.current.push({ link: URL.createObjectURL(compressedFile), type: 'image' });
                         } else {
                             setError({ error: true, content: `${sizeImage}MB big than our limit is 8MB` });
@@ -84,34 +124,64 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ colorText, colorBg, dataUser })
                     setError({ error: true, content: 'This format is not support!' });
                 }
             }
-            console.log('hello3', upload, uploadRef);
-            setupload(uploadRef.current);
+            const time = setInterval(() => {
+                if (uploadRef.current.length > 0) {
+                    setupload(uploadRef.current);
+                }
+                console.log('no');
+            }, 1000);
+            mRef.current = time;
         } else {
-            setError({ error: true, content: 'You can only select 4 pictures at most!' });
+            setError({ error: true, content: `You can only select ${fileAmount} file at most!` });
         }
     };
 
     const handleAbolish = () => {
-        console.log('hello');
+        setupload([]);
+        setInputValue('');
     };
     const handlePost = () => {
-        console.log('hello2');
+        setPreView(
+            <PreviewPost
+                user={user}
+                setPreView={setPreView}
+                fontFamily={fontFamily}
+                colorText={colorText}
+                colorBg={colorBg}
+                file={upload}
+                valueText={inputValue}
+                dataText={dataTextPreView}
+            />,
+        );
     };
 
     const handleEmojiSelect = (e: any) => {
         setInputValue(inputValue + e.native);
     };
-    const handleDisEmoji = (e: { stopPropagation: () => void }) => {
-        e.stopPropagation();
+    const handleDisEmoji = useCallback(() => {
         setdisplayEmoji(!displayEmoji);
-    };
+    }, [displayEmoji]);
     const handleGetValue = (e: { target: { value: any } }) => {
         if (e.target.value.length <= 2500) setInputValue(e.target.value);
     };
 
+    const handleDuration = (e: { target: any }) => {
+        console.log(e.target, 'here');
+    };
+    console.log(upload, 'upload');
+    let imageL = 0;
+    let videoL = 0;
+    for (let i = 0; i < upload.length; i++) {
+        upload[i].type === 'image' ? imageL++ : videoL++;
+    }
+    const cart: { type: ReactNode; amount: number }[] = [
+        { type: <ImageI />, amount: imageL },
+        { type: <VideoI />, amount: videoL },
+    ];
     return (
         <>
             <ErrorBoudaries check={error.error} setError={setError} message={error.content} />
+
             <DivForm top="12px">
                 <Form encType="multipart/form-data">
                     <DivUpNews>
@@ -119,9 +189,28 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ colorText, colorBg, dataUser })
                             {displayEmoji && (
                                 <Div
                                     id={colorBg === '#202124' ? 'pickerB' : ''}
-                                    css="position: fixed; bottom: 0px; z-index: 3;"
+                                    css={`
+                                        position: fixed;
+                                        bottom: 0px;
+                                        z-index: 3;
+                                        @media (min-width: 1240px) {
+                                            bottom: 30px;
+                                            left: -8px;
+                                        }
+                                    `}
                                 >
+                                    <DivClose
+                                        width="30px"
+                                        top="5px"
+                                        right="-29px"
+                                        size="22px"
+                                        color={colorText}
+                                        onClick={() => setdisplayEmoji(false)}
+                                    >
+                                        <CloseI />
+                                    </DivClose>
                                     <Picker
+                                        locale={form.emoji}
                                         set="facebook"
                                         emojiVersion={14}
                                         data={dataEmoji}
@@ -130,19 +219,9 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ colorText, colorBg, dataUser })
                                     />
                                 </Div>
                             )}
-                            {displayFontText && (
-                                <FontFamilys
-                                    colorBg={colorBg}
-                                    colorText={colorText}
-                                    fontFamily={fontFamily}
-                                    setFontFamily={setFontFamily}
-                                    displayEmoji={displayEmoji}
-                                />
-                            )}
-
                             <Div
                                 css={`
-                                    width: 277px;
+                                    width: 100%;
                                     height: 40px;
                                     flex-wrap: wrap;
                                     padding: 0 7px;
@@ -150,12 +229,22 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ colorText, colorBg, dataUser })
                                     align-items: center;
                                     background-color: #43464c;
                                     border-radius: 10px;
+                                    justify-content: space-evenly;
                                 `}
                             >
-                                <DivItems color={colorText} position="relative" onClick={handleDisEmoji}>
+                                <DivItems
+                                    bg={displayEmoji ? '#4496dd' : ''}
+                                    color={colorText}
+                                    position="relative"
+                                    onClick={handleDisEmoji}
+                                >
                                     🙂
                                 </DivItems>
-                                <DivItems color={colorText} onClick={() => setDisplayFontText(!displayFontText)}>
+                                <DivItems
+                                    bg={displayFontText ? '#4496dd' : ''}
+                                    color={colorText}
+                                    onClick={() => setDisplayFontText(!displayFontText)}
+                                >
                                     🖋️
                                 </DivItems>
                                 <DivItems>
@@ -185,89 +274,128 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ colorText, colorBg, dataUser })
                                     ></HoverTitle>
                                 </DivItems>
                             </Div>
+                            {displayFontText && (
+                                <FontFamilys
+                                    colorBg={colorBg}
+                                    colorText={colorText}
+                                    fontFamily={fontFamily}
+                                    setFontFamily={setFontFamily}
+                                    displayEmoji={displayEmoji}
+                                    setDisplayFontText={setDisplayFontText}
+                                />
+                            )}
                             {/* <DivSignature>
                                 <SignatureI />
                                 </DivSignature> */}
                         </DivOptions>
 
                         <DivDataFake>
-                            <DivClose
-                                right="16px"
-                                top="70px"
-                                size="25px"
-                                color={colorText}
-                                onClick={() => setInputValue('')}
-                            >
-                                <CloseI />
-                            </DivClose>
-                            <Textarea
-                                color={colorText}
-                                bg={colorBg}
-                                font={fontFamily.name + ' ' + fontFamily.type}
-                                value={inputValue}
-                                onKeyUp={handleOnKeyup}
-                                onChange={handleGetValue}
-                                placeholder="What's on your mind?"
-                            ></Textarea>
-                            {upload.length > 0 && (
-                                <Div
-                                    css={`
-                                        width: 100%;
-                                        height: ${upload.length > 1 ? '211px' : '222px'};
-                                        justify-content: space-evenly;
-                                        overflow-y: overlay;
-                                        @media (min-width: 400) {
-                                        }
-                                    `}
-                                    wrap="wrap"
+                            <Div width="100%" css="position: relative;">
+                                <DivClose
+                                    right="12px"
+                                    top="10px"
+                                    size="20px"
+                                    color={colorText}
+                                    onClick={() => {
+                                        document.querySelector('.textHome')?.setAttribute('style', 'height: 42px');
+                                        setInputValue('');
+                                    }}
                                 >
-                                    {upload.map((e, index) => {
-                                        console.log(e);
-
-                                        if (e.type === 'image') {
-                                            return (
-                                                <DivImage
-                                                    key={index}
-                                                    src={e.link}
-                                                    border={
-                                                        upload.length > 1 ? '4px solid #3a3b3e; margin: 0.5px' : 'none'
+                                    <CloseI />
+                                </DivClose>
+                                <Textarea
+                                    className="textHome"
+                                    color={colorText}
+                                    bg={colorBg}
+                                    font={fontFamily.name + ' ' + fontFamily.type}
+                                    value={inputValue}
+                                    onKeyUp={handleOnKeyup}
+                                    onChange={handleGetValue}
+                                    placeholder={textarea}
+                                ></Textarea>
+                            </Div>
+                            {upload.length > 0 && (
+                                <>
+                                    <Div
+                                        width="100%"
+                                        css={`
+                                            font-size: 20px;
+                                            color: ${colorText};
+                                            align-items: center;
+                                            justify-content: space-between;
+                                            background-color: ${colorBg};
+                                            padding: 6px 0;
+                                            margin-bottom: 8px;
+                                        `}
+                                    >
+                                        {cart.map((c, index) => (
+                                            <Div
+                                                key={index}
+                                                width="49%"
+                                                wrap="wrap"
+                                                css={`
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                    &:hover {
                                                     }
-                                                ></DivImage>
-                                            );
-                                        } else if (e.type === 'video') {
-                                            return (
-                                                <Player key={e.link}>
-                                                    <source src={e.link} />
-                                                </Player>
-                                            );
-                                        }
-                                        return <></>;
-                                    })}
-                                </Div>
+                                                `}
+                                            >
+                                                <Div
+                                                    width="100%"
+                                                    css="justify-content: center; background-color: #43464c; padding: 4px; border-radius: 5px;"
+                                                >
+                                                    {c.type}
+                                                </Div>
+                                                <P>{c.amount}</P>
+                                            </Div>
+                                        ))}
+                                    </Div>
+
+                                    <Div
+                                        id="videoOver"
+                                        css={`
+                                            width: 100%;
+                                            height: 430px;
+                                            justify-content: space-evenly;
+                                            overflow-y: overlay;
+                                            @media (min-width: 600px) {
+                                                height: 550px;
+                                            }
+                                            @media (min-width: 1300px) {
+                                                height: 500px;
+                                            }
+                                        `}
+                                        wrap="wrap"
+                                    >
+                                        {upload.map((e, index) => {
+                                            console.log(e);
+
+                                            if (e.type === 'image') {
+                                                return <Img key={index} src={e.link} alt={e.link} />;
+                                            } else if (e.type === 'video') {
+                                                return <Player key={e.link} src={e.link} />;
+                                            }
+
+                                            return <></>;
+                                        })}
+                                    </Div>
+                                </>
                             )}
                         </DivDataFake>
                     </DivUpNews>
                 </Form>
-                <DivWrapButton>
-                    <Button size="1.5rem" padding="5px 15px;" bg="#d94755" onClick={handleAbolish}>
-                        Abolish
-                    </Button>
-                    <Button size="1.5rem" padding="5px 14px" bg="#2e54c6" onClick={handlePost}>
-                        Continue
-                    </Button>
-                </DivWrapButton>
-                <Bar
-                    css="
-                            width: 100%;
-                            height: 21px;
-                            position: relative;
-                            display: flex;
-                            justify-content: center;
-                                "
-                    top="calc(95% - 10px);"
-                    rotate="90deg"
-                />
+                {(inputValue || upload.length > 0) && (
+                    <DivWrapButton>
+                        <Button size="1.5rem" padding="5px 15px;" bg="#d94755" onClick={handleAbolish}>
+                            {buttonOne}
+                        </Button>
+                        <Button size="1.5rem" padding="5px 14px" bg="#2e54c6" onClick={handlePost}>
+                            {buttonTwo}
+                        </Button>
+                    </DivWrapButton>
+                )}
             </DivForm>
+            {preView}
         </>
     );
 };

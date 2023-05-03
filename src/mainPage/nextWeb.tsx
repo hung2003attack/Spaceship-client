@@ -1,23 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
-import Cookies from 'universal-cookie';
 import { useCookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import Button from '~/reUsingComponents/Buttoms/ListButton/Buttons';
-import Study from '../app/study';
-import NextListWeb from './listWebs/ListWebs';
 import ListWebBar from './listWebBar/listWebBar';
-import { BookI, DotI, NewI, ProfileI, WebsiteI, WorkI } from '~/assets/Icons/Icons';
+import { BookI, NewI, ProfileI, WebsiteI, WorkI } from '~/assets/Icons/Icons';
 import Background from 'src/backbround/background';
 import { onPersonalPage } from '~/redux/hideShow';
-import HttpRequestUser, { PropsParamsById } from '~/restAPI/requestServers/accountRequest/user';
+import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
 import {
     DivAvatar,
     DivPersonalPage,
     DivListWebProfile,
     DivMainPage,
-    DivDot,
     HfullName,
     Pstatus,
     DivChangeColorBG,
@@ -78,6 +75,7 @@ const Website: React.FC = () => {
             }
         }
         fectData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const [optionWebsite, setOptionWebsite] = useState<boolean>(false);

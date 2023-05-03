@@ -4,7 +4,7 @@ import { LanguageI } from '~/assets/Icons/Icons';
 import { InitialStateHideShow } from '~/redux/hideShow';
 import { PropsSetting } from '~/reUsingComponents/Setting/interface';
 import Settingcbl from '~/reUsingComponents/Setting/Setting';
-import Header from './components/Header/HeaderLayout';
+import Header, { PropsSN } from './components/Header/HeaderLayout';
 import { useCookies } from 'react-cookie';
 import { MdAirlineSeatLegroomExtra } from 'react-icons/md';
 const settingData = [
@@ -24,15 +24,7 @@ const settingData = [
     },
 ];
 interface InNetWork {
-    header: {
-        logo: string;
-        sett: string;
-        home: string;
-        exchange: string;
-        video: string;
-        search: string;
-        location: string;
-    };
+    header: PropsSN;
     sett: {
         data: PropsSetting;
     };
@@ -62,7 +54,15 @@ const Socialnetwork: React.FC<PropsDataNetWork> = ({ data }) => {
 
     return (
         <>
-            <Header title={header} />
+            <Header
+                logo={header.logo}
+                sett={header.sett}
+                home={header.home}
+                exchange={header.exchange}
+                video={header.video}
+                search={header.search}
+                location={header.location}
+            />
             {turnSetting && <Settingcbl dataO={sett.data} setLg={setLg} LgNow={lg} />}
         </>
     );
