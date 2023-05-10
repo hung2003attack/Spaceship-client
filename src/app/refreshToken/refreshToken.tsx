@@ -12,28 +12,24 @@ class refreshToken {
     axiosJWTs(token: string) {
         console.log('token here', token);
 
-        let number = 1;
         let i = 0;
         axiosJWT.interceptors.request.use(
-            async (config: any) => {
+            async (config) => {
                 console.log('all right', i++);
                 const date = new Date();
-                const decodeToken: any = jwt_decode(token);
+                const decodeToken: any = await jwt_decode(token);
 
-                if (decodeToken.exp < date.getTime() / 1000 + 5 && number === 1) {
+                if (decodeToken.exp < date.getTime() / 1000 + 5) {
                     console.log(decodeToken.exp, date.getTime() / 1000 + 2, token, 'hhhh');
-                    if (number === 1) {
-                        const data = await authHttpRequest.refreshToken();
-                        number++;
-                        if (data) {
-                            const newToken = 'Bearer ' + data.newAccessToken;
-                            cookies.set('tks', newToken, {
-                                path: '/',
-                                secure: false,
-                                sameSite: 'strict',
-                                expires: new Date(new Date().getTime() + 30 * 86409000),
-                            });
-                        }
+                    const data = await authHttpRequest.refreshToken();
+                    if (data) {
+                        const newToken = 'Bearer ' + data.newAccessToken;
+                        cookies.set('tks', newToken, {
+                            path: '/',
+                            secure: false,
+                            sameSite: 'strict',
+                            expires: new Date(new Date().getTime() + 30 * 86409000),
+                        });
                     }
                 }
                 return config;

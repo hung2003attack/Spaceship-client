@@ -19,7 +19,7 @@ export const DivHover = styled.div<PropsDivHover>`
     color: ${(props) => props.color};
     background-color: ${(props) => props.bg};
     top: ${(props) => props.top};
-    bottom: ${(props) => props.bottom || '-34px'};
+    bottom: ${(props) => props.bottom || '-40px'};
     right: ${(props) => props.right || '50%'};
     left: ${(props) => props.left || '50%'};
     transform: translateX(-50%);

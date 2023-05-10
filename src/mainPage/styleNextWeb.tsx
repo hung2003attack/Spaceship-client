@@ -11,13 +11,14 @@ export const DivContainer = styled.div`
     flex-wrap: wrap;
     overflow-y: overlay;
     justify-content: var(--justify-content-start);
-    background-color: ${(props: { bg: string }) => (props.bg === '#ffffffb8' ? '#efefef' : props.bg)};
+    background-color: ${(props: { bg: number }) => (props.bg === 1 ? '#202023;' : '')};
     @media (min-width: 375px) {
         justify-content: center;
     }
 `;
 
 export const DivMainPage = styled.div`
+    height: 100%;
     transition: var(--transition-03s);
 `;
 export const DivListWebProfile = styled.div`
@@ -28,7 +29,7 @@ export const DivListWebProfile = styled.div`
     align-items: center;
     justify-content: space-around;
     position: absolute;
-    background-color: ${(props: { backgr: string }) => props.backgr};
+    background-color: ${(props: { backgr: number }) => (props.backgr === 1 ? '#202023' : '')};
     overflow: hidden;
 `;
 interface PropsPersonal {

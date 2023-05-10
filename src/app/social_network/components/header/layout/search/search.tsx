@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import { PropsBg } from 'src/mainPage/nextWeb';
 import { DivClose } from '~/reUsingComponents/styleComponents/styleComponents';
 
-const Search: React.FC<{ title: string; location: string; colorBg: string; colorText: string }> = ({
+const Search: React.FC<{ title: string; location: string; colorBg: number; colorText: string }> = ({
     title,
     location,
     colorBg,

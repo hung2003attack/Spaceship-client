@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import Notification from './Notification/Notification';
 
 import './message.scss';

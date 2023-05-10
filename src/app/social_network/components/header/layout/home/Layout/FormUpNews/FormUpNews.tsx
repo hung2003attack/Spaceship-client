@@ -40,11 +40,13 @@ export interface PropsFormHome {
 }
 interface PropsFormUpNews {
     colorText: string;
-    colorBg: string;
+    colorBg: number;
     user?: PropsUserHome;
     form: PropsFormHome;
+    token: string;
+    userId: string;
 }
-const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user }) => {
+const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user, token, userId }) => {
     const [displayEmoji, setdisplayEmoji] = useState<boolean>(false);
     const [displayFontText, setDisplayFontText] = useState<boolean>(false);
     const [error, setError] = useState<{ error: boolean; content: string }>({ error: false, content: '' });
@@ -151,6 +153,8 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
                 file={upload}
                 valueText={inputValue}
                 dataText={dataTextPreView}
+                token={token}
+                userId={userId}
             />,
         );
     };
@@ -188,7 +192,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
                         <DivOptions>
                             {displayEmoji && (
                                 <Div
-                                    id={colorBg === '#202124' ? 'pickerB' : ''}
+                                    id={colorBg === 1 ? 'pickerB' : ''}
                                     css={`
                                         position: fixed;
                                         bottom: 0px;
@@ -214,7 +218,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
                                         set="facebook"
                                         emojiVersion={14}
                                         data={dataEmoji}
-                                        theme={colorBg === '#202124' ? 'dark' : 'light'}
+                                        theme={colorBg === 1 ? 'dark' : 'light'}
                                         onEmojiSelect={handleEmojiSelect}
                                     />
                                 </Div>
@@ -306,7 +310,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
                                 <Textarea
                                     className="textHome"
                                     color={colorText}
-                                    bg={colorBg}
+                                    bg={colorBg === 1 ? '#202124f5;' : ''}
                                     font={fontFamily.name + ' ' + fontFamily.type}
                                     value={inputValue}
                                     onKeyUp={handleOnKeyup}

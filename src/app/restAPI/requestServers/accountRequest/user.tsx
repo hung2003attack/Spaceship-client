@@ -1,3 +1,4 @@
+import axios from 'axios';
 import refreshToken from '~/refreshToken/refreshToken';
 export interface PropsParamsById {
     id?: string;
@@ -29,7 +30,7 @@ class HttpRequestUser {
                 params: params,
             });
             console.log(res, 'ressssss');
-
+            axios.interceptors.request.eject(Axios.interceptors.request.use());
             return res.data;
         } catch (error) {
             console.log(error);

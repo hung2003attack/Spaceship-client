@@ -3,10 +3,9 @@ import { useSelector } from 'react-redux';
 import { LanguageI } from '~/assets/Icons/Icons';
 import { InitialStateHideShow } from '~/redux/hideShow';
 import { PropsSetting } from '~/reUsingComponents/Setting/interface';
-import Settingcbl from '~/reUsingComponents/Setting/Setting';
 import Header, { PropsSN } from './components/Header/HeaderLayout';
-import { useCookies } from 'react-cookie';
-import { MdAirlineSeatLegroomExtra } from 'react-icons/md';
+import Settingcbl from '~/reUsingComponents/Setting/Setting';
+
 const settingData = [
     {
         title: 'Language',
@@ -35,6 +34,7 @@ interface PropsDataNetWork {
         [VN: string]: InNetWork;
         EN: InNetWork;
     };
+    dataUser: { avatar: string; fullName: string; gender: number };
 }
 interface PropsLanguage {
     persistedReducer: {
@@ -44,7 +44,7 @@ interface PropsLanguage {
     };
 }
 
-const Socialnetwork: React.FC<PropsDataNetWork> = ({ data }) => {
+const Socialnetwork: React.FC<PropsDataNetWork> = ({ data, dataUser }) => {
     const language = useSelector((state: PropsLanguage) => state.persistedReducer.language.sn);
     const [lg, setLg] = useState<string>(language);
     const { header, sett } = data[lg];
@@ -60,10 +60,12 @@ const Socialnetwork: React.FC<PropsDataNetWork> = ({ data }) => {
                 home={header.home}
                 exchange={header.exchange}
                 video={header.video}
+                friends={header.friends}
                 search={header.search}
                 location={header.location}
+                dataUser={dataUser}
             />
-            {turnSetting && <Settingcbl dataO={sett.data} setLg={setLg} LgNow={lg} />}
+            <Settingcbl dataO={sett.data} setLg={setLg} LgNow={lg} turnSetting={turnSetting} />
         </>
     );
 };

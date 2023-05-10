@@ -1,13 +1,15 @@
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import { Button, Div, H3, Img, P, Span } from '~/reUsingComponents/styleComponents/styleDefault';
 import { PropsUserHome } from '../../Home';
-import { Bullseye, DotI, FriendI, HeartI, LockI, NextI, ShareI } from '~/assets/Icons/Icons';
+import { BanI, Bullseye, DotI, FriendI, HeartI, LockI, NextI, ShareI } from '~/assets/Icons/Icons';
 import { Player } from 'video-react';
 import { DivAction, DivEmoji, DivWrapButton, SpanAmount } from './styleFormUpNews';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Coverflow from './ViewPostFrame/TypeFile/Coverflow';
-import OnlyImages from './ViewPostFrame/TypeFile/OnlyImages';
+import Grid from './ViewPostFrame/TypeFile/Grid';
 import DefaultType from './ViewPostFrame/TypeFile/DefaultType';
+import OptionType from './ViewPostFrame/OptionType';
+import HttpRequestHome from '~/restAPI/requestServers/socialNetwork/home';
 export interface PropsPreViewFormHome {
     time: {
         hour: string;
@@ -21,7 +23,7 @@ const PreviewPost: React.FC<{
     user?: PropsUserHome;
     setPreView?: React.Dispatch<React.SetStateAction<React.ReactNode>>;
     colorText: string;
-    colorBg: string;
+    colorBg: number;
     file: {
         link: string;
         type: string;
@@ -32,27 +34,38 @@ const PreviewPost: React.FC<{
     };
     valueText: string;
     dataText: PropsPreViewFormHome;
-}> = ({ user, setPreView, colorText, colorBg, file, valueText, fontFamily, dataText }) => {
+    token: string;
+    userId: string;
+}> = ({ user, setPreView, colorText, colorBg, file, valueText, fontFamily, dataText, token, userId }) => {
+    const [selectType, setSelectType] = useState<number>(0);
+    const [column, setColumn] = useState<number>(3);
     const images: string[] = [];
     const videos: string[] = [];
     let checkImg = false;
+    useEffect(() => {
+        // setColumn()
+    }, [file]);
     for (let i = 0; i < file.length; i++) {
         if (file[i].type === 'image') images.push(file[i].link);
         if (file[i].type === 'video') videos.push(file[i].link);
         if (file[i].type === '!images' && checkImg === false) checkImg = true;
     }
-    console.log(images);
-    const handleAbolish = () => {};
-    const handlePost = () => {};
-    const tRef = useRef<any>();
-    const [t, setT] = useState<any>();
+
+    const handlePost = async () => {
+        // const params = {}
+        // const res = await HttpRequestHome.setPost(token,userId,)
+        console.log(file);
+    };
     const setHVideo = ` .video-react.video-react-fluid {
                         height: 100%;
                         padding: 0 !important;
                     }`;
-    let i = 'bottom';
-    let z = 0;
-
+    console.log('yess');
+    const postTypes = [
+        <DefaultType file={file} />,
+        file.length > 3 ? <Coverflow file={file} /> : <P color="#c05d5d">Please select at least 3!</P>,
+        <Grid file={file} column={column} />,
+    ];
     return (
         <>
             <Div
@@ -66,31 +79,24 @@ const PreviewPost: React.FC<{
                 `}
             >
                 {setPreView && (
-                    <Div
-                        width="100%"
-                        css={`
-                            display: block;
-                            color: ${colorText};
-                            text-align: center;
-                            font-size: 1.8rem;
-                            font-family: 'Item Straight';
-                            margin-bottom: 5px;
-                            padding: 5px;
-                            background-color: #212225;
-                        `}
-                    >
-                        Pre-View your post here
-                    </Div>
+                    <OptionType
+                        column={column}
+                        setColumn={setColumn}
+                        setSelectType={setSelectType}
+                        colorText={colorText}
+                        colorBg={colorBg}
+                        file={file}
+                    />
                 )}
                 <Div
                     wrap="wrap"
                     css={`
                         width: 100%;
                         overflow: hidden;
-                        background-color: #202124f5;
+                        background-color: ${colorBg === 1 ? '#292a2d' : ''};
                     `}
                 >
-                    <Div width="100%" css="height: fit-content;">
+                    <Div width="100%" css="height: fit-content; margin-top: 5px;">
                         <Div
                             css={`
                                 width: 35px;
@@ -143,10 +149,13 @@ const PreviewPost: React.FC<{
                             {valueText}
                         </P>
                     </Div>
-                    <Div css="position: relative;">
-                        {/* {!checkImg && <OnlyImages images={images} />} */}
-                        {/* {true && <DefaultType file={file} />} */}
-                        <Coverflow file={file} />
+                    <Div
+                        width="100%"
+                        css={`
+                            position: relative;
+                        `}
+                    >
+                        {postTypes[selectType]}
                     </Div>
                     <Div
                         css={`
@@ -241,21 +250,23 @@ const PreviewPost: React.FC<{
                         </DivAction>
                     </Div>
 
-                    <DivWrapButton>
-                        <Button
-                            size="1.5rem"
-                            padding="5px 15px;"
-                            bg="#d94755"
-                            onClick={() => {
-                                if (setPreView) setPreView('');
-                            }}
-                        >
-                            {dataText.buttonFirst}
-                        </Button>
-                        <Button size="1.5rem" padding="5px 14px" bg="#2e54c6" onClick={handlePost}>
-                            {dataText.buttonTwo}
-                        </Button>
-                    </DivWrapButton>
+                    {setPreView && (
+                        <DivWrapButton>
+                            <Button
+                                size="1.5rem"
+                                padding="5px 15px;"
+                                bg="#d94755"
+                                onClick={() => {
+                                    if (setPreView) setPreView('');
+                                }}
+                            >
+                                {dataText.buttonFirst}
+                            </Button>
+                            <Button size="1.5rem" padding="5px 14px" bg="#2e54c6" onClick={handlePost}>
+                                {dataText.buttonTwo}
+                            </Button>
+                        </DivWrapButton>
+                    )}
                 </Div>
             </Div>
         </>

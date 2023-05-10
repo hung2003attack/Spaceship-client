@@ -1,7 +1,9 @@
 import { memo } from 'react';
 import Avatar from '../Avatars/Avatar';
 import { DivContainer, DivImg, Hname } from '../styleComponents/styleComponents';
-import { Button, Buttons } from '../styleComponents/styleDefault';
+import { Button, Buttons, Div, P } from '../styleComponents/styleDefault';
+import { setIdUser } from '~/redux/hideShow';
+import { useDispatch } from 'react-redux';
 interface PropsTagP {
     data: {
         id: string;
@@ -10,34 +12,71 @@ interface PropsTagP {
         avatar: string | undefined;
         gender: number;
     };
-    onClick: (id: string) => void;
-    button?: boolean;
+    onClick?: (id: string) => void;
+    button?: { css: string; text: string }[];
     margin?: string;
     bg?: string;
+    profile?: boolean;
+    cssImage?: string;
 }
-const TagProfle: React.FC<PropsTagP> = ({ data, onClick, button = false, margin, bg }) => {
+const TagProfle: React.FC<PropsTagP> = ({ data, onClick, button = false, margin, bg, cssImage, profile = false }) => {
+    const dispatch = useDispatch();
+    const handlePlPage = () => {
+        if (profile) {
+            dispatch(setIdUser(['']));
+        }
+    };
     console.log('1');
     return (
-        <DivContainer width="138px" bg={bg} wrap="wrap" margin={margin}>
-            <DivContainer wrap="wrap" bg=" #fffffff2">
-                <DivImg>
-                    <Avatar src={data.avatar} alt={data.fullName} gender={data.gender} />
-                </DivImg>
-                <Hname>{data.fullName}</Hname>
-            </DivContainer>
+        <Div width="100%" wrap="wrap">
+            <Div
+                css={`
+                    align-items: center;
+                    padding: 5px;
+                    @media (min-width: 769px) {
+                        padding: 0;
+                        width: 100%;
+                        flex-wrap: wrap;
+                        justify-content: center;
+                    }
+                `}
+            >
+                <Avatar profile={profile} css={cssImage} src={data.avatar} alt={data.fullName} gender={data.gender} />
+                <Div
+                    width="100%"
+                    wrap="wrap"
+                    css={`
+                        @media (min-width: 769px) {
+                            margin-top: 7px;
+                            justify-content: center;
+                            text-align: center;
+                        }
+                    `}
+                    onClick={handlePlPage}
+                >
+                    <Hname>{data.fullName}</Hname>
+                    <P css="font-size: 1.2rem;">{data.nickName}</P>
+                </Div>
+            </Div>
             {button && (
-                <DivContainer padding="10px 0 0 0" content="space-evenly">
+                <Div
+                    width="100%"
+                    css="justify-content: space-evenly; padding: 8px 0; background-color: #414141;
+                                    @media (min-width: 769px) {
+                                        padding:0;
+                                        background-color: transparent;
+                                        margin-top: 8px;
+                                    }"
+                >
                     <Buttons
-                        text={['View', 'Select']}
-                        size="1.2rem"
-                        padding="3.5px 9.5px"
-                        bg="#f6f6f6"
-                        color="var(--color-dark)"
-                        onClick={() => onClick(data.id)}
+                        text={button}
+                        onClick={() => {
+                            if (onClick) onClick(data.id);
+                        }}
                     />
-                </DivContainer>
+                </Div>
             )}
-        </DivContainer>
+        </Div>
     );
 };
 export default memo(TagProfle);

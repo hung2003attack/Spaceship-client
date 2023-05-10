@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 // wait
 export const Links = styled(Link)`
-    width: 50px;
+    width: 70px;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -11,8 +11,11 @@ export const Links = styled(Link)`
     color: #aeaeae;
     position: relative;
     &:hover {
-        background-color: ${(props: { bg: string }) => (props.bg === '#ffffffb8' ? '#bebbbb94' : ' #202124')};
+        background-color: ${(props: { bg: number }) => (props.bg === 1 ? ' #385d8c;' : ' #202124')};
     }
+`;
+export const A = styled.a`
+    ${(props: { css?: string }) => props.css}
 `;
 
 export const Input = styled.input`
@@ -48,12 +51,9 @@ export const Button = styled.button<Propss>`
     font-size: ${(props) => props.size || '1.6rem'};
     font-weight: bold;
     ${(props) => props.css}
-    @media (min-width: 400px) {
-        padding: ${(props) => props.repP || props.padding || '2px 22px'};
-    }
 `;
 interface PropsButtons {
-    text: string[];
+    text: { css: string; text: string }[];
     padding?: string;
     color?: string;
     background?: string;
@@ -61,18 +61,23 @@ interface PropsButtons {
     css?: string;
     onClick?: () => void;
 }
-export const Buttons: React.FC<PropsButtons | any> = ({ text, padding, color, background, size, css, onClick }) => {
+export const Buttons: React.FC<PropsButtons | any> = ({ text, onClick }) => {
     const propsEvents = {
         onClick,
     };
     return text.map((vl: any) => (
-        <Button padding={padding} color={color} bg={background} size={size} css={css} key={vl} {...propsEvents}>
-            {vl}
+        <Button key={vl.text} css={vl.css} {...propsEvents}>
+            {vl.text}
         </Button>
     ));
 };
-export const Img = styled.img`
-    border-radius: ${(props: { radius?: string }) => props.radius || '0'};
+interface PropsImg {
+    radius?: string;
+    css?: string;
+}
+export const Img = styled.img<PropsImg>`
+    border-radius: ${(props) => props.radius || '0'};
+    ${(props) => props.css}
 `;
 export const P = styled.p`
     color: ${(props) => props.color};

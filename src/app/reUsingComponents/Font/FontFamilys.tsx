@@ -10,7 +10,7 @@ const FontFamilys: React.FC<{
     setFontFamily: React.Dispatch<React.SetStateAction<{ name: string; type: string }>>;
     setDisplayFontText: React.Dispatch<React.SetStateAction<boolean>>;
     colorText: string;
-    colorBg: string;
+    colorBg: number;
     displayEmoji: boolean;
 }> = ({ fontFamily, setFontFamily, colorBg, colorText, displayEmoji, setDisplayFontText }) => {
     const [typeFont, setTypeFont] = useState<string>('');
@@ -22,7 +22,7 @@ const FontFamilys: React.FC<{
 
     console.log('fontFamily');
     return (
-        <DivFonts bg={colorBg === '#202124' ? '#292a2d;' : colorBg}>
+        <DivFonts bg={colorBg === 1 ? '#292a2d;' : ''}>
             <DivList color={colorText}>
                 {fontDatas.map((f) => {
                     let leftPX = 23;

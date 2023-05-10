@@ -3,7 +3,6 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     news: {
         isFetching: false,
-        newsCurrent: null,
         error: false,
     },
 };
@@ -14,8 +13,14 @@ const homeSlice = createSlice({
         getNewsStart: (state) => {
             state.news.isFetching = true;
         },
-        getNewsCurrent: (state, action) => {
-            state.news.newsCurrent = action.payload;
+        getNewsEnd: (state) => {
+            state.news.isFetching = false;
+            state.news.error = false;
+        },
+        setNewsStart: (state) => {
+            state.news.isFetching = true;
+        },
+        setNewsEnd: (state) => {
             state.news.isFetching = false;
             state.news.error = false;
         },
@@ -25,5 +30,5 @@ const homeSlice = createSlice({
         },
     },
 });
-export const { getNewsStart, getNewsCurrent, getNewsFailed } = homeSlice.actions;
+export const { getNewsStart, getNewsEnd, setNewsStart, setNewsEnd, getNewsFailed } = homeSlice.actions;
 export default homeSlice.reducer;

@@ -128,8 +128,8 @@ export const DivContainer = styled.div<PropsDivContainer>`
     ${(props) => props.css};
 `;
 export const DivImg = styled.div<PropsDivContainer>`
-    width: ${(props) => props.width || '100%'};
-    height: ${(props) => props.width || '100%'};
+    width: 100%;
+    height: 100%;
     ${(props) => props.css};
 `;
 
@@ -144,6 +144,7 @@ export const Hname = styled.h3<PropsHname>`
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
+
     ${(props) => props.css}
 `;
 interface PropsClose {

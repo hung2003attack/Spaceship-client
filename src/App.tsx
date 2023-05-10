@@ -1,39 +1,32 @@
-import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    InitialStateHideShow,
-    offAll,
-    offPersonalPage,
-    offSetting,
-    onPersonalPage,
-    onSetting,
-    setIdUser,
-} from './app/redux/hideShow';
+import { InitialStateHideShow, offAll, onPersonalPage, setIdUser } from './app/redux/hideShow';
 
-import Website from './mainPage/nextWeb';
-import Settingcbl from '~/reUsingComponents/Setting/Setting';
-import { LanguageI } from '~/assets/Icons/Icons';
-import Message from '~/Message/message';
 import Personalpage from './mainPage/personalPage/personalPage';
 import { login } from './dataMark/dataLogin';
 import { register } from './dataMark/dataRegister';
-import Authentication from '~/Authentication/Auth';
 import { useCookies } from 'react-cookie';
-import { useDeferredValue, useEffect, useState } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import searchAPI from '~/restAPI/requestServers/socialNetwork/searchAPI_SN';
 import { DivContainer } from '~/reUsingComponents/styleComponents/styleComponents';
 import styled from 'styled-components';
+import { Div } from '~/reUsingComponents/styleComponents/styleDefault';
+import Progress from '~/reUsingComponents/Progress/Progress';
+
+const Authentication = React.lazy(() => import('~/Authentication/Auth'));
+const Website = React.lazy(() => import('./mainPage/nextWeb'));
 
 function App() {
     const dispatch = useDispatch();
     const { setting, personalPage } = useSelector((state: any) => state.hideShow);
     const user = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow?.idUser);
+    useEffect(() => {
+        if (user.length > 0) dispatch(onPersonalPage());
+    }, [user]);
     const handleClick = (e: { stopPropagation: () => void }) => {
         e.stopPropagation();
         dispatch(offAll());
         dispatch(setIdUser([]));
     };
-
     const [cookies, setCookie] = useCookies(['tks', 'k_user', 'sn']);
     //   document.cookie.addListener("change", (event) => {
     //   console.log("1 change event");
@@ -54,6 +47,7 @@ function App() {
 
     // console.log(Object.getPrototypeOf(employees));
     useEffect(() => {
+        //seach on the url of web add profile?id=id
         const search = async () => {
             const search = window.location.search;
             if (search) {
@@ -61,15 +55,17 @@ function App() {
                 console.log('id', id);
 
                 if (id.length < 4 && id.length > 0) {
-                    const arrayDate = [];
+                    const arrayData = [];
                     for (let i = 1; i < id.length; i++) {
                         const res = await searchAPI.user(id[i], cookies.tks);
+                        console.log(res, 'sss');
+
                         if (res.status === 1) {
-                            arrayDate.push(res.data);
+                            arrayData.push(res.data);
                         }
                     }
-                    if (arrayDate.length > 0) {
-                        dispatch(setIdUser(arrayDate));
+                    if (arrayData.length > 0) {
+                        dispatch(setIdUser(arrayData));
                         dispatch(onPersonalPage());
                     }
                 }
@@ -81,107 +77,107 @@ function App() {
         search();
     }, []);
 
-    const home = {
-        id: 0,
-        name: 'hung',
-        avatar: 'url',
-        image: 'images',
-        dis: '...',
-        feel: {
-            like: '1',
-            love: '5',
-        },
-        comment: [
-            {
-                id: 1 - 0,
-                name: 'hung',
-                avatar: 'url',
-                reply: [
-                    {
-                        id: 2 - 1,
-                        content: '...',
-                        reply: [
-                            {
-                                id: 3 - 2,
-                                name: 'han',
-                                avatar: 'url',
-                                reply: [
-                                    {
-                                        id: 1 - 3,
-                                        content: '...',
-                                        reply: [
-                                            {
-                                                id: 4,
-                                                name: 'han',
-                                                avatar: 'url',
-                                                reply: [{ content: '...' }],
-                                            },
-                                        ],
-                                    },
-                                    {
-                                        id: 3 - 1,
-                                        content: '...',
-                                    },
-                                    { content: '...' },
-                                ],
-                            },
-                            {
-                                id: 2 - 3,
-                                name: 'han',
-                                avatar: 'url',
-                                reply: [{ content: '...' }],
-                            },
-                            {
-                                id: 2 - 2,
-                                content: '...',
-                            },
-                            {
-                                id: 1 - 2,
-                                content: '...',
-                            },
-                            {
-                                id: 2 - 1,
-                                content: '...',
-                            },
-                        ],
-                    },
-                    {
-                        id: 3 - 1,
-                        content: '...',
-                    },
-                    {
-                        id: 1 - 2,
-                        content: '...',
-                    },
-                    {
-                        id: 1 - 3,
-                        content: '...',
-                    },
-                    {
-                        id: 2 - 2,
-                        content: '...',
-                    },
-                ],
-            },
-            {
-                id: 6,
-                name: 'han',
-                avatar: 'url',
-                comment: [
-                    {
-                        content: '...',
-                        reply: {},
-                    },
-                    {
-                        content: '...',
-                    },
-                    {
-                        content: '...',
-                    },
-                ],
-            },
-        ],
-    };
+    // const home = {
+    //     id: 0,
+    //     name: 'hung',
+    //     avatar: 'url',
+    //     image: 'images',
+    //     dis: '...',
+    //     feel: {
+    //         like: '1',
+    //         love: '5',
+    //     },
+    //     comment: [
+    //         {
+    //             id: 1 - 0,
+    //             name: 'hung',
+    //             avatar: 'url',
+    //             reply: [
+    //                 {
+    //                     id: 2 - 1,
+    //                     content: '...',
+    //                     reply: [
+    //                         {
+    //                             id: 3 - 2,
+    //                             name: 'han',
+    //                             avatar: 'url',
+    //                             reply: [
+    //                                 {
+    //                                     id: 1 - 3,
+    //                                     content: '...',
+    //                                     reply: [
+    //                                         {
+    //                                             id: 4,
+    //                                             name: 'han',
+    //                                             avatar: 'url',
+    //                                             reply: [{ content: '...' }],
+    //                                         },
+    //                                     ],
+    //                                 },
+    //                                 {
+    //                                     id: 3 - 1,
+    //                                     content: '...',
+    //                                 },
+    //                                 { content: '...' },
+    //                             ],
+    //                         },
+    //                         {
+    //                             id: 2 - 3,
+    //                             name: 'han',
+    //                             avatar: 'url',
+    //                             reply: [{ content: '...' }],
+    //                         },
+    //                         {
+    //                             id: 2 - 2,
+    //                             content: '...',
+    //                         },
+    //                         {
+    //                             id: 1 - 2,
+    //                             content: '...',
+    //                         },
+    //                         {
+    //                             id: 2 - 1,
+    //                             content: '...',
+    //                         },
+    //                     ],
+    //                 },
+    //                 {
+    //                     id: 3 - 1,
+    //                     content: '...',
+    //                 },
+    //                 {
+    //                     id: 1 - 2,
+    //                     content: '...',
+    //                 },
+    //                 {
+    //                     id: 1 - 3,
+    //                     content: '...',
+    //                 },
+    //                 {
+    //                     id: 2 - 2,
+    //                     content: '...',
+    //                 },
+    //             ],
+    //         },
+    //         {
+    //             id: 6,
+    //             name: 'han',
+    //             avatar: 'url',
+    //             comment: [
+    //                 {
+    //                     content: '...',
+    //                     reply: {},
+    //                 },
+    //                 {
+    //                     content: '...',
+    //                 },
+    //                 {
+    //                     content: '...',
+    //                 },
+    //             ],
+    //         },
+    //     ],
+    // };
     // console.log(Math.round(Math.random() * 9573), 'heress');
     const leng = user?.length;
     const css = `
@@ -248,7 +244,13 @@ function App() {
                  height: 270px;
             }
             @media (min-width: 600px){
+                  height: ${300 / (leng > 1 ? leng - 0.7 : leng) + 'px'};
+            }
+            @media (min-width: 769px){
                   height: ${400 / (leng > 1 ? leng - 0.7 : leng) + 'px'};
+            }
+            @media (min-width: 1201px){
+                  height: ${500 / (leng > 1 ? leng - 0.7 : leng) + 'px'};
             }
         }
 
@@ -266,27 +268,45 @@ function App() {
 
     if (token && k_user) {
         return (
-            <>
+            <Suspense
+                fallback={
+                    <Progress
+                        title={{
+                            vn: 'Đang tải dữ liệu...',
+                            en: 'loading data...',
+                        }}
+                    />
+                }
+            >
                 <Website />
                 {(setting || personalPage) && <DivOpacity onClick={handleClick} />}
                 {/* <Message />  */}
                 {user?.length > 0 && (
-                    <DivContainer width="90%" height="88%" css={css} bg="#fff" content="start" display="flex">
+                    <DivContainer width="80%" height="100%" css={css} bg="#fff" content="start" display="flex">
                         {user?.map((data: any, index: number) => (
                             <Personalpage user={data} key={index} css={css2} />
                         ))}
                     </DivContainer>
                 )}
-            </>
+            </Suspense>
         );
     }
     return (
-        <>
+        <Suspense
+            fallback={
+                <Progress
+                    title={{
+                        vn: 'Vui lòng chờ trong giây lát để thệ thông cập nhật thông tin cho bạn. Xin cảm ơn đã sử dụng dịch vụ của chúng tôi!',
+                        en: 'Please wait a while to update your information. Thank you for using our services!',
+                    }}
+                />
+            }
+        >
             <Authentication
                 dataLogin={{ EN: login.EN, VN: login.VN }}
                 dataRegister={{ VN: register.VN, EN: register.EN }}
             />
-        </>
+        </Suspense>
     );
 }
 

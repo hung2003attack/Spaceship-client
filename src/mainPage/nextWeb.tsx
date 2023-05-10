@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect, useEffect, Suspense } from 'react';
 import { useCookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -10,6 +10,7 @@ import { BookI, NewI, ProfileI, WebsiteI, WorkI } from '~/assets/Icons/Icons';
 import Background from 'src/backbround/background';
 import { onPersonalPage } from '~/redux/hideShow';
 import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
+import CurrentPageL from './CurrentPage';
 import {
     DivAvatar,
     DivPersonalPage,
@@ -28,9 +29,9 @@ import {
     DivContainerChangeP,
 } from './styleNextWeb';
 import Time from './DateTime/DateTime';
-import currentPageL from './CurrentPage';
 import CurrentOptions from './CurrentOption';
 import { changeThree } from '~/redux/languageRD';
+import Progress from '~/reUsingComponents/Progress/Progress';
 
 interface PropsRes {
     avatar: string;
@@ -45,7 +46,7 @@ export interface PropsBg {
     persistedReducer: {
         background: {
             colorText: string;
-            colorBg: string;
+            colorBg: number;
         };
     };
 }
@@ -67,14 +68,14 @@ const Website: React.FC = () => {
                 l: 'l',
                 w: 'w',
             });
-            console.log(user, 'user');
+            console.log(res, 'user heeheheh');
 
-            if (res) {
-                setUser(res);
-                dispatch(changeThree(res));
-            }
+            setUser(res);
+            dispatch(changeThree(res));
         }
         fectData();
+        console.log('helllooo');
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -180,51 +181,77 @@ const Website: React.FC = () => {
             icon: <WorkI />,
         },
     ];
-
+    console.log('userrrrrr', user);
+    let dataUser;
     return (
         <>
             <DivMainPage>
-                {currentPageL(currentPage, optionWebsite)}
-                {!optionWebsite && (
-                    <DivListWebProfile backgr={colorBg}>
-                        <DivDate color={colorText}>
-                            <Time />
-                        </DivDate>
-                        <DivPersonalPage width="430px" height="150px" margin="10px" wrap="wrap" content="center">
-                            <DivAvatar>
-                                <Avatar
-                                    src={user?.avatar || ''}
-                                    alt={user?.fullName}
-                                    gender={user?.gender}
-                                    radius="50%"
-                                    id={cookies.k_user}
-                                />
-                            </DivAvatar>
-                            <HfullName color={colorText}>{user?.fullName}</HfullName>
-                            <Pstatus color={colorText}>{user?.status}</Pstatus>
-                        </DivPersonalPage>
-                        <DivChangeColorBG>
-                            <Background dispatch={dispatch} />
-                        </DivChangeColorBG>
-                        <DivContainerChangeP>
-                            <DivContainerChangeC>
-                                <PtitleOptions color={colorText}>{option ? 'Family' : 'Tap'}</PtitleOptions>
-                                <DivOptions>
-                                    <DivElements color={colorText} onClick={handleProfile}>
-                                        <ProfileI />
-                                    </DivElements>
-                                    <DivElements color={colorText} onClick={handleWebsite}>
-                                        <WebsiteI />
-                                    </DivElements>
-                                </DivOptions>
-                            </DivContainerChangeC>
-                            <DivContainer bg={colorBg}>
-                                <CurrentOptions options={option} data={buttonPage} />
-                            </DivContainer>
-                        </DivContainerChangeP>
-                    </DivListWebProfile>
+                {user ? (
+                    <>
+                        <Suspense>
+                            <CurrentPageL
+                                currentPage={currentPage}
+                                listPage={optionWebsite}
+                                dataUser={{ avatar: user.avatar, fullName: user.fullName, gender: user.gender }}
+                            />
+                        </Suspense>
+                        {!optionWebsite && (
+                            <DivListWebProfile backgr={colorBg}>
+                                <DivDate color={colorText}>
+                                    <Time />
+                                </DivDate>
+                                <DivPersonalPage
+                                    width="430px"
+                                    height="150px"
+                                    margin="10px"
+                                    wrap="wrap"
+                                    content="center"
+                                >
+                                    <DivAvatar>
+                                        <Avatar
+                                            profile
+                                            src={user?.avatar || ''}
+                                            alt={user?.fullName}
+                                            gender={user?.gender}
+                                            radius="50%"
+                                            id={cookies.k_user}
+                                        />
+                                    </DivAvatar>
+                                    <HfullName color={colorText}>{user?.fullName}</HfullName>
+                                    <Pstatus color={colorText}>{user?.status}</Pstatus>
+                                </DivPersonalPage>
+                                <DivChangeColorBG>
+                                    <Background dispatch={dispatch} />
+                                </DivChangeColorBG>
+                                <DivContainerChangeP>
+                                    <DivContainerChangeC>
+                                        <PtitleOptions color={colorText}>{option ? 'Family' : 'Tap'}</PtitleOptions>
+                                        <DivOptions>
+                                            <DivElements color={colorText} onClick={handleProfile}>
+                                                <ProfileI />
+                                            </DivElements>
+                                            <DivElements color={colorText} onClick={handleWebsite}>
+                                                <WebsiteI />
+                                            </DivElements>
+                                        </DivOptions>
+                                    </DivContainerChangeC>
+                                    <DivContainer bg={colorBg}>
+                                        <CurrentOptions options={option} data={buttonPage} />
+                                    </DivContainer>
+                                    1
+                                </DivContainerChangeP>
+                            </DivListWebProfile>
+                        )}
+                        {optionWebsite && <ListWebBar {...props2} colorBg={colorBg} colorText={colorText} />}
+                    </>
+                ) : (
+                    <Progress
+                        title={{
+                            vn: 'Đang tải dữ liệu...',
+                            en: 'loading data...',
+                        }}
+                    />
                 )}
-                {optionWebsite && <ListWebBar {...props2} />}
             </DivMainPage>
         </>
     );

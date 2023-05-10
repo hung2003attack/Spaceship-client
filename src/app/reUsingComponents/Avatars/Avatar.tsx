@@ -4,8 +4,8 @@ import React, { memo, useState, useEffect, useLayoutEffect } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import Images from '../../assets/images';
 import { Img } from '../styleComponents/styleDefault';
-import { useDispatch } from 'react-redux';
-import { onPersonalPage, onSetting, setIdUser } from '~/redux/hideShow';
+import { useDispatch, useSelector } from 'react-redux';
+import { InitialStateHideShow, onPersonalPage, onSetting, setIdUser } from '~/redux/hideShow';
 import { DivImg } from '../styleComponents/styleComponents';
 
 interface _Avatar {
@@ -31,10 +31,11 @@ const Avatar: React.FC<_Avatar> = ({
     fallback: Fallback = gender === 0 ? Images.defaultAvatarMale : gender === 1 ? Images.defaultAvatarFemale : null,
     onClick,
     css,
-    profile = true,
+    profile = false,
 }) => {
     console.log('av', gender, Fallback);
     const dispatch = useDispatch();
+    const [idUser] = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow.idUser);
     const [avatar, setAvatar] = useState<boolean>(false);
     const [avatarFallback, setAvatarFallback] = useState<string>('');
     const [repetitions, setRepetitions] = useState<number>(0);
@@ -52,11 +53,10 @@ const Avatar: React.FC<_Avatar> = ({
     const events = {
         onClick,
     };
+    console.log(idUser);
+
     const handleOpentProfile = () => {
-        if (profile) {
-            dispatch(setIdUser([id]));
-            dispatch(onPersonalPage());
-        }
+        if (profile) dispatch(setIdUser([id]));
     };
     useEffect(() => {
         if (!src) {

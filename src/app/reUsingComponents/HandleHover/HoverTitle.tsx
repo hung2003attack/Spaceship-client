@@ -26,6 +26,7 @@ const Hovertitle: React.FC<hover> = ({
     bottom,
     right,
     left,
+    id,
 }) => {
     const [showHidetitle, setShowHideetitle] = useState<boolean>(false);
 
@@ -48,12 +49,26 @@ const Hovertitle: React.FC<hover> = ({
     useEffect(() => {}, []);
     return (
         <>
-            <Propstag {...propLink} bg={colorBg} onMouseEnter={handleHover} onMouseLeave={removeHover} {...propEvents}>
+            <Propstag
+                id={id}
+                {...propLink}
+                bg={colorBg}
+                onMouseEnter={handleHover}
+                onMouseLeave={removeHover}
+                {...propEvents}
+            >
                 <DivIcon size={size} color={color}>
                     {children}
                 </DivIcon>
                 {showHidetitle && (
-                    <DivHover color={colorBg} bg={color} left={left} right={right} top={top} bottom={bottom}>
+                    <DivHover
+                        color={colorBg === 1 ? '#202023' : '#ffffffb8'}
+                        bg={color}
+                        left={left}
+                        right={right}
+                        top={top}
+                        bottom={bottom}
+                    >
                         <p>{title}</p>
                     </DivHover>
                 )}

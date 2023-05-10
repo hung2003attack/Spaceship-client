@@ -6,10 +6,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
-import { EffectCoverflow, Pagination } from 'swiper';
+import { Autoplay, EffectCoverflow, Pagination } from 'swiper';
 import './swiper.scss';
-import { Img } from 'src/backbround/styleBackground';
 import { Player } from 'video-react';
+import { Img } from '~/reUsingComponents/styleComponents/styleDefault';
 
 const Coverflow: React.FC<{
     file: {
@@ -22,26 +22,27 @@ const Coverflow: React.FC<{
             <Swiper
                 effect={'coverflow'}
                 grabCursor={true}
-                centeredSlides={true}
                 slidesPerView={'auto'}
+                loop={true}
                 coverflowEffect={{
-                    rotate: 50,
+                    rotate: 0,
                     stretch: 0,
                     depth: 100,
-                    modifier: 1,
+                    modifier: 3,
                     slideShadows: true,
                 }}
                 pagination={{
                     type: 'progressbar',
                 }}
-                autoplay={{ delay: 2000 }}
-                modules={[EffectCoverflow, Pagination]}
+                speed={1000}
+                autoplay={{ delay: 1000 }}
+                modules={[Autoplay, EffectCoverflow, Pagination]}
                 className="mySwiper"
             >
                 {file.map((f) => (
                     <SwiperSlide key={f.link}>
                         {f.type === 'image' ? (
-                            <Img src={f.link} id="baby" alt={f.link} />
+                            <Img src={f.link} id="baby" alt={f.link} radius="5px" />
                         ) : f.type === 'video' ? (
                             <Player src={f.link} />
                         ) : (

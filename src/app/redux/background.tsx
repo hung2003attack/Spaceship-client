@@ -2,11 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 
 interface Props {
     colorText: string;
-    colorBg: string;
+    colorBg: number;
 }
 const initialState: Props = {
     colorText: '#cbcbcb',
-    colorBg: '#202124',
+    colorBg: 1,
 };
 const backgroundSilde = createSlice({
     name: 'background',

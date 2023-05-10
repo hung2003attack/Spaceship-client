@@ -186,7 +186,10 @@ const ChangePassword: React.FC<PropsChangeP> = ({ phoneMail, Next }) => {
                         data={data}
                         key={data.id}
                         onClick={handleChangePass}
-                        button
+                        button={[
+                            { text: 'Hide', css: '' },
+                            { text: 'Show', css: 't' },
+                        ]}
                         margin="5px"
                         bg="#595959e0"
                     />

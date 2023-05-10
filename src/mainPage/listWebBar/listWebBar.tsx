@@ -5,15 +5,27 @@ import { BookI, WorkI, NewI } from '~/assets/Icons/Icons';
 import Button from '~/reUsingComponents/Buttoms/ListButton/Buttons';
 import Hovertitle from '~/reUsingComponents/HandleHover/HoverTitle';
 import styles from './listWebBar.module.scss';
-import { ButtonLink } from './styleListWeb';
+import { ButtonLink, DivList } from './styleListWeb';
+import Images from '~/assets/images';
+import { Alogo } from '~/social_network/components/Header/styleHeader';
+import { A, Div, P } from '~/reUsingComponents/styleComponents/styleDefault';
 interface Props {
     optionWebsite: boolean;
     hanNextWebsite1: () => void;
     hanNextWebsite2: () => void;
     hanNextWebsite3: () => void;
+    colorBg?: number;
+    colorText?: string;
 }
 
-const ListWebBar: React.FC<Props> = ({ optionWebsite, hanNextWebsite1, hanNextWebsite2, hanNextWebsite3 }) => {
+const ListWebBar: React.FC<Props> = ({
+    optionWebsite,
+    hanNextWebsite1,
+    hanNextWebsite2,
+    hanNextWebsite3,
+    colorBg,
+    colorText,
+}) => {
     const [showNextWebsite, setShowNextWebsite] = useState<boolean>(false);
     const handleshowNextBar = () => {
         setShowNextWebsite(!showNextWebsite);
@@ -27,23 +39,41 @@ const ListWebBar: React.FC<Props> = ({ optionWebsite, hanNextWebsite1, hanNextWe
         return listOptions.map((res) => (
             <ButtonLink key={res.id} to={res.part} onClick={res.onClick}>
                 <div className={clsx(styles.website)}>{res.icon}</div>
-                <p className={clsx(styles.title2)}>{res.name}</p>
+                <P css="font-size: 1.5rem; position: absolute; bottom: 3px;">{res.name}</P>
             </ButtonLink>
         ));
     };
     return (
-        <div className={clsx({ [styles.nextWebsiteBar]: optionWebsite, [styles.showNextWebsite]: showNextWebsite })}>
-            <Hovertitle title="Websites">
-                <Bar
-                    css="position: absolute;
-                    left: 0;
-                    top: 56px;
-                    transform: rotate(180deg);"
-                    onClick={handleshowNextBar}
-                />
-            </Hovertitle>
-            {elements()}
-        </div>
+        <Div
+            width="350px"
+            css={`
+                height: 100px;
+                position: fixed;
+                transition: all 0.5s linear;
+                right: ${showNextWebsite ? '0' : '-350px'};
+                top: 300px;
+                z-index: 102;
+            `}
+        >
+            <Div>
+                <Hovertitle title="Websites" left="-59px" top="6px" colorBg={colorBg} color={colorText}>
+                    <Bar
+                        css="position: absolute;
+                        left: 0;
+                        top: 64px;
+                        transform: rotate(180deg);"
+                        onClick={handleshowNextBar}
+                    />
+                </Hovertitle>
+            </Div>
+
+            <DivList>
+                <A css="min-width: 85px; height: 85px; padding: 15px; position: relative;" href="/">
+                    <img src={Images.logo} alt="d" />
+                </A>
+                {elements()}
+            </DivList>
+        </Div>
     );
 };
 export default ListWebBar;

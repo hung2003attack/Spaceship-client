@@ -29,13 +29,21 @@ import {
     AiOutlineHeart,
 } from 'react-icons/ai';
 import { GiNewspaper } from 'react-icons/gi';
-import { MdWorkOutline, MdEmojiPeople, MdRestartAlt, MdStraighten, MdOutlineNavigateNext } from 'react-icons/md';
+import {
+    MdWorkOutline,
+    MdEmojiPeople,
+    MdRestartAlt,
+    MdStraighten,
+    MdOutlineNavigateNext,
+    MdNotInterested,
+    MdNavigateBefore,
+} from 'react-icons/md';
 import { FaPeopleArrows, FaAddressCard, FaUserFriends } from 'react-icons/fa';
 import { RiDragMoveFill, RiMailSendLine } from 'react-icons/ri';
 import { TbArrowNarrowLeft, TbTextResize } from 'react-icons/tb';
 import { CgWebsite } from 'react-icons/cg';
 import { VscPreview } from 'react-icons/vsc';
-import { CiHeart, CiPaperplane } from 'react-icons/ci';
+import { CiHeart, CiPaperplane, CiSearch } from 'react-icons/ci';
 import { SlLike } from 'react-icons/sl';
 export const ImageI = () => <IoImagesOutline />;
 
@@ -49,6 +57,7 @@ export const WorkI = () => <MdWorkOutline />;
 export const SendI = () => <BsMessenger />;
 export const MoveI = () => <RiDragMoveFill />;
 export const UndoI = () => <IoArrowUndoCircleOutline />;
+export const SearchI = () => <CiSearch />;
 
 export const EyemI = () => <AiOutlineEye />;
 export const EyedI = () => <AiOutlineEyeInvisible />;
@@ -84,3 +93,5 @@ export const HeartI = () => <CiHeart />;
 export const ShareI = () => <CiPaperplane />;
 export const Bullseye = () => <BiBullseye />;
 export const NextI = () => <MdOutlineNavigateNext />;
+export const BeforeI = () => <MdNavigateBefore />;
+export const BanI = () => <MdNotInterested />;

@@ -2,31 +2,32 @@ import styled from 'styled-components';
 import { Links } from '~/reUsingComponents/styleComponents/styleDefault';
 
 export const DivHeader = styled.div`
-    min-width: 100%;
-    height: 40px;
-    z-index: 5;
-    top: 40px;
-    box-shadow: 0 0 1px 0 rgb(100 91 91);
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    height: 60px;
+    background-color: ${(props: { bg: number }) => (props.bg === 1 ? '#292a2d' : props.bg)};
     position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 3;
 `;
 export const DivWrapper = styled.div`
     width: 100%;
-    height: 50%;
+    height: 60%;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    ${(props: { css?: string }) => props.css}
 `;
 export const LinkHome = styled(Links)`
     border-radius: 5px;
-    transition: var(--transition-03s);
 `;
 export const LinkExchange = styled(LinkHome)`
     font-size: 25px;
 `;
-export const LinkCall = styled(Links)``;
+export const LinkCall = styled(LinkHome)``;
 
 export const SpanX = styled.span`
     font-size: 15px;
@@ -34,6 +35,8 @@ export const SpanX = styled.span`
     color: #aeaeae;
 `;
 export const ButtonSt = styled.button`
+    width: 50px;
+    height: 100%;
     background-color: transparent;
     position: relative;
 `;
@@ -50,10 +53,16 @@ export const DivHollow = styled.div`
     justify-content: space-evenly;
 `;
 export const Alogo = styled.a`
-    width: 30px;
-    position: relative;
-
-    div {
-        align-items: end;
+    height: 100%;
+    #id {
+        display: none;
+        @media (min-width: 769px) {
+            display: block;
+            width: 30px;
+            position: relative;
+            div {
+                align-items: end;
+            }
+        }
     }
 `;

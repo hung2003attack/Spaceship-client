@@ -1,6 +1,5 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import clsx from 'clsx';
 import { InitialStateHideShow, offAll, offSetting } from '~/redux/hideShow';
 
 import { CloseI } from '~/assets/Icons/Icons';
@@ -14,15 +13,6 @@ import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
 import { DivLanguages, DivResults } from './styleSetting';
 import { P } from '../styleComponents/styleDefault';
 
-const css1 = `
-        min-width: 270px;
-        position: fixed;
-        top: 0px;
-        right: 9px;
-        box-shadow: 0 0 4px rgb(108 106 106);
-        z-index: 9999;
-        color: var(--color-light);
-    `;
 const css2 = `
         margin-top: 49px;
         box-shadow: 0 0 1px;
@@ -37,7 +27,8 @@ const Settingcbl: React.FC<{
     dataO: PropsSetting;
     setLg: React.Dispatch<React.SetStateAction<string>>;
     LgNow: string;
-}> = ({ dataO, setLg, LgNow }) => {
+    turnSetting: boolean;
+}> = ({ dataO, setLg, LgNow, turnSetting }) => {
     const datas = dataO.data;
     const showHideSettingn = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow?.setting);
     const [cookies, setCookie, removeCookie] = useCookies(['tks', 'k_user']);
@@ -61,6 +52,16 @@ const Settingcbl: React.FC<{
             }
         }
     };
+    const css1 = `
+        min-width: 270px;
+        position: fixed;
+        top: 0px;
+        right: ${turnSetting ? '9px' : '-280px'};
+        box-shadow: 0 0 4px rgb(108 106 106);
+        z-index: 9999;
+        transition: all 0.3s linear;
+        color: var(--color-light);
+    `;
     const handleResult = (data: any) => {
         const cssR = `
                 transition: all 0.1s linear;

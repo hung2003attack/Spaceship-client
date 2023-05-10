@@ -33,6 +33,14 @@ export const socialnetwork = {
             exchange: ' Giao Lưu',
             video: 'Gọi Video',
             search: 'Tìm kiếm',
+            friends: {
+                title: 'Bạn bè',
+                children: {
+                    option: ['Tên', 'Tuổi', 'Sinh nhật', 'Địa chỉ'],
+                    menu: ['Chưa kết bạn', 'Đã kêt bạn'],
+                    main: '',
+                },
+            },
             location: 'SN',
         },
         sett: {
@@ -89,6 +97,14 @@ export const socialnetwork = {
             exchange: 'Exchange',
             video: 'Call Video',
             search: 'Search',
+            friends: {
+                title: 'Bạn bè',
+                children: {
+                    option: ['Name', 'Age', 'BirthDay', 'Address'],
+                    menu: ['Not Friends', 'Friends'],
+                    main: '',
+                },
+            },
             location: 'SN',
         },
         sett: {

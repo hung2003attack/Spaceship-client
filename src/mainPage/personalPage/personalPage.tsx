@@ -33,13 +33,13 @@ const Personalpage: React.FC<any> = ({ user, css }) => {
 `;
 
     return (
-        <DivContainer css={css} wrap="wrap">
+        <DivContainer css={css}>
             <div className="personalPage">
                 <div className="background">
-                    {/* {user.background && ( */}
+                    {/* {user?.background && ( */}
                     <Img
                         src="https://vaithuhayho.com/wp-content/uploads/2022/09/anh-gai-xinh-cute-50.jpg"
-                        alt={user.fullName}
+                        alt={user?.fullName}
                     />
                     {/* )} */}
                 </div>
@@ -50,76 +50,18 @@ const Personalpage: React.FC<any> = ({ user, css }) => {
                     <div className="avatar">
                         <Avatar
                             src="https://khoinguonsangtao.vn/wp-content/uploads/2022/09/hinh-anh-gai-xinh-facebook-tiktok.jpg"
-                            alt={user.fullName}
-                            gender={user.gender}
+                            alt={user?.fullName}
+                            gender={user?.gender}
                             radius="50%"
                         />
                     </div>
                     <div className="fullName">
-                        <Hname>{user.fullName}</Hname>
-                        <p className={clsx(styles.nickName)}>{user.nickName}I used to love you, but now will not</p>
+                        <Hname>{user?.fullName}</Hname>
+                        <p className={clsx(styles.nickName)}>{user?.nickName}I used to love you, but now will not</p>
                     </div>
-                    <div className={clsx(styles.status)}>{user.status}</div>
+                    <div className={clsx(styles.status)}>{user?.status}</div>
                 </DivPersonalPage>
                 <div className={clsx(styles.introduction)}>
-                    <div className={clsx(styles.information)}>
-                        {edit ? (
-                            <Edit />
-                        ) : (
-                            <>
-                                <div className={clsx(styles.dot)} onClick={handloEdit}>
-                                    <DotI />
-                                </div>
-                                {user.birthDate && (
-                                    <div className={clsx(styles.details)}>
-                                        <p>BirthDate:</p> {user.birthDate}
-                                    </div>
-                                )}
-                                {isNaN(user.phoneNumberEmail) && user.phoneNumberEmail && (
-                                    <div className={clsx(styles.details)}>
-                                        <p>Email:</p>
-                                        {user.phoneNumberEmail}
-                                    </div>
-                                )}
-                                {!isNaN(user.phoneNumberEmail) && user.phoneNumberEmail && (
-                                    <div className={clsx(styles.details)}>
-                                        <p>Phone:</p> {user.phoneNumberEmail}
-                                    </div>
-                                )}
-                                {user.adress && (
-                                    <div className={clsx(styles.details)}>
-                                        <p>Adress:</p> {user.adress}
-                                    </div>
-                                )}
-                                {user.gender && (
-                                    <div className={clsx(styles.details)}>
-                                        <p>Gender:</p>{' '}
-                                        {user.gender == 0 ? 'Male' : user.gender == 1 ? 'Female' : 'LGBT+'}
-                                    </div>
-                                )}
-                                {user.hobby && (
-                                    <div className={clsx(styles.details)}>
-                                        <p>hobby:</p> {user.hobby}
-                                    </div>
-                                )}
-                                {user.experience && (
-                                    <div className={clsx(styles.details)}>
-                                        <p>Strengths:</p> {user.strengths}
-                                    </div>
-                                )}
-                                {user.skill && (
-                                    <div className={clsx(styles.details)}>
-                                        <p>Skill:</p> {user.skill}
-                                    </div>
-                                )}
-                                {user.occupation && (
-                                    <div className={clsx(styles.details)}>
-                                        <p>Occupation:</p> {user.occupation}
-                                    </div>
-                                )}
-                            </>
-                        )}
-                    </div>
                     <div className={clsx(styles.myStores)}>
                         <div className={clsx(styles.optionBar)}>
                             <div className={clsx(styles.posts)}>post</div>
