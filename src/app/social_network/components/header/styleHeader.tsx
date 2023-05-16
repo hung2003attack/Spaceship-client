@@ -6,8 +6,8 @@ export const DivHeader = styled.div`
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 60px;
-    background-color: ${(props: { bg: number }) => (props.bg === 1 ? '#292a2d' : props.bg)};
+    height: 50px;
+    background-color: ${(props: { bg: number }) => (props.bg === 1 ? '#292a2d' : '')};
     position: fixed;
     top: 0;
     right: 0;
@@ -15,7 +15,7 @@ export const DivHeader = styled.div`
 `;
 export const DivWrapper = styled.div`
     width: 100%;
-    height: 60%;
+    height: 100%;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -54,15 +54,4 @@ export const DivHollow = styled.div`
 `;
 export const Alogo = styled.a`
     height: 100%;
-    #id {
-        display: none;
-        @media (min-width: 769px) {
-            display: block;
-            width: 30px;
-            position: relative;
-            div {
-                align-items: end;
-            }
-        }
-    }
 `;

@@ -182,7 +182,6 @@ const Website: React.FC = () => {
         },
     ];
     console.log('userrrrrr', user);
-    let dataUser;
     return (
         <>
             <DivMainPage>

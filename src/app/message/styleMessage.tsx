@@ -20,14 +20,14 @@ interface PropsDivMs {
     width: string;
 }
 export const DivMs = styled.div<PropsDivMs>`
-    ${(props) => props.about};
-    top: ${(props: { top: string }) => props.top};
     width: ${(props: { width: string }) => props.width || '100px'};
+    position: fixed;
+    right: 2px;
+    top: ${(props: { top: string }) => props.top};
     z-index: 12;
     border-radius: 15px;
-    position: fixed;
     display: flex;
     justify-content: space-evenly;
-    background-color: rgb(242 242 242 / 92%);
     padding: 10px;
+    flex-direction: column-reverse;
 `;

@@ -10,10 +10,12 @@ import Posts from './Layout/DataPosts/Posts';
 import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
 import { Div, H3, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
+import { io } from 'socket.io-client';
+const socket = io('http://localhost:3001', { transports: ['websocket'] });
 export interface PropsUserHome {
-    avatar?: string;
-    fullName?: string;
-    gender?: number;
+    avatar: string;
+    fullName: string;
+    gender: number;
 }
 export interface PropsTextHome {
     userBar: {
@@ -30,7 +32,7 @@ interface PropsHome {
 }
 const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
     const dispatch = useDispatch();
-    const [cookies, setCookie, removeCookie] = useCookies(['tks', 'k_user']);
+    const [cookies] = useCookies(['tks', 'k_user']);
     const [user, setUser] = useState<PropsUserHome | undefined>(dataUser);
     const token = cookies.tks;
     const userId = cookies.k_user;
@@ -38,21 +40,10 @@ const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
     useEffect(() => {
         const data = HttpRequestHome.news(token, dispatch);
     }, []);
-    console.log('user here', user);
-    useLayoutEffect(() => {
-        //  const data = GetFriend.friend(dispatch);
-        // async function fectData() {
-        //     const res: PropsUserHome = await HttpRequestUser.getById(cookies.tks, cookies.k_user, {
-        //         avatar: 'avatar',
-        //         fullName: 'fullname',
-        //         gender: 'gender',
-        //     });
-        //     res.avatar = 'https://hinhgaixinh.com/wp-content/uploads/2022/03/anh-gai-xinh-hoc-sinh-tuyet-dep.jpg';
-        //     setUser(res);
-        // }
-        // fectData();
-    }, []);
-
+    socket.on(`Request others?id=${userId}`, (msg: any) => {
+        console.log('Received message id:', socket.id);
+        console.log('Received message', msg);
+    });
     const [userList, setUserList] = useState();
     const [moveForm, setMoveForm] = useState<boolean>(false);
     const handleOpenForm = () => {

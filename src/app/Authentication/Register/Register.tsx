@@ -21,6 +21,7 @@ import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
 import { PropsRegister, PropsState } from './interfaceType';
 import { Input } from '~/reUsingComponents/styleComponents/styleDefault';
 import Eyes from '~/reUsingComponents/Eys/Eye';
+import { TRUE } from 'sass';
 
 const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
     //dataLanguage
@@ -38,7 +39,7 @@ const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
     const [valuePhoneNumberEmail, setValuePhoneNumberEmail] = useState<{
         value: any;
         icon?: string | React.ReactElement;
-    }>({ value: 'nevergiveupstartup@gmail.com', icon: '' });
+    }>({ value: account, icon: '' });
     const [valuePassword, setValuePassword] = useState<{ [password1: string]: string; password2: string }>({
         password1: '',
         password2: '',
@@ -228,6 +229,7 @@ const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
                     date: valueDate,
                 };
                 const data = await authHttpRequest.postRegister(params);
+                if (data.check === 2) setRegisterStatus({ title: data.result, status: true });
                 console.log('register', data);
 
                 if (data.check === 1) {

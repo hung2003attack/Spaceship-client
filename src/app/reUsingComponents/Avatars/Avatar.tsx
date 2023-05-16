@@ -16,7 +16,7 @@ interface _Avatar {
     width?: string;
     radius?: string;
     gender?: any;
-    onClick?: () => void;
+    onClick?: (args: any) => void;
     css?: string;
     profile?: boolean;
 }
@@ -37,7 +37,7 @@ const Avatar: React.FC<_Avatar> = ({
     const dispatch = useDispatch();
     const [idUser] = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow.idUser);
     const [avatar, setAvatar] = useState<boolean>(false);
-    const [avatarFallback, setAvatarFallback] = useState<string>('');
+    const [avatarFallback, setAvatarFallback] = useState<string>(!src ? Fallback : src);
     const [repetitions, setRepetitions] = useState<number>(0);
     const handleErrorImage = () => {
         console.log('ko');
@@ -58,11 +58,7 @@ const Avatar: React.FC<_Avatar> = ({
     const handleOpentProfile = () => {
         if (profile) dispatch(setIdUser([id]));
     };
-    useEffect(() => {
-        if (!src) {
-            setAvatarFallback(Fallback);
-        }
-    }, [gender]);
+
     console.log(gender, avatarFallback, Fallback, '++');
 
     return avatar ? (

@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import Hovertitle from '~/reUsingComponents/HandleHover/HoverTitle';
 import useDebounce from '~/reUsingComponents/hook/useDebounce';
 import { DivIconMs } from '../styleMessage';
-const Send: React.FC = () => {
+const Send: React.FC<{ colorText: string; colorBg: number }> = ({ colorBg, colorText }) => {
     const [send, setSend] = useState(false);
 
     const [left, setlLeft] = useState<boolean>(false);
@@ -48,13 +48,7 @@ const Send: React.FC = () => {
     return (
         <>
             {!send && (
-                <Hovertitle
-                    Tags={DivIconMs}
-                    title="Send"
-                    size="23px"
-                    color="var(--color-dark)"
-                    onClick={handleShowHide}
-                >
+                <Hovertitle Tags={DivIconMs} title="Send" size="23px" color={colorText} onClick={handleShowHide}>
                     <SendI />
                     <p className={clsx('miss')}>+</p>
                 </Hovertitle>

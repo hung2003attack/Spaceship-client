@@ -1,5 +1,7 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import refreshToken from '~/refreshToken/refreshToken';
+import Cookies from 'universal-cookie';
+
 export interface PropsParamsById {
     id?: string;
     fullName?: string;
@@ -21,6 +23,7 @@ export interface PropsParamsById {
     l?: string;
     w?: string;
 }
+const cookies = new Cookies();
 class HttpRequestUser {
     getById = async (token: string, id: string, params: PropsParamsById) => {
         try {
@@ -33,7 +36,18 @@ class HttpRequestUser {
             axios.interceptors.request.eject(Axios.interceptors.request.use());
             return res.data;
         } catch (error) {
-            console.log(error);
+            const err: any = error as AxiosError;
+            const errRes: { mess: string; status: number } = err.response?.data;
+            console.log(errRes);
+
+            if (errRes.status === 0) {
+                console.log('Here');
+                cookies.remove('tks', { path: '/' });
+                cookies.remove('k_user', { path: '/' });
+                window.location.reload();
+                // cookies.remove('k_user');
+            }
+            // console.log(error.reponsive.data);
         }
     };
     getByName = async (token: string, name: string, params: PropsParamsById) => {

@@ -25,7 +25,7 @@ import styled from 'styled-components';
 import Socialnetwork from '~/social_network';
 import { PropsBg } from 'src/mainPage/nextWeb';
 import { PropsTextHome } from './layout/Home/Home';
-import { PropsTextFriends } from './layout/MakingFriends/MakingFirends';
+import { PropsTextFriends } from './layout/MakingFriends/People';
 import { DivItems, Input } from './layout/MakingFriends/styleMakingFriends';
 import { Div } from '~/reUsingComponents/styleComponents/styleDefault';
 
@@ -53,7 +53,7 @@ export interface PropsSN {
 const Header: React.FC<PropsSN> = ({ logo, sett, home, exchange, search, video, friends, location, dataUser }) => {
     const dispatch = useDispatch();
     const { colorBg, colorText } = useSelector((state: PropsBg) => state.persistedReducer.background);
-
+    const [border, setBorder] = useState<string>('home');
     const [searchC, setSearchC] = useState<boolean>(false);
     const handleSetting = useCallback((e: { stopPropagation: () => void }) => {
         e.stopPropagation();
@@ -74,22 +74,37 @@ const Header: React.FC<PropsSN> = ({ logo, sett, home, exchange, search, video, 
             <DivHeader bg={colorBg}>
                 <DivWrapper
                     css={`
-                        ${searchC ? '#not{width: 0; display: none;}' : '#not{width: 70px;}'}
+                        ${searchC ? 'a{width: 0; display: none;}' : 'a{width: 70px;}'}
                         @media (min-width: 650px) {
-                            #not {
+                            a {
                                 display: block;
-                                width: 70px;
+                                width: 120px;
+                            }
+                        }
+                        #${border} {
+                            border-bottom: 8px solid #3e75bc;
+                        }
+                        #logo {
+                            display: ${searchC ? 'block' : 'none'};
+                            width: 35px;
+                            height: 35px;
+                            @media (min-width: 769px) {
+                                display: block;
+                                position: relative;
+                                div {
+                                    align-items: end;
+                                }
                             }
                         }
                     `}
                 >
-                    <Hovertitle title={logo} Tags={Alogo} href="/" size="40px">
+                    <Hovertitle id="logo" title={logo} Tags={Alogo} href="/">
                         <img src={Images.logo} alt="d" />
                         {/* <Plogo>Universe</Plogo> */}
                     </Hovertitle>
                     {/* <Search colorBg={colorBg} colorText={colorText} title={search} location={location} /> */}
                     <Hovertitle
-                        id="not"
+                        id="home"
                         colorBg={colorBg}
                         Tags={LinkHome}
                         to="/SN/"
@@ -97,9 +112,10 @@ const Header: React.FC<PropsSN> = ({ logo, sett, home, exchange, search, video, 
                         title={home.title}
                         size="25px"
                         color={colorText}
+                        onClick={() => setBorder('home')}
                     />
                     <Hovertitle
-                        id="not"
+                        id="exch"
                         colorBg={colorBg}
                         color={colorText}
                         Tags={LinkExchange}
@@ -107,9 +123,10 @@ const Header: React.FC<PropsSN> = ({ logo, sett, home, exchange, search, video, 
                         title={exchange}
                         children={<ExchangeI />}
                         size="20px"
+                        onClick={() => setBorder('exch')}
                     />
                     <Hovertitle
-                        id="not"
+                        id="link"
                         colorBg={colorBg}
                         Tags={LinkCall}
                         to="/SN/callVideo"
@@ -117,9 +134,10 @@ const Header: React.FC<PropsSN> = ({ logo, sett, home, exchange, search, video, 
                         title={video}
                         size="25px"
                         color={colorText}
+                        onClick={() => setBorder('link')}
                     />
                     <Hovertitle
-                        id="not"
+                        id="people"
                         colorBg={colorBg}
                         Tags={LinkHome}
                         to="/SN/people"
@@ -127,6 +145,7 @@ const Header: React.FC<PropsSN> = ({ logo, sett, home, exchange, search, video, 
                         title={friends.title}
                         size="25px"
                         color={colorText}
+                        onClick={() => setBorder('people')}
                     />
                     <Div
                         width="70px"
@@ -138,6 +157,7 @@ const Header: React.FC<PropsSN> = ({ logo, sett, home, exchange, search, video, 
                             cursor: var(--pointer);
                             transition: all 0.5s linear;
                             position: relative;
+                            padding: 5px 0;
                             color: ${colorText};
                             ${searchC
                                 ? 'width: 71%; input{display: block; width: 100%; height: 85%;} @media (min-width: 650px){width: 380px;}'
@@ -145,13 +165,13 @@ const Header: React.FC<PropsSN> = ({ logo, sett, home, exchange, search, video, 
                         `}
                         onClick={handleSearch}
                     >
-                        <Input id="notS" color={colorText} placeholder="Search" />
+                        <Input id="notS" color={colorText} placeholder={search} />
                         <Div
                             css={`
                                 ${searchC
                                     ? 'width: 20%; right: -4px '
                                     : 'width: 100%; left: 50%; right: 50%; top: 50%; bottom: 50%; translate: -50% -50%;'};
-                                height: 100%;
+                                height: 75%;
                                 position: absolute;
                                 align-items: center;
                                 justify-content: center;

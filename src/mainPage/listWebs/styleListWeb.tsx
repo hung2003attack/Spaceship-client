@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const DivPage = styled.div`
     font-size: 70px;
@@ -7,5 +7,4 @@ export const DivPage = styled.div`
 export const Ptitle = styled.p`
     position: absolute;
     bottom: 0px;
-}
 `;

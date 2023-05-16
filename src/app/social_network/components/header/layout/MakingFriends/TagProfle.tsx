@@ -1,7 +1,7 @@
 import { memo } from 'react';
-import Avatar from '../Avatars/Avatar';
-import { DivContainer, DivImg, Hname } from '../styleComponents/styleComponents';
-import { Button, Buttons, Div, P } from '../styleComponents/styleDefault';
+import Avatar from '../../../../../reUsingComponents/Avatars/Avatar';
+import { DivContainer, DivImg, Hname } from '../../../../../reUsingComponents/styleComponents/styleComponents';
+import { Button, Buttons, Div, P } from '../../../../../reUsingComponents/styleComponents/styleDefault';
 import { setIdUser } from '~/redux/hideShow';
 import { useDispatch } from 'react-redux';
 interface PropsTagP {
@@ -13,17 +13,27 @@ interface PropsTagP {
         gender: number;
     };
     onClick?: (id: string) => void;
-    button?: { css: string; text: string }[];
+    button?: { css: string; text: string; onClick: (args: any) => void }[];
     margin?: string;
     bg?: string;
     profile?: boolean;
     cssImage?: string;
+    colorText?: string;
 }
-const TagProfle: React.FC<PropsTagP> = ({ data, onClick, button = false, margin, bg, cssImage, profile = false }) => {
+const TagProfle: React.FC<PropsTagP> = ({
+    data,
+    onClick,
+    button,
+    margin,
+    bg,
+    colorText,
+    cssImage,
+    profile = false,
+}) => {
     const dispatch = useDispatch();
-    const handlePlPage = () => {
+    const handlePlPage = (id: string) => {
         if (profile) {
-            dispatch(setIdUser(['']));
+            dispatch(setIdUser([id]));
         }
     };
     console.log('1');
@@ -41,18 +51,27 @@ const TagProfle: React.FC<PropsTagP> = ({ data, onClick, button = false, margin,
                     }
                 `}
             >
-                <Avatar profile={profile} css={cssImage} src={data.avatar} alt={data.fullName} gender={data.gender} />
+                <Avatar
+                    profile={profile}
+                    css={cssImage}
+                    src={data.avatar}
+                    alt={data.fullName}
+                    gender={data.gender}
+                    onClick={() => handlePlPage(data.id)}
+                />
                 <Div
-                    width="100%"
                     wrap="wrap"
                     css={`
+                        height: 45px;
+                        color: ${colorText || '#cbcbcb'};
                         @media (min-width: 769px) {
                             margin-top: 7px;
                             justify-content: center;
                             text-align: center;
+                            cursor: var(--pointer);
                         }
                     `}
-                    onClick={handlePlPage}
+                    onClick={() => handlePlPage(data.id)}
                 >
                     <Hname>{data.fullName}</Hname>
                     <P css="font-size: 1.2rem;">{data.nickName}</P>
@@ -68,12 +87,7 @@ const TagProfle: React.FC<PropsTagP> = ({ data, onClick, button = false, margin,
                                         margin-top: 8px;
                                     }"
                 >
-                    <Buttons
-                        text={button}
-                        onClick={() => {
-                            if (onClick) onClick(data.id);
-                        }}
-                    />
+                    <Buttons text={button} />
                 </Div>
             )}
         </Div>

@@ -53,20 +53,11 @@ export const Button = styled.button<Propss>`
     ${(props) => props.css}
 `;
 interface PropsButtons {
-    text: { css: string; text: string }[];
-    padding?: string;
-    color?: string;
-    background?: string;
-    size?: string;
-    css?: string;
-    onClick?: () => void;
+    text: { css: string; text: string; onClick: (args: any) => void }[];
 }
-export const Buttons: React.FC<PropsButtons | any> = ({ text, onClick }) => {
-    const propsEvents = {
-        onClick,
-    };
-    return text.map((vl: any) => (
-        <Button key={vl.text} css={vl.css} {...propsEvents}>
+export const Buttons: React.FC<PropsButtons | any> = ({ text }) => {
+    return text.map((vl: { css: string; text: string; onClick: (args: any) => void }) => (
+        <Button key={vl.text} css={vl.css} onClick={vl.onClick}>
             {vl.text}
         </Button>
     ));
@@ -98,4 +89,7 @@ export const Div = styled.div<PropsDiv>`
     display: ${(props) => props.display || 'flex'};
     flex-wrap: ${(props) => props.wrap || 'none'};
     ${(props) => props.css}
+`;
+export const Strong = styled.strong`
+    ${(props: { css?: string }) => props.css}
 `;

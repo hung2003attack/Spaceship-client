@@ -5,6 +5,7 @@ export const DivChangePass = styled.div`
     text-align: center;
     position: relative;
     margin: auto;
+
     @media (min-width: 400px) {
         width: 400px;
     }

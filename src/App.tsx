@@ -11,22 +11,27 @@ import { DivContainer } from '~/reUsingComponents/styleComponents/styleComponent
 import styled from 'styled-components';
 import { Div } from '~/reUsingComponents/styleComponents/styleDefault';
 import Progress from '~/reUsingComponents/Progress/Progress';
+import Cookies from 'universal-cookie';
+import Message from '~/Message/message';
 
 const Authentication = React.lazy(() => import('~/Authentication/Auth'));
 const Website = React.lazy(() => import('./mainPage/nextWeb'));
-
+const cookie = new Cookies();
 function App() {
     const dispatch = useDispatch();
     const { setting, personalPage } = useSelector((state: any) => state.hideShow);
-    const user = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow?.idUser);
+    const id_user = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow?.idUser);
+
     useEffect(() => {
-        if (user.length > 0) dispatch(onPersonalPage());
-    }, [user]);
+        if (id_user.length > 0) dispatch(onPersonalPage());
+    }, [id_user]);
     const handleClick = (e: { stopPropagation: () => void }) => {
         e.stopPropagation();
         dispatch(offAll());
         dispatch(setIdUser([]));
     };
+    console.log(id_user, 'id_user');
+
     const [cookies, setCookie] = useCookies(['tks', 'k_user', 'sn']);
     //   document.cookie.addListener("change", (event) => {
     //   console.log("1 change event");
@@ -179,7 +184,7 @@ function App() {
     //     ],
     // };
     // console.log(Math.round(Math.random() * 9573), 'heress');
-    const leng = user?.length;
+    const leng = id_user?.length;
     const css = `
         position: fixed;
         right: 0;
@@ -188,73 +193,7 @@ function App() {
         overflow-y: overlay;
 
 `;
-    const css2 = `
-    min-width: 100%;
-    height: var(--full);
-    overflow-y: overlay;
-     @media (min-width: 1100px){
-        min-width: ${100 / leng + '%;'}
-    }
-    @media (max-width: 600px){
-        min-width: 100%;
-    }
-        .personalPage{
-            width: var(--full);
-            height: auto;
-            border-left: 1px solid;
-            border-right: 1px solid;
-        }
-        .fullName{
-            margin-bottom: 16px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: start;
-            text-align: start;
-            margin-left: 16px;
-            @media (min-width: 600px){
-                margin-bottom: 20px;
-            }
-        }
-        .avatar{
-            min-width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            padding: 5px;
-            box-shadow: 0 0 1px var(--color-dark);
-            background-color: rgb(231 62 62 / 67%);
-            @media (min-width: 600px){
-                min-width: ${150 / (leng > 1 ? leng - 0.5 : leng) + 'px;'}
-                height: ${150 / (leng > 1 ? leng - 0.5 : leng) + 'px;'}
-            }@media (min-width: 1000px){
-                min-width: ${150 / (leng > 1 ? leng - 0.7 : leng) + 'px;'}
-                height: ${150 / (leng > 1 ? leng - 0.7 : leng) + 'px;'}
-            }
-        }
-        .background{
-            width: 90%;
-            height: 230px;
-            margin: 15px auto;
-            border-radius: 5px;
-            background-color: rgb(200 200 200);
-            img {
-                border-radius: 5px;
-            }
-            @media (min-width: 400px){
-                 height: 270px;
-            }
-            @media (min-width: 600px){
-                  height: ${300 / (leng > 1 ? leng - 0.7 : leng) + 'px'};
-            }
-            @media (min-width: 769px){
-                  height: ${400 / (leng > 1 ? leng - 0.7 : leng) + 'px'};
-            }
-            @media (min-width: 1201px){
-                  height: ${500 / (leng > 1 ? leng - 0.7 : leng) + 'px'};
-            }
-        }
 
-`;
     const DivOpacity = styled.div`
         width: 100%;
         height: 100%;
@@ -280,11 +219,11 @@ function App() {
             >
                 <Website />
                 {(setting || personalPage) && <DivOpacity onClick={handleClick} />}
-                {/* <Message />  */}
-                {user?.length > 0 && (
+                <Message />
+                {id_user?.length > 0 && (
                     <DivContainer width="80%" height="100%" css={css} bg="#fff" content="start" display="flex">
-                        {user?.map((data: any, index: number) => (
-                            <Personalpage user={data} key={index} css={css2} />
+                        {id_user?.map((data: any, index: number) => (
+                            <Personalpage user={data} key={index} leng={leng} />
                         ))}
                     </DivContainer>
                 )}

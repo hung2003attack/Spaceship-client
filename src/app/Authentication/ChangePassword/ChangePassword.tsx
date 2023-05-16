@@ -1,13 +1,16 @@
 /* eslint-disable array-callback-return */
 import { DivChangePass } from './styleChangePassword';
 import { DivAccount } from '../Login/styleLogin';
-import { ButtonSubmit, DivContainer, Htitle } from '~/reUsingComponents/styleComponents/styleComponents';
+import { ButtonSubmit, DivContainer, Hname, Htitle } from '~/reUsingComponents/styleComponents/styleComponents';
 import Eyes from '~/reUsingComponents/Eys/Eye';
 import { ReactNode, useRef, useState, useEffect, useCallback } from 'react';
-import { Input } from '~/reUsingComponents/styleComponents/styleDefault';
+import { Div, Img, Input, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { Pmessage } from '../Register/styleRegister';
-import TagProfle from '~/reUsingComponents/TagProfile/TagProfle';
+import TagProfle from '~/social_network/components/Header/layout/MakingFriends/TagProfle';
 import accountRequest from '~/restAPI/requestServers/accountRequest/accountRequest';
+import { useSelector } from 'react-redux';
+import { PropsBg } from 'src/mainPage/nextWeb';
+import Avatar from '~/reUsingComponents/Avatars/Avatar';
 interface PropsChangeP {
     Next: ReactNode;
     phoneMail: string | number;
@@ -122,7 +125,7 @@ const ChangePassword: React.FC<PropsChangeP> = ({ phoneMail, Next }) => {
 
     useEffect(() => {
         const get = async () => {
-            const params = { phoneMail: 'nevergiveupstartup@gmail.com' };
+            const params = { phoneMail: phoneMail };
             const res: any = await accountRequest.getPhoneMail(params);
             const { status, data } = res;
             if (status === 200 && data.status === 1) return setDataAccount(data.user);
@@ -150,7 +153,24 @@ const ChangePassword: React.FC<PropsChangeP> = ({ phoneMail, Next }) => {
                         if (data.id === id)
                             return (
                                 <div key={data.id}>
-                                    <TagProfle data={data} onClick={handleChangePass} margin="auto" />
+                                    <Div>
+                                        <Div
+                                            wrap="wrap"
+                                            css="width: 183px; height: 150px; margin: 5px 15px; justify-content: center; color: #cbcbcb;background-color: #454646;"
+                                        >
+                                            <Avatar
+                                                css="width: 100px; height: 100px;"
+                                                src={data.avatar}
+                                                alt={data.fullName}
+                                                gender={data.gender}
+                                                onClick={handleChangePass}
+                                            />
+                                            <Div width="100%">
+                                                <Hname>{data.fullName}</Hname>
+                                                <P>{data.nickName}</P>
+                                            </Div>
+                                        </Div>
+                                    </Div>
                                     <DivAccount>
                                         <Input
                                             type={type[show1.check]}
@@ -180,21 +200,39 @@ const ChangePassword: React.FC<PropsChangeP> = ({ phoneMail, Next }) => {
                 </DivChangePass>
             </form>
 
-            <DivContainer>
+            <Div css="justify-content: center; margin: auto">
                 {dataAccount?.map((data) => (
-                    <TagProfle
-                        data={data}
+                    <Div
                         key={data.id}
-                        onClick={handleChangePass}
-                        button={[
-                            { text: 'Hide', css: '' },
-                            { text: 'Show', css: 't' },
-                        ]}
-                        margin="5px"
-                        bg="#595959e0"
-                    />
+                        wrap="wrap"
+                        css="width: 183px; height: 150px;margin: 5px 15px; cursor: pointer; text-align: center; justify-content: center; color: #cbcbcb;background-color: #454646;"
+                        onClick={() => handleChangePass(data.id)}
+                    >
+                        <Avatar
+                            css="width: 100px; height: 100px;"
+                            src={data.avatar}
+                            alt={data.fullName}
+                            gender={data.gender}
+                        />
+                        <Div width="100%">
+                            <Hname>{data.fullName}</Hname>
+                            <P>{data.nickName}</P>
+                        </Div>
+                    </Div>
+                    // <TagProfle
+                    //     cssImage="width: 100px"
+                    //     data={data}
+                    //     key={data.id}
+                    //     onClick={handleChangePass}
+                    //     button={[
+                    //         { text: 'Hide', css: '' },
+                    //         { text: 'Show', css: 't' },
+                    //     ]}
+                    //     margin="5px"
+                    //     bg="#595959e0"
+                    // />
                 ))}
-            </DivContainer>
+            </Div>
         </>
     );
 };

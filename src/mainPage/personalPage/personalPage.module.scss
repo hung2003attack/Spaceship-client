@@ -1,27 +1,8 @@
-.background {
-    width: 90%;
-    height: 300px;
-    margin: 15px auto;
-    border-radius: 5px;
-
-    background-color: rgb(200 200 200);
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 5px;
-    }
-}
 .close {
     width: 100%;
     height: 50px;
 }
-.avatar {
-    width: 17%;
-    margin: auto;
-}
-.fullName {
-}
+
 .nickName {
     width: 100%;
     font-size: 1.2rem;
@@ -30,65 +11,4 @@
 .status {
     font-size: 14px;
     text-align: center;
-}
-.introduction {
-    width: 90%;
-    margin: 35px auto 10px;
-    display: flex;
-    align-items: flex-start;
-}
-.information {
-    width: 706px;
-    height: 260px;
-    margin: 20px 50px;
-    padding: 15px;
-    box-shadow: 0 0 2px rgb(0 0 0);
-    position: relative;
-}
-.dot {
-    display: flex;
-    right: 7px;
-    top: 0px;
-    font-size: 20px;
-    cursor: var(--pointer);
-    position: absolute;
-}
-.details {
-    display: flex;
-    align-items: center;
-    p {
-        font-size: 17px;
-        font-weight: 600;
-        margin-right: 10px;
-    }
-}
-.myStores {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    background-color: rgba(255, 255, 255);
-    box-shadow: 0 0 2px rgb(0 0 0);
-    margin-top: 19px;
-}
-.optionBar {
-    width: 100%;
-    display: flex;
-    margin-bottom: 10px;
-    background-color: rgb(200 200 200);
-}
-
-.posts,
-.friends {
-    width: 100px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: var(--pointer);
-    border-radius: 5px;
-    &:hover {
-        background-color: rgb(145 145 145);
-    }
-}
-.results {
 }

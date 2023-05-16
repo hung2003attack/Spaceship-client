@@ -72,13 +72,14 @@ export const HfullName = styled.h3`
     font-size: 1.8rem;
     text-align: center;
     color: ${(props) => props.color};
-    margin: 15px 0 8px 0;
+    margin: 15px 0 0px 0;
 `;
 export const Pstatus = styled.p`
     font-size: 1.3rem;
     font-weight: bold;
     text-align: center;
     color: ${(props) => props.color};
+    font-family: 'Robotol Straight', sans-serif;
 `;
 export const DivChangeColorBG = styled.div`
     top: 35px;

@@ -4,7 +4,7 @@ export const DivOptions = styled.div`
     width: 100%;
     height: 100%;
     font-size: 1.5rem;
-    padding-top: 60px;
+    padding-top: 49px;
     color: ${(props) => props.color};
     background-color: ${(props: { bg?: string }) => props.bg};
     @media (min-width: 769px) {
@@ -47,7 +47,7 @@ export const DivResults = styled.div`
     height: 100%;
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: baseline;
     justify-content: center;
     position: absolute;
     right: 0;
