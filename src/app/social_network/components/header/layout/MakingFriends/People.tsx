@@ -113,13 +113,11 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friends, colorText, color
         type === '0'
             ? setSName(e.target.value)
             : type === '1'
-            ? setSAge(e.target.value)
-            : type === '2'
             ? setSBirth(e.target.value)
             : setSAddress(e.target.value);
     };
     return (
-        <DivOptions bg={colorBg === 1 ? '#373737' : ''} color={colorText}>
+        <DivOptions bg={colorBg === 1 ? '#353535' : ''} color={colorText}>
             <DivSearch>
                 {optionS.map((i, index) => (
                     <DivItems
@@ -127,10 +125,10 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friends, colorText, color
                         css={`
                             padding: 4px;
                             ${search.includes(i)
-                                ? 'width: 100%;'
+                                ? 'width: 100%; '
                                 : search.length > 0
                                 ? 'width: 0%; display: none; '
-                                : 'width: 100%; '};
+                                : 'width: 100%;'};
                             transition: all 0.2s linear;
                             ${search.includes(i)
                                 ? ' input {display: block; width: 100%; transition: all 0.5s linear;} div {width: 25%; transition: all 0.5s linear;}'
@@ -139,13 +137,13 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friends, colorText, color
                                 ${search.includes(i)
                                     ? 'width: 100%;'
                                     : search.length > 1
-                                    ? 'width: 0%; '
-                                    : 'width: 15%; display: block; '};
+                                    ? 'width: 40%;  display: block;'
+                                    : 'width: 20%; display: block; '};
                             }
-                            @media (min-width: 769px) {
+                            /* @media (min-width: 769px) {
                                 width: 100%;
                                 padding: 4px;
-                            }
+                            } */
                         `}
                         key={i}
                         onClick={(e) => handleOption(e, i)}
@@ -163,8 +161,10 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friends, colorText, color
                 </DivMenu>
                 <Div width="100%" css="position: relative;">
                     <DivResults>
-                        {data.map((res) => {
-                            return res.fullName.startsWith(sName, 0) ? (
+                        {data?.map((res) => {
+                            console.log(res.birthday.startsWith(sBirth, 0), res.birthday, sBirth);
+
+                            return res.fullName.startsWith(sName, 0) && res.birthday.startsWith(sBirth, 0) ? (
                                 <Div
                                     key={res.id}
                                     css={`

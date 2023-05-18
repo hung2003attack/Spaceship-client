@@ -50,4 +50,5 @@ export interface PropsRegister {
     account: string | number;
     dataRegister: PropsRegisterLanguage;
     Next: ReactNode;
+    acc: number;
 }

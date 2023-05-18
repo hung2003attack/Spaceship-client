@@ -12,6 +12,7 @@ import { DivClose, DivContainer } from '../styleComponents/styleComponents';
 import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
 import { DivLanguages, DivResults } from './styleSetting';
 import { P } from '../styleComponents/styleDefault';
+import { socket } from 'src/mainPage/nextWeb';
 
 const css2 = `
         margin-top: 49px;
@@ -45,7 +46,7 @@ const Settingcbl: React.FC<{
     }, [showHideSettingn]);
     const handleChangeLanguage = async (lg: string) => {
         if (checkLg.current !== lg) {
-            const res = await HttpRequestUser.update(token, k_user, lg);
+            const res = await HttpRequestUser.setLg(token, k_user, lg);
             if (res === 1) {
                 checkLg.current = lg;
                 setLg(lg);
@@ -94,6 +95,7 @@ const Settingcbl: React.FC<{
             dispatch(offAll());
             removeCookie('tks');
             localStorage.clear();
+            socket.emit('offline', k_user);
         }
     };
     return (

@@ -10,8 +10,10 @@ import Posts from './Layout/DataPosts/Posts';
 import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
 import { Div, H3, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
-import { io } from 'socket.io-client';
-const socket = io('http://localhost:3001', { transports: ['websocket'] });
+import { socket } from 'src/mainPage/nextWeb';
+
+console.log('eeeeeeeeeeeeeeeeeeeeeeeee');
+
 export interface PropsUserHome {
     avatar: string;
     fullName: string;
@@ -40,10 +42,14 @@ const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
     useEffect(() => {
         const data = HttpRequestHome.news(token, dispatch);
     }, []);
+    // socket.on('connect', () => {
+
     socket.on(`Request others?id=${userId}`, (msg: any) => {
         console.log('Received message id:', socket.id);
         console.log('Received message', msg);
     });
+    console.log('nooo');
+
     const [userList, setUserList] = useState();
     const [moveForm, setMoveForm] = useState<boolean>(false);
     const handleOpenForm = () => {

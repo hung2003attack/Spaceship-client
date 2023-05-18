@@ -5,7 +5,7 @@ class PeopleRequest {
     getPeople = async (accessToken: string) => {
         try {
             const axiosJWTss = refreshToken.axiosJWTs(accessToken);
-            const res = await axiosJWTss.get('/SN/people/stranger');
+            const res = await axiosJWTss.get('/SN/people/getPeopleAll');
             console.log(res, 'getPeople');
             return res.data;
         } catch (error) {
@@ -21,6 +21,15 @@ class PeopleRequest {
             return res.data;
         } catch (error) {
             console.log(error, 'add Friend');
+        }
+    };
+    getfriendAll = async (accessToken: string) => {
+        try {
+            const axiosJWTss = refreshToken.axiosJWTs(accessToken);
+            const res = await axiosJWTss.get('/SN/people/getFriendAll');
+            return res.data;
+        } catch (error) {
+            console.log(error, 'get FriendAll');
         }
     };
 }

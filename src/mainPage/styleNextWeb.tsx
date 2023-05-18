@@ -49,6 +49,7 @@ export const DivPersonalPage = styled.div<PropsPersonal>`
     justify-content: ${(props) => props.content};
     align-items: center;
     border-radius: 5px;
+    position: relative;
     ${(props) => props.css}
 `;
 export const DivAvatar = styled.div`
@@ -59,6 +60,7 @@ export const DivAvatar = styled.div`
     border-radius: 50%;
     padding: 5px;
     border: 1px solid var(--background-hover);
+    ${(props: { css?: string }) => props.css}
 `;
 export const DivDot = styled.div`
     right: -43px;
@@ -153,12 +155,12 @@ export const DivDate = styled.div`
     }
 `;
 export const DivOptions = styled.div`
-    width: 150px;
-    font-size: 40px;
+    width: 100%;
+    font-size: 30px;
     color: rgba(64, 64, 64, 0.4509803922);
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: start;
 
     @media (min-width: 837px) {
         font-size: 50px;
@@ -167,6 +169,7 @@ export const DivOptions = styled.div`
 `;
 export const DivElements = styled.div`
     display: flex;
+    margin-right: 10px;
     cursor: var(--pointer);
     color: ${(props) => props.color};
 `;

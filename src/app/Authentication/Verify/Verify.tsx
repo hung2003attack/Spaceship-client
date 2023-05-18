@@ -11,8 +11,9 @@ interface PropsVerify {
     setEnable: React.Dispatch<SetStateAction<boolean>>;
     setAccount: React.Dispatch<React.SetStateAction<string | number>>;
     Next: ReactNode;
+    setAcc: React.Dispatch<React.SetStateAction<number>>;
 }
-const Verify: React.FC<PropsVerify> = ({ setEnable, setAccount, Next }) => {
+const Verify: React.FC<PropsVerify> = ({ setAcc, setEnable, setAccount, Next }) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [otpStatus, setOtpStatus] = useState<boolean>(false);
     const [otp, setOtp] = useState<string>('');
@@ -95,6 +96,7 @@ const Verify: React.FC<PropsVerify> = ({ setEnable, setAccount, Next }) => {
                         otp: otp,
                     };
                     const res = await authHttpRequest.postVerifyOTP(params);
+                    setAcc(Number(res?.data.acc));
                     console.log('wrong', res);
 
                     if (res?.status === 200 && res?.data?.status === 1) {

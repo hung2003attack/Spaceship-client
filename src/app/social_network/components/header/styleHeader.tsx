@@ -12,6 +12,7 @@ export const DivHeader = styled.div`
     top: 0;
     right: 0;
     z-index: 3;
+    box-shadow: 0 0 4px #676464;
 `;
 export const DivWrapper = styled.div`
     width: 100%;

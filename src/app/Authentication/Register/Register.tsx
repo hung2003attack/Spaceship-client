@@ -19,11 +19,12 @@ import { changeRegister } from '~/redux/languageRD';
 import { DivLanguage } from '../Login/styleLogin';
 import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
 import { PropsRegister, PropsState } from './interfaceType';
-import { Input } from '~/reUsingComponents/styleComponents/styleDefault';
+import { Input, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import Eyes from '~/reUsingComponents/Eys/Eye';
 import { TRUE } from 'sass';
+import ErrorBoudaries from '~/reUsingComponents/ErrorBoudaries/ErrorBoudaries';
 
-const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
+const Register: React.FC<PropsRegister> = ({ acc, account, dataRegister, Next }) => {
     //dataLanguage
     const dataLanguages = useSelector((state: PropsState) => state.persistedReducer.language?.register);
 
@@ -91,6 +92,8 @@ const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
         password2: false,
         date: false,
     });
+    const [accs, setAccs] = useState<number>(acc);
+    const [errReq, setErrReq] = useState<{ error: boolean; content: string }>({ error: false, content: '' });
     useEffect(() => {
         if (isNaN(valuePhoneNumberEmail.value)) {
             const validateEmail = /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,5})+$/;
@@ -167,6 +170,15 @@ const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
     const handleBirthDate = (e: { target: any }) => {
         const date = e.target.value.includes('/', 1);
         const month = e.target.value.includes('/', 3);
+        const year = new Date().getUTCFullYear();
+        console.log(
+            year,
+            'earrr',
+            e.target.value.slice(6, 10),
+            e.target.value.slice(6, 10) >= 1500,
+            e.target.value.slice(6, 10) <= year,
+        );
+
         setValueDate(e.target.value);
         if (
             date &&
@@ -187,7 +199,9 @@ const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
                 e.target.value.slice(0, 2) <= 31 &&
                 e.target.value.slice(0, 2) > 0 &&
                 e.target.value.slice(3, 5) <= 12 &&
-                e.target.value.slice(3, 5) > 0
+                e.target.value.slice(3, 5) > 0 &&
+                e.target.value.slice(6, 10) <= year &&
+                e.target.value.slice(6, 10) >= 1500
             ) {
                 setCheckDate({ check: false, icon: '' });
             } else {
@@ -231,7 +245,8 @@ const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
                 const data = await authHttpRequest.postRegister(params);
                 if (data.check === 2) setRegisterStatus({ title: data.result, status: true });
                 console.log('register', data);
-
+                if (data?.status === 999) setErrReq({ error: true, content: data?.error });
+                setAccs(data.acc);
                 if (data.check === 1) {
                     setRegisterStatus({ title: data.result, status: false });
                 } else if (data.check === 3) {
@@ -318,9 +333,11 @@ const Register: React.FC<PropsRegister> = ({ account, dataRegister, Next }) => {
     const pass = [];
     return (
         <DivForm>
+            <ErrorBoudaries setError={setErrReq} message={errReq.content} check={errReq.error} />
             <Htitle>
                 {title}
                 {Next}
+                <P>{accs} / 2</P>
             </Htitle>
             <DivLanguage onClick={handlelanguage}>
                 <Language change={dispatch} language={language} changeLanguage={changeRegister} />

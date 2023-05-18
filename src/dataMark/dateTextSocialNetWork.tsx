@@ -36,7 +36,7 @@ export const socialnetwork = {
             friends: {
                 title: 'Bạn bè',
                 children: {
-                    option: ['Tên', 'Tuổi', 'Sinh nhật', 'Địa chỉ'],
+                    option: ['Tên', 'Ngày sinh', 'Địa chỉ'],
                     menu: ['Chưa kết bạn', 'Đã kêt bạn'],
                     main: '',
                 },
@@ -100,7 +100,7 @@ export const socialnetwork = {
             friends: {
                 title: 'Bạn bè',
                 children: {
-                    option: ['Name', 'Age', 'BirthDay', 'Address'],
+                    option: ['Name', 'BirthDay', 'Address'],
                     menu: ['Not Friends', 'Friends'],
                     main: '',
                 },

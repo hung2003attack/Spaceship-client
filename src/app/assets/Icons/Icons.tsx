@@ -28,7 +28,7 @@ import {
     AiOutlineLoading,
     AiOutlineHeart,
 } from 'react-icons/ai';
-import { GiNewspaper } from 'react-icons/gi';
+import { GiEarthAmerica, GiNewspaper } from 'react-icons/gi';
 import {
     MdWorkOutline,
     MdEmojiPeople,
@@ -40,10 +40,10 @@ import {
 } from 'react-icons/md';
 import { FaPeopleArrows, FaAddressCard, FaUserFriends } from 'react-icons/fa';
 import { RiDragMoveFill, RiMailSendLine } from 'react-icons/ri';
-import { TbArrowNarrowLeft, TbTextResize } from 'react-icons/tb';
+import { TbArrowNarrowLeft, TbGridDots, TbTextResize } from 'react-icons/tb';
 import { CgWebsite } from 'react-icons/cg';
 import { VscPreview } from 'react-icons/vsc';
-import { CiHeart, CiPaperplane, CiSearch } from 'react-icons/ci';
+import { CiHeart, CiPaperplane, CiSearch, CiWifiOff, CiWifiOn } from 'react-icons/ci';
 import { SlLike } from 'react-icons/sl';
 export const ImageI = () => <IoImagesOutline />;
 
@@ -58,6 +58,9 @@ export const SendI = () => <BsMessenger />;
 export const MoveI = () => <RiDragMoveFill />;
 export const UndoI = () => <IoArrowUndoCircleOutline />;
 export const SearchI = () => <CiSearch />;
+export const OnlineI = () => <CiWifiOn />;
+export const OfflineI = () => <CiWifiOff />;
+export const EarthI = () => <GiEarthAmerica />;
 
 export const EyemI = () => <AiOutlineEye />;
 export const EyedI = () => <AiOutlineEyeInvisible />;
@@ -78,6 +81,7 @@ export const CameraI = () => <BsFillCameraVideoFill />;
 export const SendOPTI = () => <IoIosSend />;
 export const LoadingI = () => <AiOutlineLoading />;
 export const ResTartI = () => <MdRestartAlt />;
+export const GridDotI = () => <TbGridDots />;
 // icon at home
 export const HomeI = () => <AiOutlineHome />;
 export const ExchangeI = () => <SiExpertsexchange />;

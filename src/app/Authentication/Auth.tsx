@@ -29,6 +29,7 @@ const Authentication: React.FC<{ dataLogin: PropsLogin; dataRegister: PropsRegis
     const [enable, setEnable] = useState<boolean>(false);
     const [account, setAccount] = useState<string | number>('');
     const [whatKind, setWhatKind] = useState<string>('');
+    const [acc, setAcc] = useState<number>(0);
     const Next: ReactNode = (
         <Pnext
             onClick={() => {
@@ -42,11 +43,11 @@ const Authentication: React.FC<{ dataLogin: PropsLogin; dataRegister: PropsRegis
 
     const Element = () => {
         if (whatKind === 'register') {
-            if (enable) return <Register dataRegister={dataRegister} account={account} Next={Next} />;
-            return <Verify setEnable={setEnable} setAccount={setAccount} Next={Next} />;
+            if (enable) return <Register acc={acc} dataRegister={dataRegister} account={account} Next={Next} />;
+            return <Verify setAcc={setAcc} setEnable={setEnable} setAccount={setAccount} Next={Next} />;
         } else if (whatKind === 'changePassword') {
             if (enable) return <ChangePassword phoneMail={account} Next={Next} />;
-            return <Verify setEnable={setEnable} setAccount={setAccount} Next={Next} />;
+            return <Verify setAcc={setAcc} setEnable={setEnable} setAccount={setAccount} Next={Next} />;
         } else {
             return <Login data={dataLogin} setWhatKind={setWhatKind} />;
         }

@@ -4,6 +4,6 @@ interface PropsOps extends PropsListWeb {
     options: boolean;
 }
 const CurrentOptions: React.FC<PropsOps> = ({ options, data }) => {
-    return <>{options ? <Profile /> : <NextListWeb data={data} />}</>;
+    return <>{options}</>;
 };
 export default CurrentOptions;
