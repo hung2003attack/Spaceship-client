@@ -37,7 +37,13 @@ export const socialnetwork = {
                 title: 'Bạn bè',
                 children: {
                     option: ['Tên', 'Ngày sinh', 'Địa chỉ'],
-                    menu: ['Chưa kết bạn', 'Đã kêt bạn'],
+                    menu: [
+                        { name: 'Chưa kết bạn', id: 'trangers' },
+                        { name: 'Đã kêt bạn', id: 'friends' },
+                        { name: 'Gia đình', id: 'family' },
+                        { name: 'Bạn đã gửi', id: 'yousent' },
+                        { name: 'Người khác gửi', id: 'otherssent' },
+                    ],
                     main: '',
                 },
             },
@@ -101,7 +107,13 @@ export const socialnetwork = {
                 title: 'Bạn bè',
                 children: {
                     option: ['Name', 'BirthDay', 'Address'],
-                    menu: ['Not Friends', 'Friends'],
+                    menu: [
+                        { name: 'Not Friends', id: 'trangers' },
+                        { name: 'Friends', id: 'friends' },
+                        { name: 'Family', id: 'family' },
+                        { name: 'You sent', id: 'yousent' },
+                        { name: 'others sent', id: 'otherssent' },
+                    ],
                     main: '',
                 },
             },

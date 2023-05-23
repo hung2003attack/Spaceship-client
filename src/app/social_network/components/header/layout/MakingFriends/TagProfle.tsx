@@ -11,9 +11,17 @@ interface PropsTagP {
         nickName: string | undefined;
         avatar: string | undefined;
         gender: number;
+        id_r_user?: {
+            createdAt: string;
+            id_relative: string;
+            id_user: string;
+            really: number;
+            title: string;
+        };
     };
+    typesc?: string;
     onClick?: (id: string) => void;
-    button?: { css: string; text: string; onClick: (args: any) => void }[];
+    button?: { css: string; text: string; onClick?: (args: any) => void }[];
     margin?: string;
     bg?: string;
     profile?: boolean;
@@ -28,6 +36,7 @@ const TagProfle: React.FC<PropsTagP> = ({
     bg,
     colorText,
     cssImage,
+    typesc,
     profile = false,
 }) => {
     const dispatch = useDispatch();
@@ -36,10 +45,11 @@ const TagProfle: React.FC<PropsTagP> = ({
             dispatch(setIdUser([id]));
         }
     };
-    console.log('1');
+    console.log('1', typesc);
     return (
         <Div width="100%" wrap="wrap">
             <Div
+                width="100%"
                 css={`
                     align-items: center;
                     padding: 5px;
@@ -60,6 +70,7 @@ const TagProfle: React.FC<PropsTagP> = ({
                     onClick={() => handlePlPage(data.id)}
                 />
                 <Div
+                    width="100%"
                     wrap="wrap"
                     css={`
                         height: 45px;
@@ -74,7 +85,9 @@ const TagProfle: React.FC<PropsTagP> = ({
                     onClick={() => handlePlPage(data.id)}
                 >
                     <Hname>{data.fullName}</Hname>
-                    <P css="font-size: 1.2rem;">{data.nickName}</P>
+                    <P css="font-size: 1.2rem; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; height: 20px;">
+                        {data.nickName}
+                    </P>
                 </Div>
             </Div>
             {button && (

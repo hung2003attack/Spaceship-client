@@ -21,8 +21,7 @@ import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
 import { PropsRegister, PropsState } from './interfaceType';
 import { Input, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import Eyes from '~/reUsingComponents/Eys/Eye';
-import { TRUE } from 'sass';
-import ErrorBoudaries from '~/reUsingComponents/ErrorBoudaries/ErrorBoudaries';
+import { setTrueErrorServer } from '~/redux/hideShow';
 
 const Register: React.FC<PropsRegister> = ({ acc, account, dataRegister, Next }) => {
     //dataLanguage
@@ -31,8 +30,6 @@ const Register: React.FC<PropsRegister> = ({ acc, account, dataRegister, Next })
     const [language, setLanguage] = useState<boolean>(false);
     const { title, input, submit, messagePhoneEmail, messagePassword, messageDate, messageName } =
         dataRegister[dataLanguages];
-    console.log(dataRegister[dataLanguages]);
-
     // const {} = dataRegister;
     const dispatch = useDispatch();
     //value
@@ -93,7 +90,6 @@ const Register: React.FC<PropsRegister> = ({ acc, account, dataRegister, Next })
         date: false,
     });
     const [accs, setAccs] = useState<number>(acc);
-    const [errReq, setErrReq] = useState<{ error: boolean; content: string }>({ error: false, content: '' });
     useEffect(() => {
         if (isNaN(valuePhoneNumberEmail.value)) {
             const validateEmail = /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,5})+$/;
@@ -171,13 +167,6 @@ const Register: React.FC<PropsRegister> = ({ acc, account, dataRegister, Next })
         const date = e.target.value.includes('/', 1);
         const month = e.target.value.includes('/', 3);
         const year = new Date().getUTCFullYear();
-        console.log(
-            year,
-            'earrr',
-            e.target.value.slice(6, 10),
-            e.target.value.slice(6, 10) >= 1500,
-            e.target.value.slice(6, 10) <= year,
-        );
 
         setValueDate(e.target.value);
         if (
@@ -219,7 +208,6 @@ const Register: React.FC<PropsRegister> = ({ acc, account, dataRegister, Next })
     const handleSubmit = async (e: { preventDefault: () => void; target: any }) => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        console.log(formData);
         if (
             valueUserName !== '' &&
             valuePhoneNumberEmail.value !== '' &&
@@ -234,7 +222,6 @@ const Register: React.FC<PropsRegister> = ({ acc, account, dataRegister, Next })
                 checkUserName.check === false
             ) {
                 delete valuePhoneNumberEmail.icon;
-                console.log('value', valueUserName, valuePhoneNumberEmail, valuePassword, valueGender, valueDate);
                 const params = {
                     name: valueUserName,
                     phoneMail: valuePhoneNumberEmail.value,
@@ -243,9 +230,8 @@ const Register: React.FC<PropsRegister> = ({ acc, account, dataRegister, Next })
                     date: valueDate,
                 };
                 const data = await authHttpRequest.postRegister(params);
+                if (data.status === 9999) dispatch(setTrueErrorServer(''));
                 if (data.check === 2) setRegisterStatus({ title: data.result, status: true });
-                console.log('register', data);
-                if (data?.status === 999) setErrReq({ error: true, content: data?.error });
                 setAccs(data.acc);
                 if (data.check === 1) {
                     setRegisterStatus({ title: data.result, status: false });
@@ -306,7 +292,6 @@ const Register: React.FC<PropsRegister> = ({ acc, account, dataRegister, Next })
     };
     const optionGender = [valueGender === 0, valueGender === 1, valueGender === 2];
     const eventsOnClickGender = [handleValueMale, handleValueFemale];
-    console.log(checkAll);
 
     const error = (val: string | undefined) => {
         return (
@@ -333,7 +318,6 @@ const Register: React.FC<PropsRegister> = ({ acc, account, dataRegister, Next })
     const pass = [];
     return (
         <DivForm>
-            <ErrorBoudaries setError={setErrReq} message={errReq.content} check={errReq.error} />
             <Htitle>
                 {title}
                 {Next}

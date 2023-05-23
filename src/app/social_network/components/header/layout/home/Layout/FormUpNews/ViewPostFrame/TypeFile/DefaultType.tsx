@@ -59,7 +59,7 @@ const DefaultType: React.FC<{ file: { link: string; type: string }[] }> = ({ fil
                             </Div>
                             {index + 1 === file.length && file.length > 6 && (
                                 <Div
-                                    key="pri"
+                                    key={index + 1}
                                     css={`
                                         grid-column-end: 4;
                                         grid-column-start: 1;

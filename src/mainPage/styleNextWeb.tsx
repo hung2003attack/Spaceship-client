@@ -12,9 +12,6 @@ export const DivContainer = styled.div`
     overflow-y: overlay;
     justify-content: var(--justify-content-start);
     background-color: ${(props: { bg: number }) => (props.bg === 1 ? '#202023;' : '')};
-    @media (min-width: 375px) {
-        justify-content: center;
-    }
 `;
 
 export const DivMainPage = styled.div`
@@ -161,11 +158,6 @@ export const DivOptions = styled.div`
     display: flex;
     align-items: center;
     justify-content: start;
-
-    @media (min-width: 837px) {
-        font-size: 50px;
-        justify-content: space-between;
-    }
 `;
 export const DivElements = styled.div`
     display: flex;

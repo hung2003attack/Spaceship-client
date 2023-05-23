@@ -138,7 +138,7 @@ interface PropsHname {
     css?: string;
 }
 export const Hname = styled.h3<PropsHname>`
-    width: 100%;
+    width: 98%;
     height: fit-content;
     font-size: 1.4rem;
     display: -webkit-box;

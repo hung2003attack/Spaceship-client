@@ -4,11 +4,19 @@ export interface InitialStateHideShow {
     setting: boolean;
     personalPage: boolean;
     idUser: string[];
+    errorServer: {
+        check: boolean;
+        message?: string;
+    };
 }
 const initialState: InitialStateHideShow = {
     setting: false,
     personalPage: false,
     idUser: [],
+    errorServer: {
+        check: false,
+        message: '',
+    },
 };
 const hideShowSlice = createSlice({
     name: 'hideShow',
@@ -33,7 +41,24 @@ const hideShowSlice = createSlice({
         setIdUser: (state, action) => {
             state.idUser = action.payload;
         },
+        setTrueErrorServer: (state, action?: { payload: string }) => {
+            state.errorServer.check = true;
+            state.errorServer.message = action?.payload;
+        },
+        setFalseErrorServer: (state) => {
+            state.errorServer.check = false;
+            state.errorServer.message = '';
+        },
     },
 });
-export const { onSetting, offSetting, onPersonalPage, offPersonalPage, setIdUser, offAll } = hideShowSlice.actions;
+export const {
+    onSetting,
+    offSetting,
+    onPersonalPage,
+    offPersonalPage,
+    setIdUser,
+    offAll,
+    setTrueErrorServer,
+    setFalseErrorServer,
+} = hideShowSlice.actions;
 export default hideShowSlice.reducer;

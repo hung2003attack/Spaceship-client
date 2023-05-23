@@ -11,6 +11,7 @@ import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
 import { Div, H3, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import { socket } from 'src/mainPage/nextWeb';
+import { setTrueErrorServer } from '~/redux/hideShow';
 
 console.log('eeeeeeeeeeeeeeeeeeeeeeeee');
 
@@ -40,7 +41,13 @@ const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
     const userId = cookies.k_user;
     const { userBar, form } = home;
     useEffect(() => {
-        const data = HttpRequestHome.news(token, dispatch);
+        async function fetchData() {
+            // You can await here
+            const data: any = await HttpRequestHome.news(token, dispatch);
+            if (data?.status === 9999) dispatch(setTrueErrorServer(''));
+            // ...
+        }
+        fetchData();
     }, []);
     // socket.on('connect', () => {
 

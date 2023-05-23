@@ -53,10 +53,10 @@ export const Button = styled.button<Propss>`
     ${(props) => props.css}
 `;
 interface PropsButtons {
-    text: { css: string; text: string; onClick: (args: any) => void }[];
+    text: { css: string; text: string; onClick?: (args: any) => void }[];
 }
 export const Buttons: React.FC<PropsButtons | any> = ({ text }) => {
-    return text.map((vl: { css: string; text: string; onClick: (args: any) => void }) => (
+    return text.map((vl: { css: string; text: string; onClick?: (args: any) => void }) => (
         <Button key={vl.text} css={vl.css} onClick={vl.onClick}>
             {vl.text}
         </Button>
@@ -91,5 +91,11 @@ export const Div = styled.div<PropsDiv>`
     ${(props) => props.css}
 `;
 export const Strong = styled.strong`
+    ${(props: { css?: string }) => props.css}
+`;
+export const Ol = styled.ol`
+    ${(props: { css?: string }) => props.css}
+`;
+export const Li = styled.li`
     ${(props: { css?: string }) => props.css}
 `;

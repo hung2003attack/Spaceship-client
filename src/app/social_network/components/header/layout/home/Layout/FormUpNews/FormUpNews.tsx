@@ -31,6 +31,8 @@ import { Player } from 'video-react';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import { PropsUserHome } from '../../Home';
 import PreviewPost, { PropsPreViewFormHome } from './PreView';
+import { useDispatch } from 'react-redux';
+import { setTrueErrorServer } from '~/redux/hideShow';
 export interface PropsFormHome {
     textarea: string;
     buttonOne: string;
@@ -47,9 +49,9 @@ interface PropsFormUpNews {
     userId: string;
 }
 const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user, token, userId }) => {
+    const dispatch = useDispatch();
     const [displayEmoji, setdisplayEmoji] = useState<boolean>(false);
     const [displayFontText, setDisplayFontText] = useState<boolean>(false);
-    const [error, setError] = useState<{ error: boolean; content: string }>({ error: false, content: '' });
     const mRef = useRef<any>(0);
 
     const [preView, setPreView] = useState<ReactNode>();
@@ -99,10 +101,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user,
 
                         vid.duration <= 15
                             ? uploadRef.current.push({ link: url, type: 'video' })
-                            : setError({
-                                  error: true,
-                                  content: 'Our length of the video must be less than 16 seconds!',
-                              });
+                            : dispatch(setTrueErrorServer('Our length of the video must be less than 16 seconds!'));
                     };
                 } else if (
                     file[i].type.includes('image/jpg') ||
@@ -117,13 +116,13 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user,
                         if (sizeImage / 1024 / 1024 <= 8) {
                             uploadRef.current.push({ link: URL.createObjectURL(compressedFile), type: 'image' });
                         } else {
-                            setError({ error: true, content: `${sizeImage}MB big than our limit is 8MB` });
+                            dispatch(setTrueErrorServer(`${sizeImage}MB big than our limit is 8MB`));
                         }
                     } catch (error) {
                         console.log(error);
                     }
                 } else {
-                    setError({ error: true, content: 'This format is not support!' });
+                    dispatch(setTrueErrorServer('This format is not support!'));
                 }
             }
             const time = setInterval(() => {
@@ -134,7 +133,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user,
             }, 1000);
             mRef.current = time;
         } else {
-            setError({ error: true, content: `You can only select ${fileAmount} file at most!` });
+            dispatch(setTrueErrorServer(`You can only select ${fileAmount} file at most!`));
         }
     };
 
@@ -184,8 +183,6 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user,
     ];
     return (
         <>
-            <ErrorBoudaries check={error.error} setError={setError} message={error.content} />
-
             <DivForm top="12px">
                 <Form encType="multipart/form-data">
                     <DivUpNews>

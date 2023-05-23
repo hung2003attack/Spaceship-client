@@ -14,9 +14,11 @@ const Tools: React.FC<{ colorText: string; colorBg: number; as: number }> = ({ c
         const res = await HttpRequestUser.setAs(cookies.get('tks'), o.name === 'online' ? 1 : 0);
         console.log(res, 'res here');
         if (res === 1) {
-            setOnOff(<OnlineI />);
-        } else {
-            setOnOff(<OfflineI />);
+            if (o.name === 'online') {
+                setOnOff(<OnlineI />);
+            } else {
+                setOnOff(<OfflineI />);
+            }
         }
         socket.emit(o.name, cookies.get('k_user'));
     };
@@ -29,7 +31,7 @@ const Tools: React.FC<{ colorText: string; colorBg: number; as: number }> = ({ c
                 setStatus(
                     <Div css="width: 100%; background-color: #202023;padding: 7px; font-size: 25px">
                         {res.map((o, index) => (
-                            <Div key={index} css="padding: 4px;" onClick={() => handleChange(o)}>
+                            <Div key={index} css="padding: 4px; cursor: var(--pointer)" onClick={() => handleChange(o)}>
                                 {o.icon}
                             </Div>
                         ))}
@@ -93,7 +95,7 @@ const Tools: React.FC<{ colorText: string; colorBg: number; as: number }> = ({ c
                         id="t"
                         key={res.items.title}
                         wrap="wrap"
-                        css="padding: 7px; background-color: #2f2f30; margin-bottom: 7px; align-items: center;"
+                        css="padding: 7px; background-color: #2f2f30; margin-bottom: 7px; align-items: center; cursor: var(--pointer);"
                         onClick={(e) => res.items.onClick(e, res.items.op)}
                     >
                         <Div css="margin-right: 3px;">{res.items.title}</Div>

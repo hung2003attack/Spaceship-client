@@ -1,20 +1,14 @@
 import { useEffect, useState } from 'react';
 import { DivMessage } from './stylesErrorBoudaries';
 import { P } from '../styleComponents/styleDefault';
+import { useDispatch } from 'react-redux';
+import { setFalseErrorServer } from '~/redux/hideShow';
 
-function ErrorBoudaries(props: {
-    check: boolean;
-    setError: React.Dispatch<
-        React.SetStateAction<{
-            error: boolean;
-            content: string;
-        }>
-    >;
-    message: string;
-}) {
+function ErrorBoudaries(props: { check: boolean; message: string }) {
+    const dispatch = useDispatch();
     if (props.check)
         return (
-            <DivMessage bg="#202124b8" onClick={() => props.setError({ error: false, content: '' })}>
+            <DivMessage bg="#202124b8" onClick={() => dispatch(setFalseErrorServer())}>
                 <P
                     color="#ff5252;"
                     css="width: 100%; height: 400px; background-color: aliceblue; padding-top: 97px; font-size: 2rem; font-weight: bold; border-radius: 5px; text-align: center; "

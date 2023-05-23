@@ -8,7 +8,7 @@ import Button from '~/reUsingComponents/Buttoms/ListButton/Buttons';
 import ListWebBar from './listWebBar/listWebBar';
 import { BookI, DotI, EarthI, FriendI, GridDotI, NewI, PeopleI, ProfileI, WebsiteI, WorkI } from '~/assets/Icons/Icons';
 import Background from 'src/backbround/background';
-import { onPersonalPage } from '~/redux/hideShow';
+import { onPersonalPage, setTrueErrorServer } from '~/redux/hideShow';
 import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
 import CurrentPageL from './CurrentPage';
 import {
@@ -43,7 +43,7 @@ export const socket = io('http://localhost:3001', { transports: ['websocket'] })
 interface PropsRes {
     avatar: string;
     fullName: string;
-    status: string;
+    status: string | number;
     gender: number;
     sn: string;
     l: string;
@@ -83,15 +83,19 @@ const Website: React.FC = () => {
                 l: 'l',
                 w: 'w',
             });
-            console.log(res, 'user heeheheh');
-            if (res?.fullName) {
-                setUser(res);
-                dispatch(changeThree(res));
+            if (res.status === 9999) {
+                dispatch(setTrueErrorServer(''));
+            } else {
+                console.log(res, 'user heeheheh');
+                if (res?.fullName) {
+                    setUser(res);
+                    dispatch(changeThree(res));
+                }
+                const friends: { idFriend: string; idCurrentUser: string }[] = await PeopleRequest.getfriendAll(
+                    cookies.tks,
+                );
+                setFriends(friends);
             }
-            const friends: { idFriend: string; idCurrentUser: string }[] = await PeopleRequest.getfriendAll(
-                cookies.tks,
-            );
-            setFriends(friends);
         }
         fectData();
 
@@ -292,6 +296,11 @@ const Website: React.FC = () => {
                                             </DivElements>
                                             <Div
                                                 css={`
+                                                    position: absolute;
+                                                    top: 139px;
+                                                    flex-direction: column;
+                                                    font-size: 22px;
+                                                    left: 18px;
                                                     color: ${colorText};
                                                 `}
                                             >

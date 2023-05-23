@@ -13,6 +13,7 @@ import { Div } from '~/reUsingComponents/styleComponents/styleDefault';
 import Progress from '~/reUsingComponents/Progress/Progress';
 import Cookies from 'universal-cookie';
 import Message from '~/Message/message';
+import ErrorBoudaries from '~/reUsingComponents/ErrorBoudaries/ErrorBoudaries';
 
 const Authentication = React.lazy(() => import('~/Authentication/Auth'));
 const Website = React.lazy(() => import('./mainPage/nextWeb'));
@@ -20,17 +21,17 @@ const cookie = new Cookies();
 function App() {
     const dispatch = useDispatch();
     const { setting, personalPage } = useSelector((state: any) => state.hideShow);
-    const id_user = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow?.idUser);
+    const { idUser, errorServer } = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow);
 
     useEffect(() => {
-        if (id_user.length > 0) dispatch(onPersonalPage());
-    }, [id_user]);
+        if (idUser.length > 0) dispatch(onPersonalPage());
+    }, [idUser]);
     const handleClick = (e: { stopPropagation: () => void }) => {
         e.stopPropagation();
         dispatch(offAll());
         dispatch(setIdUser([]));
     };
-    console.log(id_user, 'id_user');
+    console.log(idUser, 'idUser');
 
     const [cookies, setCookie] = useCookies(['tks', 'k_user', 'sn']);
     //   document.cookie.addListener("change", (event) => {
@@ -184,7 +185,7 @@ function App() {
     //     ],
     // };
     // console.log(Math.round(Math.random() * 9573), 'heress');
-    const leng = id_user?.length;
+    const leng = idUser?.length;
     const css = `
         position: fixed;
         right: 0;
@@ -217,12 +218,16 @@ function App() {
                     />
                 }
             >
+                <ErrorBoudaries
+                    check={errorServer.check}
+                    message={errorServer.message || 'Server is having a problem. Please try again later!'}
+                />
                 <Website />
                 {(setting || personalPage) && <DivOpacity onClick={handleClick} />}
                 <Message />
-                {id_user?.length > 0 && (
+                {idUser?.length > 0 && (
                     <DivContainer width="80%" height="100%" css={css} bg="#fff" content="start" display="flex">
-                        {id_user?.map((data: any, index: number) => (
+                        {idUser?.map((data: any, index: number) => (
                             <Personalpage user={data} key={index} leng={leng} />
                         ))}
                     </DivContainer>

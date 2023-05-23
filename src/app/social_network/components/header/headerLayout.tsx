@@ -53,7 +53,28 @@ export interface PropsSN {
 const Header: React.FC<PropsSN> = ({ logo, sett, home, exchange, search, video, friends, location, dataUser }) => {
     const dispatch = useDispatch();
     const { colorBg, colorText } = useSelector((state: PropsBg) => state.persistedReducer.background);
-    const [border, setBorder] = useState<string>('home');
+    const [border, setBorder] = useState<string>(() => {
+        const location = window.location.pathname;
+        console.log(
+            'location',
+            location,
+            ['/SN/', '/SN'].includes(location)
+                ? 'home'
+                : location === '/SN/exchange'
+                ? 'exch'
+                : location === '/SN/callVideo'
+                ? 'link'
+                : 'people',
+        );
+
+        return ['/SN/', '/SN'].includes(location)
+            ? 'home'
+            : ['/SN/exchange', '/SN/exchange/'].includes(location)
+            ? 'exch'
+            : ['/SN/callVideo', '/SN/callVideo/'].includes(location)
+            ? 'link'
+            : 'people';
+    });
     const [searchC, setSearchC] = useState<boolean>(false);
     const handleSetting = useCallback((e: { stopPropagation: () => void }) => {
         e.stopPropagation();
@@ -203,7 +224,7 @@ const Header: React.FC<PropsSN> = ({ logo, sett, home, exchange, search, video, 
                         element={
                             <Component
                                 home={home.children}
-                                friends={friends.children}
+                                friendsT={friends.children}
                                 dataUser={dataUser}
                                 colorBg={colorBg}
                                 colorText={colorText}

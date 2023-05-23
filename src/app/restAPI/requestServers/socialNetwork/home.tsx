@@ -31,8 +31,7 @@ class HttpRequestHome {
             const res = await axiosJWTss.get('/SN/home', {
                 withCredentials: true,
             });
-            console.log(res, 'res Home');
-            // dispatch(getNewsCurrent(res.data));
+            return res.data;
         } catch (error) {
             console.log(error, 'dawfawfwa');
             const err: any = error as AxiosError;
