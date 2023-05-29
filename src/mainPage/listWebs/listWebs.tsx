@@ -21,6 +21,8 @@ export interface PropsListWeb {
 }
 const NextListWeb: React.FC<PropsListWeb> = ({ data }) => {
     const { colorBg } = useSelector((state: PropsBg) => state.persistedReducer.background);
+    console.log('next web', data);
+
     return (
         <>
             {data.map((V) => {

@@ -12,7 +12,9 @@ class AuthRequest {
         try {
             const reponse = await HttpRequest.post('/account/login', { params });
             const { id, accessToken } = reponse.data.user;
-            if (id && accessToken) {
+            console.log(reponse);
+
+            if (id && accessToken && reponse.data.errCode === 1) {
                 const token = 'Bearer ' + accessToken;
                 setCookies('tks', token, {
                     path: '/',

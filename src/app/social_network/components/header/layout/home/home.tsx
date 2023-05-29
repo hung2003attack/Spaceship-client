@@ -51,10 +51,7 @@ const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
     }, []);
     // socket.on('connect', () => {
 
-    socket.on(`Request others?id=${userId}`, (msg: any) => {
-        console.log('Received message id:', socket.id);
-        console.log('Received message', msg);
-    });
+    
     console.log('nooo');
 
     const [userList, setUserList] = useState();

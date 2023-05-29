@@ -33,8 +33,7 @@ class HttpRequestUser {
                 id: id,
                 params: params,
             });
-            console.log(res, 'ressssss');
-            axios.interceptors.request.eject(Axios.interceptors.request.use());
+
             return res.data;
         } catch (error) {
             const err: any = error as AxiosError;

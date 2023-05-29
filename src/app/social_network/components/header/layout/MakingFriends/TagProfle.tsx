@@ -19,6 +19,7 @@ interface PropsTagP {
             title: string;
         };
     };
+    fixCssB: number;
     typesc?: string;
     onClick?: (id: string) => void;
     button?: { css: string; text: string; onClick?: (args: any) => void }[];
@@ -37,6 +38,7 @@ const TagProfle: React.FC<PropsTagP> = ({
     colorText,
     cssImage,
     typesc,
+    fixCssB,
     profile = false,
 }) => {
     const dispatch = useDispatch();
@@ -93,12 +95,18 @@ const TagProfle: React.FC<PropsTagP> = ({
             {button && (
                 <Div
                     width="100%"
-                    css="justify-content: space-evenly; padding: 8px 0; background-color: #414141;
-                                    @media (min-width: 769px) {
-                                        padding:0;
-                                        background-color: transparent;
-                                        margin-top: 8px;
-                                    }"
+                    css={`
+                        justify-content: space-evenly;
+                        padding: 8px 0;
+                        background-color: #414141;
+                        @media (min-width: 769px) {
+                            flex-wrap: wrap;
+                            padding: 0;
+                            background-color: transparent;
+                            margin-top: 8px;
+                            ${fixCssB === 3 ? 'flex-wrap: wrap-reverse;' : ''}
+                        }
+                    `}
                 >
                     <Buttons text={button} />
                 </Div>

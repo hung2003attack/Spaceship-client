@@ -6,7 +6,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import Button from '~/reUsingComponents/Buttoms/ListButton/Buttons';
 import ListWebBar from './listWebBar/listWebBar';
-import { BookI, DotI, EarthI, FriendI, GridDotI, NewI, PeopleI, ProfileI, WebsiteI, WorkI } from '~/assets/Icons/Icons';
+import {
+    BookI,
+    DotI,
+    EarthI,
+    FriendI,
+    GridDotI,
+    HomeI,
+    NewI,
+    PeopleI,
+    ProfileI,
+    WebsiteI,
+    WorkI,
+} from '~/assets/Icons/Icons';
 import Background from 'src/backbround/background';
 import { onPersonalPage, setTrueErrorServer } from '~/redux/hideShow';
 import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
@@ -38,6 +50,7 @@ import { Div, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import Profile from './profiles/profile';
 import NextListWeb from './listWebs/ListWebs';
 import PeopleRequest from '~/restAPI/requestServers/socialNetwork/people';
+import WarningBrowser from '~/reUsingComponents/ErrorBoudaries/Warning_browser';
 export const socket = io('http://localhost:3001', { transports: ['websocket'] });
 
 interface PropsRes {
@@ -49,6 +62,7 @@ interface PropsRes {
     l: string;
     w: string;
     as: number;
+    warning_browser?: { err: number; dateTime: string; prohibit: boolean };
 }
 export interface PropsBg {
     persistedReducer: {
@@ -69,6 +83,14 @@ const Website: React.FC = () => {
     // const [friends, setFriends] = useState<{ idFriend: string }[]>([]);
     const [friendsOnline, setFriendsOnline] = useState<number>(0);
     const [friends, setFriends] = useState<{ idFriend: string; idCurrentUser: string }[]>([]);
+    const [warningBrs, setWarningBrs] = useState<
+        | {
+              dateTime: string;
+              err: number;
+              prohibit: boolean;
+          }
+        | undefined
+    >();
     const userId = cookies.k_user;
     useEffect(() => {
         //  const data = GetFriend.friend(dispatch);
@@ -83,12 +105,13 @@ const Website: React.FC = () => {
                 l: 'l',
                 w: 'w',
             });
-            if (res.status === 9999) {
+            if (res?.status === 9999) {
                 dispatch(setTrueErrorServer(''));
             } else {
                 console.log(res, 'user heeheheh');
                 if (res?.fullName) {
                     setUser(res);
+                    setWarningBrs(res?.warning_browser);
                     dispatch(changeThree(res));
                 }
                 const friends: { idFriend: string; idCurrentUser: string }[] = await PeopleRequest.getfriendAll(
@@ -101,8 +124,15 @@ const Website: React.FC = () => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    console.log(friends);
 
+    console.log(friends);
+    useEffect(() => {
+        const browserId = navigator.userAgent;
+        socket.on(userId + browserId + 'browserId', (data) => {
+            console.log(JSON.parse(data));
+            setWarningBrs(JSON.parse(data));
+        });
+    }, []);
     useEffect(() => {
         if (user?.as !== 0) {
             socket.emit('sendId', userId);
@@ -132,9 +162,7 @@ const Website: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(() => {
         return JSON.parse(localStorage.getItem('currentPage') || '{}').currentWeb;
     });
-    const TagRef1 = useRef<any>(Button);
-    const TagRef2 = useRef<any>(Button);
-    const TagRef3 = useRef<any>(Button);
+
     const [hrefState, setHrefState] = useState<string>('');
     function reTap() {
         if (
@@ -169,20 +197,21 @@ const Website: React.FC = () => {
         setHrefState(document.location.href);
         reTap();
     }
+    const handleNextStart = () => {
+        setOptionWebsite(false);
+        setCurrentPage(0);
+    };
     const hanNextWebsite1 = () => {
         setOptionWebsite(true);
         setCurrentPage(1);
-        TagRef1.current = 'div';
     };
     const hanNextWebsite2 = () => {
         setOptionWebsite(true);
         setCurrentPage(2);
-        TagRef2.current = 'header';
     };
     const hanNextWebsite3 = () => {
         setOptionWebsite(true);
         setCurrentPage(3);
-        TagRef3.current = 'div';
     };
     useLayoutEffect(() => {
         reTap();
@@ -190,7 +219,7 @@ const Website: React.FC = () => {
     }, [hrefState]);
 
     const props2 = {
-        optionWebsite,
+        handleNextStart,
         hanNextWebsite1,
         hanNextWebsite2,
         hanNextWebsite3,
@@ -234,6 +263,9 @@ const Website: React.FC = () => {
     return (
         <>
             <DivMainPage>
+                {warningBrs && (
+                    <WarningBrowser currentPage={currentPage} warningBros={warningBrs} setWarningBrs={setWarningBrs} />
+                )}
                 {user ? (
                     <>
                         <Suspense>

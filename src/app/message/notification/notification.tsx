@@ -1,4 +1,4 @@
-import { CloseI, MoveI, NotificationI, UndoI } from '~/assets/Icons/Icons';
+import { CloseI, DotI, MoveI, NotificationI, UndoI } from '~/assets/Icons/Icons';
 import Hovertitle from '~/reUsingComponents/HandleHover/HoverTitle';
 import clsx from 'clsx';
 import React, { memo, useEffect, useState } from 'react';
@@ -14,6 +14,10 @@ const Notification: React.FC<{ colorText: string; colorBg: number }> = ({ colorT
     const [left, setlLeft] = useState<boolean>(false);
     const [bottom, setBottom] = useState<boolean>(false);
     const [cookies, setCookies] = useCookies(['k_user']);
+    const [dataInfo, setDataInfo] = useState<{
+        mes: { id: number; id_message: string; status: number; title: string; createAt: string };
+        user: { id: string; avatar: string; fullName: string; nickName: string; gender: number };
+    }>();
     const userId = cookies.k_user;
     const [notification, setNotification] = useState<boolean>(false);
 
@@ -24,12 +28,15 @@ const Notification: React.FC<{ colorText: string; colorBg: number }> = ({ colorT
         socket.on(`Request others?id=${userId}`, (msg: any) => {
             console.log('Received message id:', socket.id);
             console.log('Received message', msg);
+            setDataInfo({ mes: JSON.parse(msg).mes, user: JSON.parse(msg).user });
         });
     }, []);
     const handleUndo = () => {
         setlLeft(false);
         setBottom(false);
     };
+    console.log(dataInfo);
+
     return (
         <>
             {!notification && (
@@ -51,63 +58,53 @@ const Notification: React.FC<{ colorText: string; colorBg: number }> = ({ colorT
                             </H3>
                         </DivBar>
                         <DivListIs>
-                            <Div
-                                wrap="wrap"
-                                css="width: fit-content; height: fit-content; border: 1px solid #39393b; margin-bottom: 14px; padding-top: 5px;"
-                            >
-                                <DivItem color={colorText}>
-                                    <Div css="height: fit-content;">
-                                        <Avatar css="width: 40px; margin: 2px 5px;" radius="50%" gender={1} />
-                                    </Div>
-                                    <Div wrap="wrap" css="height: fit-content;">
-                                        <Hname css="width: 100%; font-size: 1.4rem;">Nguyen Trong Hung</Hname>
-                                        <P css="font-size: 1.2rem">Good boys</P>
-                                    </Div>
-                                </DivItem>
-                                <Div wrap="wrap" css="padding: 2px 9px 2px 20px; height: fit-content;">
-                                    <Ol
-                                        type="1"
-                                        css={`
-                                            color: ${colorText};
-                                            font-size: 1.3rem;
-                                        `}
-                                    >
-                                        <Li>
-                                            <Div
-                                                wrap="wrap"
-                                                css={`
-                                                    color: ${colorText};
-                                                    margin-bottom: 5px;
-
-                                                    border: 1px solid #4f4f51;
-                                                    padding: 6px;
-                                                    border-radius: 5px;
-                                                `}
-                                            >
-                                                <P css="width: 100%; font-size: 1.3rem; text-align: start;">
-                                                    He has sent for you a friend request about 1 minute ago.
-                                                    <Strong css="color: #59b6e8; font-size: 1.4rem; cursor: var(--pointer); padding: 4px 5px;">
-                                                        Confirm
-                                                    </Strong>
-                                                    or
-                                                    <Strong css="color: #ba4455; font-size: 1.4rem; cursor: var(--pointer); padding: 4px 5px;">
-                                                        Refuse?
-                                                    </Strong>
-                                                </P>
-                                                <P css="width: 100%; text-align: center; padding: 1px 0; font-size: 1.1rem; background-color: #4d4f52;">
-                                                    You comfirmed about 2 minutes ago.
-                                                </P>
-                                            </Div>{' '}
-                                        </Li>
-                                    </Ol>
-                                </Div>
-                                <Button
-                                    color={colorText}
-                                    css="width: 100%; justify-content: center; padding: 4px; font-size: 1.3rem;"
+                            {dataInfo && (
+                                <Div
+                                    wrap="wrap"
+                                    css="width: fit-content; height: fit-content; border: 1px solid #39393b; margin-bottom: 14px; padding-top: 5px; position: relative;"
                                 >
-                                    Hidden
-                                </Button>
-                            </Div>
+                                    <DivItem color={colorText}>
+                                        <Div css="height: fit-content;">
+                                            <Avatar
+                                                css="width: 40px; margin: 2px 5px;"
+                                                src={dataInfo?.user.avatar}
+                                                radius="50%"
+                                                gender={dataInfo?.user.gender}
+                                            />
+                                        </Div>
+                                        <Div wrap="wrap" css="height: fit-content; align-items: center;">
+                                            {/* <Hname css="width: 100%; font-size: 1.4rem;"></Hname> */}
+                                            <P css="width: 90%; font-size: 1.3rem; text-align: start;">
+                                                <Strong css="font-size: 1.5rem;">
+                                                    {dataInfo?.user.fullName + '. '}
+                                                </Strong>
+                                                {dataInfo?.mes.title}
+                                                {dataInfo?.mes.status === 1 && (
+                                                    <>
+                                                        <Strong css="color: #59b6e8; font-size: 1.4rem; cursor: var(--pointer); padding: 4px 5px;">
+                                                            Confirm
+                                                        </Strong>
+                                                        or
+                                                        <Strong css="color: #ba4455; font-size: 1.4rem; cursor: var(--pointer); padding: 4px 5px;">
+                                                            Refuse?
+                                                        </Strong>
+                                                    </>
+                                                )}
+                                            </P>
+                                            <P css="font-size: 17px; display: flex; position: absolute; right: 9px; top: 3px;">
+                                                <DotI />
+                                            </P>
+                                        </Div>
+                                    </DivItem>
+
+                                    <Button
+                                        color={colorText}
+                                        css="width: 100%; justify-content: center; padding: 4px; font-size: 1.3rem;"
+                                    >
+                                        More
+                                    </Button>
+                                </Div>
+                            )}
                         </DivListIs>
                     </DivRes>
                 </>

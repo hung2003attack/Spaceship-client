@@ -31,8 +31,8 @@ interface InNetWork {
 }
 interface PropsDataNetWork {
     data: {
-        [VN: string]: InNetWork;
-        EN: InNetWork;
+        [vi: string]: InNetWork;
+        en: InNetWork;
     };
     dataUser: { avatar: string; fullName: string; gender: number };
 }

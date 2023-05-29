@@ -53,12 +53,15 @@ export const Button = styled.button<Propss>`
     ${(props) => props.css}
 `;
 interface PropsButtons {
-    text: { css: string; text: string; onClick?: (args: any) => void }[];
+    text: { css: string; text: string; tx: string; onClick?: (args: any) => void }[];
 }
 export const Buttons: React.FC<PropsButtons | any> = ({ text }) => {
-    return text.map((vl: { css: string; text: string; onClick?: (args: any) => void }) => (
-        <Button key={vl.text} css={vl.css} onClick={vl.onClick}>
+    return text.map((vl: { css: string; text: string; tx: string; onClick?: (args: any) => void }) => (
+        <Button key={vl.text + vl.tx} css={vl.css} onClick={vl.onClick}>
             {vl.text}
+            <P z="1.2rem" css="margin-left: 3px;">
+                {vl.tx}
+            </P>
         </Button>
     ));
 };
@@ -70,9 +73,14 @@ export const Img = styled.img<PropsImg>`
     border-radius: ${(props) => props.radius || '0'};
     ${(props) => props.css}
 `;
-export const P = styled.p`
+interface PropsP {
+    z?: string;
+    css?: string;
+}
+export const P = styled.p<PropsP>`
     color: ${(props) => props.color};
-    ${(props: { css?: string }) => props.css}
+    font-size: ${(props) => props.z};
+    ${(props) => props.css}
 `;
 export const H3 = styled.h3`
     color: ${(props) => props.color};

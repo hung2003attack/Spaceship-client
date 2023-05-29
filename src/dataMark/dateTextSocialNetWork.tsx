@@ -1,7 +1,7 @@
 import { LanguageI } from '~/assets/Icons/Icons';
 
 export const socialnetwork = {
-    VN: {
+    vi: {
         header: {
             logo: 'Trang Chính',
             sett: 'Cài Đặt',
@@ -41,8 +41,8 @@ export const socialnetwork = {
                         { name: 'Chưa kết bạn', id: 'trangers' },
                         { name: 'Đã kêt bạn', id: 'friends' },
                         { name: 'Gia đình', id: 'family' },
-                        { name: 'Bạn đã gửi', id: 'yousent' },
-                        { name: 'Người khác gửi', id: 'otherssent' },
+                        { name: 'Bạn đã gửi', id: 'you sent' },
+                        { name: 'Người khác gửi', id: 'others sent' },
                     ],
                     main: '',
                 },
@@ -57,8 +57,8 @@ export const socialnetwork = {
                         icon: <LanguageI />,
                         children: {
                             data: [
-                                { name: 'English', lg: 'EN' },
-                                { name: 'VietNamese', lg: 'VN' },
+                                { name: 'English', lg: 'en' },
+                                { name: 'VietNamese', lg: 'vi' },
                             ],
                         },
                     },
@@ -71,7 +71,7 @@ export const socialnetwork = {
         },
         body: {},
     },
-    EN: {
+    en: {
         header: {
             logo: 'Spaceship',
             sett: 'Setting',
@@ -108,11 +108,11 @@ export const socialnetwork = {
                 children: {
                     option: ['Name', 'BirthDay', 'Address'],
                     menu: [
-                        { name: 'Not Friends', id: 'trangers' },
+                        { name: 'Not Friends', id: 'strangers' },
                         { name: 'Friends', id: 'friends' },
                         { name: 'Family', id: 'family' },
-                        { name: 'You sent', id: 'yousent' },
-                        { name: 'others sent', id: 'otherssent' },
+                        { name: 'You sent', id: 'you sent' },
+                        { name: 'others sent', id: 'others sent' },
                     ],
                     main: '',
                 },
@@ -127,8 +127,8 @@ export const socialnetwork = {
                         icon: <LanguageI />,
                         children: {
                             data: [
-                                { name: 'English', lg: 'EN' },
-                                { name: 'VietNamese', lg: 'VN' },
+                                { name: 'English', lg: 'en' },
+                                { name: 'VietNamese', lg: 'vi' },
                             ],
                         },
                     },

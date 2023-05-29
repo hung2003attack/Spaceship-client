@@ -5,24 +5,24 @@ import Personalpage from './mainPage/personalPage/personalPage';
 import { login } from './dataMark/dataLogin';
 import { register } from './dataMark/dataRegister';
 import { useCookies } from 'react-cookie';
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import searchAPI from '~/restAPI/requestServers/socialNetwork/searchAPI_SN';
 import { DivContainer } from '~/reUsingComponents/styleComponents/styleComponents';
 import styled from 'styled-components';
 import { Div } from '~/reUsingComponents/styleComponents/styleDefault';
 import Progress from '~/reUsingComponents/Progress/Progress';
 import Cookies from 'universal-cookie';
-import Message from '~/Message/message';
 import ErrorBoudaries from '~/reUsingComponents/ErrorBoudaries/ErrorBoudaries';
 
 const Authentication = React.lazy(() => import('~/Authentication/Auth'));
 const Website = React.lazy(() => import('./mainPage/nextWeb'));
+const Message = React.lazy(() => import('~/Message/message'));
 const cookie = new Cookies();
 function App() {
     const dispatch = useDispatch();
+    const [reload, setReload] = useState<boolean>(false);
     const { setting, personalPage } = useSelector((state: any) => state.hideShow);
     const { idUser, errorServer } = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow);
-
     useEffect(() => {
         if (idUser.length > 0) dispatch(onPersonalPage());
     }, [idUser]);

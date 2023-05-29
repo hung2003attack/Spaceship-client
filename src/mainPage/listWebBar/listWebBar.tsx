@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Bar from '~/reUsingComponents/Bar/Bar';
 import clsx from 'clsx';
-import { BookI, WorkI, NewI } from '~/assets/Icons/Icons';
+import { BookI, WorkI, NewI, HomeI } from '~/assets/Icons/Icons';
 import Button from '~/reUsingComponents/Buttoms/ListButton/Buttons';
 import Hovertitle from '~/reUsingComponents/HandleHover/HoverTitle';
 import styles from './listWebBar.module.scss';
@@ -10,7 +10,7 @@ import Images from '~/assets/images';
 import { Alogo } from '~/social_network/components/Header/styleHeader';
 import { A, Div, P } from '~/reUsingComponents/styleComponents/styleDefault';
 interface Props {
-    optionWebsite: boolean;
+    handleNextStart: () => void;
     hanNextWebsite1: () => void;
     hanNextWebsite2: () => void;
     hanNextWebsite3: () => void;
@@ -19,7 +19,7 @@ interface Props {
 }
 
 const ListWebBar: React.FC<Props> = ({
-    optionWebsite,
+    handleNextStart,
     hanNextWebsite1,
     hanNextWebsite2,
     hanNextWebsite3,
@@ -31,6 +31,7 @@ const ListWebBar: React.FC<Props> = ({
         setShowNextWebsite(!showNextWebsite);
     };
     const listOptions = [
+        { id: 0, part: '/', icon: <HomeI />, name: 'Home', onClick: handleNextStart },
         { id: 1, part: '/SN', icon: <NewI />, name: 'News', onClick: hanNextWebsite1 },
         { id: 2, part: '/SD', icon: <BookI />, name: 'Study', onClick: hanNextWebsite2 },
         { id: 3, part: '/W', icon: <WorkI />, name: 'Work', onClick: hanNextWebsite3 },
