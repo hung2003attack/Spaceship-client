@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Div, H3, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { DivItems, DivMenu, DivOptions, DivResults, DivSearch, Input } from './styleMakingFriends';
 import TagProfle from '~/social_network/components/Header/layout/MakingFriends/TagProfle';
@@ -65,7 +66,7 @@ interface PropsDataUsers {
             level: number;
             createdAt: string;
         };
-        id_user: {
+        id_f_user: {
             idCurrentUser: string;
             idFriend: string;
             level: number;
@@ -87,7 +88,26 @@ interface PropsDataUsers {
         };
     }[];
 }
-
+interface PropsStrangers {
+    id: string;
+    avatar: string;
+    fullName: string;
+    nickName: string;
+    gender: number;
+    birthday: string;
+    id_friend: {
+        idCurrentUser: string | null | undefined;
+        idFriend: string | null | undefined;
+        level: number | null | undefined;
+        createdAt: string | null | undefined;
+    };
+    id_f_user: {
+        idCurrentUser: string | null;
+        idFriend: string | null;
+        level: number | null;
+        createdAt: string | null;
+    };
+}
 const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colorBg, dataUser }) => {
     const dispatch = useDispatch();
     const [search, setSearch] = useState<string[]>([]);
@@ -157,6 +177,41 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
             },
         ],
     });
+    const [dataTest, setDataTest] = useState<any>();
+    const [dataConfirm, setDataConfirm] = useState<{ ok: number; id_fr: string; id: string }>();
+    useEffect(() => {
+        console.log('dataTest', data.strangers, dataTest);
+        const newStranger = data.strangers.filter((x: PropsStrangers) => {
+            console.log(x.id === dataTest?.data?.idCurrentUser, 'check', x.id, dataTest?.data?.idCurrentUser);
+
+            if (x.id === dataTest?.data?.idCurrentUser) {
+                x.id_f_user.idCurrentUser = dataTest?.data?.idCurrentUser;
+                x.id_f_user.idFriend = dataTest?.data?.idFriend;
+                x.id_f_user.createdAt = dataTest?.data?.createdAt;
+                x.id_f_user.level = 1;
+                console.log('xxxx', dataTest);
+
+                return x;
+            } else {
+                return x;
+            }
+        });
+        console.log('newStranger', newStranger, 'data', data);
+
+        setData({ ...data, strangers: newStranger });
+    }, [dataTest]);
+    useEffect(() => {
+        const newStranger = data.strangers.filter((x: PropsStrangers) => {
+            if (x.id === dataConfirm?.id) {
+                if (x.id_f_user.level) x.id_f_user.level = 2;
+                if (x.id_friend.level) x.id_friend.level = 2;
+                data.friends.push(x);
+            } else {
+                return x;
+            }
+        });
+        setData({ ...data, strangers: newStranger });
+    }, [dataConfirm]);
     async function fetch() {
         const res = await PeopleRequest.getPeople(accessToken);
         setData(res);
@@ -164,10 +219,19 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
     }
     useEffect(() => {
         fetch();
-        socket.on(`Request others?id=${userId}`, (msg: any) => {
-            fetch();
-            console.log('Received message id:', socket.id);
+        socket.on(`Request others?id=${userId}`, (msg: string) => {
+            setDataTest(JSON.parse(msg));
         });
+        socket.on(`Del request others?id=${userId}`, (msg: string) => {
+            setDataTest(JSON.parse(msg));
+        });
+        socket.on(`Confirmed ${userId}`, (msg: string) => {
+            if (msg) setDataConfirm(JSON.parse(msg));
+        });
+        // socket.on(`Delete request friends or relatives${userId}`, (msg: any) => {
+        //     fetch();
+        //     console.log('Delete Request message id:', msg);
+        // });
     }, []);
 
     const optionS = friendsT.option;
@@ -210,25 +274,22 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
             }
         }
     };
-    const handleRemove = (id: string) => {
-        if (id) {
-            const newData: any = data[
-                ['strangers', 'you sent', 'others sent'].includes(type)
-                    ? 'strangers'
-                    : type === 'family'
-                    ? 'family'
-                    : 'friends'
-            ]?.filter((d: { id: string }) => d.id !== id);
-            ['strangers', 'you sent', 'others sent'].includes(type)
-                ? setData({ ...data, strangers: newData })
-                : type === 'family'
-                ? setData({ ...data, family: newData })
-                : setData({ ...data, friends: newData });
+    const handleRemove = async (id: string, of: string = 'yes') => {
+        if (of === 'no' && id) {
+            const newData: any = data['strangers']?.filter((d: { id: string }) => d.id !== id);
+            setData({ ...data, strangers: newData });
             console.log('newData', newData);
+        } else {
+            console.log('deleted', id);
+            const res = await PeopleRequest.delete(accessToken, id);
+            if (res) {
+                const newData: any = data['strangers']?.filter((d: { id: string }) => d.id !== id);
+                setData({ ...data, strangers: newData });
+            }
         }
     };
-    const handleAdd = async (id: string, gender: number) => {
-        console.log('add friend');
+    const handleAdd = async (id: string, gender: number, kindOf: string = 'friend') => {
+        console.log('add friend', kindOf);
 
         const res: {
             id_friend: string;
@@ -238,20 +299,89 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                 title: string;
                 createdAt: string;
             };
+            data: {
+                createdAt: string;
+                id: 79;
+                idCurrentUser: string;
+                idFriend: string;
+                id_message: string;
+            };
         } = await PeopleRequest.setFriend(
             accessToken,
             id,
             `${gender === 0 ? 'He' : gender === 1 ? 'She' : 'Honey'} has sent for you a friend request`,
         );
+
+        const newStranger = data.strangers.filter((x: PropsStrangers) => {
+            if (x.id === res.data.idFriend) {
+                x.id_f_user.idCurrentUser = res.data.idCurrentUser;
+                x.id_f_user.idFriend = res.data.idFriend;
+                x.id_f_user.createdAt = res.data.createdAt;
+                x.id_f_user.level = 1;
+                console.log('xxxx', x);
+
+                return x;
+            } else {
+                return x;
+            }
+        });
+        console.log('newStranger', newStranger, 'data', data);
+
+        setData({ ...data, strangers: newStranger });
+
         setButton([...button, res.id_friend]);
-        if (res.id_friend) socket.emit('message request add friend', JSON.stringify(res));
+
         console.log('add', res);
     };
-    const handleAbolish = (id: string) => {
-        console.log('Abolish', id);
+    const handleAbolish = async (id: string, kindOf: string = 'friends') => {
+        console.log('Abolish', kindOf, id);
+        const res = await PeopleRequest.delete(accessToken, id, kindOf);
+        console.log('Abolish', res);
+        const newStranger = data.strangers.filter((x: PropsStrangers) => {
+            if (
+                (x.id_f_user.idCurrentUser === res.idCurrentUser && x.id_f_user.idFriend === res.idFriend) ||
+                (x.id_f_user.idFriend === res.idCurrentUser && x.id_f_user.idCurrentUser === res.idFriend) ||
+                (x.id_friend.idCurrentUser === res.idCurrentUser && x.id_friend.idFriend === res.idFriend) ||
+                (x.id_friend.idCurrentUser === res.idFriend && x.id_friend.idFriend === res.idCurrentUser)
+            ) {
+                console.log('Deleted!', x);
+                x.id_f_user.idCurrentUser = null;
+                x.id_f_user.idFriend = null;
+                x.id_f_user.level = null;
+                x.id_f_user.createdAt = null;
+                x.id_friend.idCurrentUser = null;
+                x.id_friend.idFriend = null;
+                x.id_friend.level = null;
+                x.id_friend.createdAt = null;
+                return x;
+            } else {
+                return x;
+            }
+        });
+        console.log('newStranger', newStranger, 'data', data);
+
+        setData({ ...data, strangers: newStranger });
     };
-    const handleConfirm = (id: string) => {
-        console.log('confirm', id);
+    const handleConfirm = async (id: string, kindOf: string = 'friends') => {
+        const res = await PeopleRequest.setConfirm(accessToken, id, kindOf);
+        console.log('confirm', kindOf, id, res);
+        if (res.ok === 1) {
+            const newStranger = data.strangers.filter((x: PropsStrangers) => {
+                if (
+                    (x.id_f_user.idCurrentUser === res.id_fr && x.id_f_user.idFriend === userId) ||
+                    (x.id_friend.idCurrentUser === res.id_fr && x.id_friend.idFriend === userId)
+                ) {
+                    if (x.id_f_user.level) x.id_f_user.level = 2;
+                    if (x.id_friend.level) x.id_friend.level = 2;
+                    data.friends.push(x);
+                    return x;
+                } else {
+                    return x;
+                }
+            });
+            console.log('newStranger', newStranger);
+            setData({ ...data, strangers: newStranger });
+        }
     };
     const handleMessenger = (id: string) => {
         console.log('messenger', id);
@@ -271,217 +401,251 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
     const Tag = (res: any, typesc?: string) => {
         const dateTime = moment(res.id_user?.createdAt).format('DD-MM-YYYY HH:mm:ss');
         const id_fr = button.includes(res.id);
-
+        const destroy = {
+            name: type === 'strangers' ? 'Remove' : 'Delete',
+        };
         const buttons = [];
         function checkPeople() {
-            if (
-                (res.id_friend?.idCurrentUser ||
-                    res.id_f_user?.idCurrentUser ||
-                    res.id_friend?.idFriend ||
-                    res.id_f_user?.idFriend) &&
-                (res.id_r_user?.id_user ||
-                    res.id_relative?.id_user ||
-                    res.id_r_user?.id_relative ||
-                    res.id_relative?.id_relative)
-            ) {
-                console.log('yessss');
-
+            if (res.id_f_user?.level === 2 || res.id_friend?.level === 2) {
+                buttons.push({
+                    text: 'Messenger',
+                    css: css + ' background-color: #366ab3; ',
+                    onClick: () => handleMessenger(res.id),
+                });
+            } else {
                 if (
-                    (res.id_friend?.idCurrentUser === userId || res.id_f_user?.idCurrentUser === userId) &&
-                    (res.id_r_user?.id_user === userId || res.id_relative?.id_user === userId)
+                    (res.id_friend?.idCurrentUser ||
+                        res.id_f_user?.idCurrentUser ||
+                        res.id_friend?.idFriend ||
+                        res.id_f_user?.idFriend) &&
+                    (res.id_r_user?.id_user ||
+                        res.id_relative?.id_user ||
+                        res.id_r_user?.id_relative ||
+                        res.id_relative?.id_relative)
                 ) {
-                    console.log('friend and relative ---you');
+                    console.log('yessss');
 
-                    if (res.id_r_user?.id_user === userId || res.id_relative?.id_user === userId) {
+                    if (
+                        (res.id_friend?.idCurrentUser === userId || res.id_f_user?.idCurrentUser === userId) &&
+                        (res.id_r_user?.id_user === userId || res.id_relative?.id_user === userId)
+                    ) {
+                        console.log('friend and relative ---you');
+
+                        if (res.id_r_user?.id_user === userId || res.id_relative?.id_user === userId) {
+                            fixCssB = 3;
+                            buttons.push(
+                                {
+                                    text: 'Delete',
+                                    css: css + '@media (min-width: 769px){width: 87%; margin-top: 5px;}',
+                                    onClick: () => handleRemove(res.id),
+                                },
+                                {
+                                    text: 'Abolish',
+                                    tx: '(R)',
+                                    css: css + 'background-color: #af2c48; ',
+                                    onClick: () => handleAbolish(res.id, 'relatives'),
+                                },
+                                {
+                                    text: 'Abolish',
+                                    tx: '(F)',
+                                    css: css + 'background-color: #af2c48; ',
+                                    onClick: () => handleAbolish(res.id),
+                                },
+                            );
+                        } else if (res.id_r_user?.id_relative === userId || res.id_relative?.id_relative === userId) {
+                            fixCssB = 3;
+                            buttons.push(
+                                {
+                                    text: 'Delete',
+                                    css: css + '@media (min-width: 769px){width: 87%; margin-top: 5px;}',
+                                    onClick: () => handleRemove(res.id),
+                                },
+                                {
+                                    text: 'Confirm',
+                                    tx: '(R)',
+                                    css: css + 'background-color: #af2c48; ',
+                                    onClick: () => handleConfirm(res.id, 'relative'),
+                                },
+                                {
+                                    text: 'Abolish',
+                                    tx: '(F)',
+                                    css: css + 'background-color: #af2c48; ',
+                                    onClick: () => handleAbolish(res.id),
+                                },
+                            );
+                        } else {
+                            fixCssB = 0;
+
+                            buttons.push(
+                                {
+                                    text: 'Delete',
+                                    css: css,
+                                    onClick: () => handleRemove(res.id),
+                                },
+                                {
+                                    text: 'Abolish',
+                                    tx: '(F)',
+                                    css: css + 'background-color: #af2c48; ',
+                                    onClick: () => handleAbolish(res.id),
+                                },
+                            );
+                        }
+                    } else if (
+                        (res.id_friend?.idFriend === userId || res.id_f_user?.idFriend === userId) &&
+                        (res.id_r_user?.id_relative === userId || res.id_relative?.id_relative === userId)
+                    ) {
+                        console.log('friend and relative ---others');
                         fixCssB = 3;
                         buttons.push(
                             {
-                                text: 'Remove',
-                                css: css + '@media (min-width: 769px){width: 87%; margin-top: 5px;}',
-                                onClick: () => handleRemove(res.id),
-                            },
-                            {
-                                text: 'Abolish',
-                                tx: '(R)',
-                                css: css + 'background-color: #af2c48; ',
-                                onClick: () => handleAbolish(res.id),
-                            },
-                            {
-                                text: 'Abolish',
-                                tx: '(F)',
-                                css: css + 'background-color: #af2c48; ',
-                                onClick: () => handleAbolish(res.id),
-                            },
-                        );
-                    } else if (res.id_r_user?.id_relative === userId || res.id_relative?.id_relative === userId) {
-                        fixCssB = 3;
-                        buttons.push(
-                            {
-                                text: 'Remove',
+                                text: 'Delete',
                                 css: css + '@media (min-width: 769px){width: 87%; margin-top: 5px;}',
                                 onClick: () => handleRemove(res.id),
                             },
                             {
                                 text: 'Confirm',
+                                tx: '(F)',
+                                css: css + ' background-color: #1553a1; ',
+                                onClick: () => handleConfirm(res.id),
+                            },
+                            {
+                                text: 'Confirm',
                                 tx: '(R)',
-                                css: css + 'background-color: #af2c48; ',
+                                css: css + 'background-color:  #1553a1; ',
+                                onClick: () => handleConfirm(res.id, 'relative'),
+                            },
+                        );
+                    } else if (
+                        (res.id_friend?.idFriend === userId || res.id_f_user?.idFriend === userId) &&
+                        (res.id_r_user?.id_user === userId || res.id_relative?.id_user === userId)
+                    ) {
+                        fixCssB = 3;
+                        buttons.push(
+                            {
+                                text: 'Delete',
+                                css: css + '@media (min-width: 769px){width: 87%; margin-top: 5px;}',
+                                onClick: () => handleRemove(res.id),
+                            },
+                            {
+                                text: 'Confirm',
+                                tx: '(F)',
+                                css: css + ' background-color: #1553a1; ',
                                 onClick: () => handleConfirm(res.id),
                             },
                             {
                                 text: 'Abolish',
-                                tx: '(F)',
+                                tx: '(R)',
                                 css: css + 'background-color: #af2c48; ',
-                                onClick: () => handleAbolish(res.id),
+                                onClick: () => handleAbolish(res.id, 'relative'),
                             },
                         );
-                    } else {
-                        fixCssB = 0;
-
+                        console.log('friend --others-s __ relative --you-s');
+                    } else if (
+                        (res.id_friend?.idCurrentUser === userId || res.id_f_user?.idCurrentUser === userId) &&
+                        (res.id_r_user?.id_relative === userId || res.id_relative?.id_relative === userId)
+                    ) {
+                        console.log('friend --you-s __ relative --others-s');
+                        fixCssB = 3;
                         buttons.push(
-                            { text: 'Remove', css: css, onClick: () => handleRemove(res.id) },
+                            {
+                                text: 'Delete',
+                                css: css + '@media (min-width: 769px){width: 87%; margin-top: 5px;}',
+                                onClick: () => handleRemove(res.id),
+                            },
                             {
                                 text: 'Abolish',
                                 tx: '(F)',
-                                css: css + 'background-color: #af2c48; ',
+                                css: css + ' background-color: #af2c48; ',
                                 onClick: () => handleAbolish(res.id),
+                            },
+                            {
+                                text: 'Confirm',
+                                tx: '(R)',
+                                css: css + 'background-color: #1553a1; ',
+                                onClick: () => handleConfirm(res.id, 'relative'),
                             },
                         );
                     }
-                } else if (
-                    (res.id_friend?.idFriend === userId || res.id_f_user?.idFriend === userId) &&
-                    (res.id_r_user?.id_relative === userId || res.id_relative?.id_relative === userId)
-                ) {
-                    console.log('friend and relative ---others');
-                    fixCssB = 3;
+                } else if (res.id_friend?.idCurrentUser === userId || res.id_f_user?.idCurrentUser === userId) {
+                    console.log('friend --you', res);
+                    fixCssB = 0;
                     buttons.push(
                         {
-                            text: 'Remove',
-                            css: css + '@media (min-width: 769px){width: 87%; margin-top: 5px;}',
+                            text: 'Delete',
+                            css: css,
+                            onClick: () => handleRemove(res.id),
+                        },
+                        {
+                            text: 'Abolish',
+                            tx: '(F)',
+                            css: css + 'background-color: #af2c48; ',
+                            onClick: () => handleAbolish(res.id),
+                        },
+                    );
+                } else if (res.id_friend?.idFriend === userId || res.id_f_user?.idFriend === userId) {
+                    console.log('friend --others');
+                    fixCssB = 0;
+                    buttons.push(
+                        {
+                            text: 'Delete',
+                            css: css,
                             onClick: () => handleRemove(res.id),
                         },
                         {
                             text: 'Confirm',
                             tx: '(F)',
-                            css: css + ' background-color: #1553a1; ',
-                            onClick: () => handleConfirm(res.id),
-                        },
-                        {
-                            text: 'Confirm',
-                            tx: '(R)',
-                            css: css + 'background-color:  #1553a1; ',
+                            css: css + 'background-color:   #1553a1; ',
                             onClick: () => handleConfirm(res.id),
                         },
                     );
-                } else if (
-                    (res.id_friend?.idFriend === userId || res.id_f_user?.idFriend === userId) &&
-                    (res.id_r_user?.id_user === userId || res.id_relative?.id_user === userId)
-                ) {
-                    fixCssB = 3;
+                } else if (res.id_r_user?.id_user === userId || res.id_relative?.id_user === userId) {
+                    console.log('relative --you');
+                    fixCssB = 0;
                     buttons.push(
                         {
-                            text: 'Remove',
-                            css: css + '@media (min-width: 769px){width: 87%; margin-top: 5px;}',
+                            text: 'Delete',
+                            css: css,
                             onClick: () => handleRemove(res.id),
-                        },
-                        {
-                            text: 'Confirm',
-                            tx: '(F)',
-                            css: css + ' background-color: #1553a1; ',
-                            onClick: () => handleConfirm(res.id),
                         },
                         {
                             text: 'Abolish',
                             tx: '(R)',
                             css: css + 'background-color: #af2c48; ',
-                            onClick: () => handleAbolish(res.id),
+                            onClick: () => handleAbolish(res.id, 'relative'),
                         },
                     );
-                    console.log('friend --others-s __ relative --you-s');
-                } else if (
-                    (res.id_friend?.idCurrentUser === userId || res.id_f_user?.idCurrentUser === userId) &&
-                    (res.id_r_user?.id_relative === userId || res.id_relative?.id_relative === userId)
-                ) {
-                    console.log('friend --you-s __ relative --others-s');
-                    fixCssB = 3;
+                } else if (res.id_r_user?.id_relative === userId || res.id_relative?.id_relative === userId) {
+                    fixCssB = 0;
+                    console.log('relative --others');
                     buttons.push(
                         {
-                            text: 'Remove',
-                            css: css + '@media (min-width: 769px){width: 87%; margin-top: 5px;}',
+                            text: 'Delete',
+                            css: css,
                             onClick: () => handleRemove(res.id),
-                        },
-                        {
-                            text: 'Abolish',
-                            tx: '(F)',
-                            css: css + ' background-color: #af2c48; ',
-                            onClick: () => handleAbolish(res.id),
                         },
                         {
                             text: 'Confirm',
                             tx: '(R)',
                             css: css + 'background-color: #1553a1; ',
-                            onClick: () => handleConfirm(res.id),
+                            onClick: () => handleConfirm(res.id, 'relative'),
+                        },
+                    );
+                } else {
+                    console.log('else');
+                    fixCssB = 0;
+                    buttons.push(
+                        {
+                            text: 'Remove',
+                            css: css,
+                            onClick: () => handleRemove(res.id, id_fr ? 'yes' : 'no'),
+                        },
+                        {
+                            text: 'Add friend',
+                            css: css + ' background-color: #366ab3;',
+                            onClick: () => handleAdd(res.id, res.gender),
                         },
                     );
                 }
-            } else if (res.id_friend?.idCurrentUser === userId || res.id_f_user?.idCurrentUser === userId) {
-                console.log('friend --you', res);
-                fixCssB = 0;
-                buttons.push(
-                    { text: 'Remove', css: css, onClick: () => handleRemove(res.id) },
-                    {
-                        text: 'Abolish',
-                        tx: '(F)',
-                        css: css + 'background-color: #af2c48; ',
-                        onClick: () => handleAbolish(res.id),
-                    },
-                );
-            } else if (res.id_friend?.idFriend === userId || res.id_f_user?.idFriend === userId) {
-                console.log('friend --others');
-                fixCssB = 0;
-                buttons.push(
-                    { text: 'Remove', css: css, onClick: () => handleRemove(res.id) },
-                    {
-                        text: 'Confirm',
-                        tx: '(F)',
-                        css: css + 'background-color:   #1553a1; ',
-                        onClick: () => handleConfirm(res.id),
-                    },
-                );
-            } else if (res.id_r_user?.id_user === userId || res.id_relative?.id_user === userId) {
-                console.log('relative --you');
-                fixCssB = 0;
-                buttons.push(
-                    { text: 'Remove', css: css, onClick: () => handleRemove(res.id) },
-                    {
-                        text: 'Abolish',
-                        tx: '(R)',
-                        css: css + 'background-color: #af2c48; ',
-                        onClick: () => handleAbolish(res.id),
-                    },
-                );
-            } else if (res.id_r_user?.id_relative === userId || res.id_relative?.id_relative === userId) {
-                fixCssB = 0;
-                console.log('relative --others');
-                buttons.push(
-                    { text: 'Remove', css: css, onClick: () => handleRemove(res.id) },
-                    {
-                        text: 'Confirm',
-                        tx: '(R)',
-                        css: css + 'background-color: #1553a1; ',
-                        onClick: () => handleConfirm(res.id),
-                    },
-                );
-            } else {
-                console.log('else');
-                fixCssB = 0;
-                buttons.push(
-                    { text: 'Remove', css: css, onClick: () => handleRemove(res.id) },
-                    {
-                        text: id_fr ? ' Abolish' : 'Add friend',
-                        css: css + `${id_fr ? 'background-color: #af2c48; ' : ' background-color: #366ab3;'}`,
-                        onClick: () => (id_fr ? handleAbolish(res.id) : handleAdd(res.id, res.gender)),
-                    },
-                );
             }
         }
         // (res.id_r_user?.id_user === userId && res.id_r_user?.really === 0) ||
@@ -502,7 +666,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                             text: 'Abolish',
                             tx: '(R)',
                             css: css + 'background-color: #af2c48; ',
-                            onClick: () => handleAbolish(res.id),
+                            onClick: () => handleAbolish(res.id, 'relative'),
                         },
                     );
                 } else {

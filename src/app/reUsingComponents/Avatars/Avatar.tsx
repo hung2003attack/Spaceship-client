@@ -5,8 +5,8 @@ import { FaUserCircle } from 'react-icons/fa';
 import Images from '../../assets/images';
 import { Img } from '../styleComponents/styleDefault';
 import { useDispatch, useSelector } from 'react-redux';
-import { InitialStateHideShow, onPersonalPage, onSetting, setIdUser } from '~/redux/hideShow';
 import { DivImg } from '../styleComponents/styleComponents';
+import { InitialStateHideShow, onPersonalPage, onSetting, setIdUser } from '../../redux/hideShow';
 
 interface _Avatar {
     id?: string;

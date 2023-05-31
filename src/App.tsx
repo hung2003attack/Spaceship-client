@@ -6,14 +6,23 @@ import { login } from './dataMark/dataLogin';
 import { register } from './dataMark/dataRegister';
 import { useCookies } from 'react-cookie';
 import React, { Suspense, useEffect, useState } from 'react';
-import searchAPI from '~/restAPI/requestServers/socialNetwork/searchAPI_SN';
-import { DivContainer } from '~/reUsingComponents/styleComponents/styleComponents';
+import searchAPI from './app/restAPI/requestServers/socialNetwork/searchAPI_SN';
+import { DivContainer } from './app/reUsingComponents/styleComponents/styleComponents';
 import styled from 'styled-components';
-import { Div } from '~/reUsingComponents/styleComponents/styleDefault';
-import Progress from '~/reUsingComponents/Progress/Progress';
+import { Div } from './app/reUsingComponents/styleComponents/styleDefault';
+import Progress from './app/reUsingComponents/Progress/Progress';
 import Cookies from 'universal-cookie';
-import ErrorBoudaries from '~/reUsingComponents/ErrorBoudaries/ErrorBoudaries';
-
+import ErrorBoudaries from './app/reUsingComponents/ErrorBoudaries/ErrorBoudaries';
+const DivOpacity = styled.div`
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-color: #686767a1;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+`;
 const Authentication = React.lazy(() => import('~/Authentication/Auth'));
 const Website = React.lazy(() => import('./mainPage/nextWeb'));
 const Message = React.lazy(() => import('~/Message/message'));
@@ -194,17 +203,6 @@ function App() {
         overflow-y: overlay;
 
 `;
-
-    const DivOpacity = styled.div`
-        width: 100%;
-        height: 100%;
-        position: fixed;
-        background-color: #686767a1;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 10;
-    `;
 
     if (token && k_user) {
         return (

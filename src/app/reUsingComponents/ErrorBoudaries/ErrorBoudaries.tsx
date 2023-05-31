@@ -8,10 +8,17 @@ function ErrorBoudaries(props: { check: boolean; message: string }) {
     const dispatch = useDispatch();
     if (props.check)
         return (
-            <DivMessage bg="#202124b8" onClick={() => dispatch(setFalseErrorServer())}>
+            <DivMessage onClick={() => dispatch(setFalseErrorServer())}>
                 <P
                     color="#ff5252;"
-                    css="width: 100%; height: 400px; background-color: aliceblue; padding-top: 97px; font-size: 2rem; font-weight: bold; border-radius: 5px; text-align: center; "
+                    css="    color: #ff5252;
+    width: 70%;
+    background-color: aliceblue;
+    font-size: 2rem;
+    font-weight: bold;
+    border-radius: 5px;
+    text-align: center;
+    padding: 10px;"
                 >
                     {props.message}
                     <br></br>

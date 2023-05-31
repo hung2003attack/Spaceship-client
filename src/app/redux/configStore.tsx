@@ -3,12 +3,13 @@ import hideShow from './hideShow';
 import home from './storeSocial_network/home';
 import background from './background';
 import changeLanguage from './languageRD';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 const persistConfig = {
     key: 'root',
     version: 1,
-    storage,
+
+    storage: AsyncStorage,
 };
 const rootReducer = combineReducers({
     language: changeLanguage,

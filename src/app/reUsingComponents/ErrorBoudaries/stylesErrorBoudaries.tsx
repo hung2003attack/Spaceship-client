@@ -6,7 +6,6 @@ export const DivMessage = styled.div`
     width: 100%;
     height: 100%;
     display: flex;
-    align-items: baseline;
     justify-content: center;
     top: 50%;
     bottom: 50%;
@@ -15,7 +14,8 @@ export const DivMessage = styled.div`
     translate: -50% -50%;
     z-index: 1000;
     cursor: pointer;
-    background-color: ${(props: { bg: string }) => props.bg};
+    background-color: #0000008a;
+    align-items: center;
 `;
 export const DivWarBs = styled.div`
     position: fixed;

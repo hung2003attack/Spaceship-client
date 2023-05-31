@@ -2,9 +2,9 @@ import React, { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ButtonSubmit, Htitle } from '~/reUsingComponents/styleComponents/styleComponents';
-import Language from 'src/Language/Language';
 import { changeLogin } from '~/redux/languageRD';
 
+import Language from '~/Language/Language';
 import { A, DivForm, DivLanguage, Perror, DivRegister, DivAccount } from './styleLogin';
 import { useCookies } from 'react-cookie';
 import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';

@@ -32,6 +32,24 @@ class PeopleRequest {
             console.log(error, 'get FriendAll');
         }
     };
+    delete = async (accessToken: string, id: string, kindOf?: string) => {
+        try {
+            const axiosJWTss = refreshToken.axiosJWTs(accessToken);
+            const res = await axiosJWTss.post('/SN/people/deleteReq', { params: { id_req: id, kindOf: kindOf } });
+            return res.data;
+        } catch (error) {
+            console.log(error, 'delete');
+        }
+    };
+    setConfirm = async (accessToken: string, id: string, kindOf?: string) => {
+        try {
+            const axiosJWTss = refreshToken.axiosJWTs(accessToken);
+            const res = await axiosJWTss.patch('/SN/people/setConfirm', { params: { id_req: id, kindOf: kindOf } });
+            return res.data;
+        } catch (error) {
+            console.log(error, 'delete');
+        }
+    };
 }
 
 export default new PeopleRequest();

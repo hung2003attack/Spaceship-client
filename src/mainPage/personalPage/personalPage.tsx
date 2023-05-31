@@ -2,16 +2,17 @@ import clsx from 'clsx';
 import React, { useState } from 'react';
 import styles from './personalPage.module.scss';
 import { useDispatch } from 'react-redux';
-import { offPersonalPage } from '~/redux/hideShow';
-import Avatar from '~/reUsingComponents/Avatars/Avatar';
-import Button from '~/reUsingComponents/Buttoms/ListButton/Buttons';
-import { CloseI, DotI } from '~/assets/Icons/Icons';
+import Avatar from '../../app/reUsingComponents/Avatars/Avatar';
+
+import Button from '../../app/reUsingComponents/Buttoms/ListButton/Buttons';
+
 import Edit from '../editInformation/editInformation';
 import Part from './result/result';
-import { Div, Img, P } from '~/reUsingComponents/styleComponents/styleDefault';
-import { DivContainer, Hname } from '~/reUsingComponents/styleComponents/styleComponents';
+import { Div, Img, P } from '../../app//reUsingComponents/styleComponents/styleDefault';
+import { DivContainer, Hname } from '../../app//reUsingComponents/styleComponents/styleComponents';
 import { DivPersonalPage } from '../styleNextWeb';
 import { DivBg, DivIntr, DivItems, DivOp, DivPerson, DivStories } from './stypePersonal';
+import { offPersonalPage } from '../../app//redux/hideShow';
 
 const Personalpage: React.FC<any> = ({ user, leng = 1 }) => {
     console.log(user);

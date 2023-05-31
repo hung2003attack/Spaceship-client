@@ -14,7 +14,7 @@ import {
     SpanIconPhoneMail,
     Pmessage,
 } from './styleRegister';
-import Language from 'src/Language/Language';
+import Language from '~/Language/Language';
 import { changeRegister } from '~/redux/languageRD';
 import { DivLanguage } from '../Login/styleLogin';
 import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';

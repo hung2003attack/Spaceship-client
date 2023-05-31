@@ -38,7 +38,7 @@ export const socialnetwork = {
                 children: {
                     option: ['Tên', 'Ngày sinh', 'Địa chỉ'],
                     menu: [
-                        { name: 'Chưa kết bạn', id: 'trangers' },
+                        { name: 'Chưa kết bạn', id: 'strangers' },
                         { name: 'Đã kêt bạn', id: 'friends' },
                         { name: 'Gia đình', id: 'family' },
                         { name: 'Bạn đã gửi', id: 'you sent' },
