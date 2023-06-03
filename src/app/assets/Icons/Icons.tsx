@@ -27,6 +27,7 @@ import {
     AiOutlineEyeInvisible,
     AiOutlineLoading,
     AiOutlineHeart,
+    AiOutlinePlayCircle,
 } from 'react-icons/ai';
 import { GiEarthAmerica, GiNewspaper } from 'react-icons/gi';
 import {
@@ -38,6 +39,7 @@ import {
     MdNotInterested,
     MdNavigateBefore,
 } from 'react-icons/md';
+import { GoScreenFull, GoScreenNormal } from 'react-icons/go';
 import { FaPeopleArrows, FaAddressCard, FaUserFriends } from 'react-icons/fa';
 import { RiDragMoveFill, RiMailSendLine } from 'react-icons/ri';
 import { TbArrowNarrowLeft, TbGridDots, TbTextResize } from 'react-icons/tb';
@@ -99,3 +101,6 @@ export const Bullseye = () => <BiBullseye />;
 export const NextI = () => <MdOutlineNavigateNext />;
 export const BeforeI = () => <MdNavigateBefore />;
 export const BanI = () => <MdNotInterested />;
+export const PlayI = () => <AiOutlinePlayCircle />;
+export const FullScreenI = () => <GoScreenFull />;
+export const ScreenI = () => <GoScreenNormal />;

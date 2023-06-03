@@ -24,7 +24,7 @@ import {
 import { Button, Buttons, Div, H3, Img, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import Bar from '~/reUsingComponents/Bar/Bar';
 import ErrorBoudaries from '~/reUsingComponents/ErrorBoudaries/ErrorBoudaries';
-import { DivClose } from '~/reUsingComponents/styleComponents/styleComponents';
+import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import HoverTitle from '~/reUsingComponents/HandleHover/HoverTitle';
 import FontFamilys from '~/reUsingComponents/Font/FontFamilys';
 import { Player } from 'video-react';
@@ -200,7 +200,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user,
                                         }
                                     `}
                                 >
-                                    <DivClose
+                                    <DivPos
                                         width="30px"
                                         top="5px"
                                         right="-29px"
@@ -209,7 +209,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user,
                                         onClick={() => setdisplayEmoji(false)}
                                     >
                                         <CloseI />
-                                    </DivClose>
+                                    </DivPos>
                                     <Picker
                                         locale={form.emoji}
                                         set="facebook"
@@ -292,7 +292,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user,
 
                         <DivDataFake>
                             <Div width="100%" css="position: relative;">
-                                <DivClose
+                                <DivPos
                                     right="12px"
                                     top="10px"
                                     size="20px"
@@ -303,7 +303,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user,
                                     }}
                                 >
                                     <CloseI />
-                                </DivClose>
+                                </DivPos>
                                 <Textarea
                                     className="textHome"
                                     color={colorText}

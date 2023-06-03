@@ -1,7 +1,7 @@
 import { ReactElement, ReactNode, memo, useEffect, useRef, useState } from 'react';
 import { Div, H3 } from '../styleComponents/styleDefault';
 import { DivFonts, DivList, DivName, PItems } from './styleFontFamily';
-import { DivClose } from '../styleComponents/styleComponents';
+import { DivPos } from '../styleComponents/styleComponents';
 import { CloseI, ItalicI, StraightI } from '~/assets/Icons/Icons';
 import { fontDatas } from 'src/dataMark/dataHomeForm';
 

@@ -4,7 +4,7 @@ import { DivItems, DivResults, DivTools } from './stylesTools';
 import { DotI, OfflineI, OnlineI } from '~/assets/Icons/Icons';
 import { socket } from '../nextWeb';
 import Cookies from 'universal-cookie';
-import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
+import HttpRequestUser from '~/restAPI/requestServers/accountRequest/userAPI';
 
 const cookies = new Cookies();
 const Tools: React.FC<{ colorText: string; colorBg: number; as: number }> = ({ colorText, colorBg, as }) => {

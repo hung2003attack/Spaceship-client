@@ -21,7 +21,7 @@ import {
 } from '~/assets/Icons/Icons';
 import Background from 'src/backbround/background';
 import { onPersonalPage, setTrueErrorServer } from '~/redux/hideShow';
-import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
+import HttpRequestUser from '~/restAPI/requestServers/accountRequest/userAPI';
 import CurrentPageL from './CurrentPage';
 import {
     DivAvatar,
@@ -49,7 +49,7 @@ import Tools from './Tools/Tools';
 import { Div, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import Profile from './profiles/profile';
 import NextListWeb from './listWebs/ListWebs';
-import PeopleRequest from '~/restAPI/requestServers/socialNetwork/people';
+import PeopleRequest from '~/restAPI/requestServers/socialNetwork/peopleAPI';
 import WarningBrowser from '~/reUsingComponents/ErrorBoudaries/Warning_browser';
 export const socket = io('http://localhost:3001', { transports: ['websocket'] });
 

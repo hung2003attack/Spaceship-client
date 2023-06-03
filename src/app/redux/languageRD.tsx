@@ -30,7 +30,10 @@ const languageSlide = createSlice({
             state.l = action.payload.l;
             state.w = action.payload.w;
         },
+        changeSN: (state, action) => {
+            state.sn = action.payload;
+        },
     },
 });
-export const { changeLogin, changeRegister, changeThree } = languageSlide.actions;
+export const { changeLogin, changeRegister, changeThree, changeSN } = languageSlide.actions;
 export default languageSlide.reducer;

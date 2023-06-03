@@ -4,10 +4,9 @@ import { DivItems, DivMenu, DivOptions, DivResults, DivSearch, Input } from './s
 import TagProfle from '~/social_network/components/Header/layout/MakingFriends/TagProfle';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import PeopleRequest from '~/restAPI/requestServers/socialNetwork/people';
+import peopleAPI from '~/restAPI/requestServers/socialNetwork/peopleAPI';
 import { useCookies } from 'react-cookie';
 
-import user from '~/restAPI/requestServers/accountRequest/user';
 import { io } from 'socket.io-client';
 import moment from 'moment';
 import { DotI } from '~/assets/Icons/Icons';
@@ -202,6 +201,8 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
     }, [dataTest]);
     useEffect(() => {
         const newStranger = data.strangers.filter((x: PropsStrangers) => {
+            console.log('come here', x, dataConfirm);
+
             if (x.id === dataConfirm?.id) {
                 if (x.id_f_user.level) x.id_f_user.level = 2;
                 if (x.id_friend.level) x.id_friend.level = 2;
@@ -213,7 +214,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
         setData({ ...data, strangers: newStranger });
     }, [dataConfirm]);
     async function fetch() {
-        const res = await PeopleRequest.getPeople(accessToken);
+        const res = await peopleAPI.getPeople(accessToken);
         setData(res);
         console.log(res, 'res here');
     }
@@ -223,15 +224,17 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
             setDataTest(JSON.parse(msg));
         });
         socket.on(`Del request others?id=${userId}`, (msg: string) => {
+            console.log('heree', msg);
+
             setDataTest(JSON.parse(msg));
         });
         socket.on(`Confirmed ${userId}`, (msg: string) => {
             if (msg) setDataConfirm(JSON.parse(msg));
         });
-        // socket.on(`Delete request friends or relatives${userId}`, (msg: any) => {
-        //     fetch();
-        //     console.log('Delete Request message id:', msg);
-        // });
+        socket.on(`Confirmed atInfo ${userId}`, (msg: string) => {
+            if (msg) setDataConfirm(JSON.parse(msg));
+            console.log('yesssssssssssssssss');
+        });
     }, []);
 
     const optionS = friendsT.option;
@@ -274,14 +277,14 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
             }
         }
     };
-    const handleRemove = async (id: string, of: string = 'yes') => {
+    const handleRemove = async (id: string, of: string = 'yes', kindOf?: string) => {
         if (of === 'no' && id) {
             const newData: any = data['strangers']?.filter((d: { id: string }) => d.id !== id);
             setData({ ...data, strangers: newData });
             console.log('newData', newData);
         } else {
             console.log('deleted', id);
-            const res = await PeopleRequest.delete(accessToken, id);
+            const res = await peopleAPI.delete(accessToken, id, kindOf);
             if (res) {
                 const newData: any = data['strangers']?.filter((d: { id: string }) => d.id !== id);
                 setData({ ...data, strangers: newData });
@@ -293,24 +296,13 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
 
         const res: {
             id_friend: string;
-            mess: {
-                id_message: string;
-                status: number;
-                title: string;
-                createdAt: string;
-            };
             data: {
                 createdAt: string;
                 id: 79;
                 idCurrentUser: string;
                 idFriend: string;
-                id_message: string;
             };
-        } = await PeopleRequest.setFriend(
-            accessToken,
-            id,
-            `${gender === 0 ? 'He' : gender === 1 ? 'She' : 'Honey'} has sent for you a friend request`,
-        );
+        } = await peopleAPI.setFriend(accessToken, id);
 
         const newStranger = data.strangers.filter((x: PropsStrangers) => {
             if (x.id === res.data.idFriend) {
@@ -335,7 +327,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
     };
     const handleAbolish = async (id: string, kindOf: string = 'friends') => {
         console.log('Abolish', kindOf, id);
-        const res = await PeopleRequest.delete(accessToken, id, kindOf);
+        const res = await peopleAPI.delete(accessToken, id, kindOf);
         console.log('Abolish', res);
         const newStranger = data.strangers.filter((x: PropsStrangers) => {
             if (
@@ -363,24 +355,27 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
         setData({ ...data, strangers: newStranger });
     };
     const handleConfirm = async (id: string, kindOf: string = 'friends') => {
-        const res = await PeopleRequest.setConfirm(accessToken, id, kindOf);
+        const res = await peopleAPI.setConfirm(accessToken, id, kindOf);
         console.log('confirm', kindOf, id, res);
-        if (res.ok === 1) {
-            const newStranger = data.strangers.filter((x: PropsStrangers) => {
-                if (
-                    (x.id_f_user.idCurrentUser === res.id_fr && x.id_f_user.idFriend === userId) ||
-                    (x.id_friend.idCurrentUser === res.id_fr && x.id_friend.idFriend === userId)
-                ) {
-                    if (x.id_f_user.level) x.id_f_user.level = 2;
-                    if (x.id_friend.level) x.id_friend.level = 2;
-                    data.friends.push(x);
-                    return x;
-                } else {
-                    return x;
-                }
-            });
-            console.log('newStranger', newStranger);
-            setData({ ...data, strangers: newStranger });
+        refresh(res);
+        function refresh(res: any) {
+            if (res.ok === 1) {
+                const newStranger = data.strangers.filter((x: PropsStrangers) => {
+                    if (
+                        (x.id_f_user.idCurrentUser === res.id_fr && x.id_f_user.idFriend === userId) ||
+                        (x.id_friend.idCurrentUser === res.id_fr && x.id_friend.idFriend === userId)
+                    ) {
+                        if (x.id_f_user.level) x.id_f_user.level = 2;
+                        if (x.id_friend.level) x.id_friend.level = 2;
+                        data.friends.push(x);
+                        return x;
+                    } else {
+                        return x;
+                    }
+                });
+                console.log('newStranger', newStranger);
+                setData({ ...data, strangers: newStranger });
+            }
         }
     };
     const handleMessenger = (id: string) => {
@@ -437,7 +432,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                                 {
                                     text: 'Delete',
                                     css: css + '@media (min-width: 769px){width: 87%; margin-top: 5px;}',
-                                    onClick: () => handleRemove(res.id),
+                                    onClick: () => handleRemove(res.id, 'yes', 'all'),
                                 },
                                 {
                                     text: 'Abolish',
@@ -458,7 +453,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                                 {
                                     text: 'Delete',
                                     css: css + '@media (min-width: 769px){width: 87%; margin-top: 5px;}',
-                                    onClick: () => handleRemove(res.id),
+                                    onClick: () => handleRemove(res.id, 'yes', 'all'),
                                 },
                                 {
                                     text: 'Confirm',
@@ -480,7 +475,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                                 {
                                     text: 'Delete',
                                     css: css,
-                                    onClick: () => handleRemove(res.id),
+                                    onClick: () => handleRemove(res.id, 'yes', 'friend'),
                                 },
                                 {
                                     text: 'Abolish',
@@ -500,7 +495,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                             {
                                 text: 'Delete',
                                 css: css + '@media (min-width: 769px){width: 87%; margin-top: 5px;}',
-                                onClick: () => handleRemove(res.id),
+                                onClick: () => handleRemove(res.id, 'yes', 'all'),
                             },
                             {
                                 text: 'Confirm',
@@ -524,7 +519,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                             {
                                 text: 'Delete',
                                 css: css + '@media (min-width: 769px){width: 87%; margin-top: 5px;}',
-                                onClick: () => handleRemove(res.id),
+                                onClick: () => handleRemove(res.id, 'yes', 'all'),
                             },
                             {
                                 text: 'Confirm',
@@ -550,7 +545,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                             {
                                 text: 'Delete',
                                 css: css + '@media (min-width: 769px){width: 87%; margin-top: 5px;}',
-                                onClick: () => handleRemove(res.id),
+                                onClick: () => handleRemove(res.id, 'yes', 'all'),
                             },
                             {
                                 text: 'Abolish',
@@ -573,7 +568,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                         {
                             text: 'Delete',
                             css: css,
-                            onClick: () => handleRemove(res.id),
+                            onClick: () => handleRemove(res.id, 'yes', 'friends'),
                         },
                         {
                             text: 'Abolish',
@@ -589,7 +584,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                         {
                             text: 'Delete',
                             css: css,
-                            onClick: () => handleRemove(res.id),
+                            onClick: () => handleRemove(res.id, 'yes', 'friends'),
                         },
                         {
                             text: 'Confirm',
@@ -605,7 +600,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                         {
                             text: 'Delete',
                             css: css,
-                            onClick: () => handleRemove(res.id),
+                            onClick: () => handleRemove(res.id, 'yes', 'relatives'),
                         },
                         {
                             text: 'Abolish',
@@ -621,7 +616,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                         {
                             text: 'Delete',
                             css: css,
-                            onClick: () => handleRemove(res.id),
+                            onClick: () => handleRemove(res.id, 'yes', 'relatives'),
                         },
                         {
                             text: 'Confirm',

@@ -7,7 +7,7 @@ import { useCookies } from 'react-cookie';
 import HttpRequestHome from '~/restAPI/requestServers/socialNetwork/home';
 import FormUpNews, { PropsFormHome } from './Layout/FormUpNews/FormUpNews';
 import Posts from './Layout/DataPosts/Posts';
-import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
+import HttpRequestUser from '~/restAPI/requestServers/accountRequest/userAPI';
 import { Div, H3, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import { socket } from 'src/mainPage/nextWeb';
@@ -51,7 +51,6 @@ const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
     }, []);
     // socket.on('connect', () => {
 
-    
     console.log('nooo');
 
     const [userList, setUserList] = useState();

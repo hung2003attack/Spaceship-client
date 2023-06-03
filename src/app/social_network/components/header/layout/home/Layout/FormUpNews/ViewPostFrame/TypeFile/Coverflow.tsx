@@ -10,13 +10,16 @@ import { Autoplay, EffectCoverflow, Pagination } from 'swiper';
 import './swiper.scss';
 import { Player } from 'video-react';
 import { Img } from '~/reUsingComponents/styleComponents/styleDefault';
+import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
+import { PlayI } from '~/assets/Icons/Icons';
 
 const Coverflow: React.FC<{
     file: {
         link: string;
         type: string;
     }[];
-}> = ({ file }) => {
+    colorText: string;
+}> = ({ file, colorText }) => {
     return (
         <div id="swiperS">
             <Swiper

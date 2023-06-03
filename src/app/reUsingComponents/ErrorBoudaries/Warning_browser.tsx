@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Buttons, Div, H3, P, Strong } from '../styleComponents/styleDefault';
 import { DivInBs, DivWarBs } from './stylesErrorBoudaries';
 import { CloseI } from '~/assets/Icons/Icons';
-import { DivClose } from '../styleComponents/styleComponents';
+import { DivPos } from '../styleComponents/styleComponents';
 import 'moment/locale/vi';
 import { useSelector } from 'react-redux';
 
@@ -109,9 +109,9 @@ const WarningBrowser: React.FC<{
     return (
         <DivWarBs id="exBros">
             <DivInBs>
-                <DivClose size="20px" right="10px" onClick={() => setWarningBrs(undefined)}>
+                <DivPos size="20px" right="10px" onClick={() => setWarningBrs(undefined)}>
                     <CloseI />
-                </DivClose>
+                </DivPos>
                 <H3 css="color: #fa2a2a; font-size: 2rem;}">Warning!</H3>
 
                 {prohibit ? text[lg].second : text[lg].first}

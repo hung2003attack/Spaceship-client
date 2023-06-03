@@ -36,17 +36,8 @@ class HttpRequestUser {
 
             return res.data;
         } catch (error) {
-            const err: any = error as AxiosError;
-            const errRes: { mess: string; status: number } = err.response?.data;
-            console.log(errRes);
+            console.log(error);
 
-            if (errRes.status === 0) {
-                console.log('Here');
-                cookies.remove('tks', { path: '/' });
-                cookies.remove('k_user', { path: '/' });
-                window.location.reload();
-                // cookies.remove('k_user');
-            }
             // console.log(error.reponsive.data);
         }
     };
@@ -80,6 +71,24 @@ class HttpRequestUser {
             const res = await Axios.patch('/SN/user/setAs', {
                 as: as,
             });
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    getNewMes = async (token: string) => {
+        try {
+            const Axios = refreshToken.axiosJWTs(token);
+            const res = await Axios.get('/SN/user/getNewMes');
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    delMessage = async (token: string) => {
+        try {
+            const Axios = refreshToken.axiosJWTs(token);
+            const res = await Axios.get('/SN/user/delMessage');
             return res.data;
         } catch (error) {
             console.log(error);

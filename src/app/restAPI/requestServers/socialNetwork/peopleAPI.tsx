@@ -12,11 +12,11 @@ class PeopleRequest {
             console.log(error);
         }
     };
-    setFriend = async (accessToken: string, id: string, title: string) => {
+    setFriend = async (accessToken: string, id: string) => {
         try {
             const axiosJWTss = refreshToken.axiosJWTs(accessToken);
             const res = await axiosJWTss.post('/SN/people/setFriend', {
-                params: { id_friend: id, title: title },
+                params: { id_friend: id },
             });
             return res.data;
         } catch (error) {
@@ -41,10 +41,12 @@ class PeopleRequest {
             console.log(error, 'delete');
         }
     };
-    setConfirm = async (accessToken: string, id: string, kindOf?: string) => {
+    setConfirm = async (accessToken: string, id: string, kindOf?: string, atInfor?: boolean) => {
         try {
             const axiosJWTss = refreshToken.axiosJWTs(accessToken);
-            const res = await axiosJWTss.patch('/SN/people/setConfirm', { params: { id_req: id, kindOf: kindOf } });
+            const res = await axiosJWTss.patch('/SN/people/setConfirm', {
+                params: { id_req: id, kindOf: kindOf, atInfor },
+            });
             return res.data;
         } catch (error) {
             console.log(error, 'delete');

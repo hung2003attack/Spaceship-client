@@ -2,17 +2,19 @@ import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { InitialStateHideShow, offAll, offSetting } from '~/redux/hideShow';
 
+import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
+import HttpRequestUser from '~/restAPI/requestServers/accountRequest/userAPI';
+
 import { CloseI } from '~/assets/Icons/Icons';
 import Bar from '~/reUsingComponents/Bar/Bar';
 import { PropsSetting } from './interface';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
-import { DivClose, DivContainer } from '../styleComponents/styleComponents';
-import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
+import { DivPos, DivContainer } from '../styleComponents/styleComponents';
 import { DivLanguages, DivResults } from './styleSetting';
 import { P } from '../styleComponents/styleDefault';
 import { socket } from 'src/mainPage/nextWeb';
+import { changeSN } from '~/redux/languageRD';
 
 const css2 = `
         margin-top: 49px;
@@ -41,12 +43,16 @@ const Settingcbl: React.FC<{
     const [showresult, setShowresult] = useState<ReactNode>();
     const [resultoption, setResultoption] = useState<boolean>(false);
     const dispatch = useDispatch();
+
     useEffect(() => {
         if (!showHideSettingn) setResultoption(false);
     }, [showHideSettingn]);
     const handleChangeLanguage = async (lg: string) => {
         if (checkLg.current !== lg) {
             const res = await HttpRequestUser.setLg(token, k_user, lg);
+            console.log('laggggg', res);
+            dispatch(changeSN(lg));
+
             if (res === 1) {
                 checkLg.current = lg;
                 setLg(lg);
@@ -108,7 +114,7 @@ const Settingcbl: React.FC<{
                 css={css1}
                 onClick={(e) => e.stopPropagation()}
             >
-                <DivClose
+                <DivPos
                     size="25px"
                     top="11px"
                     left="11px"
@@ -118,7 +124,7 @@ const Settingcbl: React.FC<{
                     }}
                 >
                     <CloseI />
-                </DivClose>
+                </DivPos>
                 <DivContainer width="250px" css={css2}>
                     {datas.map((setting: any, index: number) => {
                         if (setting.logout) {

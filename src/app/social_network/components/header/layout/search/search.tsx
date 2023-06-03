@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 import useDebounce from '../../../../../reUsingComponents/hook/useDebounce';
 
-import HttpRequestUser from '~/restAPI/requestServers/accountRequest/user';
+import HttpRequestUser from '~/restAPI/requestServers/accountRequest/userAPI';
 import { CloseI } from '~/assets/Icons/Icons';
 import Account from '~/social_network/Accoutns/Account';
 import styles from './search.module.scss';
@@ -12,7 +12,7 @@ import { useCookies } from 'react-cookie';
 import { DivSearch, Input } from './styleSearch';
 import { useSelector } from 'react-redux';
 import { PropsBg } from 'src/mainPage/nextWeb';
-import { DivClose } from '~/reUsingComponents/styleComponents/styleComponents';
+import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 
 const Search: React.FC<{ title: string; location: string; colorBg: number; colorText: string }> = ({
     title,
@@ -80,7 +80,7 @@ const Search: React.FC<{ title: string; location: string; colorBg: number; color
                 onChange={(e) => handleResultSearch(e)}
                 onFocus={handleShowHide}
             />
-            <DivClose
+            <DivPos
                 width="30px"
                 size="1.8rem"
                 top="1.5px"
@@ -90,7 +90,7 @@ const Search: React.FC<{ title: string; location: string; colorBg: number; color
                 onClick={handleCloseSearch}
             >
                 <CloseI />
-            </DivClose>
+            </DivPos>
             {resultSearch?.length > 0 && (
                 <>
                     <div className={clsx(styles.resultBar, hide && styles.showHide)}>

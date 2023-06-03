@@ -157,7 +157,7 @@ interface PropsClose {
     right?: string;
     css?: string;
 }
-export const DivClose = styled.div<PropsClose>`
+export const DivPos = styled.div<PropsClose>`
     width: ${(props) => props.width};
     height: ${(props) => props.width};
     top: ${(props) => props.top};

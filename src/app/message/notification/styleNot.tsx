@@ -10,6 +10,7 @@ export const DivRes = styled.div`
     top: 0px;
     right: 3px;
     transition: var(--transition-03s);
+    z-index: 12;
 `;
 export const DivBar = styled.div`
     width: 100%;
@@ -22,8 +23,6 @@ export const DivBar = styled.div`
 export const DivListIs = styled.div`
     width: 100%;
     height: 90%;
-    display: flex;
-    flex-wrap: wrap;
     padding: 4px;
     margin-top: 14px;
     overflow-y: overlay;

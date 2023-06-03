@@ -1,7 +1,7 @@
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import { Button, Div, H3, Img, P, Span } from '~/reUsingComponents/styleComponents/styleDefault';
 import { PropsUserHome } from '../../Home';
-import { BanI, Bullseye, DotI, FriendI, HeartI, LockI, NextI, ShareI } from '~/assets/Icons/Icons';
+import { BanI, Bullseye, DotI, FriendI, HeartI, LockI, NextI, PlayI, ShareI } from '~/assets/Icons/Icons';
 import { Player } from 'video-react';
 import { DivAction, DivEmoji, DivWrapButton, SpanAmount } from './styleFormUpNews';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -10,6 +10,7 @@ import Grid from './ViewPostFrame/TypeFile/Grid';
 import DefaultType from './ViewPostFrame/TypeFile/DefaultType';
 import OptionType from './ViewPostFrame/OptionType';
 import HttpRequestHome from '~/restAPI/requestServers/socialNetwork/home';
+import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 export interface PropsPreViewFormHome {
     time: {
         hour: string;
@@ -39,6 +40,7 @@ const PreviewPost: React.FC<{
 }> = ({ user, setPreView, colorText, colorBg, file, valueText, fontFamily, dataText, token, userId }) => {
     const [selectType, setSelectType] = useState<number>(0);
     const [column, setColumn] = useState<number>(3);
+    const [full, setFull] = useState<number>(0);
     const images: string[] = [];
     const videos: string[] = [];
     let checkImg = false;
@@ -50,7 +52,6 @@ const PreviewPost: React.FC<{
         if (file[i].type === 'video') videos.push(file[i].link);
         if (file[i].type === '!images' && checkImg === false) checkImg = true;
     }
-
     const handlePost = async () => {
         // const params = {}
         // const res = await HttpRequestHome.setPost(token,userId,)
@@ -62,8 +63,12 @@ const PreviewPost: React.FC<{
                     }`;
     console.log('yess');
     const postTypes = [
-        <DefaultType file={file} />,
-        file.length > 3 ? <Coverflow file={file} /> : <P color="#c05d5d">Please select at least 3!</P>,
+        <DefaultType colorText={colorText} file={file} full={full} setFull={setFull} />,
+        file.length > 3 ? (
+            <Coverflow colorText={colorText} file={file} />
+        ) : (
+            <P color="#c05d5d">Please select at least 3!</P>
+        ),
         <Grid file={file} column={column} />,
     ];
     return (
@@ -96,7 +101,7 @@ const PreviewPost: React.FC<{
                         background-color: ${colorBg === 1 ? '#292a2d' : ''};
                     `}
                 >
-                    <Div width="100%" css="height: fit-content; margin-top: 5px;">
+                    <Div width="100%" css="height: fit-content; margin-top: 5px; position: relative;">
                         <Div
                             css={`
                                 width: 35px;
@@ -136,6 +141,9 @@ const PreviewPost: React.FC<{
                                 </Span>
                             </P>
                         </Div>
+                        <DivPos size="21px" top="4px" right="10px" color={colorText}>
+                            <DotI />
+                        </DivPos>
                     </Div>
 
                     <Div width="100%" css="padding: 5px 6px 10px 6px;">
@@ -153,6 +161,9 @@ const PreviewPost: React.FC<{
                         width="100%"
                         css={`
                             position: relative;
+                            ${full === 1
+                                ? 'height: 100%; overflow-y: overlay; position: fixed; top: 0; left: 0; right: 0;  background-color: #1f2021; z-index: 8888;'
+                                : ''}
                         `}
                     >
                         {postTypes[selectType]}
