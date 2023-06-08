@@ -28,8 +28,11 @@ class CommonUtils {
     }
     convertBase64(file: any) {
         try {
-            const imageBase64 = Buffer.from(file, 'base64').toString('binary');
-            if (imageBase64) return imageBase64;
+            if (file?.type === 'Buffer') {
+                const imageBase64 = Buffer.from(file, 'base64').toString('binary');
+                if (imageBase64) return imageBase64;
+            }
+            return file;
         } catch (error) {
             console.log(error);
         }

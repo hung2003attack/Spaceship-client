@@ -29,13 +29,7 @@ interface InNetWork {
     };
     body: {};
 }
-interface PropsDataNetWork {
-    data: {
-        [vi: string]: InNetWork;
-        en: InNetWork;
-    };
-    dataUser: { avatar: string; fullName: string; gender: number };
-}
+
 interface PropsLanguage {
     persistedReducer: {
         language: {
@@ -44,25 +38,33 @@ interface PropsLanguage {
     };
 }
 
-const Socialnetwork: React.FC<PropsDataNetWork> = ({ data, dataUser }) => {
+const Socialnetwork: React.FC<{
+    data: {
+        [vi: string]: InNetWork;
+        en: InNetWork;
+    };
+    dataUser: { avatar: string; fullName: string; gender: number };
+}> = ({ data, dataUser }) => {
     const language = useSelector((state: PropsLanguage) => state.persistedReducer.language.sn);
     const [lg, setLg] = useState<string>(language);
     const { header, sett } = data[lg];
 
     const turnSetting = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow?.setting);
-    console.log('social', lg);
+    console.log('social', lg, dataUser);
 
     return (
         <>
             <Header
-                logo={header.logo}
-                sett={header.sett}
-                home={header.home}
-                exchange={header.exchange}
-                video={header.video}
-                friends={header.friends}
-                search={header.search}
-                location={header.location}
+                dataText={{
+                    logo: header.logo,
+                    sett: header.sett,
+                    home: header.home,
+                    exchange: header.exchange,
+                    video: header.video,
+                    friends: header.friends,
+                    search: header.search,
+                    location: header.location,
+                }}
                 dataUser={dataUser}
             />
             <Settingcbl dataO={sett.data} setLg={setLg} LgNow={lg} turnSetting={turnSetting} />

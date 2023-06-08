@@ -82,7 +82,7 @@ const Send: React.FC<{ colorText: string; colorBg: number }> = ({ colorBg, color
                                 {resultSearch.map((user: any) => (
                                     <div key={user.id} className={clsx(styles.resultSearch)}>
                                         <div className={clsx(styles.avatarearch)}>
-                                            <Avatar src={user.avatar} alt={user.full_name} />
+                                            <Avatar src={user.avatar} alt={user.full_name} gender={user.gender} />
                                         </div>
 
                                         <div className={clsx(styles.nameSearch)}>

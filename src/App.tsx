@@ -17,7 +17,6 @@ import { PropsBg } from './mainPage/nextWeb';
 import { UndoI } from '~/assets/Icons/Icons';
 import CommonUtils from '~/utils/CommonUtils';
 import userAPI from '~/restAPI/requestServers/accountRequest/userAPI';
-import { changeAvatar } from '~/redux/changeData';
 import { PropsTitleP } from './mainPage/personalPage/layout/Title';
 const DivOpacity = styled.div`
     width: 100%;
@@ -36,6 +35,23 @@ export interface PropsUserPer {
     nickName: string;
     gender: number;
     background: any;
+    status: string;
+    sn: string;
+    l: string;
+    w: string;
+    as: number;
+    id_f_user: {
+        createdAt: string;
+        idCurrentUser: string;
+        idFriend: string;
+        level: number;
+    };
+    id_friend: {
+        createdAt: string;
+        idCurrentUser: string;
+        idFriend: string;
+        level: number;
+    };
     id_m_user: PropsTitleP;
 }
 const Authentication = React.lazy(() => import('~/Authentication/Auth'));
@@ -49,8 +65,9 @@ function App() {
     const { idUser, errorServer } = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow);
     const { colorText, colorBg } = useSelector((state: PropsBg) => state.persistedReducer.background);
     const [userData, setUserData] = useState<PropsUserPer[]>([]);
+    const [userFirst, setUserFirst] = useState<PropsUserPer>();
     const [userOnline, setUserOnline] = useState<string[]>([]);
-    async function fetch(id: string) {
+    async function fetch(id: string, first?: string) {
         const res = await userAPI.getById(
             cookies.tks,
             id,
@@ -62,6 +79,10 @@ function App() {
                 nickName: 'nickName',
                 status: 'status',
                 gender: 'gender',
+                as: 'as',
+                sn: 'sn',
+                l: 'l',
+                w: 'w',
             },
             {
                 position: 'position',
@@ -73,22 +94,24 @@ function App() {
             },
             'personal',
         );
-        console.log(res, 'ssss', res.avatar);
-        const datas = res.user;
-
-        if (datas.avatar) {
-            const av = CommonUtils.convertBase64(datas.avatar);
-            datas.avatar = av;
+        console.log(res, first, 'ssss', res.avatar);
+        if (res.avatar) {
+            const av = CommonUtils.convertBase64(res.avatar);
+            res.avatar = av;
             console.log(res, 'sss');
         }
-        if (datas.background) {
-            const av = CommonUtils.convertBase64(datas.background);
-            datas.background = av;
+        if (res.background) {
+            const av = CommonUtils.convertBase64(res.background);
+            res.background = av;
         }
-
-        console.log(datas, 'datar');
-        setUserData([datas]);
+        if (first) {
+            setUserFirst(res);
+        } else {
+            setUserData([res]);
+        }
     }
+    console.log(userFirst, 'userFirst');
+
     useEffect(() => {
         const search = async () => {
             const search = window.location.search;
@@ -127,6 +150,9 @@ function App() {
 
     const token = cookies.tks;
     const k_user = cookies.k_user;
+    useEffect(() => {
+        fetch(k_user, 'first');
+    }, []);
     // const operatingSystem = {
     //     name: 'Ubuntu',
     //     version: 18.04,
@@ -294,39 +320,51 @@ function App() {
                     check={errorServer.check}
                     message={errorServer.message || 'Server is having a problem. Please try again later!'}
                 />
-                <Website userOnline={userOnline} setUserOnline={setUserOnline} idUser={idUser} />
-                {(setting || personalPage) && <DivOpacity onClick={handleClick} />}
-                <Message />
-                {userData?.length > 0 && (
-                    <DivContainer
-                        width="100%"
-                        height="100%"
-                        css={css}
-                        bg={`${colorBg === 1 ? '#272727' : 'white'}`}
-                        content="start"
-                        display="flex"
-                    >
-                        {userData?.map((data: any, index: number) => (
-                            <Personalpage
-                                colorText={colorText}
-                                colorBg={colorBg}
-                                user={data}
-                                online={userOnline}
-                                key={index}
-                                leng={leng}
-                            />
-                        ))}
-                        <DivPos
-                            position="fixed"
-                            size="30px"
-                            top="20px"
-                            right="11px"
-                            color={colorText}
-                            onClick={handleClick}
-                        >
-                            <UndoI />
-                        </DivPos>
-                    </DivContainer>
+                {userFirst && (
+                    <>
+                        {' '}
+                        <Website
+                            userOnline={userOnline}
+                            setUserOnline={setUserOnline}
+                            idUser={idUser}
+                            dataUser={userFirst}
+                        />
+                        {(setting || personalPage) && <DivOpacity onClick={handleClick} />}
+                        <Message />
+                        {userData?.length > 0 && (
+                            <DivContainer
+                                width="100%"
+                                height="100%"
+                                css={css}
+                                bg={`${colorBg === 1 ? '#272727' : 'white'}`}
+                                content="start"
+                                display="flex"
+                            >
+                                {userData?.map((data: any, index: number) => (
+                                    <Personalpage
+                                        setUserFirst={setUserFirst}
+                                        userFirst={{ ...userFirst }}
+                                        colorText={colorText}
+                                        colorBg={colorBg}
+                                        user={data}
+                                        online={userOnline}
+                                        key={index}
+                                        leng={leng}
+                                    />
+                                ))}
+                                <DivPos
+                                    position="fixed"
+                                    size="30px"
+                                    top="20px"
+                                    right="11px"
+                                    color={colorText}
+                                    onClick={handleClick}
+                                >
+                                    <UndoI />
+                                </DivPos>
+                            </DivContainer>
+                        )}
+                    </>
                 )}
             </Suspense>
         );

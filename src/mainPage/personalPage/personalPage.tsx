@@ -9,18 +9,17 @@ import Button from '../../app/reUsingComponents/Buttoms/ListButton/Buttons';
 import Edit from '../editInformation/editInformation';
 import Part from './layout/result';
 import { Buttons, Div, Img, P, Span } from '../../app//reUsingComponents/styleComponents/styleDefault';
-import { DivContainer, DivPos, Hname } from '../../app//reUsingComponents/styleComponents/styleComponents';
+import { DivContainer, DivLoading, DivPos, Hname } from '../../app//reUsingComponents/styleComponents/styleComponents';
 import { DivPersonalPage } from '../styleNextWeb';
 import { DivBg, DivIntr, DivItems, DivOp, DivPerson, DivStories, InputChangeP } from './stypePersonal';
 import { offPersonalPage, setTrueErrorServer } from '../../app//redux/hideShow';
 import Title from './layout/Title';
-import { CheckI, CloseI, DotI, UndoI } from '~/assets/Icons/Icons';
+import { CheckI, CloseI, DotI, ImageI, LoadingI, UndoI } from '~/assets/Icons/Icons';
 import { Label } from '~/social_network/components/Header/layout/Home/Layout/FormUpNews/styleFormUpNews';
 import CommonUtils from '~/utils/CommonUtils';
 import userAPI from '~/restAPI/requestServers/accountRequest/userAPI';
 import { useCookies } from 'react-cookie';
 import { PropsUserPer } from 'src/App';
-import { changeAvatar, changeBackground } from '~/redux/changeData';
 import EditP from './layout/EditP';
 import moment from 'moment';
 
@@ -30,6 +29,8 @@ interface PropsPer {
     colorText: string;
     colorBg: number;
     online: string[];
+    setUserFirst: React.Dispatch<React.SetStateAction<PropsUserPer | undefined>>;
+    userFirst: PropsUserPer;
 }
 interface PropsLanguage {
     persistedReducer: {
@@ -40,7 +41,7 @@ interface PropsLanguage {
         };
     };
 }
-const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, online }) => {
+const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, online, setUserFirst, userFirst }) => {
     console.log(user, 'user herrrr');
     // const lg
     const dispatch = useDispatch();
@@ -54,14 +55,17 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
     const token = cookies.tks;
 
     const [dataUser, setDataUser] = useState<PropsUserPer>(user);
+    const id_f_user = dataUser.id_f_user.idCurrentUser || dataUser.id_friend.idCurrentUser;
+    const id_friend = dataUser.id_f_user.idFriend || dataUser.id_friend.idFriend;
+
+    const level = dataUser.id_f_user.level || dataUser.id_friend.level;
 
     const [edit, setEdit] = useState<boolean>(false);
     const [categories, setCategories] = useState<number>(0);
     const [valueName, setValueName] = useState<string>('');
 
     const [errText, setErrText] = useState<string>('');
-    console.log(dataUser, 'dataUser');
-
+    const [loading, setLoading] = useState<boolean>(false);
     const [room, setRoom] = useState<{ avatar: boolean; background: boolean }>({ avatar: false, background: false });
     const handlePersonalPage = () => {
         dispatch(offPersonalPage());
@@ -69,17 +73,48 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
     const handleEdit = () => {
         setEdit(!edit);
     };
-    const editP: { [en: string]: { name: string; id: number }[]; vi: { name: string; id: number }[] } = {
+    const editP: {
+        [en: string]: { name: string; id: number; icon?: { id: number; name: string }[] }[];
+        vi: { name: string; id: number; icon?: { id: number; name: string }[] }[];
+    } = {
         en: [
-            { name: 'Background', id: 0 },
-            { name: 'Avatar', id: 1 },
+            {
+                name: 'Background',
+                icon: [
+                    { id: 1, name: 'Change' },
+                    { id: 2, name: 'Delete' },
+                ],
+                id: 0,
+            },
+            {
+                name: 'Avatar',
+                icon: [
+                    { id: 1, name: 'Change' },
+                    { id: 2, name: 'Delete' },
+                ],
+                id: 1,
+            },
             { name: 'Full name', id: 2 },
             { name: 'Nick name', id: 3 },
             { name: 'Status', id: 4 },
         ],
         vi: [
-            { name: 'Nền', id: 0 },
-            { name: 'Ảnh đại diện', id: 1 },
+            {
+                name: 'Nền',
+                icon: [
+                    { id: 1, name: 'Thay đổi' },
+                    { id: 2, name: 'Xoá' },
+                ],
+                id: 0,
+            },
+            {
+                name: 'Ảnh đại diện',
+                icon: [
+                    { id: 1, name: 'Thay đổi' },
+                    { id: 2, name: 'Xoá' },
+                ],
+                id: 1,
+            },
             { name: 'Tên', id: 2 },
             { name: 'Biệt danh', id: 3 },
             { name: 'Dòng trạng thái', id: 4 },
@@ -88,41 +123,66 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
     useEffect(() => {
         setDataUser(user);
     }, [user]);
-    const handleChangeAvatar = async (e: { target: { files: any } }, id: number) => {
-        const data = e.target.files;
-        const file = data[0];
-        const options = {
-            maxSizeMB: 10,
-        };
-        if (file) {
-            if (
-                file.type.includes('image/jpg') ||
-                file.type.includes('image/jpeg') ||
-                file.type.includes('image/png')
-            ) {
-                const img = URL.createObjectURL(file);
-                const sizeImage = Number((file.size / 1024 / 1024).toFixed(1));
-                if (sizeImage <= 8) {
-                    const base64 = await CommonUtils.getBase64(file);
-                    const res = await userAPI.changesOne(
-                        token,
-                        base64,
-                        id === 0 ? { background: 'background' } : { avatar: 'avatar' },
-                    );
-                    console.log('number', res, id);
-                    if (res === 1) {
-                        if (id === 0) {
-                            dispatch(changeBackground(img));
-                            setDataUser({ ...dataUser, background: img });
-                        } else {
-                            dispatch(changeAvatar(img));
-                            setDataUser({ ...dataUser, avatar: img });
-                        }
-                    }
+    const handleChangeAvatar = async (e?: { target: { files: any } }, id?: number) => {
+        const data = e?.target.files;
+        if (data?.length > 0) {
+            const file = data[0];
 
-                    //   uploadRef.current.push({ link: URL.createObjectURL(compressedFile), type: 'image' });
-                } else {
-                    dispatch(setTrueErrorServer(`${sizeImage}MB big than our limit is 8MB`));
+            console.log('eee');
+
+            if (file) {
+                if (
+                    file.type.includes('image/jpg') ||
+                    file.type.includes('image/jpeg') ||
+                    file.type.includes('image/png')
+                ) {
+                    const img = URL.createObjectURL(file);
+                    const sizeImage = Number((file.size / 1024 / 1024).toFixed(1));
+                    if (sizeImage <= 8) {
+                        setLoading(true);
+                        const base64 = await CommonUtils.getBase64(file);
+                        const res = await userAPI.changesOne(
+                            token,
+                            base64,
+                            id === 0 ? { background: 'background' } : { avatar: 'avatar' },
+                        );
+                        console.log('number', res, id);
+                        if (res === 1) {
+                            setLoading(false);
+                            if (id === 0) {
+                                setUserFirst({ ...userFirst, background: img });
+                                setDataUser({ ...dataUser, background: img });
+                            } else {
+                                setUserFirst({ ...userFirst, avatar: img });
+                                setDataUser({ ...dataUser, avatar: img });
+                            }
+                        }
+
+                        //   uploadRef.current.push({ link: URL.createObjectURL(compressedFile), type: 'image' });
+                    } else {
+                        dispatch(setTrueErrorServer(`${sizeImage}MB big than our limit is 8MB`));
+                    }
+                }
+            }
+        } else {
+            console.log('delete', id, data, dataUser.avatar);
+            if (dataUser.avatar || dataUser.background) {
+                setLoading(true);
+                const res = await userAPI.changesOne(
+                    token,
+                    null,
+                    id === 0 ? { background: 'background' } : { avatar: 'avatar' },
+                );
+                console.log('number', res, id);
+                if (res === 1) {
+                    setLoading(false);
+                    if (id === 0) {
+                        setUserFirst({ ...userFirst, background: null });
+                        setDataUser({ ...dataUser, background: null });
+                    } else {
+                        setUserFirst({ ...userFirst, avatar: null });
+                        setDataUser({ ...dataUser, avatar: null });
+                    }
                 }
             }
         }
@@ -162,6 +222,8 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
             height: 90px;
             border-radius: 50%;
             padding: 3px;
+            position: relative;
+            overflow: hidden;
            ${online.includes(userId) ? 'border: 1px solid #418a7a;' : 'border: 1px solid #696969;'};
             @media (min-width: 600px){
                 min-width: ${130 / (leng > 1 ? leng - 0.5 : leng) + 'px;'}
@@ -235,11 +297,10 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
         min-width: 100%;
     }`;
     console.log(room, 'room');
-    const buttons: { [en: string]: string[]; vi: string[] } = {
-        en: ['Add Friend', 'Messenger', 'Follow'],
-        vi: ['Kết bạn', 'Nhắn tin', 'Theo dõi'],
-    };
+
     const cssBt = `color: ${colorText};
+            width: 110px;
+            justify-content: center;
             padding: 9px;
             font-size: 1.3rem;
             margin: 0 5px;
@@ -248,11 +309,107 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                 font-size: 1.5rem;
             }
     `;
+    const handleAddF = () => {
+        console.log('add friend');
+    };
+    const handleConfirm = () => {
+        console.log('handleConfirm');
+    };
+    const handleAbolish = () => {
+        console.log('handleAbolish');
+    };
+    const handleMessenger = () => {
+        console.log('handleMessenger');
+    };
+    const handleFollower = () => {
+        console.log('handleFollowe');
+    };
+    const handleFriend = () => {
+        console.log('handleFriend');
+    };
+    const buttons: {
+        [en: string]: { name: string; onClick: () => void }[];
+        vi: { name: string; onClick: () => void }[];
+    } = {
+        en: [
+            {
+                name:
+                    id_f_user !== userId
+                        ? level === 1
+                            ? 'Confirm'
+                            : level === 2
+                            ? 'Friend'
+                            : 'Add Friend'
+                        : level === 1
+                        ? 'Abolish'
+                        : level === 2
+                        ? 'Friend'
+                        : 'Add Friend',
+                onClick:
+                    id_f_user !== userId
+                        ? level === 1
+                            ? handleConfirm
+                            : level === 2
+                            ? handleAddF
+                            : handleAddF
+                        : level === 1
+                        ? handleAbolish
+                        : level === 2
+                        ? handleFriend
+                        : handleAddF,
+            },
+            { name: 'Messenger', onClick: handleMessenger },
+            { name: 'Follow', onClick: handleFollower },
+        ],
+        vi: [
+            {
+                name:
+                    id_f_user !== userId
+                        ? level === 1
+                            ? 'Chấp nhận'
+                            : level === 2
+                            ? 'Bạn bè'
+                            : 'Kêt bạn'
+                        : level === 1
+                        ? 'Thu hồi'
+                        : level === 2
+                        ? 'Bạn bè'
+                        : 'Kêt bạn',
+                onClick:
+                    id_f_user !== userId
+                        ? level === 1
+                            ? handleConfirm
+                            : level === 2
+                            ? handleAddF
+                            : handleAddF
+                        : level === 1
+                        ? handleAbolish
+                        : level === 2
+                        ? handleFriend
+                        : handleAddF,
+            },
+            { name: 'Nhắn tin', onClick: handleMessenger },
+            { name: 'Theo dõi', onClick: handleFollower },
+        ],
+    };
+    const moreCss =
+        id_f_user !== userId
+            ? level === 1
+                ? 'background-color: #095b00;'
+                : level === 2
+                ? ''
+                : ''
+            : level === 1
+            ? 'background-color: #902525;'
+            : level === 2
+            ? ''
+            : '';
+    const btss = [
+        { text: buttons[lg][0].name, css: cssBt, onClick: buttons[lg][0].onClick },
+        { text: buttons[lg][1].name, css: cssBt + 'background-color: #0d62b4;', onClick: buttons[lg][1].onClick },
+        { text: buttons[lg][2].name, css: cssBt + 'padding: 9px 21px;', onClick: buttons[lg][2].onClick },
+    ];
 
-    // if (dataUser.background) {
-    //     const bg = CommonUtils.convertBase64(dataUser.background);
-    //     dataUser.background = bg;
-    // }
     return (
         <Div css={css}>
             {(room.background || room.avatar) && (
@@ -271,7 +428,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
             <DivPerson>
                 <Div css={cssBg}>
                     {/* {user?.background && ( */}
-                    {user.background && (
+                    {dataUser.background && (
                         <Img
                             src={dataUser.background}
                             alt={dataUser?.fullName}
@@ -290,9 +447,64 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                             alt={dataUser?.fullName}
                             gender={dataUser?.gender}
                             radius="50%"
-                            css=""
+                            css="z-index: 1;"
                         />
+                        {loading && (
+                            <DivLoading
+                                css={`
+                                    position: absolute;
+                                    top: -61px;
+                                    right: 50%;
+                                    left: 50%;
+                                    translate: -50%;
+                                `}
+                            >
+                                <Div
+                                    css={`
+                                        width: 70px;
+                                        height: 200px;
+                                        animation: bg-color-animation 5s infinite;
+                                        @keyframes bg-color-animation {
+                                            0% {
+                                                background-color: #f67575;
+                                            }
+                                            10% {
+                                                background-color: #fdf982;
+                                            }
+                                            20% {
+                                                background-color: #97ff60;
+                                            }
+                                            30% {
+                                                background-color: #904ef3;
+                                            }
+                                            40% {
+                                                background-color: #7360ed;
+                                            }
+                                            50% {
+                                                background-color: #ff7cf0;
+                                            }
+                                            60% {
+                                                background-color: #88f588;
+                                            }
+                                            70% {
+                                                background-color: #88cff5;
+                                            }
+                                            80% {
+                                                background-color: #eef080;
+                                            }
+                                            90% {
+                                                background-color: #ffffff;
+                                            }
+                                            100% {
+                                                background-color: #373937;
+                                            }
+                                        }
+                                    `}
+                                ></Div>
+                            </DivLoading>
+                        )}
                     </Div>
+
                     <Div css={cssName}>
                         <Hname>{valueName || dataUser.fullName}</Hname>
                         {categories === 2 && (
@@ -375,13 +587,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                         }
                     `}
                 >
-                    <Buttons
-                        text={[
-                            { text: 'Add Friend', css: cssBt },
-                            { text: 'Messenger', css: cssBt },
-                            { text: 'Follow', css: cssBt + 'padding: 9px 21px;' },
-                        ]}
-                    />
+                    {dataUser.id !== userId && <Buttons text={btss} />}
                 </Div>
                 <Title colorText={colorText} colorBg={colorBg} data={dataUser.id_m_user} />
                 {/* <DivIntr>

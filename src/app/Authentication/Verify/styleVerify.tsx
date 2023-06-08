@@ -34,21 +34,7 @@ export const DivOtp = styled.div`
         width: 400px;
     }
 `;
-export const DivLoading = styled.div`
-    color: #fff;
-    width: 100%;
-    margin: 30px auto;
-    font-size: 2.5rem;
-    display: flex;
-    justify-content: center;
-    animation: loading 1.5s linear infinite;
 
-    @keyframes loading {
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-`;
 export const DivReSend = styled.div`
     font-size: 1.2rem;
     bottom: 0;

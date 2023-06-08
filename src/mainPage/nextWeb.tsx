@@ -53,19 +53,9 @@ import NextListWeb from './listWebs/ListWebs';
 import PeopleRequest from '~/restAPI/requestServers/socialNetwork/peopleAPI';
 import WarningBrowser from '~/reUsingComponents/ErrorBoudaries/Warning_browser';
 import CommonUtils from '~/utils/CommonUtils';
+import { PropsUserPer } from 'src/App';
 export const socket = io('http://localhost:3001', { transports: ['websocket'] });
 
-interface PropsRes {
-    avatar: string;
-    fullName: string;
-    status: string | number;
-    gender: number;
-    sn: string;
-    l: string;
-    w: string;
-    as: number;
-    warning_browser?: { err: number; dateTime: string; prohibit: boolean };
-}
 export interface PropsBg {
     persistedReducer: {
         background: {
@@ -79,15 +69,14 @@ const Website: React.FC<{
     setUserOnline: React.Dispatch<React.SetStateAction<string[]>>;
     userOnline: string[];
     idUser: string[];
-}> = ({ setUserOnline, userOnline, idUser }) => {
+    dataUser: PropsUserPer;
+}> = ({ setUserOnline, userOnline, idUser, dataUser }) => {
     const dispatch = useDispatch();
     const { colorText, colorBg } = useSelector((state: PropsBg) => state.persistedReducer.background);
-    const { avatar, background } = useSelector(
-        (state: { changeDataUser: { avatar: any; background: any } }) => state.changeDataUser,
-    );
+
     const [cookies, setCookie] = useCookies(['tks', 'k_user']);
     // const [darkShining, setDarkShining] = useState<boolean>(backgr);
-    const [user, setUser] = useState<PropsRes>();
+    // const [user, setUser] = useState<PropsUserPer | undefined>(dataUser);
 
     // const [friends, setFriends] = useState<{ idFriend: string }[]>([]);
     const [friendsOnline, setFriendsOnline] = useState<number>(0);
@@ -101,47 +90,50 @@ const Website: React.FC<{
         | undefined
     >();
     const userId = cookies.k_user;
-    useEffect(() => {
-        //  const data = GetFriend.friend(dispatch);
-        async function fectData() {
-            const res: PropsRes = await HttpRequestUser.getById(
-                cookies.tks,
-                cookies.k_user,
-                {
-                    avatar: 'avatar',
-                    fullName: 'fullname',
-                    status: 'status',
-                    gender: 'gender',
-                    as: 'as',
-                    sn: 'sn',
-                    l: 'l',
-                    w: 'w',
-                },
-                { position: 'position' },
-            );
-            if (res?.status === 9999) {
-                dispatch(setTrueErrorServer(''));
-            } else {
-                if (res?.fullName) {
-                    if (res.avatar) {
-                        const av: any = CommonUtils.convertBase64(res.avatar);
-                        res.avatar = av;
-                    }
 
-                    setUser({ ...res, avatar: res.avatar });
-                    setWarningBrs(res?.warning_browser);
-                    dispatch(changeThree({ sn: res.sn, l: res.l, w: res.w }));
-                }
-                const friends: { idFriend: string; idCurrentUser: string }[] = await PeopleRequest.getfriendAll(
-                    cookies.tks,
-                );
-                setFriends(friends);
-            }
-        }
-        fectData();
+    // useEffect(() => {
+    //     //  const data = GetFriend.friend(dispatch);
+    //     async function fectData() {
+    //         const res: PropsRes = await HttpRequestUser.getById(
+    //             cookies.tks,
+    //             cookies.k_user,
+    //             {
+    //                 avatar: 'avatar',
+    //                 fullName: 'fullname',
+    //                 status: 'status',
+    //                 gender: 'gender',
+    //                 as: 'as',
+    //                 sn: 'sn',
+    //                 l: 'l',
+    //                 w: 'w',
+    //             },
+    //             { position: 'position' },
+    //         );
+    //         console.log('second');
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    //         if (res?.status === 9999) {
+    //             dispatch(setTrueErrorServer(''));
+    //         } else {
+    //             if (res?.fullName) {
+    //                 if (res.avatar) {
+    //                     const av: any = CommonUtils.convertBase64(res.avatar);
+    //                     res.avatar = av;
+    //                 }
+
+    //                 setUser({ ...res, avatar: res.avatar });
+    //                 setWarningBrs(res?.warning_browser);
+    //                 dispatch(changeThree({ sn: res.sn, l: res.l, w: res.w }));
+    //             }
+    //             const friends: { idFriend: string; idCurrentUser: string }[] = await PeopleRequest.getfriendAll(
+    //                 cookies.tks,
+    //             );
+    //             setFriends(friends);
+    //         }
+    //     }
+    //     fectData();
+
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
 
     console.log(friends);
     useEffect(() => {
@@ -152,7 +144,7 @@ const Website: React.FC<{
         });
     }, []);
     useEffect(() => {
-        if (user?.as !== 0) {
+        if (dataUser.as !== 0) {
             socket.emit('sendId', userId);
             socket.on('user connectedd', (re) => {
                 console.log(`connected`, JSON.parse(re));
@@ -165,7 +157,7 @@ const Website: React.FC<{
         } else {
             socket.emit('offline', userId);
         }
-    }, [user]);
+    }, [dataUser]);
     useEffect(() => {
         const am = friends?.reduce((total, value) => {
             return (userOnline.includes(value.idFriend) && !value.idFriend.includes(userId)) ||
@@ -277,22 +269,22 @@ const Website: React.FC<{
         dispatch(onPersonalPage());
     };
     const onli = userOnline.includes(userId) ? 'border: 1px solid #418a7a;' : 'border: 1px solid #696969;';
-    console.log('userrrrrr', user);
+    console.log('userrrrrr', dataUser);
     return (
         <>
             <DivMainPage>
                 {warningBrs && (
                     <WarningBrowser currentPage={currentPage} warningBros={warningBrs} setWarningBrs={setWarningBrs} />
                 )}
-                {user ? (
+                {dataUser ? (
                     <>
                         <Suspense>
                             {!idUser.includes(userId) && (
                                 <Avatar
                                     profile
-                                    src={avatar || user?.avatar || ''}
-                                    alt={user?.fullName}
-                                    gender={user?.gender}
+                                    src={dataUser.avatar}
+                                    alt={dataUser.fullName}
+                                    gender={dataUser.gender}
                                     radius="50%"
                                     id={cookies.k_user}
                                     css={`
@@ -311,9 +303,9 @@ const Website: React.FC<{
                                 currentPage={currentPage}
                                 listPage={optionWebsite}
                                 dataUser={{
-                                    avatar: avatar || user.avatar,
-                                    fullName: user.fullName,
-                                    gender: user.gender,
+                                    avatar: dataUser.avatar,
+                                    fullName: dataUser.fullName,
+                                    gender: dataUser.gender,
                                 }}
                             />
                         </Suspense>
@@ -336,15 +328,15 @@ const Website: React.FC<{
                                     >
                                         <Avatar
                                             profile
-                                            src={avatar || user?.avatar || ''}
-                                            alt={user?.fullName}
-                                            gender={user?.gender}
+                                            src={dataUser.avatar}
+                                            alt={dataUser.fullName}
+                                            gender={dataUser.gender}
                                             radius="50%"
                                             id={cookies.k_user}
                                         />
                                     </DivAvatar>
-                                    <HfullName color={colorText}>{user?.fullName}</HfullName>
-                                    <Pstatus color={colorText}>{user?.status}</Pstatus>
+                                    <HfullName color={colorText}>{dataUser.fullName}</HfullName>
+                                    <Pstatus color={colorText}>{dataUser.status}</Pstatus>
                                 </DivPersonalPage>
                                 <DivChangeColorBG>
                                     <Background dispatch={dispatch} />
@@ -362,7 +354,11 @@ const Website: React.FC<{
                                                 color={colorText}
                                                 onClick={() =>
                                                     setOption(
-                                                        <Tools colorText={colorText} colorBg={colorBg} as={user.as} />,
+                                                        <Tools
+                                                            colorText={colorText}
+                                                            colorBg={colorBg}
+                                                            as={dataUser.as}
+                                                        />,
                                                     )
                                                 }
                                             >

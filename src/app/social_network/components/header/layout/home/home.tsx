@@ -31,15 +31,16 @@ interface PropsHome {
     colorBg: number;
     colorText: string;
     home: PropsTextHome;
-    dataUser?: PropsUserHome;
+    dataUser: PropsUserHome;
 }
 const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
     const dispatch = useDispatch();
     const [cookies] = useCookies(['tks', 'k_user']);
-    const [user, setUser] = useState<PropsUserHome | undefined>(dataUser);
     const token = cookies.tks;
     const userId = cookies.k_user;
+
     const { userBar, form } = home;
+
     useEffect(() => {
         async function fetchData() {
             // You can await here
@@ -80,9 +81,9 @@ const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
                     onClick={handleOpenForm}
                 >
                     <Avatar
-                        src={user?.avatar}
-                        gender={user?.gender}
-                        alt={user?.fullName}
+                        src={dataUser.avatar}
+                        gender={dataUser.gender}
+                        alt={dataUser.fullName}
                         radius="50%"
                         css={`
                             width: 38px;
@@ -121,7 +122,7 @@ const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
                                 }
                             `}
                         >
-                            {user?.fullName}
+                            {dataUser.fullName}
                         </H3>
                         <P
                             css={`
@@ -142,7 +143,7 @@ const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
                     form={form}
                     colorBg={colorBg}
                     colorText={colorText}
-                    user={user}
+                    user={dataUser}
                 />
                 <Posts colorBg={colorBg} colorText={colorText} />
             </DivPost>

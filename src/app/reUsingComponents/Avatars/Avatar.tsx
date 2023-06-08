@@ -16,7 +16,7 @@ interface _Avatar {
     fallback?: any;
     width?: string;
     radius?: string;
-    gender?: any;
+    gender: number | undefined;
     onClick?: (args: any) => void;
     css?: string;
     profile?: boolean;
@@ -28,20 +28,23 @@ const Avatar: React.FC<_Avatar> = ({
     alt,
     width,
     radius,
-    gender = false,
+    gender,
     fallback: Fallback = gender === 0 ? Images.defaultAvatarMale : gender === 1 ? Images.defaultAvatarFemale : null,
     onClick,
     css,
     profile = false,
 }) => {
-    console.log('av', gender, Fallback);
     const dispatch = useDispatch();
     const [idUser] = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow.idUser);
     const [avatar, setAvatar] = useState<boolean>(false);
-    const [avatarFallback, setAvatarFallback] = useState<string>(!src ? Fallback : src);
+    const [avatarFallback, setAvatarFallback] = useState<string>(() => {
+        return !src ? Fallback : src;
+    });
+
     const [repetitions, setRepetitions] = useState<number>(0);
-    const [srss, setSrss] = useState(() => CommonUtils.convertBase64(src));
     const handleErrorImage = () => {
+        console.log('err');
+
         setAvatarFallback(Fallback);
         setRepetitions((pev) => pev + 1);
         if (repetitions >= 2) {
@@ -53,12 +56,11 @@ const Avatar: React.FC<_Avatar> = ({
     const events = {
         onClick,
     };
-    console.log(src, 'src');
 
     const handleOpentProfile = () => {
         if (profile) dispatch(setIdUser([id]));
     };
-    console.log(src, 'ssc');
+    console.log(src, avatarFallback, 'avatarFallback', Fallback);
 
     return avatar ? (
         <FaUserCircle />

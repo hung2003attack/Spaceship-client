@@ -2,9 +2,9 @@ import { ReactNode, SetStateAction, useEffect, useState } from 'react';
 
 import authHttpRequest from '~/restAPI/requestServers/authRequest/authRequest';
 
-import { Htitle } from '~/reUsingComponents/styleComponents/styleComponents';
-import { EmailI, LoadingI, PhoneI, SendOPTI, ResTartI, UndoIRegister } from '~/assets/Icons/Icons';
-import { DivExpireTime, DivLoading, DivOtp, DivReSend, DivSendMail, DivVerifymail, Form } from './styleVerify';
+import { DivLoading, Htitle } from '~/reUsingComponents/styleComponents/styleComponents';
+import { EmailI, LoadingI, PhoneI, SendOPTI } from '~/assets/Icons/Icons';
+import { DivExpireTime, DivOtp, DivReSend, DivSendMail, DivVerifymail, Form } from './styleVerify';
 import { Pcontent, SpanIconPhoneMail } from '../Register/styleRegister';
 import { Button, Input } from '~/reUsingComponents/styleComponents/styleDefault';
 interface PropsVerify {

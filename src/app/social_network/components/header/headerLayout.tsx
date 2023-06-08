@@ -48,11 +48,13 @@ export interface PropsSN {
         title: string;
         children: PropsTextFriends;
     };
-    //
-    dataUser?: { avatar: string; fullName: string; gender: number };
 }
-const Header: React.FC<PropsSN> = ({ logo, sett, home, exchange, search, video, friends, location, dataUser }) => {
+const Header: React.FC<{
+    dataText: PropsSN;
+    dataUser: { avatar: string; fullName: string; gender: number };
+}> = ({ dataText, dataUser }) => {
     const dispatch = useDispatch();
+    const { logo, sett, home, exchange, search, video, friends, location } = dataText;
     const { colorBg, colorText } = useSelector((state: PropsBg) => state.persistedReducer.background);
     const [border, setBorder] = useState<string>(() => {
         const location = window.location.pathname;
@@ -170,8 +172,8 @@ const Header: React.FC<PropsSN> = ({ logo, sett, home, exchange, search, video, 
                         onClick={() => setBorder('people')}
                         onDoubleClick={() => {
                             dispatch(people(true));
-                            console.log('sss');
                         }}
+                        onTouchStart={() => dispatch(people(true))}
                     />
                     <Div
                         width="70px"

@@ -9,10 +9,11 @@ import { useCookies } from 'react-cookie';
 
 import { io } from 'socket.io-client';
 import moment from 'moment';
-import { DotI } from '~/assets/Icons/Icons';
+import { DotI, LoadingI } from '~/assets/Icons/Icons';
 import { text } from 'stream/consumers';
 import { people } from '~/redux/reload';
 import CommonUtils from '~/utils/CommonUtils';
+import { DivLoading } from '~/reUsingComponents/styleComponents/styleComponents';
 const socket = io('http://localhost:3001', { transports: ['websocket'] });
 
 export interface PropsTextFriends {
@@ -181,6 +182,32 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
     });
     const [dataTest, setDataTest] = useState<any>();
     const [dataConfirm, setDataConfirm] = useState<{ ok: number; id_fr: string; id: string }>();
+    const [loading, setLoading] = useState<boolean>(false);
+    async function fetch(rl: string = 'no') {
+        setLoading(true);
+        const res = await peopleAPI.getPeople(accessToken, rl);
+        res.friends.map((f: { avatar: string | undefined }) => {
+            if (f.avatar) {
+                const av = CommonUtils.convertBase64(f.avatar);
+                f.avatar = av;
+            }
+        });
+        res.strangers.map((f: { avatar: string | undefined }) => {
+            if (f.avatar) {
+                const av = CommonUtils.convertBase64(f.avatar);
+                f.avatar = av;
+            }
+        });
+        res.family.map((f: { avatar: string | undefined }) => {
+            if (f.avatar) {
+                const av = CommonUtils.convertBase64(f.avatar);
+                f.avatar = av;
+            }
+        });
+        setLoading(false);
+        setData(res);
+        console.log(res, 'res here');
+    }
     useEffect(() => {
         console.log('dataTest', data.strangers, dataTest);
         const newStranger = data.strangers.filter((x: PropsStrangers) => {
@@ -216,11 +243,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
         });
         setData({ ...data, strangers: newStranger });
     }, [dataConfirm]);
-    async function fetch(rl: string = 'no') {
-        const res = await peopleAPI.getPeople(accessToken, rl);
-        setData(res);
-        console.log(res, 'res here');
-    }
+
     useEffect(() => {
         fetch();
         socket.on(`Request others?id=${userId}`, (msg: string) => {
@@ -772,7 +795,11 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                         <H3 css="width: 100%; text-align: center; padding: 3px; background-color: #353535; font-size: 1.5rem;">
                             {type.charAt(0).toUpperCase() + type.slice(1)}
                         </H3>
-
+                        {loading && (
+                            <DivLoading>
+                                <LoadingI />
+                            </DivLoading>
+                        )}
                         {data[type_d]?.map((res: any) => {
                             console.log(
                                 res,

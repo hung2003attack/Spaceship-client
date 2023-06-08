@@ -53,7 +53,7 @@ export const Button = styled.button<Propss>`
     ${(props) => props.css}
 `;
 interface PropsButtons {
-    text: { css: string; text: string; tx?: string; onClick?: (args: any) => void }[];
+    text: { css: string; text: string; tx?: string; onClick?: (args?: any) => void }[];
 }
 export const Buttons: React.FC<PropsButtons | any> = ({ text }) => {
     return text.map((vl: { css: string; text: string; tx: string; onClick?: (args: any) => void }) => (
