@@ -10,7 +10,7 @@ export const DivItemsType = styled.div`
 `;
 export const DivsetC = styled.div`
     display: flex;
-    font-size: 1.6rem;
+    font-size: ${(props: { size?: string }) => props.size || '16px'};
     border-radius: 50%;
     padding: 2px;
     background-color: #338fdfe6;

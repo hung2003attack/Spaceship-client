@@ -9,6 +9,7 @@ const Hovertitle: React.FC<hover> = ({
     children,
     //Event
     onClick,
+    onDoubleClick,
     //href,
     href,
     to,
@@ -40,6 +41,7 @@ const Hovertitle: React.FC<hover> = ({
     };
     const propEvents = {
         onClick,
+        onDoubleClick,
     };
     const propLink = {
         href,

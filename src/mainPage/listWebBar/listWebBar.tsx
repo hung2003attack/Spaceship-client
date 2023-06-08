@@ -31,27 +31,26 @@ const ListWebBar: React.FC<Props> = ({
         setShowNextWebsite(!showNextWebsite);
     };
     const listOptions = [
-        { id: 0, part: '/', icon: <HomeI />, name: 'Home', onClick: handleNextStart },
-        { id: 1, part: '/SN', icon: <NewI />, name: 'News', onClick: hanNextWebsite1 },
-        { id: 2, part: '/SD', icon: <BookI />, name: 'Study', onClick: hanNextWebsite2 },
-        { id: 3, part: '/W', icon: <WorkI />, name: 'Work', onClick: hanNextWebsite3 },
+        { id: 0, part: '/', icon: <HomeI />, onClick: handleNextStart },
+        { id: 1, part: '/SN', icon: <NewI />, onClick: hanNextWebsite1 },
+        { id: 2, part: '/SD', icon: <BookI />, onClick: hanNextWebsite2 },
+        { id: 3, part: '/W', icon: <WorkI />, onClick: hanNextWebsite3 },
     ];
     const elements = () => {
         return listOptions.map((res) => (
             <ButtonLink key={res.id} to={res.part} onClick={res.onClick}>
                 <div className={clsx(styles.website)}>{res.icon}</div>
-                <P css="font-size: 1.5rem; position: absolute; bottom: 3px;">{res.name}</P>
             </ButtonLink>
         ));
     };
     return (
         <Div
-            width="350px"
+            width="300px"
             css={`
                 height: 100px;
                 position: fixed;
                 transition: all 0.5s linear;
-                right: ${showNextWebsite ? '0' : '-350px'};
+                right: ${showNextWebsite ? '0' : '-301px'};
                 top: 300px;
                 z-index: 102;
             `}
@@ -69,7 +68,7 @@ const ListWebBar: React.FC<Props> = ({
             </Div>
 
             <DivList>
-                <A css="min-width: 85px; height: 85px; padding: 15px; position: relative;" href="/">
+                <A css="min-width: 60px; width: 60px; height: 60px; padding: 15px; position: relative;" href="/">
                     <img src={Images.logo} alt="d" />
                 </A>
                 {elements()}

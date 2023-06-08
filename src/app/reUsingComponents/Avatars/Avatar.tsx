@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { memo, useState, useEffect, useLayoutEffect } from 'react';
+import React, { memo, useState, useEffect, useLayoutEffect, useCallback } from 'react';
 
 import { FaUserCircle } from 'react-icons/fa';
 import Images from '../../assets/images';
@@ -7,10 +7,11 @@ import { Img } from '../styleComponents/styleDefault';
 import { useDispatch, useSelector } from 'react-redux';
 import { DivImg } from '../styleComponents/styleComponents';
 import { InitialStateHideShow, onPersonalPage, onSetting, setIdUser } from '../../redux/hideShow';
+import CommonUtils from '~/utils/CommonUtils';
 
 interface _Avatar {
     id?: string;
-    src?: string | undefined;
+    src?: any;
     alt?: string | undefined;
     fallback?: any;
     width?: string;
@@ -39,9 +40,8 @@ const Avatar: React.FC<_Avatar> = ({
     const [avatar, setAvatar] = useState<boolean>(false);
     const [avatarFallback, setAvatarFallback] = useState<string>(!src ? Fallback : src);
     const [repetitions, setRepetitions] = useState<number>(0);
+    const [srss, setSrss] = useState(() => CommonUtils.convertBase64(src));
     const handleErrorImage = () => {
-        console.log('ko');
-
         setAvatarFallback(Fallback);
         setRepetitions((pev) => pev + 1);
         if (repetitions >= 2) {
@@ -53,13 +53,12 @@ const Avatar: React.FC<_Avatar> = ({
     const events = {
         onClick,
     };
-    console.log(idUser);
+    console.log(src, 'src');
 
     const handleOpentProfile = () => {
         if (profile) dispatch(setIdUser([id]));
     };
-
-    console.log(gender, avatarFallback, Fallback, '++');
+    console.log(src, 'ssc');
 
     return avatar ? (
         <FaUserCircle />

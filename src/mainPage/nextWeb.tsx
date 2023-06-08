@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useRef, useLayoutEffect, useEffect, Suspense } from 'react';
+import React, { memo, useState, useRef, useLayoutEffect, useEffect, Suspense } from 'react';
 import { useCookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';
+import { Buffer } from 'buffer';
 
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import Button from '~/reUsingComponents/Buttoms/ListButton/Buttons';
@@ -51,6 +52,7 @@ import Profile from './profiles/profile';
 import NextListWeb from './listWebs/ListWebs';
 import PeopleRequest from '~/restAPI/requestServers/socialNetwork/peopleAPI';
 import WarningBrowser from '~/reUsingComponents/ErrorBoudaries/Warning_browser';
+import CommonUtils from '~/utils/CommonUtils';
 export const socket = io('http://localhost:3001', { transports: ['websocket'] });
 
 interface PropsRes {
@@ -73,13 +75,20 @@ export interface PropsBg {
     };
 }
 
-const Website: React.FC = () => {
+const Website: React.FC<{
+    setUserOnline: React.Dispatch<React.SetStateAction<string[]>>;
+    userOnline: string[];
+    idUser: string[];
+}> = ({ setUserOnline, userOnline, idUser }) => {
     const dispatch = useDispatch();
     const { colorText, colorBg } = useSelector((state: PropsBg) => state.persistedReducer.background);
+    const { avatar, background } = useSelector(
+        (state: { changeDataUser: { avatar: any; background: any } }) => state.changeDataUser,
+    );
     const [cookies, setCookie] = useCookies(['tks', 'k_user']);
     // const [darkShining, setDarkShining] = useState<boolean>(backgr);
     const [user, setUser] = useState<PropsRes>();
-    const [userOnline, setUserOnline] = useState<string[]>([]);
+
     // const [friends, setFriends] = useState<{ idFriend: string }[]>([]);
     const [friendsOnline, setFriendsOnline] = useState<number>(0);
     const [friends, setFriends] = useState<{ idFriend: string; idCurrentUser: string }[]>([]);
@@ -95,24 +104,33 @@ const Website: React.FC = () => {
     useEffect(() => {
         //  const data = GetFriend.friend(dispatch);
         async function fectData() {
-            const res: PropsRes = await HttpRequestUser.getById(cookies.tks, cookies.k_user, {
-                avatar: 'avatar',
-                fullName: 'fullname',
-                status: 'status',
-                gender: 'gender',
-                as: 'as',
-                sn: 'sn',
-                l: 'l',
-                w: 'w',
-            });
+            const res: PropsRes = await HttpRequestUser.getById(
+                cookies.tks,
+                cookies.k_user,
+                {
+                    avatar: 'avatar',
+                    fullName: 'fullname',
+                    status: 'status',
+                    gender: 'gender',
+                    as: 'as',
+                    sn: 'sn',
+                    l: 'l',
+                    w: 'w',
+                },
+                { position: 'position' },
+            );
             if (res?.status === 9999) {
                 dispatch(setTrueErrorServer(''));
             } else {
-                console.log(res, 'user heeheheh');
                 if (res?.fullName) {
-                    setUser(res);
+                    if (res.avatar) {
+                        const av: any = CommonUtils.convertBase64(res.avatar);
+                        res.avatar = av;
+                    }
+
+                    setUser({ ...res, avatar: res.avatar });
                     setWarningBrs(res?.warning_browser);
-                    dispatch(changeThree(res));
+                    dispatch(changeThree({ sn: res.sn, l: res.l, w: res.w }));
                 }
                 const friends: { idFriend: string; idCurrentUser: string }[] = await PeopleRequest.getfriendAll(
                     cookies.tks,
@@ -258,7 +276,7 @@ const Website: React.FC = () => {
     const handleProfileMain = () => {
         dispatch(onPersonalPage());
     };
-
+    const onli = userOnline.includes(userId) ? 'border: 1px solid #418a7a;' : 'border: 1px solid #696969;';
     console.log('userrrrrr', user);
     return (
         <>
@@ -269,10 +287,34 @@ const Website: React.FC = () => {
                 {user ? (
                     <>
                         <Suspense>
+                            {!idUser.includes(userId) && (
+                                <Avatar
+                                    profile
+                                    src={avatar || user?.avatar || ''}
+                                    alt={user?.fullName}
+                                    gender={user?.gender}
+                                    radius="50%"
+                                    id={cookies.k_user}
+                                    css={`
+                                        width: 40px;
+                                        height: 40px;
+                                        position: fixed;
+                                        top: 134px;
+                                        right: 7px;
+                                        z-index: 88;
+                                        border-radius: 50%;
+                                        ${onli}
+                                    `}
+                                />
+                            )}
                             <CurrentPageL
                                 currentPage={currentPage}
                                 listPage={optionWebsite}
-                                dataUser={{ avatar: user.avatar, fullName: user.fullName, gender: user.gender }}
+                                dataUser={{
+                                    avatar: avatar || user.avatar,
+                                    fullName: user.fullName,
+                                    gender: user.gender,
+                                }}
                             />
                         </Suspense>
                         {!optionWebsite && (
@@ -289,12 +331,12 @@ const Website: React.FC = () => {
                                 >
                                     <DivAvatar
                                         css={`
-                                            ${userOnline.includes(userId) ? 'border: 2px solid #418a7a;' : ''}
+                                            ${onli}
                                         `}
                                     >
                                         <Avatar
                                             profile
-                                            src={user?.avatar || ''}
+                                            src={avatar || user?.avatar || ''}
                                             alt={user?.fullName}
                                             gender={user?.gender}
                                             radius="50%"
@@ -364,4 +406,4 @@ const Website: React.FC = () => {
     );
 };
 
-export default Website;
+export default memo(Website);

@@ -149,25 +149,28 @@ export const Hname = styled.h3<PropsHname>`
     ${(props) => props.css}
 `;
 interface PropsClose {
-    size: string;
+    size?: string;
     top?: string;
     left?: string;
     width?: string;
     bg?: string;
     right?: string;
     css?: string;
+    position?: string;
+    index?: number;
 }
 export const DivPos = styled.div<PropsClose>`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: ${(props) => props.width};
     height: ${(props) => props.width};
     top: ${(props) => props.top};
     left: ${(props) => props.left};
     right: ${(props) => props.right};
     color: ${(props) => props.color};
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: ${(props) => props.position || 'absolute'};
+    z-index: ${(props) => props.index};
     font-size: ${(props) => props.size};
     cursor: var(--pointer);
     ${(props) => props.css}

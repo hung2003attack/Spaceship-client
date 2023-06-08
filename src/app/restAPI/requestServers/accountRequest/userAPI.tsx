@@ -24,16 +24,31 @@ export interface PropsParamsById {
     w?: string;
     as?: string;
 }
+interface PropsParamsMores {
+    position: string;
+    star?: string;
+    love?: string;
+    visit?: string;
+    follow?: string;
+    following?: string;
+}
 const cookies = new Cookies();
 class HttpRequestUser {
-    getById = async (token: string, id: string, params: PropsParamsById) => {
+    getById = async (
+        token: string,
+        id: string,
+        params: PropsParamsById,
+        mores: PropsParamsMores,
+        personal?: string,
+    ) => {
         try {
             const Axios = refreshToken.axiosJWTs(token);
             const res = await Axios.post('/SN/user/getById', {
                 id: id,
+                mores,
+                personal,
                 params: params,
             });
-
             return res.data;
         } catch (error) {
             console.log(error);
@@ -89,6 +104,20 @@ class HttpRequestUser {
         try {
             const Axios = refreshToken.axiosJWTs(token);
             const res = await Axios.get('/SN/user/delMessage');
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    changesOne = async (token: string, value: any, params: PropsParamsById) => {
+        try {
+            const Axios = refreshToken.axiosJWTs(token);
+            const res = await Axios.patch('/SN/user/changesOne', {
+                params: {
+                    params,
+                    value,
+                },
+            });
             return res.data;
         } catch (error) {
             console.log(error);

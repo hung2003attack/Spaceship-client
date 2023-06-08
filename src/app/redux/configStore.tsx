@@ -3,6 +3,8 @@ import hideShow from './hideShow';
 import home from './storeSocial_network/home';
 import background from './background';
 import changeLanguage from './languageRD';
+import changeDataUser from './changeData';
+import reload from './reload';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 const persistConfig = {
@@ -17,7 +19,7 @@ const rootReducer = combineReducers({
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
-    reducer: { persistedReducer, hideShow, home },
+    reducer: { persistedReducer, hideShow, home, changeDataUser, reload },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: {

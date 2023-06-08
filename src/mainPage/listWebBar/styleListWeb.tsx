@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 export const ButtonLink = styled(Link)`
-    min-width: 96px;
-    height: 90px;
+    min-width: 62px;
+    height: 60px;
     display: flex;
     justify-content: center;
     position: relative;

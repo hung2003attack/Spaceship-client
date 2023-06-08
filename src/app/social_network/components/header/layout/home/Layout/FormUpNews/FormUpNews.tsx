@@ -33,6 +33,7 @@ import { PropsUserHome } from '../../Home';
 import PreviewPost, { PropsPreViewFormHome } from './PreView';
 import { useDispatch } from 'react-redux';
 import { setTrueErrorServer } from '~/redux/hideShow';
+import CommonUtils from '~/utils/CommonUtils';
 export interface PropsFormHome {
     textarea: string;
     buttonOne: string;
@@ -109,11 +110,11 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user,
                     file[i].type.includes('image/png')
                 ) {
                     try {
-                        const compressedFile = await imageCompression(file[i], options);
+                        const compressedFile: any = await CommonUtils.compress(file[i]);
                         console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
                         console.log(`compressedFile size ${(compressedFile.size / 1024 / 1024).toFixed(1)} MB`); // smaller than maxSizeMB
                         const sizeImage = Number((compressedFile.size / 1024 / 1024).toFixed(1));
-                        if (sizeImage / 1024 / 1024 <= 8) {
+                        if (sizeImage <= 8) {
                             uploadRef.current.push({ link: URL.createObjectURL(compressedFile), type: 'image' });
                         } else {
                             dispatch(setTrueErrorServer(`${sizeImage}MB big than our limit is 8MB`));

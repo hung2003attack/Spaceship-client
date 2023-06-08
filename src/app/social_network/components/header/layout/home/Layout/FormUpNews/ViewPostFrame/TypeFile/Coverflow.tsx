@@ -7,11 +7,11 @@ import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import { Autoplay, EffectCoverflow, Pagination } from 'swiper';
-import './swiper.scss';
 import { Player } from 'video-react';
 import { Img } from '~/reUsingComponents/styleComponents/styleDefault';
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
-import { PlayI } from '~/assets/Icons/Icons';
+import { FullScreenI, PlayI, ScreenI } from '~/assets/Icons/Icons';
+import { DivSwiper } from './styleCoverflow';
 
 const Coverflow: React.FC<{
     file: {
@@ -19,9 +19,35 @@ const Coverflow: React.FC<{
         type: string;
     }[];
     colorText: string;
-}> = ({ file, colorText }) => {
+    full: number;
+    setFull: React.Dispatch<React.SetStateAction<number>>;
+}> = ({ file, colorText, full, setFull }) => {
     return (
-        <div id="swiperS">
+        <DivSwiper
+            css={`
+                ${full === 1
+                    ? 'position: fixed; top: 0; left: 0; background-color: #090808; height: 100%; z-index: 12;'
+                    : ''}
+            `}
+        >
+            {full !== 0 && (
+                <DivPos
+                    size="20px"
+                    top="-25px"
+                    right="11.5px"
+                    color={colorText}
+                    onClick={() => setFull(0)}
+                    css={`
+                        ${full > 0
+                            ? `${
+                                  full > 1 ? 'background-color: #a1a1a18a;' : 'background-color: #0304048a;'
+                              };position: fixed; top: 8px; right: 11.5px; color: #e2d2d2; font-size: 22px; z-index: 888; width: 35px; height: 35px;  transition: all 0.5s linear; `
+                            : ''}
+                    `}
+                >
+                    <ScreenI />
+                </DivPos>
+            )}
             <Swiper
                 effect={'coverflow'}
                 grabCursor={true}
@@ -54,7 +80,7 @@ const Coverflow: React.FC<{
                     </SwiperSlide>
                 ))}
             </Swiper>
-        </div>
+        </DivSwiper>
     );
 };
 export default Coverflow;

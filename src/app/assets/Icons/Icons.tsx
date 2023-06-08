@@ -28,6 +28,7 @@ import {
     AiOutlineLoading,
     AiOutlineHeart,
     AiOutlinePlayCircle,
+    AiOutlineStar,
 } from 'react-icons/ai';
 import { GiEarthAmerica, GiNewspaper } from 'react-icons/gi';
 import {
@@ -104,3 +105,4 @@ export const BanI = () => <MdNotInterested />;
 export const PlayI = () => <AiOutlinePlayCircle />;
 export const FullScreenI = () => <GoScreenFull />;
 export const ScreenI = () => <GoScreenNormal />;
+export const StarI = () => <AiOutlineStar />;

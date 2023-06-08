@@ -1,6 +1,7 @@
 export interface hover {
     children?: React.ReactNode | any;
     onClick?: (e?: any) => void;
+    onDoubleClick?: (e?: any) => void;
     anyTags?: any;
     Tags?: any;
     href?: string;

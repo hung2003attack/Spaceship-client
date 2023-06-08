@@ -51,3 +51,12 @@ export const DivPerson = styled.div`
     border-left: 1px solid;
     border-right: 1px solid;
 `;
+export const InputChangeP = styled.input`
+    width: 100%;
+    border: 0;
+    padding: 5px 45px 5px 5px;
+    border-radius: 5px;
+    background-color: #3d3d3dd4;
+    margin-bottom: 3px;
+    color: ${(props) => props.color};
+`;

@@ -1,7 +1,19 @@
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import { Button, Div, H3, Img, P, Span } from '~/reUsingComponents/styleComponents/styleDefault';
 import { PropsUserHome } from '../../Home';
-import { BanI, Bullseye, DotI, FriendI, HeartI, LockI, NextI, PlayI, ShareI } from '~/assets/Icons/Icons';
+import {
+    BanI,
+    Bullseye,
+    DotI,
+    FriendI,
+    FullScreenI,
+    HeartI,
+    LockI,
+    NextI,
+    PlayI,
+    ScreenI,
+    ShareI,
+} from '~/assets/Icons/Icons';
 import { Player } from 'video-react';
 import { DivAction, DivEmoji, DivWrapButton, SpanAmount } from './styleFormUpNews';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -65,11 +77,11 @@ const PreviewPost: React.FC<{
     const postTypes = [
         <DefaultType colorText={colorText} file={file} full={full} setFull={setFull} />,
         file.length > 3 ? (
-            <Coverflow colorText={colorText} file={file} />
+            <Coverflow colorText={colorText} file={file} full={full} setFull={setFull} />
         ) : (
             <P color="#c05d5d">Please select at least 3!</P>
         ),
-        <Grid file={file} column={column} />,
+        <Grid colorText={colorText} file={file} column={column} full={full} setFull={setFull} />,
     ];
     return (
         <>
@@ -85,6 +97,8 @@ const PreviewPost: React.FC<{
             >
                 {setPreView && (
                     <OptionType
+                        full={full}
+                        selectType={selectType}
                         column={column}
                         setColumn={setColumn}
                         setSelectType={setSelectType}
@@ -99,8 +113,21 @@ const PreviewPost: React.FC<{
                         width: 100%;
                         overflow: hidden;
                         background-color: ${colorBg === 1 ? '#292a2d' : ''};
+                        position: relative;
                     `}
                 >
+                    {full === 0 && (
+                        <DivPos
+                            size="18px"
+                            top="11px"
+                            right="46.5px"
+                            css="z-index: 1;"
+                            color={colorText}
+                            onClick={() => setFull(1)}
+                        >
+                            <FullScreenI />
+                        </DivPos>
+                    )}
                     <Div width="100%" css="height: fit-content; margin-top: 5px; position: relative;">
                         <Div
                             css={`

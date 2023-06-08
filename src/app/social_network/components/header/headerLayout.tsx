@@ -28,6 +28,7 @@ import { PropsTextHome } from './layout/Home/Home';
 import { PropsTextFriends } from './layout/MakingFriends/People';
 import { DivItems, Input } from './layout/MakingFriends/styleMakingFriends';
 import { Div } from '~/reUsingComponents/styleComponents/styleDefault';
+import { people } from '~/redux/reload';
 
 //button
 // to = Link tag, href = a tag
@@ -167,6 +168,10 @@ const Header: React.FC<PropsSN> = ({ logo, sett, home, exchange, search, video, 
                         size="25px"
                         color={colorText}
                         onClick={() => setBorder('people')}
+                        onDoubleClick={() => {
+                            dispatch(people(true));
+                            console.log('sss');
+                        }}
                     />
                     <Div
                         width="70px"

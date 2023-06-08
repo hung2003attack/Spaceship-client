@@ -2,10 +2,10 @@ import { AnyAction, Dispatch } from '@reduxjs/toolkit';
 import { HttpRequest } from '../httpRequest';
 import refreshToken from '~/refreshToken/refreshToken';
 class PeopleRequest {
-    getPeople = async (accessToken: string) => {
+    getPeople = async (accessToken: string, rl?: string) => {
         try {
             const axiosJWTss = refreshToken.axiosJWTs(accessToken);
-            const res = await axiosJWTss.get('/SN/people/getPeopleAll');
+            const res = await axiosJWTss.get(`/SN/people/getPeopleAll?rl=${rl}`);
             console.log(res, 'getPeople');
             return res.data;
         } catch (error) {

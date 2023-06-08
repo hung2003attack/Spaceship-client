@@ -4,6 +4,7 @@ import { DivContainer, DivImg, Hname } from '../../../../../reUsingComponents/st
 import { Button, Buttons, Div, P } from '../../../../../reUsingComponents/styleComponents/styleDefault';
 import { setIdUser } from '~/redux/hideShow';
 import { useDispatch } from 'react-redux';
+import CommonUtils from '~/utils/CommonUtils';
 interface PropsTagP {
     data: {
         id: string;
@@ -47,6 +48,7 @@ const TagProfle: React.FC<PropsTagP> = ({
             dispatch(setIdUser([id]));
         }
     };
+
     console.log('1', typesc);
     return (
         <Div width="100%" wrap="wrap">

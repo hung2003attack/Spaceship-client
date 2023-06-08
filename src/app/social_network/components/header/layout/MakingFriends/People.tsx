@@ -2,8 +2,8 @@
 import { Div, H3, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { DivItems, DivMenu, DivOptions, DivResults, DivSearch, Input } from './styleMakingFriends';
 import TagProfle from '~/social_network/components/Header/layout/MakingFriends/TagProfle';
-import { useState, useEffect, useLayoutEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState, useEffect, useLayoutEffect, memo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import peopleAPI from '~/restAPI/requestServers/socialNetwork/peopleAPI';
 import { useCookies } from 'react-cookie';
 
@@ -11,6 +11,8 @@ import { io } from 'socket.io-client';
 import moment from 'moment';
 import { DotI } from '~/assets/Icons/Icons';
 import { text } from 'stream/consumers';
+import { people } from '~/redux/reload';
+import CommonUtils from '~/utils/CommonUtils';
 const socket = io('http://localhost:3001', { transports: ['websocket'] });
 
 export interface PropsTextFriends {
@@ -109,6 +111,7 @@ interface PropsStrangers {
 }
 const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colorBg, dataUser }) => {
     const dispatch = useDispatch();
+    const reload = useSelector((state: { reload: { people: boolean } }) => state.reload.people);
     const [search, setSearch] = useState<string[]>([]);
     const [cookies, setCookies] = useCookies(['tks', 'k_user']);
     const accessToken: string = cookies.tks;
@@ -213,8 +216,8 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
         });
         setData({ ...data, strangers: newStranger });
     }, [dataConfirm]);
-    async function fetch() {
-        const res = await peopleAPI.getPeople(accessToken);
+    async function fetch(rl: string = 'no') {
+        const res = await peopleAPI.getPeople(accessToken, rl);
         setData(res);
         console.log(res, 'res here');
     }
@@ -224,8 +227,6 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
             setDataTest(JSON.parse(msg));
         });
         socket.on(`Del request others?id=${userId}`, (msg: string) => {
-            console.log('heree', msg);
-
             setDataTest(JSON.parse(msg));
         });
         socket.on(`Confirmed ${userId}`, (msg: string) => {
@@ -233,9 +234,14 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
         });
         socket.on(`Confirmed atInfo ${userId}`, (msg: string) => {
             if (msg) setDataConfirm(JSON.parse(msg));
-            console.log('yesssssssssssssssss');
         });
     }, []);
+    if (reload) {
+        console.log(reload, 'er');
+
+        fetch('yes');
+        dispatch(people(false));
+    }
 
     const optionS = friendsT.option;
     const menu = friendsT.menu;
@@ -400,6 +406,12 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
             name: type === 'strangers' ? 'Remove' : 'Delete',
         };
         const buttons = [];
+        const idU = res.id_friend?.idCurrentUser || res.id_f_user?.idCurrentUser;
+        const idFr = res.id_f_user?.idFriend || res.id_friend?.idFriend;
+        const level = res.id_friend?.level || res.id_f_user?.level;
+        const id_r_user = res.id_r_user?.id_user || res.id_relative?.id_user;
+        const id_r_r = res.id_relative?.id_relative || res.id_r_user?.id_relative;
+        const really = res.id_r_user?.really || res.id_relative?.really;
         function checkPeople() {
             if (res.id_f_user?.level === 2 || res.id_friend?.level === 2) {
                 buttons.push({
@@ -408,25 +420,13 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                     onClick: () => handleMessenger(res.id),
                 });
             } else {
-                if (
-                    (res.id_friend?.idCurrentUser ||
-                        res.id_f_user?.idCurrentUser ||
-                        res.id_friend?.idFriend ||
-                        res.id_f_user?.idFriend) &&
-                    (res.id_r_user?.id_user ||
-                        res.id_relative?.id_user ||
-                        res.id_r_user?.id_relative ||
-                        res.id_relative?.id_relative)
-                ) {
+                if ((idU || idFr) && (id_r_user || id_r_r)) {
                     console.log('yessss');
 
-                    if (
-                        (res.id_friend?.idCurrentUser === userId || res.id_f_user?.idCurrentUser === userId) &&
-                        (res.id_r_user?.id_user === userId || res.id_relative?.id_user === userId)
-                    ) {
+                    if (idU === userId && id_r_user === userId) {
                         console.log('friend and relative ---you');
 
-                        if (res.id_r_user?.id_user === userId || res.id_relative?.id_user === userId) {
+                        if (id_r_user === userId) {
                             fixCssB = 3;
                             buttons.push(
                                 {
@@ -447,7 +447,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                                     onClick: () => handleAbolish(res.id),
                                 },
                             );
-                        } else if (res.id_r_user?.id_relative === userId || res.id_relative?.id_relative === userId) {
+                        } else if (id_r_r === userId) {
                             fixCssB = 3;
                             buttons.push(
                                 {
@@ -485,10 +485,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                                 },
                             );
                         }
-                    } else if (
-                        (res.id_friend?.idFriend === userId || res.id_f_user?.idFriend === userId) &&
-                        (res.id_r_user?.id_relative === userId || res.id_relative?.id_relative === userId)
-                    ) {
+                    } else if (idFr === userId && id_r_r === userId) {
                         console.log('friend and relative ---others');
                         fixCssB = 3;
                         buttons.push(
@@ -510,10 +507,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                                 onClick: () => handleConfirm(res.id, 'relative'),
                             },
                         );
-                    } else if (
-                        (res.id_friend?.idFriend === userId || res.id_f_user?.idFriend === userId) &&
-                        (res.id_r_user?.id_user === userId || res.id_relative?.id_user === userId)
-                    ) {
+                    } else if (idFr === userId && id_r_user === userId) {
                         fixCssB = 3;
                         buttons.push(
                             {
@@ -535,10 +529,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                             },
                         );
                         console.log('friend --others-s __ relative --you-s');
-                    } else if (
-                        (res.id_friend?.idCurrentUser === userId || res.id_f_user?.idCurrentUser === userId) &&
-                        (res.id_r_user?.id_relative === userId || res.id_relative?.id_relative === userId)
-                    ) {
+                    } else if (idU === userId && id_r_user === userId) {
                         console.log('friend --you-s __ relative --others-s');
                         fixCssB = 3;
                         buttons.push(
@@ -561,7 +552,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                             },
                         );
                     }
-                } else if (res.id_friend?.idCurrentUser === userId || res.id_f_user?.idCurrentUser === userId) {
+                } else if (idU === userId) {
                     console.log('friend --you', res);
                     fixCssB = 0;
                     buttons.push(
@@ -577,7 +568,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                             onClick: () => handleAbolish(res.id),
                         },
                     );
-                } else if (res.id_friend?.idFriend === userId || res.id_f_user?.idFriend === userId) {
+                } else if (idFr === userId) {
                     console.log('friend --others');
                     fixCssB = 0;
                     buttons.push(
@@ -593,7 +584,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                             onClick: () => handleConfirm(res.id),
                         },
                     );
-                } else if (res.id_r_user?.id_user === userId || res.id_relative?.id_user === userId) {
+                } else if (id_r_user === userId) {
                     console.log('relative --you');
                     fixCssB = 0;
                     buttons.push(
@@ -609,7 +600,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                             onClick: () => handleAbolish(res.id, 'relative'),
                         },
                     );
-                } else if (res.id_r_user?.id_relative === userId || res.id_relative?.id_relative === userId) {
+                } else if (id_r_r === userId) {
                     fixCssB = 0;
                     console.log('relative --others');
                     buttons.push(
@@ -647,10 +638,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
         // (res.id_relative?.id_user === userId && res.id_relative?.really === 0)
         if (type === 'friends') {
             if (typesc === 'friends') {
-                if (
-                    (res.id_r_user?.id_user === userId && res.id_r_user?.really === 0) ||
-                    (res.id_relative?.id_user === userId && res.id_relative?.really === 0)
-                ) {
+                if (id_r_user === userId && really === 0) {
                     buttons.push(
                         {
                             text: 'Messenger',
@@ -795,21 +783,17 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                                 type.charAt(0).toUpperCase() + type.slice(1),
                             );
 
+                            const idU = res.id_friend?.idCurrentUser || res.id_f_user?.idCurrentUser;
+                            const idFr = res.id_f_user?.idFriend || res.id_friend?.idFriend;
+                            const level = res.id_friend?.level || res.id_f_user?.level;
+                            const id_r_user = res.id_r_user?.id_user || res.id_relative?.id_user;
+                            const id_r_r = res.id_relative?.id_relative || res.id_r_user?.id_relative;
+                            const really = res.id_r_user?.really || res.id_relative?.really;
                             if (type === 'you sent') {
-                                if (
-                                    (res.id_friend?.idCurrentUser === userId && res.id_friend?.level === 1) ||
-                                    (res.id_f_user?.idCurrentUser === userId && res.id_f_friend?.level === 1) ||
-                                    (res.id_r_user?.id_user === userId && res.id_r_user?.really === 0) ||
-                                    (res.id_relative?.id_user === userId && res.id_relative?.really === 0)
-                                )
+                                if ((idU === userId && level === 1) || (id_r_user === userId && really === 0))
                                     return Tag(res, type);
                             } else if (type === 'others sent') {
-                                if (
-                                    (res.id_f_user?.idFriend === userId && res.id_f_user?.level === 1) ||
-                                    (res.id_relative?.id_relative === userId && res.id_relative?.really === 0) ||
-                                    (res.id_friend?.idFriend === userId && res.id_f_user?.level === 1) ||
-                                    (res.id_relative?.id_relative === userId && res.id_relative?.really === 0)
-                                )
+                                if ((idFr === userId && level === 1) || (id_r_r === userId && really === 0))
                                     return Tag(res, type);
                             } else if (type === 'friends') {
                                 if (res.id_friend?.level === 2 || res.id_f_user?.level === 2) return Tag(res, type);
@@ -825,4 +809,4 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
         </DivOptions>
     );
 };
-export default MakingFriends;
+export default memo(MakingFriends);

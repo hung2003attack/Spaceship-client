@@ -54,7 +54,9 @@ export const DivSignature = styled.div`
 export const Label = styled.label`
     color: ${(props) => props.color};
     display: flex;
+    justify-content: center;
     cursor: pointer;
+    ${(props: { css?: string }) => props.css}
 `;
 interface PropsDivItems {
     position?: string;
