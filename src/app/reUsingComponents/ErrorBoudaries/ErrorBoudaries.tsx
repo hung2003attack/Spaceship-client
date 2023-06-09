@@ -12,13 +12,13 @@ function ErrorBoudaries(props: { check: boolean; message: string }) {
                 <P
                     color="#ff5252;"
                     css="    color: #ff5252;
-    width: 70%;
-    background-color: aliceblue;
-    font-size: 2rem;
-    font-weight: bold;
-    border-radius: 5px;
-    text-align: center;
-    padding: 10px;"
+                            width: 70%;
+                            background-color: aliceblue;
+                            font-size: 1.6rem;
+                            font-weight: bold;
+                            border-radius: 5px;
+                            text-align: center;
+                            padding: 10px;"
                 >
                     {props.message}
                     <br></br>

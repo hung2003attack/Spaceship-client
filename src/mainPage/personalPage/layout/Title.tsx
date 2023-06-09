@@ -1,4 +1,14 @@
-import { FriendI, HeartI, PeopleI, StarI } from '~/assets/Icons/Icons';
+import {
+    BirthI,
+    FriendI,
+    GenderMaleI,
+    HeartI,
+    HeartMI,
+    LocationI,
+    PeopleI,
+    StarI,
+    WorkingI,
+} from '~/assets/Icons/Icons';
 import { Hname } from '~/reUsingComponents/styleComponents/styleComponents';
 import { Div, H3, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { DivTitleP } from './styleLayout';
@@ -10,7 +20,12 @@ export interface PropsTitleP {
     follow: number;
     following: number;
 }
-const Title: React.FC<{ colorText: string; colorBg: number; data: PropsTitleP }> = ({ colorText, colorBg, data }) => {
+const Title: React.FC<{ colorText: string; colorBg: number; data: PropsTitleP; status: string }> = ({
+    colorText,
+    colorBg,
+    data,
+    status,
+}) => {
     console.log(data, 'datattt');
     const itemsT = [
         { icon: <StarI />, key: 2, qt: data.star },
@@ -79,6 +94,47 @@ const Title: React.FC<{ colorText: string; colorBg: number; data: PropsTitleP }>
                         <P z="1.3rem">{i.qt}</P>
                     </Div>
                 ))}
+            </Div>
+            <Div
+                width="100%"
+                wrap="wrap"
+                css={`
+                    margin-top: 15px;
+                    padding-top: 15px;
+                    border-top: 1px solid #727272b0;
+                    color: ${colorText};
+                `}
+            >
+                <Div width="100%" css=" align-items: center; font-size: 20px; margin-bottom: 4px;">
+                    <Div width="20px" css="margin-right: 2px;">
+                        <LocationI />
+                    </Div>
+                    <P css="font-size: 1.4rem; margin-top: 2.5px;">Tôt Động, Chương Mỹ, Hà Nội</P>
+                </Div>
+                <Div width="100%" css=" align-items: center;  font-size: 20px; margin-bottom: 4px;">
+                    <Div width="20px" css="margin-right: 2px;">
+                        <GenderMaleI />
+                    </Div>
+                    <P css="font-size: 1.4rem; margin-top: 2.5px;">Male</P>
+                </Div>{' '}
+                <Div width="100%" css=" align-items: center;  font-size: 18px; margin-bottom: 4px;">
+                    <Div width="20px" css="margin-right: 2px;">
+                        <WorkingI />
+                    </Div>
+                    <P css="font-size: 1.4rem; margin-top: 2.5px;">Developer</P>
+                </Div>
+                <Div width="100%" css=" align-items: center;  font-size: 18px; margin-bottom: 4px;">
+                    <Div width="20px" css="margin-right: 2px;">
+                        <BirthI />
+                    </Div>
+                    <P css="font-size: 1.4rem; margin-top: 2.5px;">05/07/2003</P>
+                </Div>
+                <Div width="100%" css=" align-items: center;  font-size: 18px; margin-bottom: 4px;">
+                    <Div width="20px" css="margin-right: 2px;">
+                        <HeartMI />
+                    </Div>
+                    <P css="font-size: 1.4rem; margin-top: 2.5px;">Single</P>
+                </Div>
             </Div>
         </DivTitleP>
     );

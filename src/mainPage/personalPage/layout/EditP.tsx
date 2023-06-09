@@ -6,9 +6,9 @@ import { Label } from '~/social_network/components/Header/layout/Home/Layout/For
 const EditP: React.FC<{
     editP: { name: string; id: number; icon?: { id: number; name: string }[] }[];
     onClick: (e?: any, id?: number) => void;
-    onName: (id: number) => Promise<void>;
+    onText: (id: number) => Promise<void>;
     colorText: string;
-}> = ({ editP, onClick, onName, colorText }) => {
+}> = ({ editP, onClick, onText, colorText }) => {
     const [more, setMore] = useState<number | null>(null);
 
     const handleMore = (e: any, id: number) => {
@@ -53,7 +53,7 @@ const EditP: React.FC<{
                             width="100%"
                             css="cursor: pointer; justify-content: center;"
                             onClick={() => {
-                                if (ed.id === 2) onName(ed.id);
+                                if (ed.id === 2 || ed.id === 3) onText(ed.id);
                             }}
                         >
                             {ed.name}

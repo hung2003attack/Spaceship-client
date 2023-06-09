@@ -59,4 +59,7 @@ export const InputChangeP = styled.input`
     background-color: #3d3d3dd4;
     margin-bottom: 3px;
     color: ${(props) => props.color};
+    @media (min-width: 600px) {
+        padding: 8px 45px 8px 8px;
+    }
 `;

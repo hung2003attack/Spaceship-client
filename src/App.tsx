@@ -107,11 +107,10 @@ function App() {
         if (first) {
             setUserFirst(res);
         } else {
-            setUserData([res]);
+            return res;
         }
     }
     console.log(userFirst, 'userFirst');
-
     useEffect(() => {
         const search = async () => {
             const search = window.location.search;
@@ -120,18 +119,26 @@ function App() {
             if (search && idUser.length === 0) {
                 const id = search.split('id=');
                 const ids = [];
+                const datas = [];
                 if (id.length < 4 && id.length > 0) {
                     for (let i = 1; i < id.length; i++) {
                         ids.push(id[i]);
                         console.log('hii', id[i]);
-                        fetch(id[i]);
+                        const data = await fetch(id[i]);
+                        datas.push(data);
                     }
+                    setUserData(datas);
                 }
                 dispatch(setIdUser(ids));
-            } else if (idUser.length === 1 && !search) {
-                console.log('search', idUser[0]);
-
-                fetch(idUser[0]);
+            }
+        };
+        search();
+    }, []);
+    useEffect(() => {
+        const search = async () => {
+            if (idUser.length === 1) {
+                const data = await fetch(idUser[0]);
+                setUserData([data]);
             }
         };
         search();
@@ -300,8 +307,6 @@ function App() {
         right: 0;
         bottom: 0;
         z-index: 11;
-        overflow-y: overlay;
-
 `;
 
     if (token && k_user) {
@@ -343,7 +348,7 @@ function App() {
                                 {userData?.map((data: any, index: number) => (
                                     <Personalpage
                                         setUserFirst={setUserFirst}
-                                        userFirst={{ ...userFirst }}
+                                        userFirst={userFirst}
                                         colorText={colorText}
                                         colorBg={colorBg}
                                         user={data}

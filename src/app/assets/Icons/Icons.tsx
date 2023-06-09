@@ -8,6 +8,8 @@ import {
     BsEmojiSmileFill,
     BsTypeItalic,
     BsClockHistory,
+    BsGenderMale,
+    BsGenderFemale,
 } from 'react-icons/bs';
 import {
     IoImagesOutline,
@@ -29,6 +31,7 @@ import {
     AiOutlineHeart,
     AiOutlinePlayCircle,
     AiOutlineStar,
+    AiFillHeart,
 } from 'react-icons/ai';
 import { GiEarthAmerica, GiNewspaper } from 'react-icons/gi';
 import {
@@ -39,11 +42,13 @@ import {
     MdOutlineNavigateNext,
     MdNotInterested,
     MdNavigateBefore,
+    MdEditLocation,
+    MdOutlineWork,
 } from 'react-icons/md';
 import { GoScreenFull, GoScreenNormal } from 'react-icons/go';
-import { FaPeopleArrows, FaAddressCard, FaUserFriends } from 'react-icons/fa';
+import { FaPeopleArrows, FaAddressCard, FaUserFriends, FaBirthdayCake } from 'react-icons/fa';
 import { RiDragMoveFill, RiMailSendLine } from 'react-icons/ri';
-import { TbArrowNarrowLeft, TbGridDots, TbTextResize } from 'react-icons/tb';
+import { TbArrowNarrowLeft, TbGenderFemale, TbGenderMale, TbGridDots, TbTextResize } from 'react-icons/tb';
 import { CgWebsite } from 'react-icons/cg';
 import { VscPreview } from 'react-icons/vsc';
 import { CiHeart, CiPaperplane, CiSearch, CiWifiOff, CiWifiOn } from 'react-icons/ci';
@@ -106,3 +111,9 @@ export const PlayI = () => <AiOutlinePlayCircle />;
 export const FullScreenI = () => <GoScreenFull />;
 export const ScreenI = () => <GoScreenNormal />;
 export const StarI = () => <AiOutlineStar />;
+export const LocationI = () => <MdEditLocation />;
+export const GenderMaleI = () => <TbGenderMale />;
+export const GenderFemaleI = () => <TbGenderFemale />;
+export const WorkingI = () => <MdOutlineWork />;
+export const BirthI = () => <FaBirthdayCake />;
+export const HeartMI = () => <AiFillHeart />;

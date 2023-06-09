@@ -22,6 +22,7 @@ import { useCookies } from 'react-cookie';
 import { PropsUserPer } from 'src/App';
 import EditP from './layout/EditP';
 import moment from 'moment';
+import ErrorBoudaries from '~/reUsingComponents/ErrorBoudaries/ErrorBoudaries';
 
 interface PropsPer {
     user: PropsUserPer;
@@ -41,7 +42,7 @@ interface PropsLanguage {
         };
     };
 }
-const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, online, setUserFirst, userFirst }) => {
+const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, online, userFirst, setUserFirst }) => {
     console.log(user, 'user herrrr');
     // const lg
     const dispatch = useDispatch();
@@ -63,6 +64,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
     const [edit, setEdit] = useState<boolean>(false);
     const [categories, setCategories] = useState<number>(0);
     const [valueName, setValueName] = useState<string>('');
+    const [valueNickN, setValueNickN] = useState<string>('');
 
     const [errText, setErrText] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
@@ -151,9 +153,11 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                             setLoading(false);
                             if (id === 0) {
                                 setUserFirst({ ...userFirst, background: img });
+
                                 setDataUser({ ...dataUser, background: img });
                             } else {
                                 setUserFirst({ ...userFirst, avatar: img });
+
                                 setDataUser({ ...dataUser, avatar: img });
                             }
                         }
@@ -187,7 +191,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
             }
         }
     };
-    const handleChangeName = async (id: number) => {
+    const handleChangeText = async (id: number) => {
         console.log('name', id);
         setEdit(false);
         setCategories(id);
@@ -197,16 +201,65 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
             setValueName(e.target.value);
         }
     };
+    const handleVNickN = (e: any) => {
+        if (e.target.value.length <= 30) {
+            setValueNickN(e.target.value);
+        }
+    };
     const handleNameU = async () => {
-        if (valueName && valueName.length <= 30) {
+        if (valueName && valueName.length <= 30 && valueName !== userFirst.fullName) {
+            setLoading(true);
             const res = await userAPI.changesOne(token, valueName, { fullName: 'fullName' });
+            setLoading(false);
             if (res === 1) {
+                setUserFirst({ ...userFirst, fullName: valueName });
                 setCategories(0);
             } else {
                 const dateT = moment(res, 'HH:mm:ss DD-MM-YYYY').locale(lg).fromNow();
-                setErrText('You changed about ' + dateT + ' after a month you can keep change your name');
+                const textEr: { [en: string]: string; vi: string } = {
+                    en: `You changed about ${dateT}. After a month you can keep change your name`,
+                    vi: `Bạn đã thay đổi ${dateT}. Sau 1 tháng bạn mới có thể đổi lại lần nữa`,
+                };
+                setErrText(textEr[lg]);
             }
         }
+    };
+    const handleNickNameU = async () => {
+        if (valueNickN.length <= 30 && valueNickN !== userFirst.nickName) {
+            setLoading(true);
+            const res = await userAPI.changesOne(token, valueNickN, { nickName: 'nickName' });
+            setLoading(false);
+            if (res === 1) {
+                setUserFirst({ ...userFirst, nickName: valueNickN });
+                setCategories(0);
+            } else {
+                setValueNickN('');
+                const textEr: { [en: string]: string; vi: string } = {
+                    en: `You changed 10 times in 1 month. After a month you can keep change your nick name`,
+                    vi: `Bạn đã thay đổi 10 lần trong 1 tháng rồi. Sau 1 tháng bạn mới có thể đổi lại 2 lần nữa`,
+                };
+                setErrText(textEr[lg]);
+            }
+        }
+    };
+
+    const handleAddF = () => {
+        console.log('add friend');
+    };
+    const handleConfirm = () => {
+        console.log('handleConfirm');
+    };
+    const handleAbolish = () => {
+        console.log('handleAbolish');
+    };
+    const handleMessenger = () => {
+        console.log('handleMessenger');
+    };
+    const handleFollower = () => {
+        console.log('handleFollowe');
+    };
+    const handleFriend = () => {
+        console.log('handleFriend');
     };
     const cssDivPersonalPage = `
         position: relative;
@@ -274,6 +327,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
             }
             `;
     const cssName = ` 
+            width: inherit;
             height: 30px;
             margin-bottom: 16px;
             display: flex;
@@ -287,15 +341,16 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
             @media (min-width: 600px){
                 margin-bottom: 20px;
             }`;
-    const css = ` min-width: 100%;
-    height: var(--full);
-    overflow-y: overlay;
-     @media (min-width: 1100px){
-        min-width: ${100 / leng + '%;'}
-    }
-    @media (max-width: 600px){
-        min-width: 100%;
-    }`;
+    const css = `
+            width: 100%;
+            height: var(--full);
+            overflow-y: overlay;
+            @media (min-width: 1100px){
+                min-width: ${100 / leng + '%;'}
+            }
+            @media (max-width: 600px){
+                min-width: 100%;
+            }`;
     console.log(room, 'room');
 
     const cssBt = `color: ${colorText};
@@ -309,24 +364,6 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                 font-size: 1.5rem;
             }
     `;
-    const handleAddF = () => {
-        console.log('add friend');
-    };
-    const handleConfirm = () => {
-        console.log('handleConfirm');
-    };
-    const handleAbolish = () => {
-        console.log('handleAbolish');
-    };
-    const handleMessenger = () => {
-        console.log('handleMessenger');
-    };
-    const handleFollower = () => {
-        console.log('handleFollowe');
-    };
-    const handleFriend = () => {
-        console.log('handleFriend');
-    };
     const buttons: {
         [en: string]: { name: string; onClick: () => void }[];
         vi: { name: string; onClick: () => void }[];
@@ -409,7 +446,31 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
         { text: buttons[lg][1].name, css: cssBt + 'background-color: #0d62b4;', onClick: buttons[lg][1].onClick },
         { text: buttons[lg][2].name, css: cssBt + 'padding: 9px 21px;', onClick: buttons[lg][2].onClick },
     ];
-
+    const btName: { [en: string]: { del: string; ok: string }; vi: { del: string; ok: string } } = {
+        en: { del: 'Cancel', ok: 'Change' },
+        vi: { del: 'Huỷ bỏ', ok: 'Thay đổi' },
+    };
+    const inputChange = (onEvent: (e: any) => void, value: string, holder: string) => {
+        return (
+            <Div width="196px" wrap="wrap" css="position: relative; @media(min-width: 600px){width: 250px}">
+                <InputChangeP id="h" placeholder={holder} color={colorText} value={value} onChange={onEvent} />
+                <Label
+                    htmlFor="h"
+                    css={`
+                        font-size: 1.2rem;
+                        position: absolute;
+                        right: 5px;
+                        top: 5px;
+                        @media (min-width: 600px) {
+                            top: 7px;
+                        }
+                    `}
+                >
+                    {value.length} / 30
+                </Label>
+            </Div>
+        );
+    };
     return (
         <Div css={css}>
             {(room.background || room.avatar) && (
@@ -425,6 +486,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                     <UndoI />
                 </DivPos>
             )}
+
             <DivPerson>
                 <Div css={cssBg}>
                     {/* {user?.background && ( */}
@@ -506,25 +568,20 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                     </Div>
 
                     <Div css={cssName}>
-                        <Hname>{valueName || dataUser.fullName}</Hname>
-                        {categories === 2 && (
-                            <Div width="196px" wrap="wrap" css="position: relative;">
-                                <InputChangeP
-                                    id="h"
-                                    placeholder={user.fullName}
-                                    color={colorText}
-                                    value={valueName}
-                                    onChange={handleVName}
-                                />
-                                <Label htmlFor="h" css="font-size: 1.2rem; position: absolute; right: 5px; top: 5px;">
-                                    {valueName.length} / 30
-                                </Label>
-                            </Div>
-                        )}
-                        <P css="width: 100%; " z="1.2rem">
-                            {errText || 'I used to love you, but now will not'}
-                            {dataUser?.nickName}
+                        <Hname
+                            css={`
+                                @media (min-width: 600px) {
+                                    font-size: 1.6rem;
+                                }
+                            `}
+                        >
+                            {valueName || dataUser.fullName}
+                        </Hname>
+                        {categories === 2 && inputChange(handleVName, valueName, user.fullName)}
+                        <P css="width: 100%; @media (min-width: 600px) {font-size: 1.3rem;}" z="1.2rem">
+                            {valueNickN || dataUser.nickName}
                         </P>
+                        {categories === 3 && inputChange(handleVNickN, valueNickN, user.nickName)}
                     </Div>
                     {categories === 0 && cookies.k_user === dataUser.id && (
                         <DivPos
@@ -552,44 +609,62 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                         <EditP
                             editP={editP[lg]}
                             onClick={handleChangeAvatar}
-                            onName={handleChangeName}
+                            onText={handleChangeText}
                             colorText={colorText}
                         />
                     )}
                 </DivPersonalPage>
-                {categories === 2 && (
-                    <Div width="150px" css="margin: 30px auto 0; justify-content: space-evenly;">
-                        <Div
-                            css="font-size: 25px; background-color: #e7e7e7; color: #333; border-radius: 50%; z-index: 8"
-                            onClick={() => {
-                                setCategories(0);
-                                setErrText('');
-                                setValueName('');
-                            }}
-                        >
-                            <CloseI />
-                        </Div>
-                        <Div
-                            css="font-size: 25px; background-color: #e7e7e7; color: #333; border-radius: 50%; z-index: 8"
-                            onClick={handleNameU}
+                {(categories === 2 || categories === 3) && (
+                    <Div width="200px" css="margin: 55px auto 0; justify-content: space-evenly;">
+                        <Buttons
+                            text={[
+                                {
+                                    text: btName[lg].del,
+                                    css: cssBt + 'background-color: #781111;',
+                                    onClick: () => {
+                                        setCategories(0);
+                                        setErrText('');
+                                        setValueName('');
+                                    },
+                                },
+                            ]}
+                        />
+
+                        <Buttons
+                            text={[
+                                {
+                                    text: btName[lg].ok,
+                                    css: cssBt + 'background-color: #214795;',
+                                    onClick: categories === 2 ? handleNameU : handleNickNameU,
+                                },
+                            ]}
                         >
                             <CheckI />
-                        </Div>
+                        </Buttons>
                     </Div>
                 )}
-                <Div
-                    width="95%"
-                    css={`
-                        justify-content: center;
-                        margin: 46px auto 0;
-                        @media (min-width: 500px) {
-                            justify-content: right;
-                        }
-                    `}
+                <P
+                    color={colorText}
+                    css="width: 100%; padding: 10px; @media (min-width: 600px) {font-size: 1.3rem;}"
+                    z="1.2rem"
                 >
-                    {dataUser.id !== userId && <Buttons text={btss} />}
-                </Div>
-                <Title colorText={colorText} colorBg={colorBg} data={dataUser.id_m_user} />
+                    {errText}
+                </P>
+                {dataUser.id !== userId && (
+                    <Div
+                        width="95%"
+                        css={`
+                            justify-content: center;
+                            margin: 46px auto 0;
+                            @media (min-width: 500px) {
+                                justify-content: right;
+                            }
+                        `}
+                    >
+                        <Buttons text={btss} />
+                    </Div>
+                )}
+                <Title colorText={colorText} colorBg={colorBg} data={dataUser.id_m_user} status={dataUser.status} />
                 {/* <DivIntr>
                     <DivStories>
                         <DivOp>
