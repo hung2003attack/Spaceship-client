@@ -53,6 +53,22 @@ export interface PropsUserPer {
         level: number;
     };
     id_m_user: PropsTitleP;
+    id_flwing: {
+        flwed: number;
+        flwing: number;
+        id_followed: string;
+        id_following: string;
+        createdAt: string;
+        updatedAt: string;
+    };
+    id_flwed: {
+        flwing: number;
+        flwed: number;
+        id_following: string;
+        id_followed: string;
+        createdAt: string;
+        updatedAt: string;
+    };
 }
 const Authentication = React.lazy(() => import('~/Authentication/Auth'));
 const Website = React.lazy(() => import('./mainPage/nextWeb'));

@@ -294,6 +294,7 @@ const Website: React.FC<{
                                         right: 7px;
                                         z-index: 88;
                                         border-radius: 50%;
+                                        cursor: var(--pointer);
                                         ${onli}
                                     `}
                                 />

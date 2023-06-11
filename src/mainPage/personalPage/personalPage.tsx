@@ -23,6 +23,7 @@ import { PropsUserPer } from 'src/App';
 import EditP from './layout/EditP';
 import moment from 'moment';
 import ErrorBoudaries from '~/reUsingComponents/ErrorBoudaries/ErrorBoudaries';
+import peopleAPI from '~/restAPI/requestServers/socialNetwork/peopleAPI';
 
 interface PropsPer {
     user: PropsUserPer;
@@ -57,9 +58,12 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
 
     const [dataUser, setDataUser] = useState<PropsUserPer>(user);
     const id_f_user = dataUser.id_f_user.idCurrentUser || dataUser.id_friend.idCurrentUser;
-    const id_friend = dataUser.id_f_user.idFriend || dataUser.id_friend.idFriend;
+    const id_fl = dataUser.id_flwing.id_following || dataUser.id_flwed.id_following;
+    const id_fled = dataUser.id_flwing.id_followed || dataUser.id_flwed.id_followed;
 
     const level = dataUser.id_f_user.level || dataUser.id_friend.level;
+    const following = dataUser.id_flwing.flwing || dataUser.id_flwed.flwing;
+    const follwed = dataUser.id_flwing.flwed || dataUser.id_flwed.flwed;
 
     const [edit, setEdit] = useState<boolean>(false);
     const [categories, setCategories] = useState<number>(0);
@@ -126,6 +130,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
         setDataUser(user);
     }, [user]);
     const handleChangeAvatar = async (e?: { target: { files: any } }, id?: number) => {
+        setEdit(false);
         const data = e?.target.files;
         if (data?.length > 0) {
             const file = data[0];
@@ -153,11 +158,9 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                             setLoading(false);
                             if (id === 0) {
                                 setUserFirst({ ...userFirst, background: img });
-
                                 setDataUser({ ...dataUser, background: img });
                             } else {
                                 setUserFirst({ ...userFirst, avatar: img });
-
                                 setDataUser({ ...dataUser, avatar: img });
                             }
                         }
@@ -243,22 +246,83 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
         }
     };
 
-    const handleAddF = () => {
+    const handleAddF = async (id: string) => {
         console.log('add friend');
     };
-    const handleConfirm = () => {
-        console.log('handleConfirm');
+    const handleConfirm = async (id: string) => {
+        console.log('handleConfirm', id);
+        if (id) {
+            const res = await peopleAPI.setConfirm(token, id, 'friends', true);
+            console.log(res, 'conf');
+
+            if (res.ok === 1) {
+                setDataUser({ ...dataUser, id_f_user: { ...dataUser.id_f_user, level: 2 } });
+            }
+        }
     };
-    const handleAbolish = () => {
+    const handleAbolish = async (id: string) => {
         console.log('handleAbolish');
     };
-    const handleMessenger = () => {
+    const handleMessenger = async (id: string) => {
         console.log('handleMessenger');
     };
-    const handleFollower = () => {
-        console.log('handleFollowe');
+    const handleFollower = async (id: string, follow?: string) => {
+        console.log('handleFollowe', id);
+        const res = await userAPI.follow(token, id, follow);
+        console.log(res, 'followres');
+        if (res.ok === 1) {
+            if (dataUser.id_flwing.id_following) {
+                if (res.follow === 'following') {
+                    setDataUser({ ...dataUser, id_flwing: { ...dataUser.id_flwing, flwing: 2 } });
+                } else {
+                    setDataUser({ ...dataUser, id_flwing: { ...dataUser.id_flwing, flwed: 2 } });
+                }
+            } else if (dataUser.id_flwed.id_followed) {
+                if (res.follow === 'following') {
+                    setDataUser({ ...dataUser, id_flwed: { ...dataUser.id_flwed, flwing: 2 } });
+                } else {
+                    setDataUser({ ...dataUser, id_flwed: { ...dataUser.id_flwed, flwed: 2 } });
+                }
+            } else {
+                setDataUser({
+                    ...dataUser,
+                    id_flwed: {
+                        ...dataUser.id_flwed,
+                        flwed: 1,
+                        flwing: 2,
+                        id_followed: res.id,
+                        id_following: res.id_fl,
+                    },
+                });
+            }
+        }
+
+        // dataUser({...dataUser, id_flwing: {...dataUser.id_flwed.}})
     };
-    const handleFriend = () => {
+    console.log(dataUser, 'dataUser');
+
+    const handleUnFollower = async (id: string, unfollow: string) => {
+        console.log('handleUnFollowe', id);
+        const res = await userAPI.Unfollow(token, id, unfollow);
+        console.log(res);
+
+        if (res.ok === 1) {
+            if (dataUser.id_flwing.id_following) {
+                if (res.unfollow === 'following') {
+                    setDataUser({ ...dataUser, id_flwing: { ...dataUser.id_flwing, flwing: 1 } });
+                } else {
+                    setDataUser({ ...dataUser, id_flwing: { ...dataUser.id_flwing, flwed: 1 } });
+                }
+            } else if (dataUser.id_flwed.id_followed) {
+                if (res.unfollow === 'following') {
+                    setDataUser({ ...dataUser, id_flwed: { ...dataUser.id_flwed, flwing: 1 } });
+                } else {
+                    setDataUser({ ...dataUser, id_flwed: { ...dataUser.id_flwed, flwed: 1 } });
+                }
+            }
+        }
+    };
+    const handleFriend = async (id: string) => {
         console.log('handleFriend');
     };
     const cssDivPersonalPage = `
@@ -297,6 +361,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
             height: 230px;
             border-radius: 5px;
             background-color: #494949cf;
+            cursor: var(--pointer);
 
             img {
                 border-radius: 5px;
@@ -354,7 +419,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
     console.log(room, 'room');
 
     const cssBt = `color: ${colorText};
-            width: 110px;
+            width: 118px;
             justify-content: center;
             padding: 9px;
             font-size: 1.3rem;
@@ -364,9 +429,11 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                 font-size: 1.5rem;
             }
     `;
+    console.log(id_fl, id_fled, following, follwed, dataUser.id_flwing.flwed, dataUser.id_flwed.flwed);
+
     const buttons: {
-        [en: string]: { name: string; onClick: () => void }[];
-        vi: { name: string; onClick: () => void }[];
+        [en: string]: { name: string; onClick: (id: string) => Promise<void> }[];
+        vi: { name: string; onClick: (id: string) => Promise<void> }[];
     } = {
         en: [
             {
@@ -382,21 +449,29 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                         : level === 2
                         ? 'Friend'
                         : 'Add Friend',
-                onClick:
+                onClick: () =>
                     id_f_user !== userId
                         ? level === 1
-                            ? handleConfirm
+                            ? handleConfirm(dataUser.id)
                             : level === 2
-                            ? handleAddF
-                            : handleAddF
+                            ? handleAddF(dataUser.id)
+                            : handleAddF(dataUser.id)
                         : level === 1
-                        ? handleAbolish
+                        ? handleAbolish(dataUser.id)
                         : level === 2
-                        ? handleFriend
-                        : handleAddF,
+                        ? handleFriend(dataUser.id)
+                        : handleAddF(dataUser.id),
             },
-            { name: 'Messenger', onClick: handleMessenger },
-            { name: 'Follow', onClick: handleFollower },
+            { name: 'Messenger', onClick: () => handleMessenger(dataUser.id) },
+            id_fl === userId
+                ? following === 1
+                    ? { name: 'Follow', onClick: () => handleFollower(dataUser.id) }
+                    : { name: 'Unfollow', onClick: () => handleUnFollower(dataUser.id, 'following') }
+                : id_fled === userId
+                ? follwed === 1
+                    ? { name: 'Follow', onClick: () => handleFollower(dataUser.id) }
+                    : { name: 'Unfollow', onClick: () => handleUnFollower(dataUser.id, 'followed') }
+                : { name: 'Follow', onClick: () => handleFollower(dataUser.id) },
         ],
         vi: [
             {
@@ -412,21 +487,29 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                         : level === 2
                         ? 'Bạn bè'
                         : 'Kêt bạn',
-                onClick:
+                onClick: () =>
                     id_f_user !== userId
                         ? level === 1
-                            ? handleConfirm
+                            ? handleConfirm(dataUser.id)
                             : level === 2
-                            ? handleAddF
-                            : handleAddF
+                            ? handleAddF(dataUser.id)
+                            : handleAddF(dataUser.id)
                         : level === 1
-                        ? handleAbolish
+                        ? handleAbolish(dataUser.id)
                         : level === 2
-                        ? handleFriend
-                        : handleAddF,
+                        ? handleFriend(dataUser.id)
+                        : handleAddF(dataUser.id),
             },
-            { name: 'Nhắn tin', onClick: handleMessenger },
-            { name: 'Theo dõi', onClick: handleFollower },
+            { name: 'Nhắn tin', onClick: () => handleMessenger(dataUser.id) },
+            id_fl === userId
+                ? following === 1
+                    ? { name: 'Theo dõi', onClick: () => handleFollower(dataUser.id, 'following') }
+                    : { name: 'Bỏ theo dõi', onClick: () => handleUnFollower(dataUser.id, 'following') }
+                : id_fled === userId
+                ? follwed === 1
+                    ? { name: 'Theo dõi', onClick: () => handleFollower(dataUser.id, 'followed') }
+                    : { name: 'Bỏ theo dõi', onClick: () => handleUnFollower(dataUser.id, 'followed') }
+                : { name: 'Theo dõi', onClick: () => handleFollower(dataUser.id) },
         ],
     };
     const moreCss =
@@ -444,7 +527,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
     const btss = [
         { text: buttons[lg][0].name, css: cssBt, onClick: buttons[lg][0].onClick },
         { text: buttons[lg][1].name, css: cssBt + 'background-color: #0d62b4;', onClick: buttons[lg][1].onClick },
-        { text: buttons[lg][2].name, css: cssBt + 'padding: 9px 21px;', onClick: buttons[lg][2].onClick },
+        { text: buttons[lg][2].name, css: cssBt, onClick: buttons[lg][2].onClick },
     ];
     const btName: { [en: string]: { del: string; ok: string }; vi: { del: string; ok: string } } = {
         en: { del: 'Cancel', ok: 'Change' },
@@ -509,7 +592,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                             alt={dataUser?.fullName}
                             gender={dataUser?.gender}
                             radius="50%"
-                            css="z-index: 1;"
+                            css="z-index: 1; cursor: var(--pointer);"
                         />
                         {loading && (
                             <DivLoading

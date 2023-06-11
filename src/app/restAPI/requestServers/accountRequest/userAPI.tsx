@@ -123,5 +123,35 @@ class HttpRequestUser {
             console.log(error);
         }
     };
+    follow = async (token: string, id: string, follow?: string) => {
+        try {
+            const Axios = refreshToken.axiosJWTs(token);
+            const res = await Axios.patch('/SN/user/follow', {
+                params: {
+                    id,
+                    follow,
+                },
+            });
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    Unfollow = async (token: string, id: string, unfollow: string) => {
+        try {
+            const Axios = refreshToken.axiosJWTs(token);
+            const res = await Axios.patch('/SN/user/Unfollow', {
+                params: {
+                    id,
+                    unfollow,
+                },
+            });
+            console.log(res, 'sd');
+
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
+    };
 }
 export default new HttpRequestUser();
