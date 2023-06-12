@@ -12,16 +12,7 @@ interface PropsTagP {
         nickName: string | undefined;
         avatar: string | undefined;
         gender: number;
-        id_r_user?: {
-            createdAt: string;
-            id_relative: string;
-            id_user: string;
-            really: number;
-            title: string;
-        };
     };
-    fixCssB: number;
-    typesc?: string;
     onClick?: (id: string) => void;
     button?: { css: string; text: string; onClick?: (args: any) => void }[];
     margin?: string;
@@ -38,8 +29,6 @@ const TagProfle: React.FC<PropsTagP> = ({
     bg,
     colorText,
     cssImage,
-    typesc,
-    fixCssB,
     profile = false,
 }) => {
     const dispatch = useDispatch();
@@ -49,7 +38,6 @@ const TagProfle: React.FC<PropsTagP> = ({
         }
     };
 
-    console.log('1', typesc);
     return (
         <Div width="100%" wrap="wrap">
             <Div
@@ -106,7 +94,6 @@ const TagProfle: React.FC<PropsTagP> = ({
                             padding: 0;
                             background-color: transparent;
                             margin-top: 8px;
-                            ${fixCssB === 3 ? 'flex-wrap: wrap-reverse;' : ''}
                         }
                     `}
                 >

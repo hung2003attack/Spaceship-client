@@ -171,9 +171,9 @@ const Header: React.FC<{
                         color={colorText}
                         onClick={() => setBorder('people')}
                         onDoubleClick={() => {
-                            dispatch(people(true));
+                            dispatch(people(Math.random()));
                         }}
-                        onTouchStart={() => dispatch(people(true))}
+                        onTouchStart={() => dispatch(people(Math.random()))}
                     />
                     <Div
                         width="70px"

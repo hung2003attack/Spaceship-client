@@ -60,7 +60,6 @@ const Avatar: React.FC<_Avatar> = ({
     const handleOpentProfile = () => {
         if (profile) dispatch(setIdUser([id]));
     };
-    console.log(src, avatarFallback, 'avatarFallback', Fallback);
 
     return avatar ? (
         <FaUserCircle />

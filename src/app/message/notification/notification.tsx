@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Send from '../Send/Send';
 import { setIdUser } from '~/redux/hideShow';
 import moment from 'moment';
+import CommonUtils from '~/utils/CommonUtils';
 interface PropsLanguage {
     persistedReducer: {
         language: {
@@ -71,13 +72,20 @@ const Notification: React.FC<{ colorText: string; colorBg: number }> = ({ colorT
     useEffect(() => {
         async function fetch() {
             const res = await userAPI.getNewMes(token);
+            const newData = res.user.map((v: { avatar: any }) => {
+                if (v.avatar) v.avatar = CommonUtils.convertBase64(v.avatar);
+                return v;
+            });
+            res.user = newData;
             if (res) setDataInfo(res);
         }
         fetch();
         socket.on(`Request others?id=${userId}`, (msg: string) => {
             console.log('Received message id:', socket.id);
             console.log('Received message', JSON.parse(msg));
-            setDataTest({ user: JSON.parse(msg).user, quantity: JSON.parse(msg).quantity });
+            const user = JSON.parse(msg).user;
+            if (user.avatar) user.avatar = CommonUtils.convertBase64(user.avatar);
+            setDataTest({ user: user, quantity: JSON.parse(msg).quantity });
         });
         socket.on(`Delete request friends or relatives${userId}`, (msg: string) => {
             console.log('Delete Request message id:', msg, delReq);
@@ -103,6 +111,7 @@ const Notification: React.FC<{ colorText: string; colorBg: number }> = ({ colorT
     const handleShowHide = async () => {
         setNotification(!notification);
         const res = await userAPI.delMessage(token);
+
         if (res.ok) setDataInfo({ ...dataInfo, quantity: 0 });
     };
     const handleUndo = () => {
@@ -119,6 +128,7 @@ const Notification: React.FC<{ colorText: string; colorBg: number }> = ({ colorT
                         x.status = 0;
                         return x;
                     }
+
                     return x;
                 });
                 setDataInfo({ ...dataInfo, user: newData });
@@ -218,9 +228,9 @@ const Notification: React.FC<{ colorText: string; colorBg: number }> = ({ colorT
                                         css="width: fit-content; height: fit-content; border: 1px solid #39393b; margin-bottom: 14px; padding-top: 5px; position: relative;"
                                     >
                                         <DivItem color={colorText}>
-                                            <Div css="height: fit-content;">
+                                            <Div css="height: fit-content; width: 40px; height: 40px; min-width: 40px; margin: 2px 5px;">
                                                 <Avatar
-                                                    css="width: 40px; margin: 2px 5px; cursor: var(--pointer)"
+                                                    css=" var(--pointer)"
                                                     src={v.avatar}
                                                     radius="50%"
                                                     gender={v.gender}

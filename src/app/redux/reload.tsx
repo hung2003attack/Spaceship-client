@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface PropsReloadRD {
-    people: boolean;
+    people: number;
 }
 const initialState: PropsReloadRD = {
-    people: false,
+    people: 0,
 };
 const reloadPage = createSlice({
     name: 'reload',

@@ -120,6 +120,22 @@ function App() {
             const av = CommonUtils.convertBase64(res.background);
             res.background = av;
         }
+        if (res.id_m_user.flwed_data) {
+            res.id_m_user.flwed_data.map((a: { avatar: any }) => {
+                if (a.avatar) {
+                    const av = CommonUtils.convertBase64(res.background);
+                    a.avatar = av;
+                }
+            });
+        }
+        if (res.id_m_user.flwing_data) {
+            res.id_m_user.flwing_data.map((a: { avatar: any }) => {
+                if (a.avatar) {
+                    const av = CommonUtils.convertBase64(res.background);
+                    a.avatar = av;
+                }
+            });
+        }
         if (first) {
             setUserFirst(res);
         } else {

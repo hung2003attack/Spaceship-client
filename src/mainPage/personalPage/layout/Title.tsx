@@ -12,6 +12,14 @@ import {
 import { Hname } from '~/reUsingComponents/styleComponents/styleComponents';
 import { Div, H3, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { DivTitleP } from './styleLayout';
+import { useState } from 'react';
+import UserBar from '~/reUsingComponents/Bar/UserBar';
+interface PropsFlw {
+    id: string;
+    avatar: any;
+    fullName: string;
+    gender: number;
+}
 export interface PropsTitleP {
     position: string;
     star: number;
@@ -19,6 +27,8 @@ export interface PropsTitleP {
     visit: number;
     follow: number;
     following: number;
+    flwed_data: PropsFlw[];
+    flwing_data: PropsFlw[];
 }
 const Title: React.FC<{ colorText: string; colorBg: number; data: PropsTitleP; status: string }> = ({
     colorText,
@@ -26,18 +36,23 @@ const Title: React.FC<{ colorText: string; colorBg: number; data: PropsTitleP; s
     data,
     status,
 }) => {
+    const [flwData, setFlwData] = useState<{ id: string; avatar: any; fullName: string; gender: number }[]>();
     console.log(data, 'datattt');
     const itemsT = [
-        { icon: <StarI />, key: 2, qt: data.star },
-        { icon: <HeartI />, key: 3, qt: data.love },
-        { icon: <PeopleI />, key: 4, qt: data.visit },
-        { icon: <FriendI />, key: 5, qt: 10 },
+        { icon: <StarI />, key: 1, qt: data.star },
+        { icon: <HeartI />, key: 2, qt: data.love },
+        { icon: <PeopleI />, key: 3, qt: data.visit },
+        { icon: <FriendI />, key: 4, qt: 10 },
     ];
     const itemsP = [
-        { icon: 'Followed', key: 1, qt: data.follow },
-        { icon: 'Following', key: 2, qt: data.following },
+        { icon: 'Followed', key: 5, qt: data.follow },
+        { icon: 'Following', key: 6, qt: data.following },
     ];
-
+    const handleFlwData = (id: number) => {
+        if (id === 5) {
+            setFlwData(data.flwed_data);
+        }
+    };
     return (
         <DivTitleP>
             <Div>
@@ -89,7 +104,9 @@ const Title: React.FC<{ colorText: string; colorBg: number; data: PropsTitleP; s
                         `}
                     >
                         <Div width="100%" css="align-items: center; justify-content: center; ">
-                            <H3 css="font-size: 1.5rem;">{i.icon}</H3>
+                            <H3 css="font-size: 1.5rem; cursor: var(--pointer); " onClick={() => handleFlwData(i.key)}>
+                                {i.icon}
+                            </H3>
                         </Div>
                         <P z="1.3rem">{i.qt}</P>
                     </Div>
@@ -136,6 +153,7 @@ const Title: React.FC<{ colorText: string; colorBg: number; data: PropsTitleP; s
                     <P css="font-size: 1.4rem; margin-top: 2.5px;">Single</P>
                 </Div>
             </Div>
+            {flwData && <UserBar colorBg={colorBg} colorText={colorText} data={flwData} setFlwData={setFlwData} />}
         </DivTitleP>
     );
 };

@@ -44,14 +44,16 @@ export const DivMenu = styled.div`
 `;
 export const DivResults = styled.div`
     width: 100%;
+    min-width: 100%;
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
     justify-content: center;
-    position: absolute;
     right: 0;
     padding: 10px;
     background-color: #292a2c;
+
+    overflow-y: overlay;
 `;
 export const Input = styled.input`
     display: none;

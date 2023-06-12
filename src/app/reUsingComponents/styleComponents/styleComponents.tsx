@@ -173,9 +173,9 @@ export const DivPos = styled.div<PropsClose>`
     z-index: ${(props) => props.index};
     font-size: ${(props) => props.size};
     cursor: var(--pointer);
+    border-radius: 50%;
     ${(props) => props.css}
 
-    border-radius: 50%;
     &:hover {
         transition: all 0.1s linear;
         background-color: ${(props) => props.bg};
