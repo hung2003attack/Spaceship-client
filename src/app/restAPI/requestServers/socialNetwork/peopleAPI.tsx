@@ -52,15 +52,16 @@ class PeopleRequest {
             console.log(error, 'delete');
         }
     };
-    getStrangers = async (token: string, offset: number, limit: number) => {
+    getStrangers = async (token: string, limit: number, ids: string[]) => {
         try {
             const axiosJWTss = refreshToken.axiosJWTs(token);
             const res = await axiosJWTss.get('/SN/people/getStrangers', {
                 params: {
-                    offset,
                     limit,
+                    ids,
                 },
             });
+            refreshToken.ejectInterceptor();
             return res.data;
         } catch (error) {
             console.log(error, 'get Strangers');

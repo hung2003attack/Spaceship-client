@@ -1,5 +1,5 @@
 export const login = {
-    EN: {
+    en: {
         title: 'Log In',
 
         input: [
@@ -10,7 +10,7 @@ export const login = {
         submit: 'Login',
         register: 'Register',
     },
-    VN: {
+    vi: {
         title: 'Đăng Nhập',
 
         input: [

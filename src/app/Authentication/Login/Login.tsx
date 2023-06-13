@@ -25,8 +25,8 @@ interface InLogin {
     register: string;
 }
 export interface PropsLogin {
-    [EN: string]: InLogin;
-    VN: InLogin;
+    [en: string]: InLogin;
+    vi: InLogin;
 }
 interface PropsState {
     persistedReducer: {

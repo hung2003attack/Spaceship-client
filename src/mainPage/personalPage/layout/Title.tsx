@@ -14,12 +14,8 @@ import { Div, H3, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { DivTitleP } from './styleLayout';
 import { useState } from 'react';
 import UserBar from '~/reUsingComponents/Bar/UserBar';
-interface PropsFlw {
-    id: string;
-    avatar: any;
-    fullName: string;
-    gender: number;
-}
+import { useCookies } from 'react-cookie';
+
 export interface PropsTitleP {
     position: string;
     star: number;
@@ -27,22 +23,26 @@ export interface PropsTitleP {
     visit: number;
     follow: number;
     following: number;
-    flwed_data: PropsFlw[];
-    flwing_data: PropsFlw[];
+    friends: string;
 }
-const Title: React.FC<{ colorText: string; colorBg: number; data: PropsTitleP; status: string }> = ({
-    colorText,
-    colorBg,
-    data,
-    status,
-}) => {
+const Title: React.FC<{
+    colorText: string;
+    colorBg: number;
+    data: PropsTitleP;
+    status: string;
+    id_o: string;
+    id_f: string;
+    level: number;
+}> = ({ colorText, colorBg, data, status, id_o, id_f, level }) => {
+    const [cookies, setCookies] = useCookies(['k_user']);
     const [flwData, setFlwData] = useState<{ id: string; avatar: any; fullName: string; gender: number }[]>();
     console.log(data, 'datattt');
+    const userId = cookies.k_user;
     const itemsT = [
         { icon: <StarI />, key: 1, qt: data.star },
         { icon: <HeartI />, key: 2, qt: data.love },
         { icon: <PeopleI />, key: 3, qt: data.visit },
-        { icon: <FriendI />, key: 4, qt: 10 },
+        { icon: <FriendI />, key: 4, qt: data.friends },
     ];
     const itemsP = [
         { icon: 'Followed', key: 5, qt: data.follow },
@@ -50,7 +50,7 @@ const Title: React.FC<{ colorText: string; colorBg: number; data: PropsTitleP; s
     ];
     const handleFlwData = (id: number) => {
         if (id === 5) {
-            setFlwData(data.flwed_data);
+            // setFlwData(data.flwed_data);
         }
     };
     return (
@@ -66,6 +66,11 @@ const Title: React.FC<{ colorText: string; colorBg: number; data: PropsTitleP; s
                             align-items: center;
                             font-size: 20px;
                             color: ${colorText};
+                            div {
+                                color: ${i.key === 4 && [id_o, id_f].includes(userId) && level === 2
+                                    ? '#257fc2'
+                                    : colorText};
+                            }
                             @media (min-width: 768px) {
                                 font-size: 22px;
                             }
@@ -74,7 +79,14 @@ const Title: React.FC<{ colorText: string; colorBg: number; data: PropsTitleP; s
                             }
                         `}
                     >
-                        <Div width="100%" css="align-items: center; justify-content: center; cursor: var(--pointer);">
+                        <Div
+                            width="100%"
+                            css={`
+                                align-items: center;
+                                justify-content: center;
+                                cursor: var(--pointer);
+                            `}
+                        >
                             {i.icon}
                         </Div>
                         <P z="1.3rem">{i.qt}</P>

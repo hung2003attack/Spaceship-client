@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { DotI } from '~/assets/Icons/Icons';
-import { Div } from '~/reUsingComponents/styleComponents/styleDefault';
+import { DotI, LoadingI } from '~/assets/Icons/Icons';
+import { Div, H3 } from '~/reUsingComponents/styleComponents/styleDefault';
 import peopleAPI from '~/restAPI/requestServers/socialNetwork/peopleAPI';
 import CommonUtils from '~/utils/CommonUtils';
 import TagProfle from './TagProfle';
 import { useSelector } from 'react-redux';
+import { DivResults } from './styleMakingFriends';
+import { DivLoading } from '~/reUsingComponents/styleComponents/styleComponents';
 interface PropsYouSent {
     avatar: any;
     birthday: string;
@@ -14,37 +16,59 @@ interface PropsYouSent {
     id: string;
     nickName: string | undefined;
 }
-const Requested: React.FC<{ setLoading: React.Dispatch<React.SetStateAction<boolean>>; type: string }> = ({
-    setLoading,
-    type,
-}) => {
+const Requested: React.FC<{ type: string }> = ({ type }) => {
     const reload = useSelector((state: { reload: { people: number } }) => state.reload.people);
+    const [cookies, setCookies] = useCookies(['tks', 'k_user']);
 
     const [data, setData] = useState<PropsYouSent[]>();
-    const [cookies, setCookies] = useCookies(['tks', 'k_user']);
-    const [offset, setOffset] = useState(0);
-    const [limit, setLimit] = useState(10);
+    const limit: number = 2;
+
+    const offsetRef = useRef<number>(0);
     const cRef = useRef<number>(0);
+    const eleRef = useRef<any>();
+    const dataRef = useRef<any>([]);
+    const loadRef = useRef<boolean>(false);
+
     const token = cookies.tks;
     const userId = cookies.k_user;
-    useEffect(() => {
-        async function fetch() {
-            cRef.current = 1;
-            setLoading(true);
-            const res = await peopleAPI.getFriends(token, offset, limit, 'yousent');
-            console.log('you sent ', res);
 
+    async function fetch(rel: boolean) {
+        cRef.current = 1;
+        if (rel) {
+            offsetRef.current = 0;
+            dataRef.current = [];
+        }
+        if (!loadRef.current) {
+            loadRef.current = true;
+            const res = await peopleAPI.getFriends(token, offsetRef.current, limit, 'yousent');
+            console.log(type, res);
             res.map((f: { avatar: string | undefined }) => {
                 if (f.avatar) {
                     const av = CommonUtils.convertBase64(f.avatar);
                     f.avatar = av;
                 }
             });
-            setLoading(false);
-            setData(res);
-            setOffset((prevOffset) => prevOffset + limit);
+            if (res) {
+                dataRef.current = [...(dataRef.current ?? []), ...res];
+                setData(dataRef.current);
+                offsetRef.current += limit;
+                loadRef.current = false;
+            }
         }
-        if (type === 'you sent' || cRef.current === 0) fetch();
+    }
+
+    const handleScroll = () => {
+        const { scrollTop, clientHeight, scrollHeight } = eleRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 20 && !loadRef.current) {
+            fetch(false);
+        }
+    };
+    useEffect(() => {
+        if (type === 'yousent' || cRef.current === 0) fetch(true);
+        eleRef.current.addEventListener('scroll', handleScroll);
+        return () => {
+            eleRef?.current?.removeEventListener('scroll', handleScroll);
+        };
     }, [reload]);
     const handleAbolish = async (id: string, kindOf: string = 'friends') => {
         console.log('Abolish', kindOf, id);
@@ -64,7 +88,7 @@ const Requested: React.FC<{ setLoading: React.Dispatch<React.SetStateAction<bool
         }
     };
 
-    const css = `    display: flex;
+    const css = `display: flex;
             align-items: center;
             padding: 4px 6px;
            background-color: #5e5e5e;
@@ -94,63 +118,73 @@ const Requested: React.FC<{ setLoading: React.Dispatch<React.SetStateAction<bool
 
     return (
         <>
-            {data?.map((vl) => {
-                const buttons = [
-                    {
-                        text: 'Delete',
-                        css: css,
-                        onClick: () => handleRemove(vl.id, 'friends'),
-                    },
-                    {
-                        text: 'Abolish',
-                        tx: '(F)',
-                        css: css + 'background-color: #af2c48; ',
-                        onClick: () => handleAbolish(vl.id),
-                    },
-                ];
-                return (
-                    <Div
-                        key={vl.id}
-                        wrap="wrap"
-                        css={`
-                            width: 90%;
-                            padding: 5px;
-                            border: 1px solid #414141;
-                            margin: 10px;
-                            transition: all 0.2s linear;
-                            position: relative;
-                            &:hover {
-                                box-shadow: 0 0 8px #6a48bc;
-                            }
-                            @media (min-width: 480px) {
-                                width: 306px;
-                            }
-                            @media (min-width: 769px) {
-                                width: 190px;
-                                height: fit-content;
-                                flex-wrap: wrap;
-                                justify-content: center;
-                                text-align: center;
-                                background-color: #292a2c;
-                                box-shadow: 0 0 5px #7b797987;
-                                border-radius: 5px;
-                                padding: 0 0 12px;
-                            }
-                        `}
-                    >
+            <DivResults id="yousent" ref={eleRef}>
+                <H3 css="width: 100%; text-align: center; padding: 3px; background-color: #353535; font-size: 1.5rem; ">
+                    You requested
+                </H3>
+                {loadRef.current && (
+                    <DivLoading>
+                        <LoadingI />
+                    </DivLoading>
+                )}
+                {data?.map((vl) => {
+                    const buttons = [
+                        {
+                            text: 'Delete',
+                            css: css,
+                            onClick: () => handleRemove(vl.id, 'friends'),
+                        },
+                        {
+                            text: 'Abolish',
+                            tx: '(F)',
+                            css: css + 'background-color: #af2c48; ',
+                            onClick: () => handleAbolish(vl.id),
+                        },
+                    ];
+                    return (
                         <Div
+                            key={vl.id}
+                            wrap="wrap"
                             css={`
-                                position: absolute;
-                                right: 9px;
-                                font-size: 20px;
+                                width: 90%;
+                                padding: 5px;
+                                border: 1px solid #414141;
+                                margin: 10px;
+                                transition: all 0.2s linear;
+                                position: relative;
+                                &:hover {
+                                    box-shadow: 0 0 8px #6a48bc;
+                                }
+                                @media (min-width: 480px) {
+                                    width: 306px;
+                                }
+                                @media (min-width: 769px) {
+                                    width: 190px;
+                                    height: fit-content;
+                                    flex-wrap: wrap;
+                                    justify-content: center;
+                                    text-align: center;
+                                    background-color: #292a2c;
+                                    box-shadow: 0 0 5px #7b797987;
+                                    border-radius: 5px;
+                                    padding: 0 0 12px;
+                                }
                             `}
                         >
-                            <DotI />
+                            <Div
+                                css={`
+                                    position: absolute;
+                                    right: 9px;
+                                    font-size: 20px;
+                                `}
+                            >
+                                <DotI />
+                            </Div>
+                            <TagProfle profile button={buttons} cssImage={cssImage} data={vl} />
                         </Div>
-                        <TagProfle profile button={buttons} cssImage={cssImage} data={vl} />
-                    </Div>
-                );
-            })}
+                    );
+                })}
+            </DivResults>
         </>
     );
 };

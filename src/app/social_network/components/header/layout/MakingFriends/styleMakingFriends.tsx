@@ -58,7 +58,7 @@ export const DivResults = styled.div`
 export const Input = styled.input`
     display: none;
     width: 0%;
-    border: 1px solid rgba(255, 255, 255, 0.83);
+    border: ${(props: { border?: string }) => props.border || '1px solid rgba(255, 255, 255, 0.83)'};
     border-radius: 25px;
     margin: 3px 0;
     padding: 0 10px;

@@ -2,7 +2,7 @@
 import { Div, H3, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { DivItems, DivMenu, DivOptions, DivResults, DivSearch, Input } from './styleMakingFriends';
 import TagProfle from '~/social_network/components/Header/layout/MakingFriends/TagProfle';
-import { useState, useEffect, useLayoutEffect, memo } from 'react';
+import { useState, useEffect, useLayoutEffect, memo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import peopleAPI from '~/restAPI/requestServers/socialNetwork/peopleAPI';
 import { useCookies } from 'react-cookie';
@@ -46,13 +46,23 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
     const [sAge, setSAge] = useState<string>('');
     const [sBirth, setSBirth] = useState<string>('');
     const [sAddress, setSAddress] = useState<string>('');
-    const [type, setType] = useState<string>('strangers');
-
+    const [type, setType] = useState<string>(() => window.location.href.split('#')[1] || 'strangers');
+    const lRef = useRef<any>();
     const [loading, setLoading] = useState<boolean>(false);
 
     const optionS = friendsT.option;
     const menu = friendsT.menu;
+    useEffect(() => {
+        const as = document.querySelectorAll('.idHref');
+        Array.from(as).forEach((item) => {
+            console.log(item, 'item', item.getAttribute('href'));
 
+            if (item.getAttribute('href') === '#' + window.location.href.split('#')[1]) {
+                item.dispatchEvent(new MouseEvent('click'));
+            }
+        });
+        console.log(window.location.href.split('#')[1], 'aa', as);
+    }, []);
     const handleOption = (e: any, i: string) => {
         if (!['0', '1', '2', '3'].includes(e.target.getAttribute('id'))) {
             if (search.lastIndexOf(i) >= 0) {
@@ -110,64 +120,29 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
             </DivSearch>
             <Div css="height: 91%">
                 <DivMenu>
-                    {menu?.map((m) => (
-                        <a href={`#${m.id}`} key={m.name}>
-                            <DivItems
-                                css={`
-                                    ${m.id === type ? 'background-color: #444444;' : ''}
-                                `}
-                                onClick={() => setType(m.id)}
-                            >
-                                {m.name}
-                            </DivItems>
-                        </a>
-                    ))}
+                    {menu?.map((m) => {
+                        return (
+                            <a href={`#${m.id}`} key={m.name} className="idHref" ref={lRef}>
+                                <DivItems
+                                    css={`
+                                        ${m.id === type ? 'background-color: #444444;' : ''}
+                                    `}
+                                    onClick={() => setType(m.id)}
+                                >
+                                    {m.name}
+                                </DivItems>
+                            </a>
+                        );
+                    })}
                 </DivMenu>
                 <Div width="100%" css="position: relative; height: 100%; overflow-x: hidden;">
-                    <DivResults id="strangers">
-                        <H3 css="width: 100%; text-align: center; padding: 3px; background-color: #353535; font-size: 1.5rem;">
-                            {type.charAt(0).toUpperCase() + type.slice(1)}
-                        </H3>
-                        {loading && (
-                            <DivLoading>
-                                <LoadingI />
-                            </DivLoading>
-                        )}
-                        <Strangers setLoading={setLoading} type={type} />
-                    </DivResults>{' '}
-                    <DivResults id="friends">
-                        <H3 css="width: 100%; text-align: center; padding: 3px; background-color: #353535; font-size: 1.5rem; ">
-                            {type.charAt(0).toUpperCase() + type.slice(1)}
-                        </H3>
-                        {loading && (
-                            <DivLoading>
-                                <LoadingI />
-                            </DivLoading>
-                        )}
-                        <Friends setLoading={setLoading} type={type} />
-                    </DivResults>
-                    <DivResults id="you sent">
-                        <H3 css="width: 100%; text-align: center; padding: 3px; background-color: #353535; font-size: 1.5rem; ">
-                            {type.charAt(0).toUpperCase() + type.slice(1)}
-                        </H3>
-                        {loading && (
-                            <DivLoading>
-                                <LoadingI />
-                            </DivLoading>
-                        )}
-                        <Requested setLoading={setLoading} type={type} />
-                    </DivResults>
-                    <DivResults id="others sent">
-                        <H3 css="width: 100%; text-align: center; padding: 3px; background-color: #353535; font-size: 1.5rem; ">
-                            {type.charAt(0).toUpperCase() + type.slice(1)}
-                        </H3>
-                        {loading && (
-                            <DivLoading>
-                                <LoadingI />
-                            </DivLoading>
-                        )}
-                        <Others setLoading={setLoading} type={type} />
-                    </DivResults>
+                    <Strangers type={type} />
+
+                    <Friends type={type} />
+
+                    <Requested type={type} />
+
+                    <Others type={type} />
                     <DivResults id="family">
                         <H3 css="width: 100%; text-align: center; padding: 3px; background-color: #353535; font-size: 1.5rem; ">
                             {type.charAt(0).toUpperCase() + type.slice(1)}

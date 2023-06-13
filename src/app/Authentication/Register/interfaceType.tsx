@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 export interface PropsRegisterLanguage {
-    [VN: string]: {
+    [vi: string]: {
         title: string;
         input: {
             id: number;
@@ -19,7 +19,7 @@ export interface PropsRegisterLanguage {
         messageDate: string;
         messageName: string;
     };
-    EN: {
+    en: {
         title: string;
         input: {
             id: number;

@@ -29,7 +29,11 @@ const Avatar: React.FC<_Avatar> = ({
     width,
     radius,
     gender,
-    fallback: Fallback = gender === 0 ? Images.defaultAvatarMale : gender === 1 ? Images.defaultAvatarFemale : null,
+    fallback: Fallback = gender === 0
+        ? Images.defaultAvatarMale
+        : gender === 1
+        ? Images.defaultAvatarFemale
+        : Images.defaultAvataLgbt,
     onClick,
     css,
     profile = false,

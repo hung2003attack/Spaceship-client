@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { DotI } from '~/assets/Icons/Icons';
-import { Div } from '~/reUsingComponents/styleComponents/styleDefault';
+import { DotI, LoadingI } from '~/assets/Icons/Icons';
+import { Div, H3 } from '~/reUsingComponents/styleComponents/styleDefault';
 import peopleAPI from '~/restAPI/requestServers/socialNetwork/peopleAPI';
 import CommonUtils from '~/utils/CommonUtils';
 import TagProfle from './TagProfle';
 import { useSelector } from 'react-redux';
+import Requested from './Requested';
+import { DivLoading } from '~/reUsingComponents/styleComponents/styleComponents';
+import { DivResults } from './styleMakingFriends';
 
 interface PropsOthers {
     avatar: any;
@@ -15,33 +18,59 @@ interface PropsOthers {
     id: string;
     nickName: string | undefined;
 }
-const Others: React.FC<{ setLoading: React.Dispatch<React.SetStateAction<boolean>>; type: string }> = ({
-    setLoading,
-    type,
-}) => {
+const Others: React.FC<{ type: string }> = ({ type }) => {
     const reload = useSelector((state: { reload: { people: number } }) => state.reload.people);
     const [data, setData] = useState<PropsOthers[]>();
     const [cookies, setCookies] = useCookies(['tks', 'k_user']);
-    const [offset, setOffset] = useState(0);
-    const [limit, setLimit] = useState(10);
+    const limit: number = 1;
+
+    const offsetRef = useRef<number>(0);
+    const cRef = useRef<number>(0);
+    const eleRef = useRef<any>();
+    const dataRef = useRef<any>([]);
+    const loadRef = useRef<boolean>(false);
+
     const token = cookies.tks;
     const userId = cookies.k_user;
-    useEffect(() => {
-        async function fetch() {
-            setLoading(true);
-            const res = await peopleAPI.getFriends(token, offset, limit, 'others');
-            console.log('you sent ', res);
+    async function fetch(rel: boolean) {
+        cRef.current = 1;
+        if (rel) {
+            offsetRef.current = 0;
+            dataRef.current = [];
+        }
+        if (!loadRef.current) {
+            loadRef.current = true;
+            const res = await peopleAPI.getFriends(token, offsetRef.current, limit, 'others');
+            console.log(type, res);
             res.map((f: { avatar: string | undefined }) => {
                 if (f.avatar) {
                     const av = CommonUtils.convertBase64(f.avatar);
                     f.avatar = av;
                 }
             });
-            setLoading(false);
-            setData(res);
-            setOffset((prevOffset) => prevOffset + limit);
+            if (res) {
+                dataRef.current = [...(dataRef.current ?? []), ...res];
+                setData(dataRef.current);
+                offsetRef.current += limit;
+                loadRef.current = false;
+            }
         }
-        if (type === 'others sent') fetch();
+    }
+
+    const handleScroll = () => {
+        const { scrollTop, clientHeight, scrollHeight } = eleRef.current;
+        console.log(scrollTop, clientHeight, scrollHeight);
+
+        if (scrollTop + clientHeight >= scrollHeight - 20 && !loadRef.current) {
+            fetch(false);
+        }
+    };
+    useEffect(() => {
+        if (type === 'otherssent' || cRef.current === 0) fetch(true);
+        eleRef.current.addEventListener('scroll', handleScroll);
+        return () => {
+            eleRef?.current?.removeEventListener('scroll', handleScroll);
+        };
     }, [reload]);
     const handleConfirm = async (id: string, kindOf: string = 'friends') => {
         const res = await peopleAPI.setConfirm(token, id, kindOf);
@@ -96,62 +125,72 @@ const Others: React.FC<{ setLoading: React.Dispatch<React.SetStateAction<boolean
 
     return (
         <>
-            {data?.map((vl) => {
-                const buttons = [
-                    {
-                        text: 'Delete',
-                        css: css,
-                        onClick: () => handleRemove(vl.id, 'friends'),
-                    },
-                    {
-                        text: 'Confirm',
-                        css: css + 'background-color:   #1553a1; ',
-                        onClick: () => handleConfirm(vl.id),
-                    },
-                ];
-                return (
-                    <Div
-                        key={vl.id}
-                        wrap="wrap"
-                        css={`
-                            width: 90%;
-                            padding: 5px;
-                            border: 1px solid #414141;
-                            margin: 10px;
-                            transition: all 0.2s linear;
-                            position: relative;
-                            &:hover {
-                                box-shadow: 0 0 8px #6a48bc;
-                            }
-                            @media (min-width: 480px) {
-                                width: 306px;
-                            }
-                            @media (min-width: 769px) {
-                                width: 190px;
-                                height: fit-content;
-                                flex-wrap: wrap;
-                                justify-content: center;
-                                text-align: center;
-                                background-color: #292a2c;
-                                box-shadow: 0 0 5px #7b797987;
-                                border-radius: 5px;
-                                padding: 0 0 12px;
-                            }
-                        `}
-                    >
+            <DivResults id="otherssent" ref={eleRef}>
+                <H3 css="width: 100%; text-align: center; padding: 3px; background-color: #353535; font-size: 1.5rem; ">
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                </H3>
+                {loadRef.current && (
+                    <DivLoading>
+                        <LoadingI />
+                    </DivLoading>
+                )}
+                {data?.map((vl) => {
+                    const buttons = [
+                        {
+                            text: 'Delete',
+                            css: css,
+                            onClick: () => handleRemove(vl.id, 'friends'),
+                        },
+                        {
+                            text: 'Confirm',
+                            css: css + 'background-color:   #1553a1; ',
+                            onClick: () => handleConfirm(vl.id),
+                        },
+                    ];
+                    return (
                         <Div
+                            key={vl.id}
+                            wrap="wrap"
                             css={`
-                                position: absolute;
-                                right: 9px;
-                                font-size: 20px;
+                                width: 90%;
+                                padding: 5px;
+                                border: 1px solid #414141;
+                                margin: 10px;
+                                transition: all 0.2s linear;
+                                position: relative;
+                                &:hover {
+                                    box-shadow: 0 0 8px #6a48bc;
+                                }
+                                @media (min-width: 480px) {
+                                    width: 306px;
+                                }
+                                @media (min-width: 769px) {
+                                    width: 190px;
+                                    height: fit-content;
+                                    flex-wrap: wrap;
+                                    justify-content: center;
+                                    text-align: center;
+                                    background-color: #292a2c;
+                                    box-shadow: 0 0 5px #7b797987;
+                                    border-radius: 5px;
+                                    padding: 0 0 12px;
+                                }
                             `}
                         >
-                            <DotI />
+                            <Div
+                                css={`
+                                    position: absolute;
+                                    right: 9px;
+                                    font-size: 20px;
+                                `}
+                            >
+                                <DotI />
+                            </Div>
+                            <TagProfle profile button={buttons} cssImage={cssImage} data={vl} />
                         </Div>
-                        <TagProfle profile button={buttons} cssImage={cssImage} data={vl} />
-                    </Div>
-                );
-            })}
+                    );
+                })}
+            </DivResults>
         </>
     );
 };

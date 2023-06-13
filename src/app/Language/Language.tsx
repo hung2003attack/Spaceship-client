@@ -17,8 +17,8 @@ const Language: React.FC<PropsChange> = ({ change, language, changeLanguage }) =
             </StyleLanguage>
             {language && (
                 <MenuLanguage>
-                    <OptionLanguage onClick={() => handleClick('EN')}>English</OptionLanguage>
-                    <OptionLanguage onClick={() => handleClick('VN')}>VietNamese</OptionLanguage>
+                    <OptionLanguage onClick={() => handleClick('en')}>English</OptionLanguage>
+                    <OptionLanguage onClick={() => handleClick('vi')}>VietNamese</OptionLanguage>
                 </MenuLanguage>
             )}
         </>

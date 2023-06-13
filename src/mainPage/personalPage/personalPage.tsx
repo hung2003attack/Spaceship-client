@@ -58,6 +58,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
 
     const [dataUser, setDataUser] = useState<PropsUserPer>(user);
     const id_f_user = dataUser.id_f_user.idCurrentUser || dataUser.id_friend.idCurrentUser;
+    const id_friend = dataUser.id_friend.idFriend || dataUser.id_f_user.idFriend;
     const id_fl = dataUser.id_flwing.id_following || dataUser.id_flwed.id_following;
     const id_fled = dataUser.id_flwing.id_followed || dataUser.id_flwed.id_followed;
 
@@ -410,6 +411,14 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
             width: 100%;
             height: var(--full);
             overflow-y: overlay;
+            &::-webkit-scrollbar {
+                width: 0px;
+            }
+            @media (min-width: 768px) {
+                &::-webkit-scrollbar {
+                    width: 7px;
+                }
+            }
             @media (min-width: 1100px){
                 min-width: ${100 / leng + '%;'}
             }
@@ -421,7 +430,8 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
     const cssBt = `color: ${colorText};
             width: 118px;
             justify-content: center;
-            padding: 9px;
+            align-items: center;
+            padding: 7px;
             font-size: 1.3rem;
             margin: 0 5px;
             background-color: #383838;
@@ -512,21 +522,10 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                 : { name: 'Theo dõi', onClick: () => handleFollower(dataUser.id) },
         ],
     };
-    const moreCss =
-        id_f_user !== userId
-            ? level === 1
-                ? 'background-color: #095b00;'
-                : level === 2
-                ? ''
-                : ''
-            : level === 1
-            ? 'background-color: #902525;'
-            : level === 2
-            ? ''
-            : '';
+
     const btss = [
         { text: buttons[lg][0].name, css: cssBt, onClick: buttons[lg][0].onClick },
-        { text: buttons[lg][1].name, css: cssBt + 'background-color: #0d62b4;', onClick: buttons[lg][1].onClick },
+        { text: buttons[lg][1].name, css: cssBt, onClick: buttons[lg][1].onClick },
         { text: buttons[lg][2].name, css: cssBt, onClick: buttons[lg][2].onClick },
     ];
     const btName: { [en: string]: { del: string; ok: string }; vi: { del: string; ok: string } } = {
@@ -747,7 +746,15 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                         <Buttons text={btss} />
                     </Div>
                 )}
-                <Title colorText={colorText} colorBg={colorBg} data={dataUser.id_m_user} status={dataUser.status} />
+                <Title
+                    id_o={id_f_user}
+                    id_f={id_friend}
+                    level={level}
+                    colorText={colorText}
+                    colorBg={colorBg}
+                    data={dataUser.id_m_user}
+                    status={dataUser.status}
+                />
                 {/* <DivIntr>
                     <DivStories>
                         <DivOp>

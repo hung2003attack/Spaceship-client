@@ -8,11 +8,11 @@ interface InitialState {
     w: string;
 }
 const initialState: InitialState = {
-    login: 'VN',
-    register: 'VN',
-    sn: 'VN',
-    l: 'VN',
-    w: 'VN',
+    login: 'vi',
+    register: 'vi',
+    sn: 'vi',
+    l: 'vi',
+    w: 'vi',
 };
 
 const languageSlide = createSlice({

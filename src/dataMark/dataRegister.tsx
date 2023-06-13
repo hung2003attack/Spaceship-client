@@ -1,5 +1,5 @@
 export const register = {
-    VN: {
+    vi: {
         title: 'Đăng Ký',
         input: [
             { id: 0, type: 'text', placeholder: 'Tên', role: 'name' },
@@ -23,7 +23,7 @@ export const register = {
         messageDate: 'Ngày sinh không hợp lệ.',
         messageName: 'Độ dài phải từ 1 đến 30 ký tự.',
     },
-    EN: {
+    en: {
         title: 'Register',
         input: [
             { id: 0, type: 'text', placeholder: 'your name', role: 'name' },

@@ -105,31 +105,29 @@ function App() {
                 star: 'star',
                 love: 'love',
                 visit: 'visit',
-                follow: 'follow',
-                following: 'following',
             },
             'personal',
         );
-        console.log(res, first, 'ssss', res.avatar);
-        if (res.avatar) {
+        console.log(res, first, 'ssss', res?.avatar);
+        if (res?.avatar) {
             const av = CommonUtils.convertBase64(res.avatar);
             res.avatar = av;
             console.log(res, 'sss');
         }
-        if (res.background) {
+        if (res?.background) {
             const av = CommonUtils.convertBase64(res.background);
             res.background = av;
         }
-        if (res.id_m_user.flwed_data) {
-            res.id_m_user.flwed_data.map((a: { avatar: any }) => {
+        if (res?.id_m_user.flwed_data) {
+            res?.id_m_user.flwed_data.map((a: { avatar: any }) => {
                 if (a.avatar) {
                     const av = CommonUtils.convertBase64(res.background);
                     a.avatar = av;
                 }
             });
         }
-        if (res.id_m_user.flwing_data) {
-            res.id_m_user.flwing_data.map((a: { avatar: any }) => {
+        if (res?.id_m_user.flwing_data) {
+            res?.id_m_user.flwing_data.map((a: { avatar: any }) => {
                 if (a.avatar) {
                     const av = CommonUtils.convertBase64(res.background);
                     a.avatar = av;
@@ -418,8 +416,8 @@ function App() {
             }
         >
             <Authentication
-                dataLogin={{ EN: login.EN, VN: login.VN }}
-                dataRegister={{ VN: register.VN, EN: register.EN }}
+                dataLogin={{ en: login.en, vi: login.vi }}
+                dataRegister={{ vi: register.vi, en: register.en }}
             />
         </Suspense>
     );
