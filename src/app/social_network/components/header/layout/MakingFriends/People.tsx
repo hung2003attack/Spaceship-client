@@ -1,4 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+
+import { io } from 'socket.io-client';
+import moment from 'moment';
+import { Swiper, SwiperSlide } from 'swiper/react';
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { Pagination, Mousewheel } from 'swiper';
+
 import { Div, H3, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { DivItems, DivMenu, DivOptions, DivResults, DivSearch, Input } from './styleMakingFriends';
 import TagProfle from '~/social_network/components/Header/layout/MakingFriends/TagProfle';
@@ -6,9 +15,6 @@ import { useState, useEffect, useLayoutEffect, memo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import peopleAPI from '~/restAPI/requestServers/socialNetwork/peopleAPI';
 import { useCookies } from 'react-cookie';
-
-import { io } from 'socket.io-client';
-import moment from 'moment';
 import { DotI, LoadingI } from '~/assets/Icons/Icons';
 import { text } from 'stream/consumers';
 import { people } from '~/redux/reload';
@@ -18,6 +24,7 @@ import Strangers from './Strangers';
 import Friends from './Friends';
 import Requested from './Requested';
 import Others from './OthersRequest';
+
 const socket = io('http://localhost:3001', { transports: ['websocket'] });
 
 export interface PropsTextFriends {
@@ -52,6 +59,14 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
 
     const optionS = friendsT.option;
     const menu = friendsT.menu;
+
+    const pagination = {
+        clickable: true,
+        renderBullet: function (index: number, className: string) {
+            return '<span class="' + className + '">' + (index + 1) + '</span>';
+        },
+    };
+
     useEffect(() => {
         const as = document.querySelectorAll('.idHref');
         Array.from(as).forEach((item) => {
@@ -135,8 +150,42 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                         );
                     })}
                 </DivMenu>
-                <Div width="100%" css="position: relative; height: 100%; overflow-x: hidden;">
-                    <Strangers type={type} />
+                <Div
+                    width="70%"
+                    css={`
+                        position: relative;
+                        height: 100%;
+                        @media (min-width: 800px) {
+                            width: 81%;
+                        }
+                    `}
+                >
+                    <Swiper
+                        pagination={pagination}
+                        allowTouchMove={false}
+                        breakpoints={{
+                            992: {
+                                allowTouchMove: true,
+                            },
+                        }}
+                        slidesPerView={'auto'}
+                        scrollbar={{ el: '.swiper-scrollbar', lockClass: '.swiper-scrollbar-lock' }}
+                        className="mySwiper"
+                    >
+                        <SwiperSlide>
+                            <Strangers type={type} />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <Friends type={type} />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <Requested type={type} />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <Others type={type} />
+                        </SwiperSlide>
+                    </Swiper>
+                    {/* <Strangers type={type} />
 
                     <Friends type={type} />
 
@@ -153,7 +202,7 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                             </DivLoading>
                         )}
                         Empty
-                    </DivResults>
+                    </DivResults> */}
                 </Div>
             </Div>
         </DivOptions>

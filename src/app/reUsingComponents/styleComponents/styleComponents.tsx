@@ -155,6 +155,7 @@ interface PropsClose {
     width?: string;
     bg?: string;
     right?: string;
+    bottom?: string;
     css?: string;
     position?: string;
     index?: number;
@@ -168,6 +169,7 @@ export const DivPos = styled.div<PropsClose>`
     top: ${(props) => props.top};
     left: ${(props) => props.left};
     right: ${(props) => props.right};
+    bottom: ${(props) => props.bottom};
     color: ${(props) => props.color};
     position: ${(props) => props.position || 'absolute'};
     z-index: ${(props) => props.index};
@@ -178,7 +180,7 @@ export const DivPos = styled.div<PropsClose>`
 
     &:hover {
         transition: all 0.1s linear;
-        background-color: ${(props) => props.bg};
+        background-color: ${(props) => props.bg || ''};
     }
 `;
 export const DivLoading = styled.div`

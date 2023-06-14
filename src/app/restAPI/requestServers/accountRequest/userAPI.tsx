@@ -23,9 +23,10 @@ export interface PropsParamsById {
     l?: string;
     w?: string;
     as?: string;
+    more?: PropsParamsMores;
 }
 interface PropsParamsMores {
-    position: string;
+    position?: string;
     star?: string;
     love?: string;
     visit?: string;
@@ -109,11 +110,12 @@ class HttpRequestUser {
             console.log(error);
         }
     };
-    changesOne = async (token: string, value: any, params: PropsParamsById) => {
+    changesOne = async (token: string, id: string, value: any, params: PropsParamsById) => {
         try {
             const Axios = refreshToken.axiosJWTs(token);
             const res = await Axios.patch('/SN/user/changesOne', {
                 params: {
+                    id,
                     params,
                     value,
                 },
@@ -144,6 +146,22 @@ class HttpRequestUser {
                 params: {
                     id,
                     unfollow,
+                },
+            });
+            console.log(res, 'sd');
+
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    getMore = async (token: string, offset: number, limit: number) => {
+        try {
+            const Axios = refreshToken.axiosJWTs(token);
+            const res = await Axios.get('/SN/user/getMore', {
+                params: {
+                    offset,
+                    limit,
                 },
             });
             console.log(res, 'sd');

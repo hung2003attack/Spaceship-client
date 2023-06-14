@@ -39,7 +39,7 @@ const TagProfle: React.FC<PropsTagP> = ({
     };
 
     return (
-        <Div width="100%" wrap="wrap">
+        <Div width="100%" wrap="wrap" css=" align-items: center;">
             <Div
                 width="100%"
                 css={`

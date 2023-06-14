@@ -22,13 +22,13 @@ const Others: React.FC<{ type: string }> = ({ type }) => {
     const reload = useSelector((state: { reload: { people: number } }) => state.reload.people);
     const [data, setData] = useState<PropsOthers[]>();
     const [cookies, setCookies] = useCookies(['tks', 'k_user']);
+    const [loading, setLoading] = useState<boolean>(false);
     const limit: number = 1;
 
     const offsetRef = useRef<number>(0);
     const cRef = useRef<number>(0);
     const eleRef = useRef<any>();
     const dataRef = useRef<any>([]);
-    const loadRef = useRef<boolean>(false);
 
     const token = cookies.tks;
     const userId = cookies.k_user;
@@ -37,23 +37,22 @@ const Others: React.FC<{ type: string }> = ({ type }) => {
         if (rel) {
             offsetRef.current = 0;
             dataRef.current = [];
+            setLoading(true);
         }
-        if (!loadRef.current) {
-            loadRef.current = true;
-            const res = await peopleAPI.getFriends(token, offsetRef.current, limit, 'others');
-            console.log(type, res);
-            res.map((f: { avatar: string | undefined }) => {
-                if (f.avatar) {
-                    const av = CommonUtils.convertBase64(f.avatar);
-                    f.avatar = av;
-                }
-            });
-            if (res) {
-                dataRef.current = [...(dataRef.current ?? []), ...res];
-                setData(dataRef.current);
-                offsetRef.current += limit;
-                loadRef.current = false;
+
+        const res = await peopleAPI.getFriends(token, offsetRef.current, limit, 'others');
+        console.log(type, res);
+        res.map((f: { avatar: string | undefined }) => {
+            if (f.avatar) {
+                const av = CommonUtils.convertBase64(f.avatar);
+                f.avatar = av;
             }
+        });
+        if (res) {
+            dataRef.current = [...(dataRef.current ?? []), ...res];
+            setData(dataRef.current);
+            offsetRef.current += limit;
+            setLoading(false);
         }
     }
 
@@ -61,7 +60,7 @@ const Others: React.FC<{ type: string }> = ({ type }) => {
         const { scrollTop, clientHeight, scrollHeight } = eleRef.current;
         console.log(scrollTop, clientHeight, scrollHeight);
 
-        if (scrollTop + clientHeight >= scrollHeight - 20 && !loadRef.current) {
+        if (scrollTop + clientHeight >= scrollHeight - 20 && !loading) {
             fetch(false);
         }
     };
@@ -126,14 +125,12 @@ const Others: React.FC<{ type: string }> = ({ type }) => {
     return (
         <>
             <DivResults id="otherssent" ref={eleRef}>
-                <H3 css="width: 100%; text-align: center; padding: 3px; background-color: #353535; font-size: 1.5rem; ">
-                    {type.charAt(0).toUpperCase() + type.slice(1)}
-                </H3>
-                {loadRef.current && (
+                {loading && (
                     <DivLoading>
                         <LoadingI />
                     </DivLoading>
                 )}
+
                 {data?.map((vl) => {
                     const buttons = [
                         {
@@ -152,7 +149,7 @@ const Others: React.FC<{ type: string }> = ({ type }) => {
                             key={vl.id}
                             wrap="wrap"
                             css={`
-                                width: 90%;
+                                width: 185px;
                                 padding: 5px;
                                 border: 1px solid #414141;
                                 margin: 10px;

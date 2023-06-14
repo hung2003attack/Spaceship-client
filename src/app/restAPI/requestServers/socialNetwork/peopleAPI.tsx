@@ -61,7 +61,6 @@ class PeopleRequest {
                     ids,
                 },
             });
-            refreshToken.ejectInterceptor();
             return res.data;
         } catch (error) {
             console.log(error, 'get Strangers');

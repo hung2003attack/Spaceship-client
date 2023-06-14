@@ -33,7 +33,7 @@ import {
     AiOutlineStar,
     AiFillHeart,
 } from 'react-icons/ai';
-import { GiEarthAmerica, GiNewspaper } from 'react-icons/gi';
+import { GiBurningBook, GiEarthAmerica, GiNewspaper } from 'react-icons/gi';
 import {
     MdWorkOutline,
     MdEmojiPeople,
@@ -117,3 +117,4 @@ export const GenderFemaleI = () => <TbGenderFemale />;
 export const WorkingI = () => <MdOutlineWork />;
 export const BirthI = () => <FaBirthdayCake />;
 export const HeartMI = () => <AiFillHeart />;
+export const FollowI = () => <GiBurningBook />;

@@ -12,9 +12,10 @@ import {
 import { Hname } from '~/reUsingComponents/styleComponents/styleComponents';
 import { Div, H3, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { DivTitleP } from './styleLayout';
-import { useState } from 'react';
-import UserBar from '~/reUsingComponents/Bar/UserBar';
+import { useRef, useState } from 'react';
+import UserBar from 'src/mainPage/personalPage/layout/UserBar';
 import { useCookies } from 'react-cookie';
+import userAPI from '~/restAPI/requestServers/accountRequest/userAPI';
 
 export interface PropsTitleP {
     position: string;
@@ -34,24 +35,26 @@ const Title: React.FC<{
     id_f: string;
     level: number;
 }> = ({ colorText, colorBg, data, status, id_o, id_f, level }) => {
-    const [cookies, setCookies] = useCookies(['k_user']);
-    const [flwData, setFlwData] = useState<{ id: string; avatar: any; fullName: string; gender: number }[]>();
+    const [cookies, setCookies] = useCookies(['k_user', 'tks']);
+    const [position, setPosition] = useState<number>(0);
+    const offset = useRef<number>(0);
+    const limit = 2;
     console.log(data, 'datattt');
     const userId = cookies.k_user;
+    const token = cookies.tks;
     const itemsT = [
         { icon: <StarI />, key: 1, qt: data.star },
         { icon: <HeartI />, key: 2, qt: data.love },
-        { icon: <PeopleI />, key: 3, qt: data.visit },
-        { icon: <FriendI />, key: 4, qt: data.friends },
+        { icon: <FriendI />, key: 3, qt: data.friends },
+        { icon: <PeopleI />, key: 4, qt: data.visit },
     ];
     const itemsP = [
         { icon: 'Followed', key: 5, qt: data.follow },
         { icon: 'Following', key: 6, qt: data.following },
     ];
-    const handleFlwData = (id: number) => {
-        if (id === 5) {
-            // setFlwData(data.flwed_data);
-        }
+    const handlePosition = async (id: number) => {
+        const res = await userAPI.getMore(token, offset.current, limit);
+        setPosition(id);
     };
     return (
         <DivTitleP>
@@ -61,6 +64,7 @@ const Title: React.FC<{
                         key={i.key}
                         width="50px"
                         wrap="wrap"
+                        onClick={() => handlePosition(i.key)}
                         css={`
                             justify-content: center;
                             align-items: center;
@@ -116,8 +120,8 @@ const Title: React.FC<{
                         `}
                     >
                         <Div width="100%" css="align-items: center; justify-content: center; ">
-                            <H3 css="font-size: 1.5rem; cursor: var(--pointer); " onClick={() => handleFlwData(i.key)}>
-                                {i.icon}
+                            <H3 css="font-size: 1.5rem; cursor: var(--pointer); " onClick={() => handlePosition(i.key)}>
+                                <a href={`#title${i.key}`}> {i.icon}</a>
                             </H3>
                         </Div>
                         <P z="1.3rem">{i.qt}</P>
@@ -165,7 +169,9 @@ const Title: React.FC<{
                     <P css="font-size: 1.4rem; margin-top: 2.5px;">Single</P>
                 </Div>
             </Div>
-            {flwData && <UserBar colorBg={colorBg} colorText={colorText} data={flwData} setFlwData={setFlwData} />}
+            {position > 0 && (
+                <UserBar colorBg={colorBg} colorText={colorText} position={position} setPosition={setPosition} />
+            )}
         </DivTitleP>
     );
 };

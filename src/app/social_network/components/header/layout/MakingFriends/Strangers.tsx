@@ -53,6 +53,7 @@ const Strangers: React.FC<{
     const reload = useSelector((state: { reload: { people: number } }) => state.reload.people);
 
     const [cookies, setCookies] = useCookies(['tks', 'k_user']);
+    const [loading, setLoading] = useState<boolean>(false);
     const offsetRef = useRef<number>(0);
     const limit: number = 10;
     const token = cookies.tks;
@@ -61,42 +62,37 @@ const Strangers: React.FC<{
     const dataRef = useRef<any>([]);
     const idRefs = useRef<string[]>([]);
     const cRef = useRef<number>(0);
-    const loadRef = useRef<boolean>(false);
 
     const fetch = async (rel: boolean) => {
         cRef.current = 1;
-        if (!loadRef.current) {
-            loadRef.current = true;
-            if (rel) {
-                idRefs.current = [];
-                dataRef.current = [];
+        if (rel) {
+            idRefs.current = [];
+            dataRef.current = [];
+            setLoading(true);
+        }
+        const res = await peopleAPI.getStrangers(token, limit, idRefs.current);
+        console.log('strangers', res, data, idRefs);
+        res.map((f: { avatar: any; id: string }) => {
+            idRefs.current.push(f.id);
+            if (f.avatar) {
+                const av = CommonUtils.convertBase64(f.avatar);
+                f.avatar = av;
             }
-            const res = await peopleAPI.getStrangers(token, limit, idRefs.current);
-            console.log('strangers', res, data, idRefs);
-            res.map((f: { avatar: any; id: string }) => {
-                idRefs.current.push(f.id);
-                if (f.avatar) {
-                    const av = CommonUtils.convertBase64(f.avatar);
-                    f.avatar = av;
-                }
-            });
-            dataRef.current = [...(dataRef.current ?? []), ...res];
-            if (!rel) {
-                setData(dataRef.current);
-                offsetRef.current += limit;
-            } else {
-                setData(res);
-            }
-            loadRef.current = false;
+        });
+        dataRef.current = [...(dataRef.current ?? []), ...res];
+        if (!rel) {
+            setData(dataRef.current);
+            offsetRef.current += limit;
+        } else {
+            setLoading(false);
+            setData(res);
         }
     };
     const handleScroll = () => {
         const { scrollTop, clientHeight, scrollHeight } = eleRef.current;
         console.log(scrollTop, clientHeight, scrollHeight);
 
-        if (scrollTop + clientHeight >= scrollHeight - 20 && !loadRef.current) {
-            console.log(loadRef, 'llllllllll');
-
+        if (scrollTop + clientHeight >= scrollHeight - 20 && !loading) {
             fetch(false);
         }
     };
@@ -229,17 +225,64 @@ const Strangers: React.FC<{
                             img{border-radius: 5px 5px 0 0 !important; }
                     }
                     img{border-radius: 50% ;}`;
+    const eRef = useRef<any>();
+    let startX: any; // Lưu tọa độ x ban đầu
+    let startY: any; // Lưu tọa độ y ban đầu
+    let endX: any; // Lưu tọa độ x cuối cùng
+    let endY: any; // Lưu tọa độ y cuối cùng
+
+    const handleTouchStart = (event: any) => {};
+    const handleTouchMove = (e: any) => {
+        console.log(e.target, e.touches[0].clientX);
+
+        if (!startX && !startY) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        }
+
+        // Lấy tọa độ x và y cuối cùng khi di chuyển ngón tay
+        endX = e.touches[0].clientX;
+        endY = e.touches[0].clientY;
+
+        // Đặt lại tọa độ ban đầu và cuối cùng
+
+        // Tính khoảng cách di chuyển ngón tay
+        const distanceX = endX - startX;
+        const distanceY = endY - startY;
+        console.log(startX, endX, startY, endY);
+
+        // Kiểm tra các hướng chạm
+        if (Math.abs(distanceX) > Math.abs(distanceY)) {
+            eleRef.current.style.overflowY = 'unset';
+            console.log('unset');
+            // Di chuyển theo trục x
+            if (distanceX > 0) {
+                console.log('Sự kiện chạm di chuyển sang phải');
+            } else if (distanceX < 0) {
+                console.log('Sự kiện chạm di chuyển sang trái');
+            }
+        } else {
+            console.log('overlay');
+
+            eleRef.current.style.overflowY = 'overlay';
+            // Di chuyển theo trục y
+            if (distanceY > 0) {
+                console.log('Sự kiện chạm di chuyển xuống');
+            } else if (distanceY < 0) {
+                console.log('Sự kiện chạm di chuyển lên');
+            }
+        }
+    };
+
     return (
         <>
-            <DivResults id="strangers" ref={eleRef}>
-                <H3 css="width: 100%; text-align: center; padding: 3px; background-color: #353535; font-size: 1.5rem;">
-                    Strangers
-                </H3>
-                {loadRef.current && (
+            <DivResults ref={eleRef} id="strangers">
+                {loading && (
                     <DivLoading>
                         <LoadingI />
                     </DivLoading>
                 )}
+
                 {data?.map((vl) => {
                     const buttons = [];
                     const idU = vl.id_friend?.idCurrentUser || vl.id_f_user?.idCurrentUser;
@@ -302,7 +345,7 @@ const Strangers: React.FC<{
                             key={vl.id}
                             wrap="wrap"
                             css={`
-                                width: 90%;
+                                width: 185px;
                                 padding: 5px;
                                 border: 1px solid #414141;
                                 margin: 10px;
@@ -340,7 +383,7 @@ const Strangers: React.FC<{
                         </Div>
                     );
                 })}
-            </DivResults>{' '}
+            </DivResults>
         </>
     );
 };

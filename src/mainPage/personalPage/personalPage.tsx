@@ -14,7 +14,7 @@ import { DivPersonalPage } from '../styleNextWeb';
 import { DivBg, DivIntr, DivItems, DivOp, DivPerson, DivStories, InputChangeP } from './stypePersonal';
 import { offPersonalPage, setTrueErrorServer } from '../../app//redux/hideShow';
 import Title from './layout/Title';
-import { CheckI, CloseI, DotI, ImageI, LoadingI, UndoI } from '~/assets/Icons/Icons';
+import { CheckI, CloseI, DotI, HeartI, HeartMI, ImageI, LoadingI, UndoI } from '~/assets/Icons/Icons';
 import { Label } from '~/social_network/components/Header/layout/Home/Layout/FormUpNews/styleFormUpNews';
 import CommonUtils from '~/utils/CommonUtils';
 import userAPI from '~/restAPI/requestServers/accountRequest/userAPI';
@@ -151,6 +151,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                         const base64 = await CommonUtils.getBase64(file);
                         const res = await userAPI.changesOne(
                             token,
+                            userId,
                             base64,
                             id === 0 ? { background: 'background' } : { avatar: 'avatar' },
                         );
@@ -178,6 +179,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                 setLoading(true);
                 const res = await userAPI.changesOne(
                     token,
+                    userId,
                     null,
                     id === 0 ? { background: 'background' } : { avatar: 'avatar' },
                 );
@@ -213,7 +215,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
     const handleNameU = async () => {
         if (valueName && valueName.length <= 30 && valueName !== userFirst.fullName) {
             setLoading(true);
-            const res = await userAPI.changesOne(token, valueName, { fullName: 'fullName' });
+            const res = await userAPI.changesOne(token, userId, valueName, { fullName: 'fullName' });
             setLoading(false);
             if (res === 1) {
                 setUserFirst({ ...userFirst, fullName: valueName });
@@ -231,7 +233,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
     const handleNickNameU = async () => {
         if (valueNickN.length <= 30 && valueNickN !== userFirst.nickName) {
             setLoading(true);
-            const res = await userAPI.changesOne(token, valueNickN, { nickName: 'nickName' });
+            const res = await userAPI.changesOne(token, userId, valueNickN, { nickName: 'nickName' });
             setLoading(false);
             if (res === 1) {
                 setUserFirst({ ...userFirst, nickName: valueNickN });
@@ -363,7 +365,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
             border-radius: 5px;
             background-color: #494949cf;
             cursor: var(--pointer);
-
+            position: relative;
             img {
                 border-radius: 5px;
             }
@@ -553,6 +555,9 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
             </Div>
         );
     };
+    const handleLoves = async () => {
+        const res = await userAPI.changesOne(token, dataUser.id, '', { more: { love: 'love' } });
+    };
     return (
         <Div css={css}>
             {(room.background || room.avatar) && (
@@ -580,6 +585,42 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                         />
                     )}
                     {/* )} */}
+                    {dataUser.id !== userId && (
+                        <DivPos
+                            size="25px"
+                            color={colorText}
+                            bottom="-37px"
+                            right="10%"
+                            css={`
+                                @media (min-width: 600px) {
+                                    bottom: -43px;
+                                    font-size: 30px;
+                                    p {
+                                        right: 16px;
+                                    }
+                                }
+                            `}
+                            onClick={handleLoves}
+                        >
+                            <HeartI />
+                            <Div
+                                css={`
+                                    position: absolute;
+                                    color: #444646;
+                                    font-size: 17px;
+                                    right: 4px;
+                                    @media (min-width: 600px) {
+                                        font-size: 22px;
+                                    }
+                                `}
+                            >
+                                <HeartMI />
+                            </Div>
+                            <P z="26px" css="position: absolute; color: #7c8787; right: 13px; z-index: 6; top: -17px;">
+                                .
+                            </P>
+                        </DivPos>
+                    )}
                 </Div>
                 {/* <div className={clsx(styles.close)} onClick={handlePersonalPage}>
                 <CloseI />
@@ -738,6 +779,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                         css={`
                             justify-content: center;
                             margin: 46px auto 0;
+                            position: relative;
                             @media (min-width: 500px) {
                                 justify-content: right;
                             }
