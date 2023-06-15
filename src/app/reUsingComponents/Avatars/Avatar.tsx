@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { memo, useState, useEffect, useLayoutEffect, useCallback } from 'react';
+import React, { memo, useState, useEffect, useLayoutEffect, useCallback, forwardRef, Ref } from 'react';
 
 import { FaUserCircle } from 'react-icons/fa';
 import Images from '../../assets/images';
@@ -7,7 +7,6 @@ import { Img } from '../styleComponents/styleDefault';
 import { useDispatch, useSelector } from 'react-redux';
 import { DivImg } from '../styleComponents/styleComponents';
 import { InitialStateHideShow, onPersonalPage, onSetting, setIdUser } from '../../redux/hideShow';
-import CommonUtils from '~/utils/CommonUtils';
 
 interface _Avatar {
     id?: string;
@@ -20,24 +19,27 @@ interface _Avatar {
     onClick?: (args: any) => void;
     css?: string;
     profile?: boolean;
+    onTouchMove?: (args: any) => void;
 }
 
-const Avatar: React.FC<_Avatar> = ({
-    id,
-    src,
-    alt,
-    width,
-    radius,
-    gender,
-    fallback: Fallback = gender === 0
-        ? Images.defaultAvatarMale
-        : gender === 1
-        ? Images.defaultAvatarFemale
-        : Images.defaultAvataLgbt,
-    onClick,
-    css,
-    profile = false,
-}) => {
+const Avatar = forwardRef((props: any, ref: any) => {
+    const {
+        id,
+        src,
+        alt,
+        width,
+        radius,
+        gender,
+        fallback: Fallback = gender === 0
+            ? Images.defaultAvatarMale
+            : gender === 1
+            ? Images.defaultAvatarFemale
+            : Images.defaultAvataLgbt,
+        onClick,
+        onTouchMove,
+        css,
+        profile = false,
+    } = props;
     const dispatch = useDispatch();
     const [idUser] = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow.idUser);
     const [avatar, setAvatar] = useState<boolean>(false);
@@ -59,6 +61,7 @@ const Avatar: React.FC<_Avatar> = ({
     };
     const events = {
         onClick,
+        onTouchMove,
     };
 
     const handleOpentProfile = () => {
@@ -68,7 +71,7 @@ const Avatar: React.FC<_Avatar> = ({
     return avatar ? (
         <FaUserCircle />
     ) : (
-        <DivImg width={width} css={css} {...events}>
+        <DivImg width={width} css={css} {...events} ref={ref}>
             <Img
                 src={src || avatarFallback}
                 alt={alt}
@@ -78,6 +81,6 @@ const Avatar: React.FC<_Avatar> = ({
             />
         </DivImg>
     );
-};
+});
 
 export default memo(Avatar);

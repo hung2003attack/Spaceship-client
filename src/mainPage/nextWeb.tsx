@@ -52,7 +52,7 @@ import NextListWeb from './listWebs/ListWebs';
 import PeopleRequest from '~/restAPI/requestServers/socialNetwork/peopleAPI';
 import WarningBrowser from '~/reUsingComponents/ErrorBoudaries/Warning_browser';
 import CommonUtils from '~/utils/CommonUtils';
-import { PropsUserPer } from 'src/App';
+import { PropsUser, PropsUserPer } from 'src/App';
 export const socket = io('http://localhost:3001', { transports: ['websocket'] });
 
 export interface PropsBg {
@@ -68,7 +68,7 @@ const Website: React.FC<{
     setUserOnline: React.Dispatch<React.SetStateAction<string[]>>;
     userOnline: string[];
     idUser: string[];
-    dataUser: PropsUserPer;
+    dataUser: PropsUser;
 }> = ({ setUserOnline, userOnline, idUser, dataUser }) => {
     const dispatch = useDispatch();
     const { colorText, colorBg } = useSelector((state: PropsBg) => state.persistedReducer.background);
@@ -269,6 +269,35 @@ const Website: React.FC<{
     };
     const onli = userOnline.includes(userId) ? 'border: 1px solid #418a7a;' : 'border: 1px solid #696969;';
     console.log('userrrrrr', dataUser);
+    let startX: any; // Lưu tọa độ x ban đầu
+    let startY: any; // Lưu tọa độ y ban đầu
+    let endX: any; // Lưu tọa độ x cuối cùng
+    let endY: any; // Lưu tọa độ y cuối cùng
+    const elRef = useRef<any>();
+    const xRef = useRef<number | null>(null);
+    const yRef = useRef<number | null>(null);
+
+    const handleTouchMove = (e: any) => {
+        const touch = e.touches[0];
+        const x = touch.clientX;
+        const y = touch.clientY;
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const elementRect = elRef.current.getBoundingClientRect();
+        console.log(x, y, viewportWidth, viewportHeight, elementRect);
+        if (elRef.current) {
+            if (viewportWidth - 10 >= x && x >= 19) {
+                xRef.current = x - 20;
+                elRef.current.style.left = `${x - 20}px`;
+            }
+            if (viewportHeight - 10 >= y && y >= 24) {
+                yRef.current = y - 20;
+                elRef.current.style.top = `${y - 20}px`;
+            }
+        }
+        // Đặt vị trí cho phần tử
+    };
+
     return (
         <>
             <DivMainPage>
@@ -280,20 +309,24 @@ const Website: React.FC<{
                         <Suspense>
                             {!idUser.includes(userId) && (
                                 <Avatar
+                                    ref={elRef}
                                     profile
                                     src={dataUser.avatar}
                                     alt={dataUser.fullName}
                                     gender={dataUser.gender}
                                     radius="50%"
                                     id={cookies.k_user}
+                                    onTouchMove={handleTouchMove}
                                     css={`
                                         width: 40px;
                                         height: 40px;
                                         position: fixed;
-                                        top: 134px;
+                                        top: ${(yRef.current || 134) + 'px'};
+                                        left: ${(xRef.current || 'unset') + 'px'};
                                         right: 7px;
                                         z-index: 88;
                                         border-radius: 50%;
+                                        transition: all 0.5s linear
                                         cursor: var(--pointer);
                                         ${onli}
                                     `}

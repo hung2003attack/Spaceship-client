@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { InitialStateHideShow, offAll, onPersonalPage, setIdUser } from './app/redux/hideShow';
 
-import Personalpage from './mainPage/personalPage/personalPage';
+import Personalpage from './mainPage/personalPage/PersonalPage';
 import { login } from './dataMark/dataLogin';
 import { register } from './dataMark/dataRegister';
 import { useCookies } from 'react-cookie';
@@ -28,6 +28,19 @@ const DivOpacity = styled.div`
     right: 0;
     z-index: 10;
 `;
+export interface PropsUser {
+    id: string;
+    avatar: any;
+    fullName: string;
+    nickName: string;
+    gender: number;
+    background: any;
+    status: string;
+    sn: string;
+    l: string;
+    w: string;
+    as: number;
+}
 export interface PropsUserPer {
     id: string;
     avatar: any;
@@ -41,16 +54,16 @@ export interface PropsUserPer {
     w: string;
     as: number;
     id_f_user: {
-        createdAt: string;
-        idCurrentUser: string;
-        idFriend: string;
-        level: number;
+        createdAt: string | null;
+        idCurrentUser: string | null;
+        idFriend: string | null;
+        level: number | null;
     };
     id_friend: {
-        createdAt: string;
-        idCurrentUser: string;
-        idFriend: string;
-        level: number;
+        createdAt: string | null;
+        idCurrentUser: string | null;
+        idFriend: string | null;
+        level: number | null;
     };
     id_m_user: PropsTitleP;
     id_flwing: {
@@ -69,6 +82,9 @@ export interface PropsUserPer {
         createdAt: string;
         updatedAt: string;
     };
+    id_loved_user: {
+        id_loved: string;
+    };
 }
 const Authentication = React.lazy(() => import('~/Authentication/Auth'));
 const Website = React.lazy(() => import('./mainPage/nextWeb'));
@@ -81,7 +97,7 @@ function App() {
     const { idUser, errorServer } = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow);
     const { colorText, colorBg } = useSelector((state: PropsBg) => state.persistedReducer.background);
     const [userData, setUserData] = useState<PropsUserPer[]>([]);
-    const [userFirst, setUserFirst] = useState<PropsUserPer>();
+    const [userFirst, setUserFirst] = useState<PropsUser>();
     const [userOnline, setUserOnline] = useState<string[]>([]);
     async function fetch(id: string, first?: string) {
         const res = await userAPI.getById(
@@ -103,10 +119,9 @@ function App() {
             {
                 position: 'position',
                 star: 'star',
-                love: 'love',
                 visit: 'visit',
             },
-            'personal',
+            first,
         );
         console.log(res, first, 'ssss', res?.avatar);
         if (res?.avatar) {
@@ -118,22 +133,7 @@ function App() {
             const av = CommonUtils.convertBase64(res.background);
             res.background = av;
         }
-        if (res?.id_m_user.flwed_data) {
-            res?.id_m_user.flwed_data.map((a: { avatar: any }) => {
-                if (a.avatar) {
-                    const av = CommonUtils.convertBase64(res.background);
-                    a.avatar = av;
-                }
-            });
-        }
-        if (res?.id_m_user.flwing_data) {
-            res?.id_m_user.flwing_data.map((a: { avatar: any }) => {
-                if (a.avatar) {
-                    const av = CommonUtils.convertBase64(res.background);
-                    a.avatar = av;
-                }
-            });
-        }
+
         if (first) {
             setUserFirst(res);
         } else {

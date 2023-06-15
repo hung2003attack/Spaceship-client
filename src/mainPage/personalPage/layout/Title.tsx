@@ -24,17 +24,25 @@ export interface PropsTitleP {
     visit: number;
     follow: number;
     following: number;
-    friends: string;
+    friends: number;
 }
 const Title: React.FC<{
     colorText: string;
     colorBg: number;
     data: PropsTitleP;
     status: string;
-    id_o: string;
-    id_f: string;
-    level: number;
-}> = ({ colorText, colorBg, data, status, id_o, id_f, level }) => {
+    id_o: string | null;
+    id_f: string | null;
+    level: number | null;
+    resTitle: {
+        star: number;
+        love: number;
+        viste: number;
+        followed: number;
+        following: number;
+    };
+    id_loved: string;
+}> = ({ colorText, colorBg, data, status, id_o, id_f, level, resTitle, id_loved }) => {
     const [cookies, setCookies] = useCookies(['k_user', 'tks']);
     const [position, setPosition] = useState<number>(0);
     const offset = useRef<number>(0);
@@ -42,9 +50,14 @@ const Title: React.FC<{
     console.log(data, 'datattt');
     const userId = cookies.k_user;
     const token = cookies.tks;
-    const itemsT = [
+    const itemsT: { icon: React.ReactElement; key: number; qt: number; css?: string | undefined }[] = [
         { icon: <StarI />, key: 1, qt: data.star },
-        { icon: <HeartI />, key: 2, qt: data.love },
+        {
+            icon: <HeartMI />,
+            css: id_loved === userId ? 'color: #c73434 !important' : '',
+            key: 2,
+            qt: resTitle.love || data.love,
+        },
         { icon: <FriendI />, key: 3, qt: data.friends },
         { icon: <PeopleI />, key: 4, qt: data.visit },
     ];
@@ -54,6 +67,7 @@ const Title: React.FC<{
     ];
     const handlePosition = async (id: number) => {
         const res = await userAPI.getMore(token, offset.current, limit);
+
         setPosition(id);
     };
     return (
@@ -71,7 +85,7 @@ const Title: React.FC<{
                             font-size: 20px;
                             color: ${colorText};
                             div {
-                                color: ${i.key === 4 && [id_o, id_f].includes(userId) && level === 2
+                                color: ${i.key === 3 && [id_o, id_f].includes(userId) && level === 2
                                     ? '#257fc2'
                                     : colorText};
                             }
@@ -88,12 +102,13 @@ const Title: React.FC<{
                             css={`
                                 align-items: center;
                                 justify-content: center;
+                                ${i.css};
                                 cursor: var(--pointer);
                             `}
                         >
                             {i.icon}
                         </Div>
-                        <P z="1.3rem">{i.qt}</P>
+                        <P z="1.3rem">{i.qt < 0 ? 0 : i.qt}</P>
                     </Div>
                 ))}{' '}
             </Div>
@@ -170,7 +185,13 @@ const Title: React.FC<{
                 </Div>
             </Div>
             {position > 0 && (
-                <UserBar colorBg={colorBg} colorText={colorText} position={position} setPosition={setPosition} />
+                <UserBar
+                    id_loved={id_loved}
+                    colorBg={colorBg}
+                    colorText={colorText}
+                    position={position}
+                    setPosition={setPosition}
+                />
             )}
         </DivTitleP>
     );

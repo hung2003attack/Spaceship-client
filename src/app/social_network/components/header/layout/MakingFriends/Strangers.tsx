@@ -231,48 +231,48 @@ const Strangers: React.FC<{
     let endX: any; // Lưu tọa độ x cuối cùng
     let endY: any; // Lưu tọa độ y cuối cùng
 
-    const handleTouchStart = (event: any) => {};
-    const handleTouchMove = (e: any) => {
-        console.log(e.target, e.touches[0].clientX);
+    // const handleTouchStart = (event: any) => {};
+    // const handleTouchMove = (e: any) => {
+    //     console.log(e.target, e.touches[0].clientX);
 
-        if (!startX && !startY) {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-        }
+    //     if (!startX && !startY) {
+    //         startX = e.touches[0].clientX;
+    //         startY = e.touches[0].clientY;
+    //     }
 
-        // Lấy tọa độ x và y cuối cùng khi di chuyển ngón tay
-        endX = e.touches[0].clientX;
-        endY = e.touches[0].clientY;
+    //     // Lấy tọa độ x và y cuối cùng khi di chuyển ngón tay
+    //     endX = e.touches[0].clientX;
+    //     endY = e.touches[0].clientY;
 
-        // Đặt lại tọa độ ban đầu và cuối cùng
+    //     // Đặt lại tọa độ ban đầu và cuối cùng
 
-        // Tính khoảng cách di chuyển ngón tay
-        const distanceX = endX - startX;
-        const distanceY = endY - startY;
-        console.log(startX, endX, startY, endY);
+    //     // Tính khoảng cách di chuyển ngón tay
+    //     const distanceX = endX - startX;
+    //     const distanceY = endY - startY;
+    //     console.log(startX, 'X-t', endX, 'X-e', startY, 'Y-t', endY, 'Y -e');
 
-        // Kiểm tra các hướng chạm
-        if (Math.abs(distanceX) > Math.abs(distanceY)) {
-            eleRef.current.style.overflowY = 'unset';
-            console.log('unset');
-            // Di chuyển theo trục x
-            if (distanceX > 0) {
-                console.log('Sự kiện chạm di chuyển sang phải');
-            } else if (distanceX < 0) {
-                console.log('Sự kiện chạm di chuyển sang trái');
-            }
-        } else {
-            console.log('overlay');
+    //     // Kiểm tra các hướng chạm
+    //     if (Math.abs(distanceX) > Math.abs(distanceY)) {
+    //         eleRef.current.style.overflowY = 'unset';
+    //         console.log('unset');
+    //         // Di chuyển theo trục x
+    //         if (distanceX > 0) {
+    //             console.log('Sự kiện chạm di chuyển sang phải');
+    //         } else if (distanceX < 0) {
+    //             console.log('Sự kiện chạm di chuyển sang trái');
+    //         }
+    //     } else {
+    //         console.log('overlay');
 
-            eleRef.current.style.overflowY = 'overlay';
-            // Di chuyển theo trục y
-            if (distanceY > 0) {
-                console.log('Sự kiện chạm di chuyển xuống');
-            } else if (distanceY < 0) {
-                console.log('Sự kiện chạm di chuyển lên');
-            }
-        }
-    };
+    //         eleRef.current.style.overflowY = 'overlay';
+    //         // Di chuyển theo trục y
+    //         if (distanceY > 0) {
+    //             console.log('Sự kiện chạm di chuyển xuống');
+    //         } else if (distanceY < 0) {
+    //             console.log('Sự kiện chạm di chuyển lên');
+    //         }
+    //     }
+    // };
 
     return (
         <>

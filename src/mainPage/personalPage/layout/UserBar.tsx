@@ -6,21 +6,25 @@ import { useEffect, useState } from 'react';
 import { Input } from '~/social_network/components/Header/layout/MakingFriends/styleMakingFriends';
 import { DivSearch } from './styleLayout';
 import { GiBurningBook } from 'react-icons/gi';
+import { useCookies } from 'react-cookie';
 
 const UserBar: React.FC<{
     colorText: string;
     colorBg: number;
     position: number;
     setPosition: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ colorText, colorBg, position, setPosition }) => {
+    id_loved: string;
+}> = ({ colorText, colorBg, position, setPosition, id_loved }) => {
+    const [cookies, setCookies] = useCookies(['k_user']);
     const [search, setSearch] = useState<boolean>(false);
     const [valueS, setValueS] = useState<string>('');
+    const userId = cookies.k_user;
     const handleSearch = (e: any) => {
         setValueS(e.target.value);
     };
     const dataMark = [
         { name: 'Star', icon: <StarI />, id: 1 },
-        { name: 'Love', icon: <HeartMI />, id: 2 },
+        { name: 'Love', css: id_loved === userId && 'color: #c73434; !important', icon: <HeartMI />, id: 2 },
         { name: 'Friends', icon: <FriendI />, id: 3 },
         { name: 'Visit', icon: <PeopleI />, id: 4 },
         { name: 'Followed', icon: <FollowI />, id: 5 },
@@ -125,7 +129,15 @@ const UserBar: React.FC<{
                             <a href={`#title${res.id}`} className="searchID">
                                 <P z="1.4rem">{res.name}</P>
                             </a>
-                            <Div css="font-size: 16px; margin: 0 3px;">{res.icon}</Div>
+                            <Div
+                                css={`
+                                    font-size: 16px;
+                                    margin: 0 3px;
+                                    ${res.css}
+                                `}
+                            >
+                                {res.icon}
+                            </Div>
                         </Div>
                     ))}
                 </Div>

@@ -45,12 +45,8 @@ interface PropsMakingFriends {
 }
 
 const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colorBg, dataUser }) => {
-    const dispatch = useDispatch();
     const [search, setSearch] = useState<string[]>([]);
-    const [cookies, setCookies] = useCookies(['tks', 'k_user']);
-    const [button, setButton] = useState(['']);
     const [sName, setSName] = useState<string>('');
-    const [sAge, setSAge] = useState<string>('');
     const [sBirth, setSBirth] = useState<string>('');
     const [sAddress, setSAddress] = useState<string>('');
     const [type, setType] = useState<string>(() => window.location.href.split('#')[1] || 'strangers');
@@ -155,36 +151,16 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
                     css={`
                         position: relative;
                         height: 100%;
+                        overflow: hidden;
                         @media (min-width: 800px) {
                             width: 81%;
                         }
                     `}
                 >
-                    <Swiper
-                        pagination={pagination}
-                        allowTouchMove={false}
-                        breakpoints={{
-                            992: {
-                                allowTouchMove: true,
-                            },
-                        }}
-                        slidesPerView={'auto'}
-                        scrollbar={{ el: '.swiper-scrollbar', lockClass: '.swiper-scrollbar-lock' }}
-                        className="mySwiper"
-                    >
-                        <SwiperSlide>
-                            <Strangers type={type} />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <Friends type={type} />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <Requested type={type} />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <Others type={type} />
-                        </SwiperSlide>
-                    </Swiper>
+                    <Strangers type={type} />
+                    <Friends type={type} />
+                    <Requested type={type} />
+                    <Others type={type} />
                     {/* <Strangers type={type} />
 
                     <Friends type={type} />

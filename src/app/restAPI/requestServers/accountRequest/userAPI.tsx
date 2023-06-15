@@ -35,19 +35,13 @@ interface PropsParamsMores {
 }
 const cookies = new Cookies();
 class HttpRequestUser {
-    getById = async (
-        token: string,
-        id: string,
-        params: PropsParamsById,
-        mores: PropsParamsMores,
-        personal?: string,
-    ) => {
+    getById = async (token: string, id: string, params: PropsParamsById, mores: PropsParamsMores, first?: string) => {
         try {
             const Axios = refreshToken.axiosJWTs(token);
             const res = await Axios.post('/SN/user/getById', {
                 id: id,
                 mores,
-                personal,
+                first,
                 params: params,
             });
             return res.data;
