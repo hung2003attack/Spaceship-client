@@ -59,9 +59,7 @@ export const Buttons: React.FC<PropsButtons | any> = ({ text }) => {
     return text.map((vl: { css: string; text: string; tx: string; onClick?: (args: any) => void }) => (
         <Button key={vl.text + vl.tx} css={vl.css} onClick={vl.onClick}>
             {vl.text}
-            <P z="1.2rem" css="margin-left: 3px;">
-                {vl.tx}
-            </P>
+            {vl.tx}
         </Button>
     ));
 };

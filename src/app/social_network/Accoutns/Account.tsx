@@ -16,9 +16,9 @@ const Account: React.FC<any> = ({ data, location }) => {
             {data.map((res: any) => (
                 <div
                     key={res.id}
-                    onClick={() => {
+                    onClick={(e) => {
+                        e.stopPropagation();
                         dispatch(setIdUser([res.id]));
-                        dispatch(onPersonalPage());
                         window.history.replaceState(null, 'perspnalPage', `/${location}/profile?id=${res.id}`);
                     }}
                     className={clsx(styles.userSearch)}
@@ -29,7 +29,7 @@ const Account: React.FC<any> = ({ data, location }) => {
                     <div className={clsx(styles.title)}>
                         <h5 className={clsx(styles.fullname)}>{res.fullName}</h5>
 
-                        <p className={clsx(styles.nickname)}>{res.nickName}</p>
+                        {res.nickName && <p className={clsx(styles.nickname)}>{res.nickName}</p>}
                     </div>
                 </div>
             ))}

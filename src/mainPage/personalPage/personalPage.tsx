@@ -138,49 +138,11 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                         />
                     )}
                     {/* )} */}
-                    {dataUser.id !== userId && (
-                        <DivPos
-                            size="25px"
-                            color={colorText}
-                            bottom="-37px"
-                            right="10%"
-                            css={`
-                                z-index: 1;
-                                @media (min-width: 600px) {
-                                    bottom: -43px;
-                                    font-size: 30px;
-                                    p {
-                                        right: 16px;
-                                    }
-                                }
-                            `}
-                            onClick={handleLoves}
-                        >
-                            <HeartI />
-                            <Div
-                                css={`
-                                    position: absolute;
-                                    color: #444646;
-                                    font-size: 17px;
-                                    right: 4px;
-                                    @media (min-width: 600px) {
-                                        font-size: 22px;
-                                        right: 4px;
-                                    }
-                                    ${(id_loved === userId || resTitle.love === 1) && 'color: #c73434; '}
-                                `}
-                            >
-                                <HeartMI />
-                            </Div>
-                            <P z="26px" css="position: absolute;  color: #7c8787; right: 13px; z-index: 6; top: -17px;">
-                                .
-                            </P>
-                        </DivPos>
-                    )}
                 </Div>
                 {/* <div className={clsx(styles.close)} onClick={handlePersonalPage}>
                 <CloseI />
             </div> */}
+
                 <DivPersonalPage width="90%" height="44px" margin="auto" css={cssDivPersonalPage}>
                     <Div css={cssAvatar} onClick={() => setRoom({ ...room, avatar: true })}>
                         <Avatar
@@ -260,6 +222,48 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
                         <P css="width: 100%; @media (min-width: 600px) {font-size: 1.3rem;}" z="1.2rem">
                             {valueNickN || dataUser.nickName}
                         </P>
+                        {dataUser.id !== userId && (
+                            <DivPos
+                                size="25px"
+                                color={colorText}
+                                bottom="4px"
+                                right="10%"
+                                css={`
+                                    z-index: 1;
+                                    @media (min-width: 600px) {
+                                        bottom: 1px;
+                                        font-size: 30px;
+                                        p {
+                                            right: 16px;
+                                        }
+                                    }
+                                `}
+                                onClick={handleLoves}
+                            >
+                                <HeartI />
+                                <Div
+                                    css={`
+                                        position: absolute;
+                                        color: #444646;
+                                        font-size: 17px;
+                                        right: 4px;
+                                        @media (min-width: 600px) {
+                                            font-size: 22px;
+                                            right: 4px;
+                                        }
+                                        ${(id_loved === userId || resTitle.love === 1) && 'color: #c73434; '}
+                                    `}
+                                >
+                                    <HeartMI />
+                                </Div>
+                                <P
+                                    z="26px"
+                                    css="position: absolute;  color: #7c8787; right: 13px; z-index: 6; top: -17px;"
+                                >
+                                    .
+                                </P>
+                            </DivPos>
+                        )}
                         {categories === 3 && inputChange(handleVNickN, valueNickN, user.nickName)}
                     </Div>
                     {categories === 0 && userId === dataUser.id && (

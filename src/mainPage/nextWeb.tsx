@@ -269,10 +269,7 @@ const Website: React.FC<{
     };
     const onli = userOnline.includes(userId) ? 'border: 1px solid #418a7a;' : 'border: 1px solid #696969;';
     console.log('userrrrrr', dataUser);
-    let startX: any; // Lưu tọa độ x ban đầu
-    let startY: any; // Lưu tọa độ y ban đầu
-    let endX: any; // Lưu tọa độ x cuối cùng
-    let endY: any; // Lưu tọa độ y cuối cùng
+
     const elRef = useRef<any>();
     const xRef = useRef<number | null>(null);
     const yRef = useRef<number | null>(null);
@@ -326,7 +323,6 @@ const Website: React.FC<{
                                         right: 7px;
                                         z-index: 88;
                                         border-radius: 50%;
-                                        transition: all 0.5s linear
                                         cursor: var(--pointer);
                                         ${onli}
                                     `}

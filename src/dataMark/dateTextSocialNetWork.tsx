@@ -32,11 +32,19 @@ export const socialnetwork = {
             },
             exchange: ' Giao Lưu',
             video: 'Gọi Video',
-            search: 'Tìm kiếm',
+            search: {
+                title: 'Tìm kiếm',
+                children: {
+                    menu: [
+                        { name: 'Người dùng', id: 1 },
+                        { name: 'Bài đăng', id: 2 },
+                        { name: 'Exchanges', id: 3 },
+                    ],
+                },
+            },
             friends: {
                 title: 'Bạn bè',
                 children: {
-                    option: ['Tên', 'Ngày sinh', 'Địa chỉ'],
                     menu: [
                         { name: 'Chưa kết bạn', id: 'strangers' },
                         { name: 'Đã kêt bạn', id: 'friends' },
@@ -44,7 +52,6 @@ export const socialnetwork = {
                         { name: 'Bạn đã gửi', id: 'yousent' },
                         { name: 'Người khác gửi', id: 'otherssent' },
                     ],
-                    main: '',
                 },
             },
             location: 'SN',
@@ -102,11 +109,19 @@ export const socialnetwork = {
             },
             exchange: 'Exchange',
             video: 'Call Video',
-            search: 'Search',
+            search: {
+                title: 'Search',
+                children: {
+                    menu: [
+                        { name: 'Users', id: 1 },
+                        { name: 'Posts', id: 2 },
+                        { name: 'Exchanges', id: 3 },
+                    ],
+                },
+            },
             friends: {
                 title: 'Bạn bè',
                 children: {
-                    option: ['Name', 'BirthDay', 'Address'],
                     menu: [
                         { name: 'Not Friends', id: 'strangers' },
                         { name: 'Friends', id: 'friends' },
@@ -114,7 +129,6 @@ export const socialnetwork = {
                         { name: 'You sent', id: 'yousent' },
                         { name: 'others sent', id: 'otherssent' },
                     ],
-                    main: '',
                 },
             },
             location: 'SN',

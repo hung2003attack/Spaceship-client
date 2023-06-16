@@ -1,8 +1,10 @@
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { PropsUser, PropsUserPer } from 'src/App';
+import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
+import { Div } from '~/reUsingComponents/styleComponents/styleDefault';
 import { setTrueErrorServer } from '~/redux/hideShow';
 import userAPI from '~/restAPI/requestServers/accountRequest/userAPI';
 import peopleAPI from '~/restAPI/requestServers/socialNetwork/peopleAPI';
@@ -33,8 +35,7 @@ export default function LogicView(
     });
     const language = useSelector((state: PropsLanguage) => state.persistedReducer.language);
 
-    const lg = currentPage === 1 ? language.sn : currentPage === 2 ? language.l : language.w;
-
+    const [more, setMore] = useState<React.ReactElement | string>();
     const [valueName, setValueName] = useState<string>('');
     const [valueNickN, setValueNickN] = useState<string>('');
     const [categories, setCategories] = useState<number>(0);
@@ -54,6 +55,7 @@ export default function LogicView(
 
     const userId = cookies.k_user;
     const token = cookies.tks;
+    const lg = currentPage === 1 ? language.sn : currentPage === 2 ? language.l : language.w;
 
     const id_f_user = dataUser.id_f_user.idCurrentUser || dataUser.id_friend.idCurrentUser;
     const id_friend = dataUser.id_friend.idFriend || dataUser.id_f_user.idFriend;
@@ -190,7 +192,6 @@ export default function LogicView(
         }
     };
     const handleAddF = async (id: string) => {
-        console.log('add friend', id);
         const res: {
             id_friend: string;
             data: {
@@ -199,7 +200,10 @@ export default function LogicView(
                 idCurrentUser: string;
                 idFriend: string;
             };
-        } = await peopleAPI.setFriend(token, id);
+            count_flwe: number;
+            id: string;
+            id_fl: string;
+        } = await peopleAPI.setFriend(token, id, 'yes');
         setDataUser({
             ...dataUser,
             id_friend: {
@@ -208,23 +212,34 @@ export default function LogicView(
                 level: 1,
                 createdAt: res.data.createdAt,
             },
+            id_flwed: {
+                ...dataUser.id_flwed,
+                flwed: 1,
+                flwing: 2,
+                id_followed: res.id,
+                id_following: res.id_fl,
+            },
+            id_m_user: { ...dataUser.id_m_user, follow: res.count_flwe },
         });
-        console.log(res);
+
+        console.log(res, 'addfriend');
     };
+
     const handleConfirm = async (id: string) => {
-        console.log('handleConfirm', id);
         if (id) {
             const res = await peopleAPI.setConfirm(token, id, 'friends', true);
-            console.log(res, 'conf');
-
             if (res.ok === 1) {
-                setDataUser({ ...dataUser, id_f_user: { ...dataUser.id_f_user, level: 2 } });
+                setDataUser({
+                    ...dataUser,
+                    id_f_user: { ...dataUser.id_f_user, level: 2 },
+                    id_m_user: { ...dataUser.id_m_user, friends: res.count_friends },
+                });
             }
         }
     };
     const handleAbolish = async (id: string, kindOf: string = 'friends') => {
-        console.log('Abolish', kindOf, id);
-        const res = await peopleAPI.delete(token, id, kindOf);
+        const res = await peopleAPI.delete(token, id, kindOf, 'yes');
+        console.log('Abolish', kindOf, res);
         if (res) {
             setDataUser({
                 ...dataUser,
@@ -234,6 +249,21 @@ export default function LogicView(
                     level: null,
                     createdAt: null,
                 },
+                id_f_user: {
+                    idCurrentUser: null,
+                    idFriend: null,
+                    level: null,
+                    createdAt: null,
+                },
+                id_flwed: {
+                    updatedAt: null,
+                    createdAt: null,
+                    flwed: null,
+                    flwing: null,
+                    id_followed: null,
+                    id_following: null,
+                },
+                id_m_user: { ...dataUser.id_m_user, follow: res.count_flwe },
             });
         }
     };
@@ -328,8 +358,42 @@ export default function LogicView(
             }
         }
     };
+
     const handleFriend = async (id: string) => {
         console.log('handleFriend');
+        const tx = (
+            <DivPos
+                css={`
+                    width: 100%;
+                    height: 200px;
+                    padding: 5px 0;
+                    left: 0;
+                    top: 40px;
+                    border-radius: 5px;
+                    background-color: #383838;
+                    align-items: baseline;
+                `}
+            >
+                <Div
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleAbolish(id);
+                    }}
+                    css={`
+                        width: 100%;
+                        justify-content: center;
+                        padding: 5px;
+                    `}
+                >
+                    Huỷ kết bạn
+                </Div>
+            </DivPos>
+        );
+        if (more) {
+            setMore('');
+        } else {
+            setMore(tx);
+        }
     };
     const handleLoves = async () => {
         if (id_loved !== userId) {
@@ -393,7 +457,6 @@ export default function LogicView(
             height: 230px;
             border-radius: 5px;
             background-color: #494949cf;
-            cursor: var(--pointer);
             position: relative;
             img {
                 border-radius: 5px;
@@ -502,8 +565,8 @@ export default function LogicView(
             }
             `;
     const buttons: {
-        [en: string]: { name: string; onClick: (id: string) => Promise<void> }[];
-        vi: { name: string; onClick: (id: string) => Promise<void> }[];
+        [en: string]: { name: string; onClick: (id: string) => Promise<void> | void }[];
+        vi: { name: string; onClick: (id: string) => Promise<void> | void }[];
     } = {
         en: [
             {
@@ -524,7 +587,7 @@ export default function LogicView(
                         ? level === 1
                             ? handleConfirm(dataUser.id)
                             : level === 2
-                            ? handleAddF(dataUser.id)
+                            ? handleFriend(dataUser.id)
                             : handleAddF(dataUser.id)
                         : level === 1
                         ? handleAbolish(dataUser.id)
@@ -562,7 +625,7 @@ export default function LogicView(
                         ? level === 1
                             ? handleConfirm(dataUser.id)
                             : level === 2
-                            ? handleAddF(dataUser.id)
+                            ? handleFriend(dataUser.id)
                             : handleAddF(dataUser.id)
                         : level === 1
                         ? handleAbolish(dataUser.id)
@@ -584,7 +647,7 @@ export default function LogicView(
     };
 
     const btss = [
-        { text: buttons[lg][0].name, css: cssBt, onClick: buttons[lg][0].onClick },
+        { text: buttons[lg][0].name, css: cssBt + 'position: relative;', onClick: buttons[lg][0].onClick, tx: more },
         { text: buttons[lg][1].name, css: cssBt, onClick: buttons[lg][1].onClick },
         { text: buttons[lg][2].name, css: cssBt, onClick: buttons[lg][2].onClick },
     ];

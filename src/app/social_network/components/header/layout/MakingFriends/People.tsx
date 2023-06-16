@@ -28,9 +28,7 @@ import Others from './OthersRequest';
 const socket = io('http://localhost:3001', { transports: ['websocket'] });
 
 export interface PropsTextFriends {
-    option: string[];
     menu: { name: string; id: string }[];
-    main: string;
 }
 export interface PropsUserPeople {
     avatar?: string;
@@ -45,15 +43,9 @@ interface PropsMakingFriends {
 }
 
 const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colorBg, dataUser }) => {
-    const [search, setSearch] = useState<string[]>([]);
-    const [sName, setSName] = useState<string>('');
-    const [sBirth, setSBirth] = useState<string>('');
-    const [sAddress, setSAddress] = useState<string>('');
     const [type, setType] = useState<string>(() => window.location.href.split('#')[1] || 'strangers');
     const lRef = useRef<any>();
-    const [loading, setLoading] = useState<boolean>(false);
 
-    const optionS = friendsT.option;
     const menu = friendsT.menu;
 
     const pagination = {
@@ -74,61 +66,12 @@ const MakingFriends: React.FC<PropsMakingFriends> = ({ friendsT, colorText, colo
         });
         console.log(window.location.href.split('#')[1], 'aa', as);
     }, []);
-    const handleOption = (e: any, i: string) => {
-        if (!['0', '1', '2', '3'].includes(e.target.getAttribute('id'))) {
-            if (search.lastIndexOf(i) >= 0) {
-                search.splice(search.indexOf(i), 1);
-                setSearch([...search]);
-            } else {
-                setSearch([...search, i]);
-            }
-        }
-    };
-    console.log(type, 'people');
 
-    const handleSearch = (e: { target: { getAttribute: (arg0: string) => any; value: any } }) => {
-        const type = e.target.getAttribute('id');
-        console.log(type, 'search', e.target.value);
-        type === '0'
-            ? setSName(e.target.value)
-            : type === '1'
-            ? setSBirth(e.target.value)
-            : setSAddress(e.target.value);
-    };
+    console.log(type, 'people');
 
     return (
         <DivOptions bg={colorBg === 1 ? '#353535' : ''} color={colorText}>
-            <DivSearch>
-                {optionS?.map((i, index) => (
-                    <DivItems
-                        display="flex"
-                        css={`
-                            padding: 4px;
-                            ${search.includes(i)
-                                ? 'width: 100%; '
-                                : search.length > 0
-                                ? 'width: 0%; display: none; '
-                                : 'width: 100%;'};
-                            transition: all 0.2s linear;
-                            ${search.includes(i)
-                                ? ' input {display: block; width: 100%; transition: all 0.5s linear;} div {width: 25%; transition: all 0.5s linear;}'
-                                : 'input {display: none; width: 0%;} div {width: 100%;}'};
-                            @media (min-width: 600px) {
-                                ${search.includes(i)
-                                    ? 'width: 100%;'
-                                    : search.length > 1
-                                    ? 'width: 40%;  display: block;'
-                                    : 'width: 20%; display: block; '};
-                            }
-                        `}
-                        key={i}
-                        onClick={(e) => handleOption(e, i)}
-                    >
-                        <Input id={`${index}`} type="text" placeholder={i} color={colorText} onChange={handleSearch} />
-                        <DivItems>{i}</DivItems>
-                    </DivItems>
-                ))}
-            </DivSearch>
+            <Div width="100%" css="height: 30px;"></Div>
             <Div css="height: 91%">
                 <DivMenu>
                     {menu?.map((m) => {

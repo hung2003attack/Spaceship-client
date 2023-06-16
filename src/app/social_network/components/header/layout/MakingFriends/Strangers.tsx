@@ -60,20 +60,21 @@ const Strangers: React.FC<{
     const userId = cookies.k_user;
     const eleRef = useRef<any>();
     const dataRef = useRef<any>([]);
-    const idRefs = useRef<string[]>([]);
     const cRef = useRef<number>(0);
+    const ids: any = new Set();
 
     const fetch = async (rel: boolean) => {
         cRef.current = 1;
         if (rel) {
-            idRefs.current = [];
+            ids.clear();
             dataRef.current = [];
             setLoading(true);
         }
-        const res = await peopleAPI.getStrangers(token, limit, idRefs.current);
-        console.log('strangers', res, data, idRefs);
+
+        const res = await peopleAPI.getStrangers(token, limit, Array.from(ids));
+        console.log('strangers', res, data, Array.from(ids));
         res.map((f: { avatar: any; id: string }) => {
-            idRefs.current.push(f.id);
+            ids.add(f.id);
             if (f.avatar) {
                 const av = CommonUtils.convertBase64(f.avatar);
                 f.avatar = av;
@@ -84,8 +85,8 @@ const Strangers: React.FC<{
             setData(dataRef.current);
             offsetRef.current += limit;
         } else {
-            setLoading(false);
             setData(res);
+            setLoading(false);
         }
     };
     const handleScroll = () => {
@@ -137,10 +138,10 @@ const Strangers: React.FC<{
         console.log('Abolish', res);
         const newStranger = data?.filter((x: PropsData) => {
             if (
-                (x.id_f_user.idCurrentUser === res.idCurrentUser && x.id_f_user.idFriend === res.idFriend) ||
-                (x.id_f_user.idFriend === res.idCurrentUser && x.id_f_user.idCurrentUser === res.idFriend) ||
-                (x.id_friend.idCurrentUser === res.idCurrentUser && x.id_friend.idFriend === res.idFriend) ||
-                (x.id_friend.idCurrentUser === res.idFriend && x.id_friend.idFriend === res.idCurrentUser)
+                (x.id_f_user.idCurrentUser === res.ok?.idCurrentUser && x.id_f_user.idFriend === res.ok?.idFriend) ||
+                (x.id_f_user.idFriend === res.ok?.idCurrentUser && x.id_f_user.idCurrentUser === res.ok?.idFriend) ||
+                (x.id_friend.idCurrentUser === res.ok?.idCurrentUser && x.id_friend.idFriend === res.ok?.idFriend) ||
+                (x.id_friend.idCurrentUser === res.ok?.idFriend && x.id_friend.idFriend === res.ok?.idCurrentUser)
             ) {
                 x.id_f_user.idCurrentUser = null;
                 x.id_f_user.idFriend = null;

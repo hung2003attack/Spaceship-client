@@ -40,7 +40,7 @@ const Friends: React.FC<{ type: string }> = ({ type }) => {
             setLoading(true);
         }
 
-        const res = await peopleAPI.getFriends(token, offsetRef.current, limit);
+        const res = await peopleAPI.getFriends(token, offsetRef.current, limit, 'friends');
         console.log('friends', res);
         res.map((f: { avatar: string | undefined }) => {
             if (f.avatar) {

@@ -22,7 +22,7 @@ const Requested: React.FC<{ type: string }> = ({ type }) => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [data, setData] = useState<PropsYouSent[]>();
-    const limit: number = 2;
+    const limit: number = 3;
 
     const offsetRef = useRef<number>(0);
     const cRef = useRef<number>(0);

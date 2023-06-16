@@ -75,12 +75,12 @@ export interface PropsUserPer {
         updatedAt: string;
     };
     id_flwed: {
-        flwing: number;
-        flwed: number;
-        id_following: string;
-        id_followed: string;
-        createdAt: string;
-        updatedAt: string;
+        flwing: number | null;
+        flwed: number | null;
+        id_following: string | null;
+        id_followed: string | null;
+        createdAt: string | null;
+        updatedAt: string | null;
     };
     id_loved_user: {
         id_loved: string;

@@ -12,11 +12,11 @@ class PeopleRequest {
             console.log(error);
         }
     };
-    setFriend = async (accessToken: string, id: string) => {
+    setFriend = async (accessToken: string, id: string, per?: string) => {
         try {
             const axiosJWTss = refreshToken.axiosJWTs(accessToken);
             const res = await axiosJWTss.post('/SN/people/setFriend', {
-                params: { id_friend: id },
+                params: { id_friend: id, per },
             });
             return res.data;
         } catch (error) {
@@ -32,10 +32,10 @@ class PeopleRequest {
             console.log(error, 'get FriendAll');
         }
     };
-    delete = async (accessToken: string, id: string, kindOf?: string) => {
+    delete = async (accessToken: string, id: string, kindOf?: string, per?: string) => {
         try {
             const axiosJWTss = refreshToken.axiosJWTs(accessToken);
-            const res = await axiosJWTss.post('/SN/people/deleteReq', { params: { id_req: id, kindOf: kindOf } });
+            const res = await axiosJWTss.post('/SN/people/deleteReq', { params: { id_req: id, kindOf: kindOf, per } });
             return res.data;
         } catch (error) {
             console.log(error, 'delete');
@@ -66,9 +66,10 @@ class PeopleRequest {
             console.log(error, 'get Strangers');
         }
     };
-    getFriends = async (token: string, offset: number, limit: number, type: string = 'friends') => {
+    getFriends = async (token: string, offset: number, limit: number, type: string) => {
         try {
             const axiosJWTss = refreshToken.axiosJWTs(token);
+            console.log('loop friend');
             const res = await axiosJWTss.get('/SN/people/getFriends', {
                 params: {
                     offset,

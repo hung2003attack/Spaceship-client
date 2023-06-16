@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const DivSearch = styled.div`
-    width: 67%;
+    width: 85%;
     height: 39px;
     display: flex;
     align-items: center;
@@ -9,16 +9,6 @@ export const DivSearch = styled.div`
     text-align: center;
     z-index: 10;
     position: relative;
-    &::before {
-        display: block;
-        content: '';
-        width: 100%;
-        height: 0.5px;
-        background-color: ${(props: { bg: string }) => props.bg};
-        position: absolute;
-        bottom: 7px;
-        left: 1px;
-    }
 `;
 export const Input = styled.input`
     width: 100%;
@@ -28,4 +18,15 @@ export const Input = styled.input`
     transition: var(--transition-03s);
     color: ${(props) => props.color};
     height: 100%;
+`;
+export const DivResults = styled.div`
+    width: 330px;
+    height: 500px;
+    top: 45px;
+    left: 0;
+    position: absolute;
+    background: ${(props: { bg: string }) => props.bg};
+    transition: var(--transition-03s);
+    border-radius: 5px;
+    z-index: 9999;
 `;

@@ -5,7 +5,7 @@ import { routeheaders } from '~/routes/routeSocialNetwork/routes';
 
 import { onSetting } from '~/redux/hideShow';
 
-import Search from './layout/Search/Search';
+import Search, { PropsSearchTextSN } from './layout/Search/Search';
 import Images from '~/assets/images';
 import Hovertitle from '~/reUsingComponents/HandleHover/HoverTitle';
 import { CameraI, ExchangeI, FriendI, HomeI, LanguageI, SearchI, SettingI } from '~/assets/Icons/Icons';
@@ -42,7 +42,7 @@ export interface PropsSN {
     };
     exchange: string;
     video: string;
-    search: string;
+    search: { title: string; children: PropsSearchTextSN };
     location: string;
     friends: {
         title: string;
@@ -99,17 +99,23 @@ const Header: React.FC<{
                 <DivWrapper
                     css={`
                         ${searchC ? 'a{width: 0; display: none;}' : 'a{width: 70px;}'}
+                        #sett {
+                            display: ${searchC ? 'none' : 'block'};
+                        }
                         @media (min-width: 650px) {
                             a {
                                 display: block;
                                 width: 120px;
+                            }
+                            #sett {
+                                display: block;
                             }
                         }
                         #${border} {
                             border-bottom: 8px solid #3e75bc;
                         }
                         #logo {
-                            display: ${searchC ? 'block' : 'none'};
+                            display: none;
                             width: 35px;
                             height: 35px;
                             @media (min-width: 769px) {
@@ -180,30 +186,39 @@ const Header: React.FC<{
                         css={`
                             height: 100%;
                             align-items: center;
-                            justify-content: center;
+                            justify-content: start;
                             font-size: 28px;
-                            cursor: var(--pointer);
                             transition: all 0.5s linear;
                             position: relative;
-                            padding: 5px 0;
+                            padding: 5px;
                             color: ${colorText};
                             ${searchC
-                                ? 'width: 71%; input{display: block; width: 100%; height: 85%;} @media (min-width: 650px){width: 380px;}'
+                                ? 'width: 100%; input{display: block; width: 100%; height: 85%;} @media (min-width: 650px){width: 380px;}'
                                 : 'input{ width: 0%}'}
                         `}
                         onClick={handleSearch}
                     >
-                        <Input id="notS" color={colorText} placeholder={search} />
+                        <Search
+                            search={searchC}
+                            location={location}
+                            colorBg={colorBg}
+                            colorText={colorText}
+                            dataText={search.children}
+                            title={search.title}
+                        />
+
                         <Div
                             css={`
                                 ${searchC
-                                    ? 'width: 20%; right: -4px '
+                                    ? 'width: 16%; right: -4px '
                                     : 'width: 100%; left: 50%; right: 50%; top: 50%; bottom: 50%; translate: -50% -50%;'};
                                 height: 75%;
                                 position: absolute;
                                 align-items: center;
                                 justify-content: center;
                                 border-radius: 5px;
+                                cursor: var(--pointer);
+
                                 &:hover {
                                     background-color: #385d8c;
                                 }
@@ -213,6 +228,7 @@ const Header: React.FC<{
                         </Div>
                     </Div>
                     <Hovertitle
+                        id="sett"
                         colorBg={colorBg}
                         color={colorText}
                         Tags={ButtonSt}
