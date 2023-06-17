@@ -26,7 +26,7 @@ export const LinkHome = styled(Links)`
     border-radius: 5px;
 `;
 export const LinkExchange = styled(LinkHome)`
-    font-size: 25px;
+    font-size: 20px;
 `;
 export const LinkCall = styled(LinkHome)``;
 

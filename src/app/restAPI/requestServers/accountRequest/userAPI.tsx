@@ -44,6 +44,8 @@ class HttpRequestUser {
                 first,
                 params: params,
             });
+            console.log(res, 'res');
+
             return res.data;
         } catch (error) {
             console.log(error);
@@ -51,11 +53,13 @@ class HttpRequestUser {
             // console.log(error.reponsive.data);
         }
     };
-    getByName = async (token: string, name: string, params: PropsParamsById) => {
+    getByName = async (token: string, name: string, cateMore: string, searchMore: string, params: PropsParamsById) => {
         try {
             const Axios = refreshToken.axiosJWTs(token);
             const res = await Axios.post('/SN/user/getByName', {
-                name: name,
+                name,
+                cateMore,
+                searchMore,
                 params: params,
             });
             return res.data;

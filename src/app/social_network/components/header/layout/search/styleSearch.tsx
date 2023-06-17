@@ -20,10 +20,10 @@ export const Input = styled.input`
     height: 100%;
 `;
 export const DivResults = styled.div`
-    width: 330px;
-    height: 500px;
+    width: 320px;
+    height: 611px;
     top: 45px;
-    left: 0;
+    left: -5px;
     position: absolute;
     background: ${(props: { bg: string }) => props.bg};
     transition: var(--transition-03s);

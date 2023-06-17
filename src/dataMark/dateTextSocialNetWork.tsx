@@ -35,10 +35,22 @@ export const socialnetwork = {
             search: {
                 title: 'Tìm kiếm',
                 children: {
+                    rec: 'Vừa qua',
                     menu: [
-                        { name: 'Người dùng', id: 1 },
-                        { name: 'Bài đăng', id: 2 },
-                        { name: 'Exchanges', id: 3 },
+                        {
+                            id: 1,
+                            title: 'Tìm kiếm',
+                            children: [{ name: 'Nick-name', id: 1 }],
+                        },
+                        {
+                            id: 2,
+                            title: 'Loại',
+                            children: [
+                                { name: 'Người dùng', id: 1 },
+                                { name: 'Bài đăng', id: 2 },
+                                { name: 'Exchanges', id: 3 },
+                            ],
+                        },
                     ],
                 },
             },
@@ -112,15 +124,27 @@ export const socialnetwork = {
             search: {
                 title: 'Search',
                 children: {
+                    rec: 'Recently',
                     menu: [
-                        { name: 'Users', id: 1 },
-                        { name: 'Posts', id: 2 },
-                        { name: 'Exchanges', id: 3 },
+                        {
+                            id: 1,
+                            title: 'Search-more',
+                            children: [{ name: 'Nick-name', id: 1 }],
+                        },
+                        {
+                            id: 2,
+                            title: 'Choose',
+                            children: [
+                                { name: 'Users', id: 1 },
+                                { name: 'Posts', id: 2 },
+                                { name: 'Exchanges', id: 3 },
+                            ],
+                        },
                     ],
                 },
             },
             friends: {
-                title: 'Bạn bè',
+                title: 'Friends',
                 children: {
                     menu: [
                         { name: 'Not Friends', id: 'strangers' },

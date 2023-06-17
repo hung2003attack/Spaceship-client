@@ -645,6 +645,7 @@ export default function LogicView(
                 : { name: 'Theo dõi', onClick: () => handleFollower(dataUser.id) },
         ],
     };
+    console.log(lg, buttons, 'here');
 
     const btss = [
         { text: buttons[lg][0].name, css: cssBt + 'position: relative;', onClick: buttons[lg][0].onClick, tx: more },

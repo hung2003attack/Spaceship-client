@@ -99,9 +99,12 @@ function App() {
     const [userData, setUserData] = useState<PropsUserPer[]>([]);
     const [userFirst, setUserFirst] = useState<PropsUser>();
     const [userOnline, setUserOnline] = useState<string[]>([]);
+    const [cookies, setCookie] = useCookies(['tks', 'k_user', 'sn']);
+    const token = cookies.tks;
+    const k_user = cookies.k_user;
     async function fetch(id: string, first?: string) {
         const res = await userAPI.getById(
-            cookies.tks,
+            token,
             id,
             {
                 id: 'id',
@@ -140,7 +143,7 @@ function App() {
             return res;
         }
     }
-    console.log(userFirst, 'userFirst');
+    console.log(userFirst, 'userFirst', cookies.tks);
     useEffect(() => {
         const search = async () => {
             const search = window.location.search;
@@ -180,16 +183,13 @@ function App() {
     };
     console.log(idUser, 'idUser', userData);
 
-    const [cookies, setCookie] = useCookies(['tks', 'k_user', 'sn']);
     //   document.cookie.addListener("change", (event) => {
     //   console.log("1 change event");
     // });
 
-    const token = cookies.tks;
-    const k_user = cookies.k_user;
     useEffect(() => {
-        fetch(k_user, 'first');
-    }, []);
+        if (k_user) fetch(k_user, 'first');
+    }, [k_user]);
     // const operatingSystem = {
     //     name: 'Ubuntu',
     //     version: 18.04,

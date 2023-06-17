@@ -140,7 +140,7 @@ const Header: React.FC<{
                         to="/SN/"
                         children={<HomeI />}
                         title={home.title}
-                        size="25px"
+                        size="20px"
                         color={colorText}
                         onClick={() => setBorder('home')}
                     />
@@ -152,7 +152,7 @@ const Header: React.FC<{
                         to="/SN/exchange"
                         title={exchange}
                         children={<ExchangeI />}
-                        size="20px"
+                        size="17px"
                         onClick={() => setBorder('exch')}
                     />
                     <Hovertitle
@@ -162,7 +162,7 @@ const Header: React.FC<{
                         to="/SN/callVideo"
                         children={<CameraI />}
                         title={video}
-                        size="25px"
+                        size="20px"
                         color={colorText}
                         onClick={() => setBorder('link')}
                     />
@@ -173,7 +173,7 @@ const Header: React.FC<{
                         to="/SN/people"
                         children={<FriendI />}
                         title={friends.title}
-                        size="25px"
+                        size="20px"
                         color={colorText}
                         onClick={() => setBorder('people')}
                         onDoubleClick={() => {
@@ -187,7 +187,7 @@ const Header: React.FC<{
                             height: 100%;
                             align-items: center;
                             justify-content: start;
-                            font-size: 28px;
+                            font-size: 20px;
                             transition: all 0.5s linear;
                             position: relative;
                             padding: 5px;
