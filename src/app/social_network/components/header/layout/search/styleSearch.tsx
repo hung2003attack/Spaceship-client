@@ -15,6 +15,7 @@ export const Input = styled.input`
     padding: 10px 30px 10px 10px;
     border: 0;
     background: transparent;
+    background-color: #292a2d;
     transition: var(--transition-03s);
     color: ${(props) => props.color};
     height: 100%;
@@ -27,6 +28,7 @@ export const DivResults = styled.div`
     position: absolute;
     background: ${(props: { bg: string }) => props.bg};
     transition: var(--transition-03s);
-    border-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
     z-index: 9999;
 `;

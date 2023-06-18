@@ -7,17 +7,41 @@ import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import { useDispatch } from 'react-redux';
 import { offPersonalPage, onPersonalPage, setIdUser } from '~/redux/hideShow';
 import { profile } from 'console';
+import userAPI from '~/restAPI/requestServers/accountRequest/userAPI';
+import { useCookies } from 'react-cookie';
 
-const Account: React.FC<any> = ({ data, location }) => {
-    console.log(window.location.host, 'data');
+const Account: React.FC<{
+    data: {
+        id: string;
+        avatar: string;
+        fullName: string;
+        nickName: string;
+        gender: number;
+    }[];
+    location: string;
+}> = ({ data, location }) => {
     const dispatch = useDispatch();
+    const [cookies, setCookies] = useCookies(['k_user', 'tks']);
+    const token = cookies.tks;
+    const userId = cookies.k_user;
+    const handleHistory = async (res: {
+        id: string;
+        avatar: string;
+        fullName: string;
+        nickName: string;
+        gender: number;
+    }) => {
+        const result = await userAPI.setHistory(token, res);
+        console.log('sss');
+    };
     return (
         <>
-            {data.map((res: any) => (
+            {data.map((res) => (
                 <div
                     key={res.id}
                     onClick={(e) => {
                         e.stopPropagation();
+                        handleHistory(res);
                         dispatch(setIdUser([res.id]));
                         window.history.replaceState(null, 'perspnalPage', `/${location}/profile?id=${res.id}`);
                     }}

@@ -29,6 +29,8 @@ import { PropsTextFriends } from './layout/MakingFriends/People';
 import { DivItems, Input } from './layout/MakingFriends/styleMakingFriends';
 import { Div } from '~/reUsingComponents/styleComponents/styleDefault';
 import { people } from '~/redux/reload';
+import userAPI from '~/restAPI/requestServers/accountRequest/userAPI';
+import { useCookies } from 'react-cookie';
 
 //button
 // to = Link tag, href = a tag
@@ -54,6 +56,21 @@ const Header: React.FC<{
     dataUser: { avatar: string; fullName: string; gender: number };
 }> = ({ dataText, dataUser }) => {
     const dispatch = useDispatch();
+    const [cookies, setCookies] = useCookies(['k_user', 'tks']);
+    const token = cookies.tks;
+    const userId = cookies.k_user;
+
+    const [searchC, setSearchC] = useState<boolean>(false);
+    const [history, setHistory] = useState<
+        {
+            id: string;
+            avatar: string;
+            fullName: string;
+            nickName: string;
+            gender: number;
+        }[]
+    >([]);
+
     const { logo, sett, home, exchange, search, video, friends, location } = dataText;
     const { colorBg, colorText } = useSelector((state: PropsBg) => state.persistedReducer.background);
     const [border, setBorder] = useState<string>(() => {
@@ -78,17 +95,24 @@ const Header: React.FC<{
             ? 'link'
             : 'people';
     });
-    const [searchC, setSearchC] = useState<boolean>(false);
     const handleSetting = useCallback((e: { stopPropagation: () => void }) => {
         e.stopPropagation();
         dispatch(onSetting());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+    console.log(searchC, 'searchCC');
     const handleReload = () => {
         console.log('ok');
     };
-    const handleSearch = (e: { target: any }) => {
+    const handleSearch = async (e: any) => {
         if (e.target.getAttribute('id') !== 'notS') setSearchC(!searchC);
+        if (!searchC) {
+            console.log('ddddd');
+            const res = await userAPI.getHistory(token);
+
+            setHistory(res);
+        }
+        console.log(searchC, '--');
     };
 
     console.log(exchange, 'home', colorBg);
@@ -192,20 +216,27 @@ const Header: React.FC<{
                             position: relative;
                             padding: 5px;
                             color: ${colorText};
+                            cursor: var(--pointer);
+                            @media (min-width: 768px) {
+                                &:hover {
+                                    background-color: #385d8c;
+                                }
+                            }
                             ${searchC
                                 ? 'width: 100%; input{display: block; width: 100%; height: 85%;} @media (min-width: 650px){width: 380px;}'
                                 : 'input{ width: 0%}'}
                         `}
-                        onClick={handleSearch}
                     >
-                        <Search
-                            search={searchC}
-                            location={location}
-                            colorBg={colorBg}
-                            colorText={colorText}
-                            dataText={search.children}
-                            title={search.title}
-                        />
+                        {searchC && (
+                            <Search
+                                history={history}
+                                location={location}
+                                colorBg={colorBg}
+                                colorText={colorText}
+                                dataText={search.children}
+                                title={search.title}
+                            />
+                        )}
 
                         <Div
                             css={`
@@ -217,12 +248,8 @@ const Header: React.FC<{
                                 align-items: center;
                                 justify-content: center;
                                 border-radius: 5px;
-                                cursor: var(--pointer);
-
-                                &:hover {
-                                    background-color: #385d8c;
-                                }
                             `}
+                            onClick={handleSearch}
                         >
                             <SearchI />
                         </Div>

@@ -169,5 +169,29 @@ class HttpRequestUser {
             console.log(error);
         }
     };
+    setHistory = async (
+        token: string,
+        data: { id: string; avatar: string; fullName: string; nickName: string; gender: number },
+    ) => {
+        try {
+            const Axios = refreshToken.axiosJWTs(token);
+            const res = await Axios.post('/SN/user/setHistory', {
+                params: {
+                    data,
+                },
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    getHistory = async (token: string) => {
+        try {
+            const Axios = refreshToken.axiosJWTs(token);
+            const res = await Axios.get('/SN/user/getHistory');
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
+    };
 }
 export default new HttpRequestUser();

@@ -29,23 +29,39 @@ interface PropsSearch {
     colorText: string;
     location: string;
     dataText: PropsSearchTextSN;
-    search: boolean;
+    history: {
+        id: string;
+        avatar: string;
+        fullName: string;
+        nickName: string;
+        gender: number;
+    }[];
 }
-const Search: React.FC<PropsSearch> = ({ location, colorBg, colorText, dataText, title, search }) => {
+const Search: React.FC<PropsSearch> = ({ location, colorBg, colorText, dataText, title, history }) => {
     const [cookies, setCookie] = useCookies(['tks']);
     const [searchUser, setSearchUser] = useState<string>('');
     const [searchUserMore, setSearchUserMore] = useState<string>('');
     const [cateMore, setCateMore] = useState<string>('');
-    const [resultSearch, setResultSearch] = useState<any>([]);
+    const [resultSearch, setResultSearch] = useState<
+        {
+            id: string;
+            avatar: string;
+            fullName: string;
+            nickName: string;
+            gender: number;
+        }[]
+    >(history);
+
     const [more, setMore] = useState<React.ReactElement | null>();
     const [placeholder, setPlaceholder] = useState<string>('');
     const closeRef = useRef<any>();
+    console.log('search history', history, resultSearch);
 
     const debounce1 = useDebounce(searchUser, 500);
     const debounce2 = useDebounce(searchUserMore, 500);
     useEffect(() => {
-        if (!searchUser) {
-            setResultSearch([]);
+        if (!searchUser && !searchUserMore) {
+            setResultSearch(history);
             return;
         }
         const fechApi = async () => {
@@ -66,10 +82,16 @@ const Search: React.FC<PropsSearch> = ({ location, colorBg, colorText, dataText,
                 console.log(err);
             }
         };
+        console.log('voooc');
 
         fechApi();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debounce1, debounce2]);
+    console.log('voo', debounce1, debounce2);
+
+    useEffect(() => {
+        if (history?.length > 0) setResultSearch(history);
+    }, [history]);
     const handleResultSearch = (e: any) => {
         if (e.target.value[0] !== ' ') {
             setSearchUser(e.target.value);
@@ -87,11 +109,9 @@ const Search: React.FC<PropsSearch> = ({ location, colorBg, colorText, dataText,
         setCateMore('');
         setPlaceholder('');
         closeRef.current.focus();
-        setResultSearch([]);
+        setResultSearch(history);
     };
-    const handleShowHide = () => {
-        // setHide(false);
-    };
+
     const a = [
         { id: '70363514-1ebe-424e-a722-b1bbda7bbfc3', last_name: 'hung', full_name: 'hung nguyen' },
         { id: '3f132816-bb9d-4579-a396-02ab5680f4f4', last_name: 'hung', full_name: 'hung nguyen' },
@@ -100,6 +120,7 @@ const Search: React.FC<PropsSearch> = ({ location, colorBg, colorText, dataText,
         setPlaceholder(name);
         if (id === 1) setCateMore('nickName');
     };
+
     const handleMore = () => {
         if (!more) {
             setMore(
@@ -142,34 +163,22 @@ const Search: React.FC<PropsSearch> = ({ location, colorBg, colorText, dataText,
     };
     return (
         <DivSearch>
-            {search && (
-                <>
-                    <Input
-                        id="notS"
-                        ref={closeRef}
-                        type="text"
-                        color={colorText}
-                        value={searchUser}
-                        placeholder={title}
-                        onChange={(e) => handleResultSearch(e)}
-                        onFocus={handleShowHide}
-                    />
-                    <DivPos
-                        width="30px"
-                        size="1.8rem"
-                        top="3.5px"
-                        right="0px"
-                        color={colorText}
-                        onClick={handleCloseSearch}
-                    >
-                        <CloseI />
-                    </DivPos>
-                </>
-            )}
+            <Input
+                id="notS"
+                ref={closeRef}
+                type="text"
+                color={colorText}
+                value={searchUser}
+                placeholder={title}
+                onChange={(e) => handleResultSearch(e)}
+            />
+            <DivPos width="30px" size="1.8rem" top="3.5px" right="0px" color={colorText} onClick={handleCloseSearch}>
+                <CloseI />
+            </DivPos>
 
-            {search && (resultSearch?.length > 0 || cateMore) && (
+            {(resultSearch?.length > 0 || cateMore || searchUser) && (
                 <>
-                    <DivResults bg={colorBg === 1 ? '#292a2d;' : ''} onClick={(e) => e.stopPropagation()}>
+                    <DivResults bg={colorBg === 1 ? '#292a2d;' : ''}>
                         <Div wrap="wrap" css="margin-bottom: 6px; box-shadow: 0 0 3px rgb(31 29 29);">
                             <Div
                                 width="100%"
@@ -182,7 +191,6 @@ const Search: React.FC<PropsSearch> = ({ location, colorBg, colorText, dataText,
                                         color={colorText}
                                         placeholder={placeholder}
                                         onChange={handleResultSearchMore}
-                                        onFocus={handleShowHide}
                                     />
                                 )}
                                 <Div css="cursor: pointer;" onClick={handleMore}>

@@ -55,7 +55,7 @@ const Strangers: React.FC<{
     const [cookies, setCookies] = useCookies(['tks', 'k_user']);
     const [loading, setLoading] = useState<boolean>(false);
     const offsetRef = useRef<number>(0);
-    const limit: number = 10;
+    const limit: number = 3;
     const token = cookies.tks;
     const userId = cookies.k_user;
     const eleRef = useRef<any>();
@@ -68,11 +68,13 @@ const Strangers: React.FC<{
         if (rel) {
             ids.clear();
             dataRef.current = [];
+            cRef.current = 3;
             setLoading(true);
         }
+        console.log(Array.from(ids), 'lll');
 
         const res = await peopleAPI.getStrangers(token, limit, Array.from(ids));
-        console.log('strangers', res, data, Array.from(ids));
+        console.log(dataRef.current.length, rel, 'strangers', res, Array.from(ids));
         res.map((f: { avatar: any; id: string }) => {
             ids.add(f.id);
             if (f.avatar) {
@@ -88,13 +90,17 @@ const Strangers: React.FC<{
             setData(res);
             setLoading(false);
         }
+        cRef.current = 1;
     };
+    console.log(dataRef.current, data, 'data');
+
     const handleScroll = () => {
         const { scrollTop, clientHeight, scrollHeight } = eleRef.current;
         console.log(scrollTop, clientHeight, scrollHeight);
 
         if (scrollTop + clientHeight >= scrollHeight - 20 && !loading) {
-            fetch(false);
+            console.log(cRef.current);
+            if (cRef.current !== 3) fetch(false);
         }
     };
     useEffect(() => {
