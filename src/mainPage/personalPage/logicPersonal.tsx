@@ -515,7 +515,8 @@ export default function LogicView(
                 }
             }
             @media (min-width: 1100px){
-                width: ${1025 / leng + 'px;'}
+                width: 100%;
+                ${leng === 1 && 'padding: 0 10%;'}
             }
             @media (max-width: 600px){
                 min-width: 100%;
@@ -525,7 +526,7 @@ export default function LogicView(
             width: 118px;
             justify-content: center;
             align-items: center;
-            padding: 7px;
+            padding: 5px;
             font-size: 1.3rem;
             margin: 0 5px;
             background-color: #383838;
@@ -549,7 +550,6 @@ export default function LogicView(
             padding: 3px;
             position: relative;
             overflow: hidden;
-           ${online.includes(userId) ? 'border: 1px solid #418a7a;' : 'border: 1px solid #696969;'};
             @media (min-width: 600px){
                 min-width: ${130 / (leng > 1 ? leng - 0.5 : leng) + 'px;'}
                 width: ${130 / (leng > 1 ? leng - 0.5 : leng) + 'px;'}

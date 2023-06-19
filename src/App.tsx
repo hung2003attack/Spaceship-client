@@ -101,7 +101,6 @@ function App() {
     const [userFirst, setUserFirst] = useState<PropsUser>();
     const [userOnline, setUserOnline] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [rePro, setRePro] = useState<boolean>(false);
 
     const token = cookies.tks;
     const k_user = cookies.k_user;
@@ -148,7 +147,8 @@ function App() {
             return res;
         }
     }
-    console.log(userFirst, 'userFirst', cookies.tks);
+    console.log(userFirst, 'userFirst');
+    console.log(userData, 'userData');
     useEffect(() => {
         const search = async () => {
             const search = window.location.search;
@@ -158,7 +158,7 @@ function App() {
                 const id = search.split('id=');
                 const ids = [];
                 const datas = [];
-                if (id.length < 3 && id.length > 0) {
+                if (id.length < 5 && id.length > 0) {
                     for (let i = 1; i < id.length; i++) {
                         ids.push(id[i]);
                         console.log('hii', id[i]);
@@ -357,6 +357,7 @@ function App() {
                     />
                 }
             >
+                <Div>Helloo</Div>
                 <ErrorBoudaries
                     check={errorServer.check}
                     message={errorServer.message || 'Server is having a problem. Please try again later!'}
@@ -368,6 +369,7 @@ function App() {
                             setUserOnline={setUserOnline}
                             idUser={idUser}
                             dataUser={userFirst}
+                            setDataUser={setUserFirst}
                         />
                         {(setting || personalPage) && <DivOpacity onClick={handleClick} />}
                         <Message />
@@ -379,7 +381,7 @@ function App() {
                                     height: 100%;
                                     position: absolute;
                                     top: 0px;
-                                    z-index: 1;
+                                    z-index: 888;
                                     color: ${colorText};
                                     font-size: 50px;
                                     align-items: center;
@@ -412,7 +414,7 @@ function App() {
                                                 display: flex;
                                                 position: fixed;
                                                 flex-direction: column;
-                                                top: ${rePro ? '140px' : '175px'};
+                                                top: 175px;
                                                 right: 7px;
                                                 z-index: 88;
                                                 border-radius: 50%;
@@ -420,7 +422,6 @@ function App() {
                                         `}
                                     >
                                         {userData.map((rs) => {
-                                            if (rs.id === k_user) setRePro(true);
                                             return (
                                                 <A key={rs.id} href={`#profiles${rs.id}`}>
                                                     <Avatar

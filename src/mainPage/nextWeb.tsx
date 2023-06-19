@@ -69,7 +69,8 @@ const Website: React.FC<{
     userOnline: string[];
     idUser: string[];
     dataUser: PropsUser;
-}> = ({ setUserOnline, userOnline, idUser, dataUser }) => {
+    setDataUser: React.Dispatch<React.SetStateAction<PropsUser | undefined>>;
+}> = ({ setUserOnline, userOnline, idUser, dataUser, setDataUser }) => {
     const dispatch = useDispatch();
     const { colorText, colorBg } = useSelector((state: PropsBg) => state.persistedReducer.background);
 
@@ -384,6 +385,11 @@ const Website: React.FC<{
                                                 onClick={() =>
                                                     setOption(
                                                         <Tools
+                                                            dataUser={dataUser}
+                                                            setDataUser={setDataUser}
+                                                            userOnline={userOnline}
+                                                            setUserOnline={setUserOnline}
+                                                            userId={userId}
                                                             colorText={colorText}
                                                             colorBg={colorBg}
                                                             as={dataUser.as}

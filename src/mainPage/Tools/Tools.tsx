@@ -5,18 +5,34 @@ import { DotI, OfflineI, OnlineI } from '~/assets/Icons/Icons';
 import { socket } from '../nextWeb';
 import Cookies from 'universal-cookie';
 import HttpRequestUser from '~/restAPI/requestServers/accountRequest/userAPI';
+import { PropsUser } from 'src/App';
 
 const cookies = new Cookies();
-const Tools: React.FC<{ colorText: string; colorBg: number; as: number }> = ({ colorText, colorBg, as }) => {
+
+const Tools: React.FC<{
+    colorText: string;
+    colorBg: number;
+    as: number;
+    setUserOnline: React.Dispatch<React.SetStateAction<string[]>>;
+    userOnline: string[];
+    userId: string;
+    dataUser: PropsUser;
+    setDataUser: React.Dispatch<React.SetStateAction<PropsUser | undefined>>;
+}> = ({ colorText, colorBg, as, setUserOnline, userId, userOnline, dataUser, setDataUser }) => {
     const [status, setStatus] = useState<React.ReactNode>(null);
     const [onOff, setOnOff] = useState<React.ReactElement>(() => (as === 1 ? <OnlineI /> : <OfflineI />));
     const handleChange = async (o: { name: string }) => {
         const res = await HttpRequestUser.setAs(cookies.get('tks'), o.name === 'online' ? 1 : 0);
-        console.log(res, 'res here');
+        console.log(res, o, 'res here');
         if (res === 1) {
             if (o.name === 'online') {
+                setDataUser({ ...dataUser, as: 1 });
+                // setUserOnline([...userOnline, userId]);
                 setOnOff(<OnlineI />);
             } else {
+                setDataUser({ ...dataUser, as: 0 });
+                // const newOnlone = userOnline.filter((ol) => ol !== userId);
+                // setUserOnline(newOnlone);
                 setOnOff(<OfflineI />);
             }
         }

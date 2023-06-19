@@ -110,6 +110,8 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
             </Div>
         );
     };
+    const cssMoreAva = online.includes(dataUser.id) ? 'border: 1px solid #418a7a;' : 'border: 1px solid #696969;';
+    console.log(cssAvatar + cssMoreAva, 'cssMoreAva');
 
     return (
         <Div id={`profiles${dataUser.id}`} css={css}>
@@ -144,7 +146,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
             </div> */}
 
                 <DivPersonalPage width="90%" height="44px" margin="auto" css={cssDivPersonalPage}>
-                    <Div css={cssAvatar} onClick={() => setRoom({ ...room, avatar: true })}>
+                    <Div css={cssAvatar + cssMoreAva} onClick={() => setRoom({ ...room, avatar: true })}>
                         <Avatar
                             src={dataUser.avatar}
                             alt={dataUser?.fullName}
