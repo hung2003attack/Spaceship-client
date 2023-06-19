@@ -7,17 +7,18 @@ import { register } from './dataMark/dataRegister';
 import { useCookies } from 'react-cookie';
 import React, { Suspense, useEffect, useState } from 'react';
 import searchAPI from './app/restAPI/requestServers/socialNetwork/searchAPI_SN';
-import { DivContainer, DivPos } from './app/reUsingComponents/styleComponents/styleComponents';
+import { DivContainer, DivLoading, DivPos } from './app/reUsingComponents/styleComponents/styleComponents';
 import styled from 'styled-components';
-import { Div } from './app/reUsingComponents/styleComponents/styleDefault';
+import { A, Div } from './app/reUsingComponents/styleComponents/styleDefault';
 import Progress from './app/reUsingComponents/Progress/Progress';
 import Cookies from 'universal-cookie';
 import ErrorBoudaries from './app/reUsingComponents/ErrorBoudaries/ErrorBoudaries';
 import { PropsBg } from './mainPage/nextWeb';
-import { UndoI } from '~/assets/Icons/Icons';
+import { LoadingI, UndoI } from '~/assets/Icons/Icons';
 import CommonUtils from '~/utils/CommonUtils';
 import userAPI from '~/restAPI/requestServers/accountRequest/userAPI';
 import { PropsTitleP } from './mainPage/personalPage/layout/Title';
+import Avatar from '~/reUsingComponents/Avatars/Avatar';
 const DivOpacity = styled.div`
     width: 100%;
     height: 100%;
@@ -89,20 +90,23 @@ export interface PropsUserPer {
 const Authentication = React.lazy(() => import('~/Authentication/Auth'));
 const Website = React.lazy(() => import('./mainPage/nextWeb'));
 const Message = React.lazy(() => import('~/Message/message'));
-const cookie = new Cookies();
 function App() {
+    const [cookies, setCookie] = useCookies(['tks', 'k_user', 'sn']);
     const dispatch = useDispatch();
-    const [reload, setReload] = useState<boolean>(false);
-    const { setting, personalPage } = useSelector((state: any) => state.hideShow);
     const { idUser, errorServer } = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow);
+    const { setting, personalPage } = useSelector((state: any) => state.hideShow);
     const { colorText, colorBg } = useSelector((state: PropsBg) => state.persistedReducer.background);
     const [userData, setUserData] = useState<PropsUserPer[]>([]);
+
     const [userFirst, setUserFirst] = useState<PropsUser>();
     const [userOnline, setUserOnline] = useState<string[]>([]);
-    const [cookies, setCookie] = useCookies(['tks', 'k_user', 'sn']);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [rePro, setRePro] = useState<boolean>(false);
+
     const token = cookies.tks;
     const k_user = cookies.k_user;
     async function fetch(id: string, first?: string) {
+        if (!first) setLoading(true);
         const res = await userAPI.getById(
             token,
             id,
@@ -140,6 +144,7 @@ function App() {
         if (first) {
             setUserFirst(res);
         } else {
+            setLoading(false);
             return res;
         }
     }
@@ -153,7 +158,7 @@ function App() {
                 const id = search.split('id=');
                 const ids = [];
                 const datas = [];
-                if (id.length < 4 && id.length > 0) {
+                if (id.length < 3 && id.length > 0) {
                     for (let i = 1; i < id.length; i++) {
                         ids.push(id[i]);
                         console.log('hii', id[i]);
@@ -181,16 +186,10 @@ function App() {
         setUserData([]);
         dispatch(setIdUser([]));
     };
-    console.log(idUser, 'idUser', userData);
-
-    //   document.cookie.addListener("change", (event) => {
-    //   console.log("1 change event");
-    // });
-
     useEffect(() => {
         if (k_user) fetch(k_user, 'first');
     }, [k_user]);
-    // const operatingSystem = {
+
     //     name: 'Ubuntu',
     //     version: 18.04,
     //     license: 'Open Source',
@@ -337,6 +336,13 @@ function App() {
         right: 0;
         bottom: 0;
         z-index: 11;
+        overflow-y: overlay;
+        &::-webkit-scrollbar {
+            width: 0px;
+            height: 0px;
+            border-radius: 0;
+        }
+
 `;
 
     if (token && k_user) {
@@ -365,15 +371,71 @@ function App() {
                         />
                         {(setting || personalPage) && <DivOpacity onClick={handleClick} />}
                         <Message />
+
+                        {loading && (
+                            <Div
+                                width="100%"
+                                css={`
+                                    height: 100%;
+                                    position: absolute;
+                                    top: 0px;
+                                    z-index: 1;
+                                    color: ${colorText};
+                                    font-size: 50px;
+                                    align-items: center;
+                                    justify-content: center;
+                                    background-color: #2b2c2d78;
+                                `}
+                            >
+                                <DivLoading css="width: auto;">
+                                    <LoadingI />
+                                </DivLoading>
+                            </Div>
+                        )}
+
                         {userData?.length > 0 && (
                             <DivContainer
                                 width="100%"
                                 height="100%"
                                 css={css}
                                 bg={`${colorBg === 1 ? '#272727' : 'white'}`}
-                                content="start"
+                                content={leng === 1 ? 'center' : 'start'}
                                 display="flex"
                             >
+                                {userData?.length > 1 && (
+                                    <Div
+                                        css={`
+                                            display: none;
+                                            @media (max-width: 600px) {
+                                                width: auto;
+                                                height: auto;
+                                                display: flex;
+                                                position: fixed;
+                                                flex-direction: column;
+                                                top: ${rePro ? '140px' : '175px'};
+                                                right: 7px;
+                                                z-index: 88;
+                                                border-radius: 50%;
+                                            }
+                                        `}
+                                    >
+                                        {userData.map((rs) => {
+                                            if (rs.id === k_user) setRePro(true);
+                                            return (
+                                                <A key={rs.id} href={`#profiles${rs.id}`}>
+                                                    <Avatar
+                                                        src={rs.avatar}
+                                                        alt={rs.fullName}
+                                                        gender={rs.gender}
+                                                        radius="50%"
+                                                        id={cookies.k_user}
+                                                        css=" width: 40px; height: 40px; cursor: var(--pointer);"
+                                                    />
+                                                </A>
+                                            );
+                                        })}
+                                    </Div>
+                                )}
                                 {userData?.map((data: any, index: number) => (
                                     <Personalpage
                                         setUserFirst={setUserFirst}

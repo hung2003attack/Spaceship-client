@@ -112,7 +112,7 @@ const Personalpage: React.FC<PropsPer> = ({ user, leng = 1, colorText, colorBg, 
     };
 
     return (
-        <Div css={css}>
+        <Div id={`profiles${dataUser.id}`} css={css}>
             {(room.background || room.avatar) && (
                 <DivPos
                     position="fixed"

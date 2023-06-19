@@ -474,7 +474,7 @@ export default function LogicView(
                   height: ${400 / (leng > 1 ? leng - 0.7 : leng) + 'px'};
             };
             @media (min-width: 1201px){
-                  height: ${500 / (leng > 1 ? leng - 0.7 : leng) + 'px'};
+                  height: ${450 / (leng > 1 ? leng - 0.7 : leng) + 'px'};
             }
             @media (min-width: 1440px){
                 width: 99%;
@@ -502,8 +502,9 @@ export default function LogicView(
                 margin-bottom: 20px;
             }`;
     const css = `
+            margin: 0 3px;
             width: 100%;
-            height: var(--full);
+            height: 100%;
             overflow-y: overlay;
             &::-webkit-scrollbar {
                 width: 0px;
@@ -514,7 +515,7 @@ export default function LogicView(
                 }
             }
             @media (min-width: 1100px){
-                min-width: ${100 / leng + '%;'}
+                width: ${1025 / leng + 'px;'}
             }
             @media (max-width: 600px){
                 min-width: 100%;

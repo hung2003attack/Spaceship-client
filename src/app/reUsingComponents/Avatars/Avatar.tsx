@@ -9,6 +9,7 @@ import { DivImg } from '../styleComponents/styleComponents';
 import { InitialStateHideShow, onPersonalPage, onSetting, setIdUser } from '../../redux/hideShow';
 
 interface _Avatar {
+    idH?: string;
     id?: string;
     src?: any;
     alt?: string | undefined;
@@ -22,8 +23,9 @@ interface _Avatar {
     onTouchMove?: (args: any) => void;
 }
 
-const Avatar = forwardRef((props: any, ref: any) => {
+const Avatar = forwardRef((props: _Avatar, ref: any) => {
     const {
+        idH,
         id,
         src,
         alt,
@@ -71,7 +73,7 @@ const Avatar = forwardRef((props: any, ref: any) => {
     return avatar ? (
         <FaUserCircle />
     ) : (
-        <DivImg width={width} css={css} {...events} ref={ref}>
+        <DivImg id={idH} width={width} css={css} {...events} ref={ref}>
             <Img
                 src={src || avatarFallback}
                 alt={alt}

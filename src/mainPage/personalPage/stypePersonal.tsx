@@ -47,9 +47,7 @@ export const DivItems = styled.div`
 `;
 export const DivPerson = styled.div`
     width: var(--full);
-    height: auto;
-    border-left: 1px solid;
-    border-right: 1px solid;
+    height: 100%;
 `;
 export const InputChangeP = styled.input`
     width: 100%;
