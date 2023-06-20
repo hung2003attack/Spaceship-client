@@ -1,16 +1,21 @@
-import { CloseI, SendI, MoveI, UndoI, BeforeI } from '~/assets/Icons/Icons';
 import { memo, useEffect } from 'react';
-import clsx from 'clsx';
-import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import React, { useState } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { FreeMode, Pagination, EffectCoverflow } from 'swiper';
+import 'swiper/css/effect-coverflow';
+
+import clsx from 'clsx';
+import { CloseI, SendI, MoveI, UndoI, BeforeI } from '~/assets/Icons/Icons';
 import Hovertitle from '~/reUsingComponents/HandleHover/HoverTitle';
+import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import useDebounce from '~/reUsingComponents/hook/useDebounce';
 import { DivIconMs } from '../styleMessage';
 import { DivResults, DivSend } from './styleSed';
 import { Div, Input } from '~/reUsingComponents/styleComponents/styleDefault';
 import { DivPost } from '~/social_network/components/Header/layout/Home/styleHome';
-import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
+import { DivPos, Hname } from '~/reUsingComponents/styleComponents/styleComponents';
 import ListAccounts from './SendReults';
+
 const Send: React.FC<{
     colorText: string;
     colorBg: number;
@@ -102,6 +107,134 @@ const Send: React.FC<{
                         />
                     </Div>
                     <DivResults>
+                        <Div css=".swiper{padding: 14px 2px;} .swiper-slide, swiper-slide{user-select: none;} .swiper-pagination{top: 70px !important; height: 1px !important;} padding: 5px 2px;">
+                            <Swiper
+                                slidesPerView={6}
+                                spaceBetween={30}
+                                pagination={{
+                                    type: 'progressbar',
+                                }}
+                                modules={[Pagination]}
+                                className="mySwiper"
+                            >
+                                <SwiperSlide>
+                                    <Div>
+                                        <Avatar
+                                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
+                                            gender={0}
+                                            radius="50%"
+                                            css="min-width: 40px; width: 40px; height: 40px; margin: 3px 5px; "
+                                        />
+                                        <Hname>Nguyen Trong Hung</Hname>
+                                    </Div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Div>
+                                        <Avatar
+                                            src="https://hips.hearstapps.com/hmg-prod/images/cutest-dog-breeds-64358b34b2905.jpeg?crop=0.891xw:0.357xh;0,0.137xh&resize=1200:*"
+                                            gender={0}
+                                            radius="50%"
+                                            css="min-width: 40px; width: 40px; height: 40px; margin: 3px 5px; "
+                                        />
+                                        <Hname>Nguyen Hung</Hname>
+                                    </Div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Div>
+                                        <Avatar
+                                            src="https://www.brightstarbuddies.com.au/blog/wp-content/uploads/sites/8/bonniechessiegirl4-2.jpg"
+                                            gender={0}
+                                            radius="50%"
+                                            css="min-width: 40px; width: 40px; height: 40px; margin: 3px 5px; "
+                                        />
+                                        <Hname>Ngoc Linh</Hname>
+                                    </Div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Div>
+                                        <Avatar
+                                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
+                                            gender={0}
+                                            radius="50%"
+                                            css="min-width: 40px; width: 40px; height: 40px; margin: 3px 5px; "
+                                        />
+                                        <Hname>MNgoc Phuong</Hname>
+                                    </Div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Div>
+                                        <Avatar
+                                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
+                                            gender={0}
+                                            radius="50%"
+                                            css="min-width: 40px; width: 40px; height: 40px; margin: 3px 5px; "
+                                        />
+                                        <Hname>Hiseper</Hname>
+                                    </Div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Div>
+                                        <Avatar
+                                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
+                                            gender={0}
+                                            radius="50%"
+                                            css="min-width: 40px; width: 40px; height: 40px; margin: 3px 5px; "
+                                        />
+                                        <Hname>Hiseper</Hname>
+                                    </Div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Div>
+                                        <Avatar
+                                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
+                                            gender={0}
+                                            radius="50%"
+                                            css="min-width: 40px; width: 40px; height: 40px; margin: 3px 5px; "
+                                        />
+                                    </Div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Div>
+                                        <Avatar
+                                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
+                                            gender={0}
+                                            radius="50%"
+                                            css="min-width: 40px; width: 40px; height: 40px; margin: 3px 5px; "
+                                        />
+                                    </Div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Div>
+                                        <Avatar
+                                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
+                                            gender={0}
+                                            radius="50%"
+                                            css="min-width: 40px; width: 40px; height: 40px; margin: 3px 5px; "
+                                        />
+                                    </Div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Div>
+                                        <Avatar
+                                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
+                                            gender={0}
+                                            radius="50%"
+                                            css="min-width: 40px; width: 40px; height: 40px; margin: 3px 5px; "
+                                        />
+                                    </Div>
+                                </SwiperSlide>
+                                <SwiperSlide>
+                                    <Div>
+                                        <Avatar
+                                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
+                                            gender={0}
+                                            radius="50%"
+                                            css="min-width: 40px; width: 40px; height: 40px; margin: 3px 5px; "
+                                        />
+                                    </Div>
+                                </SwiperSlide>
+                            </Swiper>
+                        </Div>
                         <ListAccounts colorText={colorText} colorBg={colorBg} />
                         <ListAccounts colorText={colorText} colorBg={colorBg} />
                         <ListAccounts colorText={colorText} colorBg={colorBg} />
