@@ -174,9 +174,11 @@ export const DivPos = styled.div<PropsClose>`
     position: ${(props) => props.position || 'absolute'};
     z-index: ${(props) => props.index};
     font-size: ${(props) => props.size};
-    cursor: var(--pointer);
     border-radius: 50%;
     ${(props) => props.css}
+    @media (min-width: 768px) {
+        cursor: var(--pointer);
+    }
 
     &:hover {
         transition: all 0.1s linear;

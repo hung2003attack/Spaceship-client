@@ -6,8 +6,9 @@ import { DivMs } from './styleMessage';
 import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { PropsBg } from 'src/mainPage/nextWeb';
+import { PropsUser } from 'src/App';
 
-const Message: React.FC = () => {
+const Message: React.FC<{ dataUser: PropsUser; userOnline: string[] }> = ({ dataUser, userOnline }) => {
     const [width, setWidth] = useState<string>('');
     const { colorText, colorBg } = useSelector((state: PropsBg) => state.persistedReducer.background);
     const elRef = useRef<any>();
@@ -42,8 +43,8 @@ const Message: React.FC = () => {
     }
     return (
         <DivMs width="50px" top="60px" ref={elRef} onTouchMove={handleTouchMove}>
-            <Notification colorText={colorText} colorBg={colorBg} />
-            <Send colorText={colorText} colorBg={colorBg} />
+            <Notification dataUser={dataUser} userOline={userOnline} colorText={colorText} colorBg={colorBg} />
+            <Send dataUser={dataUser} userOline={userOnline} colorText={colorText} colorBg={colorBg} />
         </DivMs>
     );
 };

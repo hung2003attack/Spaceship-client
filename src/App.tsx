@@ -357,7 +357,7 @@ function App() {
                     />
                 }
             >
-                <Div>Helloo</Div>
+                {/* <Div>Helloo</Div> */}
                 <ErrorBoudaries
                     check={errorServer.check}
                     message={errorServer.message || 'Server is having a problem. Please try again later!'}
@@ -372,7 +372,7 @@ function App() {
                             setDataUser={setUserFirst}
                         />
                         {(setting || personalPage) && <DivOpacity onClick={handleClick} />}
-                        <Message />
+                        <Message dataUser={userFirst} userOnline={userOnline} />
 
                         {loading && (
                             <Div

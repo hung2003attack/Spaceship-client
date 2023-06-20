@@ -1,13 +1,22 @@
-import { CloseI, SendI, MoveI, UndoI } from '~/assets/Icons/Icons';
+import { CloseI, SendI, MoveI, UndoI, BeforeI } from '~/assets/Icons/Icons';
 import { memo, useEffect } from 'react';
 import clsx from 'clsx';
-import styles from './send.module.scss';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import React, { useState } from 'react';
 import Hovertitle from '~/reUsingComponents/HandleHover/HoverTitle';
 import useDebounce from '~/reUsingComponents/hook/useDebounce';
 import { DivIconMs } from '../styleMessage';
-const Send: React.FC<{ colorText: string; colorBg: number }> = ({ colorBg, colorText }) => {
+import { DivResults, DivSend } from './styleSed';
+import { Div, Input } from '~/reUsingComponents/styleComponents/styleDefault';
+import { DivPost } from '~/social_network/components/Header/layout/Home/styleHome';
+import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
+import ListAccounts from './SendReults';
+const Send: React.FC<{
+    colorText: string;
+    colorBg: number;
+    dataUser: { id: string; avatar: any; fullName: string; nickName: string; gender: number };
+    userOline: string[];
+}> = ({ colorBg, colorText, dataUser, userOline }) => {
     const [send, setSend] = useState(false);
 
     const [left, setlLeft] = useState<boolean>(false);
@@ -26,24 +35,24 @@ const Send: React.FC<{ colorText: string; colorBg: number }> = ({ colorBg, color
         setBottom(false);
         setMove(false);
     };
-    const debounce = useDebounce(searchUser, 500);
-    useEffect(() => {
-        if (!searchUser) {
-            setResultSearch([]);
-            return;
-        }
-        const fechApi = async () => {
-            // const results = await userService.search(searchUser);
-            // setResultSearch(results);
-        };
+    // const debounce = useDebounce(searchUser, 500);
+    // useEffect(() => {
+    //     if (!searchUser) {
+    //         setResultSearch([]);
+    //         return;
+    //     }
+    //     const fechApi = async () => {
+    //         // const results = await userService.search(searchUser);
+    //         // setResultSearch(results);
+    //     };
 
-        fechApi();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debounce]);
+    //     fechApi();
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [debounce]);
     const handleSearch = (e: { target: { value: string } }) => {
         setSearchUser(e.target.value);
     };
-    console.log(resultSearch);
+    console.log(searchUser);
 
     return (
         <>
@@ -54,61 +63,62 @@ const Send: React.FC<{ colorText: string; colorBg: number }> = ({ colorBg, color
                 </Hovertitle>
             )}
             {send && (
-                <div className={clsx(styles.hideResultBar, left && styles.leftMove, bottom && styles.bottomMove)}>
-                    <div className={clsx(styles.search)}>
-                        <div className={clsx(styles.close)} onClick={handleShowHide}>
-                            <CloseI />
-                        </div>
-                        <input
-                            className={clsx(styles.searchInput)}
+                <DivSend>
+                    <Div
+                        width="100%"
+                        css={`
+                            height: 40px;
+                            align-items: center;
+                            justify-content: space-evenly;
+                            position: relative;
+                            color: ${colorText};
+                        `}
+                    >
+                        <Div
+                            css="width: 40px; height: 100%; align-items: center; justify-content: center; font-size: 22px; "
+                            onClick={handleShowHide}
+                        >
+                            <UndoI />
+                        </Div>
+                        <Input
                             type="text"
+                            value={searchUser}
                             placeholder="Search"
                             onChange={handleSearch}
+                            color={colorText}
+                            border="0"
+                            width="auto"
+                            margin="0"
                         />
-                        <div className={clsx(styles.bar)}></div>
-                        <div className={clsx(styles.closeSearch)}>
+                        <DivPos width="35px" right="50px" onClick={() => setSearchUser('')}>
                             <CloseI />
-                        </div>
-                        {move && (
-                            <div className={clsx(styles.undo)} onClick={handleUndo}>
-                                <UndoI />
-                            </div>
-                        )}
-                        <div className={clsx(styles.move)} onClick={handleMove}>
-                            <MoveI />
-                        </div>
-                        {resultSearch.length > 0 && (
-                            <div className={clsx(styles.resultList)}>
-                                {resultSearch.map((user: any) => (
-                                    <div key={user.id} className={clsx(styles.resultSearch)}>
-                                        <div className={clsx(styles.avatarearch)}>
-                                            <Avatar src={user.avatar} alt={user.full_name} gender={user.gender} />
-                                        </div>
-
-                                        <div className={clsx(styles.nameSearch)}>
-                                            <p className={clsx(styles.fullname)}>{user.full_name}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-
-                    <div className={clsx(styles.userList)}>
-                        {/* <div className={clsx(styles.user)}>
-                            <div className={clsx(styles.avatar)}>
-                                <Avatar
-                                    src="https://thuthuatnhanh.com/wp-content/uploads/2019/05/gai-xinh-toc-ngan-facebook.jpg"
-                                    alt="de"
-                                />
-                            </div>
-                            <div className={clsx(styles.name)}>
-                                <p className={clsx(styles.sendUserName)}>Nguyễn hùng</p>
-                                <p className={clsx(styles.message)}>da nhan</p>
-                            </div>
-                        </div> */}
-                    </div>
-                </div>
+                        </DivPos>
+                        <Avatar
+                            src={dataUser.avatar}
+                            alt={dataUser.fullName}
+                            gender={dataUser.gender}
+                            radius="50%"
+                            css="width: 35px; height: 35px;"
+                        />
+                    </Div>
+                    <DivResults>
+                        <ListAccounts colorText={colorText} colorBg={colorBg} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} />
+                    </DivResults>
+                </DivSend>
             )}
         </>
     );

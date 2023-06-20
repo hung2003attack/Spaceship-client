@@ -17,15 +17,23 @@ export const Links = styled(Link)`
 export const A = styled.a`
     ${(props: { css?: string }) => props.css}
 `;
-
-export const Input = styled.input`
-    width: 100%;
-    padding: 10px 44px 10px 10px;
-    border: 1px solid rgba(255, 255, 255, 0.83);
-    border-radius: 5px;
-    margin: 10px 0;
-    background-color: rgba(255, 255, 255, 0);
-    color: #fff;
+interface PropsInput {
+    width?: string;
+    padding?: string;
+    border?: string;
+    radius?: string;
+    margin?: string;
+    background?: string;
+    borderColor?: string;
+}
+export const Input = styled.input<PropsInput>`
+    width: ${(props) => props.width || '100%'};
+    padding: ${(props) => props.padding || '10px 44px 10px 10px'};
+    border: ${(props) => props.border || '1px solid rgba(255, 255, 255, 0.83)'};
+    border-radius: ${(props) => props.radius || '5px'};
+    margin: ${(props) => props.margin || '10px 0'};
+    background-color: ${(props) => props.background || ' rgba(255, 255, 255, 0)'};
+    color: ${(props) => props.color};
     border-color: ${(props: { color?: string }) => props.color || ''};
 `;
 export const Span = styled.span`

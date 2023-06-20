@@ -27,7 +27,12 @@ interface PropsLanguage {
         };
     };
 }
-const Notification: React.FC<{ colorText: string; colorBg: number }> = ({ colorText, colorBg }) => {
+const Notification: React.FC<{
+    colorText: string;
+    colorBg: number;
+    dataUser: { id: string; avatar: any; fullName: string; nickName: string; gender: number };
+    userOline: string[];
+}> = ({ colorText, colorBg, dataUser, userOline }) => {
     const dispatch = useDispatch();
     const language = useSelector((state: PropsLanguage) => state.persistedReducer.language);
     const [currentPage, setCurrentPage] = useState<number>(() => {
@@ -214,7 +219,12 @@ const Notification: React.FC<{ colorText: string; colorBg: number }> = ({ colorT
                                 {dataText[lg].title}
                             </H3>
                             <Div css="position: absolute; top: 4px; right: 15px; ">
-                                <Send colorText={colorText} colorBg={colorBg} />
+                                <Send
+                                    dataUser={dataUser}
+                                    userOline={userOline}
+                                    colorText={colorText}
+                                    colorBg={colorBg}
+                                />
                             </Div>
                         </DivBar>
                         <DivListIs>
