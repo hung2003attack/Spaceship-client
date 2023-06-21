@@ -5,16 +5,18 @@ import { FreeMode, Pagination, EffectCoverflow } from 'swiper';
 import 'swiper/css/effect-coverflow';
 
 import clsx from 'clsx';
-import { CloseI, SendI, MoveI, UndoI, BeforeI } from '~/assets/Icons/Icons';
+import { CloseI, SendI, MoveI, UndoI, BeforeI, ProfileI, ProfileCircelI } from '~/assets/Icons/Icons';
 import Hovertitle from '~/reUsingComponents/HandleHover/HoverTitle';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import useDebounce from '~/reUsingComponents/hook/useDebounce';
 import { DivIconMs } from '../styleMessage';
 import { DivResults, DivSend } from './styleSed';
-import { Div, Input } from '~/reUsingComponents/styleComponents/styleDefault';
+import { Div, Input, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { DivPost } from '~/social_network/components/Header/layout/Home/styleHome';
 import { DivPos, Hname } from '~/reUsingComponents/styleComponents/styleComponents';
 import ListAccounts from './SendReults';
+import MoreOption from './MoreOption';
+import Conversation from './Conversation';
 
 const Send: React.FC<{
     colorText: string;
@@ -29,6 +31,8 @@ const Send: React.FC<{
     const [move, setMove] = useState<boolean>(false);
     const [searchUser, setSearchUser] = useState<string>('');
     const [resultSearch, setResultSearch] = useState<any>([]);
+
+    const [moreBar, setMoreBar] = useState<boolean>(false);
     const handleShowHide = () => {
         setSend(!send);
     };
@@ -58,6 +62,12 @@ const Send: React.FC<{
         setSearchUser(e.target.value);
     };
     console.log(searchUser);
+    const dataMore = {
+        avatar: 'https://hinhnen4k.com/wp-content/uploads/2023/02/anh-gai-xinh-vn-2.jpg',
+        fullName: 'Nguyen Trong Hung',
+        gender: 1,
+        options: [{ name: 'View Profile', icon: <ProfileCircelI />, id: 1 }],
+    };
 
     return (
         <>
@@ -68,7 +78,7 @@ const Send: React.FC<{
                 </Hovertitle>
             )}
             {send && (
-                <DivSend>
+                <DivSend onTouchMove={(e) => e.stopPropagation()}>
                     <Div
                         width="100%"
                         css={`
@@ -110,7 +120,7 @@ const Send: React.FC<{
                         <Div css=".swiper{padding: 14px 2px;} .swiper-slide, swiper-slide{user-select: none;} .swiper-pagination{top: 70px !important; height: 1px !important;} padding: 5px 2px;">
                             <Swiper
                                 slidesPerView={6}
-                                spaceBetween={30}
+                                spaceBetween={10}
                                 pagination={{
                                     type: 'progressbar',
                                 }}
@@ -235,22 +245,24 @@ const Send: React.FC<{
                                 </SwiperSlide>
                             </Swiper>
                         </Div>
-                        <ListAccounts colorText={colorText} colorBg={colorBg} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
+                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
+                        {moreBar && <MoreOption dataMore={dataMore} colorText={colorText} setMoreBar={setMoreBar} />}
                     </DivResults>
+                    {/* <Conversation colorText={colorText} colorBg={colorBg} /> */}
                 </DivSend>
             )}
         </>

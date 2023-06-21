@@ -7,6 +7,7 @@ import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { PropsBg } from 'src/mainPage/nextWeb';
 import { PropsUser } from 'src/App';
+import Conversation from './Send/Conversation';
 
 const Message: React.FC<{ dataUser: PropsUser; userOnline: string[] }> = ({ dataUser, userOnline }) => {
     const [width, setWidth] = useState<string>('');
@@ -16,6 +17,7 @@ const Message: React.FC<{ dataUser: PropsUser; userOnline: string[] }> = ({ data
     const yRef = useRef<number | null>(null);
 
     const handleTouchMove = (e: any) => {
+        e.stopPropagation();
         const touch = e.touches[0];
         const x = touch.clientX;
         const y = touch.clientY;

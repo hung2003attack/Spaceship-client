@@ -137,14 +137,7 @@ const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
                         </P>
                     </Div>
                 </Div>
-                <FormUpNews
-                    userId={userId}
-                    token={token}
-                    form={form}
-                    colorBg={colorBg}
-                    colorText={colorText}
-                    user={dataUser}
-                />
+                <FormUpNews form={form} colorBg={colorBg} colorText={colorText} user={dataUser} />
                 <Posts colorBg={colorBg} colorText={colorText} />
             </DivPost>
         </Div>

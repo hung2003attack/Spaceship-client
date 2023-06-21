@@ -31,4 +31,25 @@ export const DivResults = styled.div`
     width: 100%;
     height: 94%;
     overflow-y: overlay;
+    @media (max-width: 768px) {
+        &::-webkit-scrollbar {
+            width: 0px;
+        }
+    }
+`;
+export const DivConversation = styled.div`
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: #212020;
+    z-index: 1;
+`;
+export const DivResultsConversation = styled.div`
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 10px;
+    color: ${(props) => props.color};
 `;

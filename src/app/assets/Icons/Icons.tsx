@@ -10,6 +10,8 @@ import {
     BsClockHistory,
     BsGenderMale,
     BsGenderFemale,
+    BsFillCircleFill,
+    BsImage,
 } from 'react-icons/bs';
 import {
     IoImagesOutline,
@@ -47,9 +49,9 @@ import {
 } from 'react-icons/md';
 import { GoScreenFull, GoScreenNormal } from 'react-icons/go';
 import { FaPeopleArrows, FaAddressCard, FaUserFriends, FaBirthdayCake } from 'react-icons/fa';
-import { RiDragMoveFill, RiMailSendLine } from 'react-icons/ri';
+import { RiDragMoveFill, RiMailSendLine, RiTyphoonLine } from 'react-icons/ri';
 import { TbArrowNarrowLeft, TbGenderFemale, TbGenderMale, TbGridDots, TbTextResize } from 'react-icons/tb';
-import { CgWebsite } from 'react-icons/cg';
+import { CgProfile, CgWebsite } from 'react-icons/cg';
 import { VscPreview } from 'react-icons/vsc';
 import { CiHeart, CiPaperplane, CiSearch, CiWifiOff, CiWifiOn } from 'react-icons/ci';
 import { SlLike } from 'react-icons/sl';
@@ -118,3 +120,6 @@ export const WorkingI = () => <MdOutlineWork />;
 export const BirthI = () => <FaBirthdayCake />;
 export const HeartMI = () => <AiFillHeart />;
 export const FollowI = () => <GiBurningBook />;
+export const ProfileCircelI = () => <CgProfile />;
+export const TyOnlineI = () => <BsFillCircleFill />;
+export const ImageBayI = () => <BsImage />;

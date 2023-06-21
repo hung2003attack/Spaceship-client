@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, EffectCoverflow, Pagination } from 'swiper';
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
-import { Autoplay, EffectCoverflow, Pagination } from 'swiper';
 import { Player } from 'video-react';
 import { Img } from '~/reUsingComponents/styleComponents/styleDefault';
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';

@@ -4,12 +4,14 @@
     --color-light: #cbcbcb;
     --color-dark: #333;
     --border-radius-50: 50%;
-    --pointer: pointer;
     --background: 100%;
     --background-hover: #3c4043;
     --transition-03s: all 0.3s linear;
     --justify-content-start: start;
     --full: 100%;
+    @media (min-width: 768px) {
+        --pointer: pointer;
+    }
     #pickerB {
         --rgb-background: 26 27 30 !important;
     }

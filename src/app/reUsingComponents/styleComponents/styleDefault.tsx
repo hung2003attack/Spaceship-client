@@ -81,11 +81,13 @@ export const Img = styled.img<PropsImg>`
 `;
 interface PropsP {
     z?: string;
+    align?: string;
     css?: string;
 }
 export const P = styled.p<PropsP>`
     color: ${(props) => props.color};
     font-size: ${(props) => props.z};
+    text-align: ${(props) => props.align};
     ${(props) => props.css}
 `;
 export const H3 = styled.h3`
