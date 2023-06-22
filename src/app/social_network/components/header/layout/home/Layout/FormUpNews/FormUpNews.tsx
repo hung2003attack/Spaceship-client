@@ -5,6 +5,7 @@ import './formUpNews.scss';
 
 import { CloseI, PreviewI } from '~/assets/Icons/Icons';
 
+import { Player } from 'video-react';
 import {
     DivDataFake,
     DivForm,
@@ -22,9 +23,8 @@ import { Button, Buttons, Div, H3, Img, P } from '~/reUsingComponents/styleCompo
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import HoverTitle from '~/reUsingComponents/HandleHover/HoverTitle';
 import FontFamilys from '~/reUsingComponents/Font/FontFamilys';
-import { Player } from 'video-react';
 import { PropsPreViewFormHome } from './PreView';
-import LogicForm from './ViewPostFrame/LogicForm';
+import LogicForm from './LogicForm';
 import { PropsUserHome } from '../../Home';
 export interface PropsFormHome {
     textarea: string;

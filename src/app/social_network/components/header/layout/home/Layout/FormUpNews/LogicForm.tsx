@@ -1,10 +1,10 @@
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
-import PreviewPost from '../PreView';
+import PreviewPost from './PreView';
 import { ImageI, VideoI } from '~/assets/Icons/Icons';
 import { setTrueErrorServer } from '~/redux/hideShow';
 import { useDispatch } from 'react-redux';
-import { PropsFormHome } from '../FormUpNews';
-import { PropsUserHome } from '../../../Home';
+import { PropsFormHome } from './FormUpNews';
+import { PropsUserHome } from '../../Home';
 import CommonUtils from '~/utils/CommonUtils';
 import { useCookies } from 'react-cookie';
 

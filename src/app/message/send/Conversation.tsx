@@ -1,4 +1,4 @@
-import { Div, Input, P } from '~/reUsingComponents/styleComponents/styleDefault';
+import { Div, Img, Input, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { DivConversation, DivResultsConversation } from './styleSed';
 import { DotI, ImageBayI, ProfileCircelI, SendOPTI, UndoI } from '~/assets/Icons/Icons';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
@@ -6,20 +6,34 @@ import { Hname } from '~/reUsingComponents/styleComponents/styleComponents';
 import dataEmoji from '@emoji-mart/data/sets/14/facebook.json';
 import Picker from '@emoji-mart/react';
 import { useEffect, useRef, useState } from 'react';
+import { Label } from '~/social_network/components/Header/layout/Home/Layout/FormUpNews/styleFormUpNews';
+import LogicConversation from './LogicConver';
+import { Player } from 'video-react';
 
 const Conversation: React.FC<{ colorText: string; colorBg: number }> = ({ colorText, colorBg }) => {
-    const [value, setValue] = useState<string>('');
-    const [emoji, setEmoji] = useState<boolean>(false);
     const ERef = useRef<any>();
-    const handleEmojiSelect = (e: any) => {
-        console.log(e);
-        setValue(value + e.native);
-    };
+    const {
+        handleImageUpload,
+        upload,
+        handleTouchStart,
+        handleTouchMove,
+        handleTouchEnd,
+        option,
+        handleSend,
+        value,
+        setValue,
+        emoji,
+        setEmoji,
+        handleEmojiSelect,
+    } = LogicConversation();
 
     console.log(value);
     useEffect(() => {
         ERef.current.scrollTop = ERef.current.scrollHeight;
     }, []);
+
+    console.log(upload, 'upload');
+
     return (
         <DivConversation>
             <DivResultsConversation color={colorText}>
@@ -323,46 +337,101 @@ const Conversation: React.FC<{ colorText: string; colorBg: number }> = ({ colorT
                 <Div
                     width="100%"
                     wrap="wrap"
-                    css=" height: auto; align-items: center; justify-content: center;   background-color: #212020; div:nth-child(2){width: 100%}"
+                    css=" height: auto; align-items: center; justify-content: center;   background-color: #212020; div#emojiCon{width: 100%}"
                 >
-                    <Div width="100%" css="height: 40px; align-items: center ; justify-content: space-around;">
-                        <Div css="font-size: 20px;" onClick={() => setEmoji(!emoji)}>
-                            🙂
-                        </Div>
-                        <Div
-                            width="34px !important"
-                            css="font-size: 21px; color: #869ae7; height: 100%; align-items: center; justify-content: center;"
-                        >
-                            <ImageBayI />
-                        </Div>
-                        <Input
-                            width="180px; height: 30px"
-                            padding="4px 29px 4px 8px;"
-                            margin="0"
-                            border="1px solid #484643 !important;"
-                            radius="50px; font-size: 1.3rem"
-                            background="rgb(255 255 255 / 6%)"
-                            color={colorText}
-                            placeholder="Send"
-                            value={value}
-                            onChange={(e) => setValue(e.target.value)}
-                        />
-                        <Div
-                            width="34px"
-                            css="font-size: 22px; color: #23c3ec; height: 100%; align-items: center; justify-content: center;"
-                        >
-                            <SendOPTI />
+                    <Div width="100%" wrap="wrap" css="position: relative;">
+                        {upload.length > 0 && (
+                            <Div
+                                wrap="wrap"
+                                css={`
+                                    margin-left: 21%;
+                                    position: absolute;
+                                    bottom: 44px;
+                                    right: 0;
+                                    border-radius: 5px;
+                                    background-color: transparent;
+                                    box-shadow: 0 0 5px #7d7c7c;
+                                `}
+                            >
+                                {upload.map((item, index) => (
+                                    <Div
+                                        key={item.link}
+                                        css={`
+                                            min-width: 79px;
+                                            width: 79px;
+                                            border-radius: 5px;
+                                            border: 1px solid #4e4e4e;
+                                            ${upload.length - 1 === index && 'flex-grow: 1;'}
+                                        `}
+                                        onTouchMove={handleTouchMove}
+                                        onTouchStart={handleTouchStart}
+                                        onTouchEnd={handleTouchEnd}
+                                    >
+                                        {item.type === 'image' ? (
+                                            <Img src={item.link} radius="5px" />
+                                        ) : (
+                                            item.type === 'video' && <Player key={item.link} src={item.link} />
+                                        )}
+                                        <Div></Div>
+                                    </Div>
+                                ))}
+                            </Div>
+                        )}
+                        <Div width="100%" css="height: 40px; align-items: center ; justify-content: space-around; ">
+                            <Div css="font-size: 20px;" onClick={() => setEmoji(!emoji)}>
+                                🙂
+                            </Div>
+
+                            <Div
+                                width="34px !important"
+                                css="font-size: 21px; color: #869ae7; height: 100%; align-items: center; justify-content: center;"
+                            >
+                                <form method="post" encType="multipart/form-data" id="formss">
+                                    <input
+                                        id="uploadCon"
+                                        type="file"
+                                        name="file[]"
+                                        onChange={handleImageUpload}
+                                        multiple
+                                        hidden
+                                    />
+                                    <Label htmlFor="uploadCon" color={colorText}>
+                                        <ImageBayI />
+                                    </Label>
+                                </form>
+                            </Div>
+                            <Input
+                                width="180px; height: 30px"
+                                padding="4px 29px 4px 8px;"
+                                margin="0"
+                                border="1px solid #484643 !important;"
+                                radius="50px; font-size: 1.3rem"
+                                background="rgb(255 255 255 / 6%)"
+                                color={colorText}
+                                placeholder="Send"
+                                value={value}
+                                onChange={(e) => setValue(e.target.value)}
+                            />
+                            <Div
+                                width="34px"
+                                css="font-size: 22px; color: #23c3ec; height: 100%; align-items: center; justify-content: center;"
+                                onClick={handleSend}
+                            >
+                                <SendOPTI />
+                            </Div>
                         </Div>
                     </Div>
                     {emoji && (
-                        <Picker
-                            locale="en"
-                            set="facebook"
-                            emojiVersion={14}
-                            data={dataEmoji}
-                            theme={colorBg === 1 ? 'dark' : 'light'}
-                            onEmojiSelect={handleEmojiSelect}
-                        />
+                        <div id="emojiCon">
+                            <Picker
+                                locale="en"
+                                set="facebook"
+                                emojiVersion={14}
+                                data={dataEmoji}
+                                theme={colorBg === 1 ? 'dark' : 'light'}
+                                onEmojiSelect={handleEmojiSelect}
+                            />
+                        </div>
                     )}
                 </Div>
             </DivResultsConversation>

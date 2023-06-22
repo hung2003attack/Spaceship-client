@@ -262,7 +262,7 @@ const Send: React.FC<{
                         <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
                         {moreBar && <MoreOption dataMore={dataMore} colorText={colorText} setMoreBar={setMoreBar} />}
                     </DivResults>
-                    {/* <Conversation colorText={colorText} colorBg={colorBg} /> */}
+                    <Conversation colorText={colorText} colorBg={colorBg} />
                 </DivSend>
             )}
         </>
