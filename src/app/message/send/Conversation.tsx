@@ -9,8 +9,20 @@ import { useEffect, useRef, useState } from 'react';
 import { Label } from '~/social_network/components/Header/layout/Home/Layout/FormUpNews/styleFormUpNews';
 import LogicConversation from './LogicConver';
 import { Player } from 'video-react';
+import { PropsUser } from 'src/App';
+import { offChat } from '~/redux/reload';
 
-const Conversation: React.FC<{ colorText: string; colorBg: number }> = ({ colorText, colorBg }) => {
+const Conversation: React.FC<{
+    colorText: string;
+    colorBg: number;
+    data: {
+        id: string;
+        avatar: any;
+        fullName: string;
+        gender: number;
+    };
+    dataFirst: PropsUser;
+}> = ({ colorText, colorBg, dataFirst, data }) => {
     const ERef = useRef<any>();
     const {
         handleImageUpload,
@@ -25,13 +37,14 @@ const Conversation: React.FC<{ colorText: string; colorBg: number }> = ({ colorT
         emoji,
         setEmoji,
         handleEmojiSelect,
-    } = LogicConversation();
+        dispatch,
+        conversation,
+    } = LogicConversation(data.id, dataFirst.id);
 
     console.log(value);
     useEffect(() => {
         ERef.current.scrollTop = ERef.current.scrollHeight;
     }, []);
-
     console.log(upload, 'upload');
 
     return (
@@ -46,23 +59,25 @@ const Conversation: React.FC<{ colorText: string; colorBg: number }> = ({ colorT
                         position: absolute;
                         top: 10px;
                         left: 0;
+                        background-color: #242424;
                     `}
+                    onClick={() => dispatch(offChat(data.id))}
                 >
                     <Div
                         width="30px"
-                        css="height: 30px; margin-right: 10px; align-items: center; justify-content: center;"
+                        css="height: 30px; margin-right: 10px; align-items: center; justify-content: center; cursor: var(--pointer)"
                     >
                         <UndoI />
                     </Div>
                     <Div width="85%" css="align-items: center;">
                         <Avatar
-                            src="https://hinhnen4k.com/wp-content/uploads/2023/02/anh-gai-xinh-vn-2.jpg"
-                            alt="Avatar"
-                            gender={0}
+                            src={data.avatar}
+                            alt={data.fullName}
+                            gender={data.gender}
                             radius="50%"
                             css="min-width: 30px; width: 30px; height: 30px; margin-right: 5px;"
                         />
-                        <Hname>Nguyen Thi Han</Hname>
+                        <Hname>{data.fullName}</Hname>
                         <Div>
                             <DotI />
                         </Div>
@@ -78,7 +93,9 @@ const Conversation: React.FC<{ colorText: string; colorBg: number }> = ({ colorT
                         ${emoji ? 'height: 150px;' : 'height: 95%;'}
                         overflow-y: overlay;
                         scroll-behavior: smooth;
+                        padding-right: 5px;
                         @media (max-width: 768px) {
+                            padding-right: 0px;
                             &::-webkit-scrollbar {
                                 width: 0px;
                                 transform: translateX(calc(100% - 100vw));
@@ -87,257 +104,198 @@ const Conversation: React.FC<{ colorText: string; colorBg: number }> = ({ colorT
                     `}
                     onClick={() => setEmoji(false)}
                 >
-                    <Div
-                        width="100%"
-                        wrap="wrap"
-                        css="align-items: center; justify-content: center; margin-top: 80px; margin-bottom: 40px;"
-                    >
-                        <P z="1.3rem" align="center" css="width: 100%; margin: 8px 0; ">
-                            You and her are each other of friends
-                        </P>
-                        <Div css="align-items: center; justify-content: center; padding: 3px 8px; background-color: #333333; border-radius: 8px; border: 1px solid #52504d; cursor: var(--pointer)">
-                            <ProfileCircelI /> <Hname css="margin: 0 5px; width: fit-content;">View profile</Hname>
+                    {conversation.map((rs) => (
+                        <Div
+                            width="100%"
+                            wrap="wrap"
+                            css="align-items: center; justify-content: center; margin-top: 80px; margin-bottom: 40px;"
+                        >
+                            <P z="1.3rem" align="center" css="width: 100%; margin: 8px 0; ">
+                                {rs.status === 'isFriend'
+                                    ? 'You and her were each other of friend'
+                                    : 'You and her are each other of friends'}
+                            </P>
+                            <Div css="align-items: center; justify-content: center; padding: 3px 8px; background-color: #333333; border-radius: 8px; border: 1px solid #52504d; cursor: var(--pointer)">
+                                <ProfileCircelI /> <Hname css="margin: 0 5px; width: fit-content;">View profile</Hname>
+                            </Div>
                         </Div>
-                    </Div>
+                    ))}
                     <Div
                         width="100%"
-                        css="min-height: 33px; height: 33px; justify-content: left; margin-bottom: 8px; align-items: center;"
+                        css="padding-right: 35%; justify-content: left; margin-bottom: 8px; align-items: center;"
                     >
                         <Avatar
-                            src="https://hinhnen4k.com/wp-content/uploads/2023/02/anh-gai-xinh-vn-2.jpg"
-                            alt="Avatar"
-                            gender={0}
+                            src={data.avatar}
+                            alt={data.fullName}
+                            gender={data.gender}
                             radius="50%"
                             css="min-width: 17px; width: 17px; height: 17px; margin-right: 4px; margin-top: 3px;"
                         />
                         <P
                             z="1.5rem"
-                            css="width: auto; padding: 2px 12px; border-radius: 50px; background-color: #353636; border: 1px solid #4e4d4b;"
+                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
                         >
                             Hello!
                         </P>
                     </Div>
                     <Div
                         width="100%"
-                        css="min-height: 33px; height: 33px; justify-content: right; align-items:center; margin-bottom: 8px; "
+                        css="padding-left: 35%; justify-content: right; align-items:center; margin-bottom: 8px; "
                     >
                         <P
                             z="1.5rem"
-                            css="width: auto; padding: 2px 12px; border-radius: 50px; background-color: #353636; border: 1px solid #4e4d4b;"
+                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #454442e0;     background-color: #00000061;"
                         >
                             Hi
                         </P>
-                        <Avatar
-                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
-                            alt="Avatar"
-                            gender={0}
-                            radius="50%"
-                            css="min-width: 17px; width: 17px; height: 17px; margin-left: 4px; margin-top: 3px;"
-                        />
                     </Div>
                     <Div
                         width="100%"
-                        css="min-height: 33px; height: 33px; justify-content: left; margin-bottom: 8px; align-items: center;"
+                        css="padding-right: 35%; justify-content: left; margin-bottom: 8px; align-items: center;"
                     >
                         <Avatar
-                            src="https://hinhnen4k.com/wp-content/uploads/2023/02/anh-gai-xinh-vn-2.jpg"
-                            alt="Avatar"
-                            gender={0}
+                            src={data.avatar}
+                            alt={data.fullName}
+                            gender={data.gender}
                             radius="50%"
                             css="min-width: 17px; width: 17px; height: 17px; margin-right: 4px; margin-top: 3px;"
                         />
                         <P
                             z="1.5rem"
-                            css="width: auto; padding: 2px 12px; border-radius: 50px; background-color: #353636; border: 1px solid #4e4d4b;"
+                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
                         >
                             What's up?
                         </P>
                     </Div>
                     <Div
                         width="100%"
-                        css="min-height: 33px; height: 33px; justify-content: right; align-items:center; "
+                        css="margin-bottom: 5px; padding-left: 35%; justify-content: right; align-items:center; "
                     >
                         <P
                             z="1.5rem"
-                            css="width: auto; padding: 2px 12px; border-radius: 50px; background-color: #353636; border: 1px solid #4e4d4b;"
+                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #454442e0;     background-color: #00000061;"
                         >
                             I'm good
                         </P>
-                        <Avatar
-                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
-                            alt="Avatar"
-                            gender={0}
-                            radius="50%"
-                            css="min-width: 17px; width: 17px; height: 17px; margin-left: 4px; margin-top: 3px;"
-                        />
                     </Div>
                     <Div
                         width="100%"
-                        css="min-height: 33px; height: 33px; justify-content: right; align-items:center ;margin-bottom: 8px; "
+                        css="padding-left: 35%; justify-content: right; align-items:center ;margin-bottom: 8px; "
                     >
                         <P
                             z="1.5rem"
-                            css="width: auto; padding: 2px 12px; border-radius: 50px; background-color: #353636; border: 1px solid #4e4d4b;"
+                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #454442e0;     background-color: #00000061;"
                         >
                             How about you?
                         </P>
-                        <Avatar
-                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
-                            alt="Avatar"
-                            gender={0}
-                            radius="50%"
-                            css="min-width: 17px; width: 17px; height: 17px; margin-left: 4px; margin-top: 3px;"
-                        />
                     </Div>
                     <Div
                         width="100%"
-                        css="min-height: 33px; height: 33px; justify-content: left;  align-items: center;"
+                        css="margin-bottom: 5px; padding-right: 35%; justify-content: left;  align-items: center;"
                     >
                         <Avatar
-                            src="https://hinhnen4k.com/wp-content/uploads/2023/02/anh-gai-xinh-vn-2.jpg"
-                            alt="Avatar"
-                            gender={0}
+                            src={data.avatar}
+                            alt={data.fullName}
+                            gender={data.gender}
                             radius="50%"
                             css="min-width: 17px; width: 17px; height: 17px; margin-right: 4px; margin-top: 3px;"
                         />
                         <P
                             z="1.5rem"
-                            css="width: auto; padding: 2px 12px; border-radius: 50px; background-color: #353636; border: 1px solid #4e4d4b;"
+                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
                         >
                             I'm doing well
                         </P>
                     </Div>
                     <Div
                         width="100%"
-                        css="min-height: 33px; height: 33px; justify-content: left; margin-bottom: 8px; align-items: center;"
+                        css="padding-right: 35%; justify-content: left; margin-bottom: 8px; align-items: center;"
                     >
                         <Avatar
-                            src="https://hinhnen4k.com/wp-content/uploads/2023/02/anh-gai-xinh-vn-2.jpg"
-                            alt="Avatar"
-                            gender={0}
+                            src={data.avatar}
+                            alt={data.fullName}
+                            gender={data.gender}
                             radius="50%"
                             css="min-width: 17px; width: 17px; height: 17px; margin-right: 4px; margin-top: 3px;"
                         />
                         <P
                             z="1.5rem"
-                            css="width: auto; padding: 2px 12px; border-radius: 50px; background-color: #353636; border: 1px solid #4e4d4b;"
+                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
                         >
                             Is your work ok?
                         </P>
                     </Div>
                     <Div
                         width="100%"
-                        css="min-height: 33px; height: 33px; justify-content: right; align-items:center ;"
+                        css="margin-bottom: 5px; padding-left: 35%; justify-content: right; align-items:center ;"
                     >
                         <P
                             z="1.5rem"
-                            css="width: auto; padding: 2px 12px; border-radius: 50px; background-color: #353636; border: 1px solid #4e4d4b;"
+                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
                         >
                             Year, Nothing change
                         </P>
-                        <Avatar
-                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
-                            alt="Avatar"
-                            gender={0}
-                            radius="50%"
-                            css="min-width: 17px; width: 17px; height: 17px; margin-left: 4px; margin-top: 3px;"
-                        />
                     </Div>{' '}
                     <Div
                         width="100%"
-                        css="min-height: 33px; height: 33px; justify-content: right; align-items:center ; "
+                        css="margin-bottom: 5px; padding-left: 35%; justify-content: right; align-items:center ; "
                     >
                         <P
                             z="1.5rem"
-                            css="width: auto; padding: 2px 12px; border-radius: 50px; background-color: #353636; border: 1px solid #4e4d4b;"
+                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
                         >
                             Year, Nothing change
                         </P>
-                        <Avatar
-                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
-                            alt="Avatar"
-                            gender={0}
-                            radius="50%"
-                            css="min-width: 17px; width: 17px; height: 17px; margin-left: 4px; margin-top: 3px;"
-                        />
                     </Div>{' '}
                     <Div
                         width="100%"
-                        css="min-height: 33px; height: 33px; justify-content: right; align-items:center ; "
+                        css="margin-bottom: 5px; padding-left: 35%; justify-content: right; align-items:center ; "
                     >
                         <P
                             z="1.5rem"
-                            css="width: auto; padding: 2px 12px; border-radius: 50px; background-color: #353636; border: 1px solid #4e4d4b;"
+                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
                         >
                             Year, Nothing change
                         </P>
-                        <Avatar
-                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
-                            alt="Avatar"
-                            gender={0}
-                            radius="50%"
-                            css="min-width: 17px; width: 17px; height: 17px; margin-left: 4px; margin-top: 3px;"
-                        />
                     </Div>{' '}
                     <Div
                         width="100%"
-                        css="min-height: 33px; height: 33px; justify-content: right; align-items:center ; "
+                        css="margin-bottom: 5px; padding-left: 35%; justify-content: right; align-items:center ; "
                     >
                         <P
                             z="1.5rem"
-                            css="width: auto; padding: 2px 12px; border-radius: 50px; background-color: #353636; border: 1px solid #4e4d4b;"
+                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
                         >
                             Year, Nothing change
                         </P>
-                        <Avatar
-                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
-                            alt="Avatar"
-                            gender={0}
-                            radius="50%"
-                            css="min-width: 17px; width: 17px; height: 17px; margin-left: 4px; margin-top: 3px;"
-                        />
                     </Div>{' '}
                     <Div
                         width="100%"
-                        css="min-height: 33px; height: 33px; justify-content: right; align-items:center ; "
+                        css=" margin-bottom: 5px; padding-left: 35%; justify-content: right; align-items:center ; "
                     >
                         <P
                             z="1.5rem"
-                            css="width: auto; padding: 2px 12px; border-radius: 50px; background-color: #353636; border: 1px solid #4e4d4b;"
+                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
                         >
                             Year, Nothing change
                         </P>
-                        <Avatar
-                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
-                            alt="Avatar"
-                            gender={0}
-                            radius="50%"
-                            css="min-width: 17px; width: 17px; height: 17px; margin-left: 4px; margin-top: 3px;"
-                        />
                     </Div>{' '}
                     <Div
                         width="100%"
-                        css="min-height: 33px; height: 33px; justify-content: right; align-items:center ;margin-bottom: 5px; "
+                        css="margin-bottom: 5px; padding-left: 35%; justify-content: right; align-items:center ;margin-bottom: 5px; "
                     >
                         <P
                             z="1.5rem"
-                            css="width: auto; padding: 2px 12px; border-radius: 50px; background-color: #353636; border: 1px solid #4e4d4b;"
+                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
                         >
                             Year, Nothing change
                         </P>
-                        <Avatar
-                            src="https://pbs.twimg.com/media/DefM3PPXcAABTmm.jpg"
-                            alt="Avatar"
-                            gender={0}
-                            radius="50%"
-                            css="min-width: 17px; width: 17px; height: 17px; margin-left: 4px; margin-top: 3px;"
-                        />
                     </Div>
                 </Div>
                 <Div
                     width="100%"
                     wrap="wrap"
-                    css=" height: auto; align-items: center; justify-content: center;   background-color: #212020; div#emojiCon{width: 100%}"
+                    css=" height: auto; align-items: center; justify-content: center; background-color: #242424; div#emojiCon{width: 100%}"
                 >
                     <Div width="100%" wrap="wrap" css="position: relative;">
                         {upload.length > 0 && (
@@ -414,7 +372,7 @@ const Conversation: React.FC<{ colorText: string; colorBg: number }> = ({ colorT
                             />
                             <Div
                                 width="34px"
-                                css="font-size: 22px; color: #23c3ec; height: 100%; align-items: center; justify-content: center;"
+                                css="font-size: 22px; color: #23c3ec; height: 100%; align-items: center; justify-content: center; cursor: var(--pointer);"
                                 onClick={handleSend}
                             >
                                 <SendOPTI />

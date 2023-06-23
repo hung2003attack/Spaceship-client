@@ -53,14 +53,12 @@ import PeopleRequest from '~/restAPI/requestServers/socialNetwork/peopleAPI';
 import WarningBrowser from '~/reUsingComponents/ErrorBoudaries/Warning_browser';
 import CommonUtils from '~/utils/CommonUtils';
 import { PropsUser, PropsUserPer } from 'src/App';
+import { PropsBackGroundRedux } from '~/redux/background';
 export const socket = io('http://localhost:3001', { transports: ['websocket'] });
 
 export interface PropsBg {
     persistedReducer: {
-        background: {
-            colorText: string;
-            colorBg: number;
-        };
+        background: PropsBackGroundRedux;
     };
 }
 

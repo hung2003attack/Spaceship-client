@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Pagination, EffectCoverflow } from 'swiper';
@@ -17,6 +17,29 @@ import { DivPos, Hname } from '~/reUsingComponents/styleComponents/styleComponen
 import ListAccounts from './SendReults';
 import MoreOption from './MoreOption';
 import Conversation from './Conversation';
+import sendChatAPi from '~/restAPI/requestServers/accountRequest/sendChatAPi';
+import { useCookies } from 'react-cookie';
+import CommonUtils from '~/utils/CommonUtils';
+
+export interface PropsRoomChat {
+    _id: any;
+    id_us: string[];
+    user: {
+        id: string;
+        avatar: any;
+        fullName: string;
+        gender: number;
+    }[];
+    imageOrVideos: string[];
+    room: {
+        _id: string;
+        text: { icon: string; t: string };
+        imageOrVideos: string[];
+        seenBy: string[];
+        createdAt: string;
+        user: { avatar: any; fullName: string; gender: number; id: string };
+    };
+}
 
 const Send: React.FC<{
     colorText: string;
@@ -25,25 +48,35 @@ const Send: React.FC<{
     userOline: string[];
 }> = ({ colorBg, colorText, dataUser, userOline }) => {
     const [send, setSend] = useState(false);
-
-    const [left, setlLeft] = useState<boolean>(false);
-    const [bottom, setBottom] = useState<boolean>(false);
-    const [move, setMove] = useState<boolean>(false);
+    const [cookies, setCookies] = useCookies(['k_user', 'tks']);
+    const userId = cookies.k_user;
+    const token = cookies.tks;
     const [searchUser, setSearchUser] = useState<string>('');
     const [resultSearch, setResultSearch] = useState<any>([]);
+    const [rooms, setRooms] = useState<PropsRoomChat[]>([]);
+    const limit = 10;
+    const offset = useRef<number>(0);
 
     const [moreBar, setMoreBar] = useState<boolean>(false);
     const handleShowHide = () => {
         setSend(!send);
     };
-    const handleMove = () => {
-        setMove(!move);
-    };
-    const handleUndo = () => {
-        setlLeft(false);
-        setBottom(false);
-        setMove(false);
-    };
+    useEffect(() => {
+        async function fetchRoom() {
+            const res: PropsRoomChat[] = await sendChatAPi.getRoom(token, limit, offset.current);
+            res.map((sc) => {
+                sc.user.map((us) => {
+                    if (us?.avatar) us.avatar = CommonUtils.convertBase64(us.avatar);
+                });
+                if (sc.room.user?.avatar) sc.room.user.avatar = CommonUtils.convertBase64(sc.room.user.avatar);
+            });
+            setRooms(res);
+            console.log(res, 'get Room');
+        }
+        fetchRoom();
+    }, []);
+
+    const handleUndo = () => {};
     // const debounce = useDebounce(searchUser, 500);
     // useEffect(() => {
     //     if (!searchUser) {
@@ -245,24 +278,17 @@ const Send: React.FC<{
                                 </SwiperSlide>
                             </Swiper>
                         </Div>
-                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
-                        <ListAccounts colorText={colorText} colorBg={colorBg} setMoreBar={setMoreBar} />
+                        {rooms.map((r) => (
+                            <ListAccounts
+                                key={r._id}
+                                data={r}
+                                colorText={colorText}
+                                colorBg={colorBg}
+                                setMoreBar={setMoreBar}
+                            />
+                        ))}
                         {moreBar && <MoreOption dataMore={dataMore} colorText={colorText} setMoreBar={setMoreBar} />}
                     </DivResults>
-                    <Conversation colorText={colorText} colorBg={colorBg} />
                 </DivSend>
             )}
         </>

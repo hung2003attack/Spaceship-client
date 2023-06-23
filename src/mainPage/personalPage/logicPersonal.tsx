@@ -6,6 +6,7 @@ import { PropsUser, PropsUserPer } from 'src/App';
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import { Div } from '~/reUsingComponents/styleComponents/styleDefault';
 import { setTrueErrorServer } from '~/redux/hideShow';
+import { onChat } from '~/redux/reload';
 import userAPI from '~/restAPI/requestServers/accountRequest/userAPI';
 import peopleAPI from '~/restAPI/requestServers/socialNetwork/peopleAPI';
 import CommonUtils from '~/utils/CommonUtils';
@@ -267,7 +268,8 @@ export default function LogicView(
             });
         }
     };
-    const handleMessenger = async (id: string) => {
+    const handleMessenger = async (data: { id: string; fullName: string; avatar: any; gender: number }) => {
+        dispatch(onChat(data));
         console.log('handleMessenger');
     };
     const handleFollower = async (id: string, follow?: string) => {
@@ -596,7 +598,16 @@ export default function LogicView(
                         ? handleFriend(dataUser.id)
                         : handleAddF(dataUser.id),
             },
-            { name: 'Messenger', onClick: () => handleMessenger(dataUser.id) },
+            {
+                name: 'Messenger',
+                onClick: () =>
+                    handleMessenger({
+                        id: dataUser.id,
+                        avatar: dataUser.avatar,
+                        fullName: dataUser.fullName,
+                        gender: dataUser.gender,
+                    }),
+            },
             id_fl === userId
                 ? following === 1
                     ? { name: 'Follow', onClick: () => handleFollower(dataUser.id) }
@@ -634,7 +645,16 @@ export default function LogicView(
                         ? handleFriend(dataUser.id)
                         : handleAddF(dataUser.id),
             },
-            { name: 'Nhắn tin', onClick: () => handleMessenger(dataUser.id) },
+            {
+                name: 'Nhắn tin',
+                onClick: () =>
+                    handleMessenger({
+                        id: dataUser.id,
+                        avatar: dataUser.avatar,
+                        fullName: dataUser.fullName,
+                        gender: dataUser.gender,
+                    }),
+            },
             id_fl === userId
                 ? following === 1
                     ? { name: 'Theo dõi', onClick: () => handleFollower(dataUser.id, 'following') }

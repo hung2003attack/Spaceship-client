@@ -19,6 +19,8 @@ import CommonUtils from '~/utils/CommonUtils';
 import userAPI from '~/restAPI/requestServers/accountRequest/userAPI';
 import { PropsTitleP } from './mainPage/personalPage/layout/Title';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
+import Conversation from '~/Message/Send/Conversation';
+import { PropsReloadRD } from '~/redux/reload';
 const DivOpacity = styled.div`
     width: 100%;
     height: 100%;
@@ -95,6 +97,7 @@ function App() {
     const dispatch = useDispatch();
     const { idUser, errorServer } = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow);
     const { setting, personalPage } = useSelector((state: any) => state.hideShow);
+    const { chat } = useSelector((state: { reload: PropsReloadRD }) => state.reload);
     const { colorText, colorBg } = useSelector((state: PropsBg) => state.persistedReducer.background);
     const [userData, setUserData] = useState<PropsUserPer[]>([]);
 
@@ -373,6 +376,15 @@ function App() {
                         />
                         {(setting || personalPage) && <DivOpacity onClick={handleClick} />}
                         <Message dataUser={userFirst} userOnline={userOnline} />
+                        {chat?.map((room) => (
+                            <Conversation
+                                key={room.id}
+                                colorText={colorText}
+                                colorBg={colorBg}
+                                data={room}
+                                dataFirst={userFirst}
+                            />
+                        ))}
 
                         {loading && (
                             <Div

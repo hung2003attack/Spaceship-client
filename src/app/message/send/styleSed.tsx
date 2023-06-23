@@ -38,13 +38,18 @@ export const DivResults = styled.div`
     }
 `;
 export const DivConversation = styled.div`
-    width: 100%;
-    height: 100%;
+    width: 320px;
+    height: 93%;
     position: fixed;
     bottom: 0;
-    left: 0;
-    background-color: #212020;
+    right: 0;
+    border: 1px solid #1b1a1a;
+    border-radius: 5px;
+    background-color: #242424;
     z-index: 1;
+    * {
+        font-family: Baloo2, sans-serif;
+    }
 `;
 export const DivResultsConversation = styled.div`
     width: 100%;

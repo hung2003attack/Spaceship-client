@@ -6,12 +6,31 @@ import sendChatAPI from '~/restAPI/requestServers/accountRequest/sendChatAPi';
 import userAPI from '~/restAPI/requestServers/accountRequest/userAPI';
 import CommonUtils from '~/utils/CommonUtils';
 
-export default function LogicConversation() {
+export default function LogicConversation(id_others: string, id_you: string) {
     const dispatch = useDispatch();
     const [cookies, setCookies] = useCookies(['k_user', 'tks']);
     const userId = cookies.k_user;
     const token = cookies.tks;
     const mRef = useRef<any>(0);
+    const [conversation, setConversation] = useState<
+        {
+            id_us: string[];
+            status: string;
+            background: string;
+            room: [
+                {
+                    _id: string;
+                    text: {
+                        t: string;
+                        icon: string;
+                    };
+                    imageOrVideos: { v: string; icon: string }[];
+                    createdAt: string;
+                },
+            ];
+            createdAt: string;
+        }[]
+    >([]);
 
     const [value, setValue] = useState<string>('');
     const [emoji, setEmoji] = useState<boolean>(false);
@@ -49,16 +68,38 @@ export default function LogicConversation() {
             const d: any = document.getElementById('formss');
             const formData = new FormData();
             formData.append('value', value);
+            formData.append('id_others', id_others);
             for (let i = 0; i < fileUpload.length; i++) {
-                console.log(fileUpload, fileUpload[i]);
-
                 formData.append('files', fileUpload[i]);
             }
-            console.log(formData);
-
-            const res = await sendChatAPI.send(token, formData);
+            const res: {
+                id_us: string[];
+                status: string;
+                background: string;
+                room: [
+                    {
+                        _id: string;
+                        text: {
+                            t: string;
+                            icon: string;
+                        };
+                        imageOrVideos: { v: string; icon: string }[];
+                        createdAt: string;
+                    },
+                ];
+                createdAt: string;
+            } = await sendChatAPI.send(token, formData);
+            const imageOrVideos: any = [];
+            for (let up of upload) {
+                imageOrVideos.push({ v: up, icon: '' });
+            }
+            res.room[0].imageOrVideos = imageOrVideos;
+            setConversation([...conversation, res]);
+            console.log(res, 'send here');
         }
     };
+    console.log(conversation, 'conversation');
+
     const handleImageUpload = async (e: any) => {
         uploadRef.current = [];
         const files = e.target.files;
@@ -143,5 +184,7 @@ export default function LogicConversation() {
         emoji,
         setEmoji,
         handleEmojiSelect,
+        dispatch,
+        conversation,
     };
 }

@@ -10,5 +10,16 @@ class SendChat {
             console.log(error);
         }
     };
+    getRoom = async (token: string, limit: number, offset: number) => {
+        try {
+            const Axios = refreshToken.axiosJWTs(token);
+            const res = await Axios.get('/SN/sendChat/getRoom', { params: { limit, offset } });
+            console.log(res, 'get Room2');
+
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
+    };
 }
 export default new SendChat();
