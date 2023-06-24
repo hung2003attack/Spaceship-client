@@ -6,6 +6,8 @@ import { socket } from '../nextWeb';
 import Cookies from 'universal-cookie';
 import HttpRequestUser from '~/restAPI/requestServers/accountRequest/userAPI';
 import { PropsUser } from 'src/App';
+import { PropsReloadRD } from '~/redux/reload';
+import { useSelector } from 'react-redux';
 
 const cookies = new Cookies();
 
@@ -13,12 +15,10 @@ const Tools: React.FC<{
     colorText: string;
     colorBg: number;
     as: number;
-    setUserOnline: React.Dispatch<React.SetStateAction<string[]>>;
-    userOnline: string[];
     userId: string;
     dataUser: PropsUser;
     setDataUser: React.Dispatch<React.SetStateAction<PropsUser | undefined>>;
-}> = ({ colorText, colorBg, as, setUserOnline, userId, userOnline, dataUser, setDataUser }) => {
+}> = ({ colorText, colorBg, as, userId, dataUser, setDataUser }) => {
     const [status, setStatus] = useState<React.ReactNode>(null);
     const [onOff, setOnOff] = useState<React.ReactElement>(() => (as === 1 ? <OnlineI /> : <OfflineI />));
     const handleChange = async (o: { name: string }) => {

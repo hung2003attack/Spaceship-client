@@ -2,11 +2,13 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export interface PropsReloadRD {
     people: number;
-    chat: { id: string; avatar: any; fullName: string; gender: number }[];
+    chat: { id_room: string; user: { id: string; avatar: any; fullName: string; gender: number } }[];
+    userOnline: string[];
 }
 const initialState: PropsReloadRD = {
     people: 0,
     chat: [],
+    userOnline: [],
 };
 const reloadPage = createSlice({
     name: 'reload',
@@ -18,7 +20,7 @@ const reloadPage = createSlice({
         onChat: (state, action) => {
             let here = false;
             state.chat.forEach((c) => {
-                if (c.id === action.payload.id) {
+                if (c.id_room === action.payload.id) {
                     here = true;
                 }
             });
@@ -31,10 +33,13 @@ const reloadPage = createSlice({
             }
         },
         offChat: (state, action) => {
-            const newData = state.chat.filter((chat) => chat.id !== action.payload);
+            const newData = state.chat.filter((chat) => chat.id_room !== action.payload);
             state.chat = newData;
+        },
+        online: (state, action) => {
+            state.userOnline = action.payload;
         },
     },
 });
-export const { people, onChat, offChat } = reloadPage.actions;
+export const { people, onChat, offChat, online } = reloadPage.actions;
 export default reloadPage.reducer;

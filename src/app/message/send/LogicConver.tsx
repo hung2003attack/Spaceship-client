@@ -2,13 +2,16 @@ import { ReactNode, useEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useDispatch } from 'react-redux';
 import { setTrueErrorServer } from '~/redux/hideShow';
+import sendChatAPi from '~/restAPI/requestServers/accountRequest/sendChatAPi';
 import sendChatAPI from '~/restAPI/requestServers/accountRequest/sendChatAPi';
 import userAPI from '~/restAPI/requestServers/accountRequest/userAPI';
 import CommonUtils from '~/utils/CommonUtils';
 
-export default function LogicConversation(id_others: string, id_you: string) {
+export default function LogicConversation(id_room: string, id_others: string, id_you: string) {
     const dispatch = useDispatch();
     const [cookies, setCookies] = useCookies(['k_user', 'tks']);
+    const ERef = useRef<any>();
+
     const userId = cookies.k_user;
     const token = cookies.tks;
     const mRef = useRef<any>(0);
@@ -41,6 +44,17 @@ export default function LogicConversation(id_others: string, id_you: string) {
 
     const uploadRef = useRef<{ link: string; type: string }[]>([]);
 
+    const offset = useRef<number>(0);
+    const limit = 5;
+    useEffect(() => {
+        ERef.current.scrollTop = ERef.current.scrollHeight;
+        async function fetchChat() {
+            const res = await sendChatAPi.getChat(token, id_room, id_others, limit, offset.current);
+            setConversation(res);
+            console.log(res, 'chat');
+        }
+        fetchChat();
+    }, []);
     useEffect(() => {
         return clearInterval(mRef.current);
     }, [mRef.current]);
@@ -186,5 +200,7 @@ export default function LogicConversation(id_others: string, id_you: string) {
         handleEmojiSelect,
         dispatch,
         conversation,
+        token,
+        ERef,
     };
 }

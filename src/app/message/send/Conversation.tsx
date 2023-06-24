@@ -11,19 +11,19 @@ import LogicConversation from './LogicConver';
 import { Player } from 'video-react';
 import { PropsUser } from 'src/App';
 import { offChat } from '~/redux/reload';
+import sendChatAPi from '~/restAPI/requestServers/accountRequest/sendChatAPi';
 
 const Conversation: React.FC<{
     colorText: string;
     colorBg: number;
     data: {
-        id: string;
-        avatar: any;
-        fullName: string;
-        gender: number;
+        id_room: string;
+        user: { id: string; avatar: any; fullName: string; gender: number };
     };
     dataFirst: PropsUser;
 }> = ({ colorText, colorBg, dataFirst, data }) => {
-    const ERef = useRef<any>();
+    const id_room = data.id_room;
+    const user = data.user;
     const {
         handleImageUpload,
         upload,
@@ -39,17 +39,17 @@ const Conversation: React.FC<{
         handleEmojiSelect,
         dispatch,
         conversation,
-    } = LogicConversation(data.id, dataFirst.id);
+        token,
+        ERef,
+    } = LogicConversation(id_room, user.id, dataFirst.id);
 
     console.log(value);
-    useEffect(() => {
-        ERef.current.scrollTop = ERef.current.scrollHeight;
-    }, []);
+
     console.log(upload, 'upload');
 
     return (
         <DivConversation>
-            <DivResultsConversation color={colorText}>
+            <DivResultsConversation color="#e4e4e4">
                 <Div
                     width="100%"
                     css={`
@@ -61,23 +61,23 @@ const Conversation: React.FC<{
                         left: 0;
                         background-color: #242424;
                     `}
-                    onClick={() => dispatch(offChat(data.id))}
                 >
                     <Div
                         width="30px"
                         css="height: 30px; margin-right: 10px; align-items: center; justify-content: center; cursor: var(--pointer)"
+                        onClick={() => dispatch(offChat(id_room))}
                     >
                         <UndoI />
                     </Div>
                     <Div width="85%" css="align-items: center;">
                         <Avatar
-                            src={data.avatar}
-                            alt={data.fullName}
-                            gender={data.gender}
+                            src={user.avatar}
+                            alt={user.fullName}
+                            gender={user.gender}
                             radius="50%"
                             css="min-width: 30px; width: 30px; height: 30px; margin-right: 5px;"
                         />
-                        <Hname>{data.fullName}</Hname>
+                        <Hname>{user.fullName}</Hname>
                         <Div>
                             <DotI />
                         </Div>
@@ -104,193 +104,60 @@ const Conversation: React.FC<{
                     `}
                     onClick={() => setEmoji(false)}
                 >
-                    {conversation.map((rs) => (
-                        <Div
-                            width="100%"
-                            wrap="wrap"
-                            css="align-items: center; justify-content: center; margin-top: 80px; margin-bottom: 40px;"
-                        >
-                            <P z="1.3rem" align="center" css="width: 100%; margin: 8px 0; ">
-                                {rs.status === 'isFriend'
-                                    ? 'You and her were each other of friend'
-                                    : 'You and her are each other of friends'}
-                            </P>
-                            <Div css="align-items: center; justify-content: center; padding: 3px 8px; background-color: #333333; border-radius: 8px; border: 1px solid #52504d; cursor: var(--pointer)">
-                                <ProfileCircelI /> <Hname css="margin: 0 5px; width: fit-content;">View profile</Hname>
-                            </Div>
+                    <Div
+                        width="100%"
+                        wrap="wrap"
+                        css="align-items: center; justify-content: center; margin-top: 80px; margin-bottom: 40px;"
+                    >
+                        <P z="1.3rem" align="center" css="width: 100%; margin: 8px 0; ">
+                            {conversation[0]?.status === 'isFriend'
+                                ? 'You and her were each other of friend'
+                                : 'You and her are each other of friends'}
+                        </P>
+                        <Div css="align-items: center; justify-content: center; padding: 3px 8px; background-color: #333333; border-radius: 8px; border: 1px solid #52504d; cursor: var(--pointer)">
+                            <ProfileCircelI /> <Hname css="margin: 0 5px; width: fit-content;">View profile</Hname>
                         </Div>
-                    ))}
-                    <Div
-                        width="100%"
-                        css="padding-right: 35%; justify-content: left; margin-bottom: 8px; align-items: center;"
-                    >
-                        <Avatar
-                            src={data.avatar}
-                            alt={data.fullName}
-                            gender={data.gender}
-                            radius="50%"
-                            css="min-width: 17px; width: 17px; height: 17px; margin-right: 4px; margin-top: 3px;"
-                        />
-                        <P
-                            z="1.5rem"
-                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
-                        >
-                            Hello!
-                        </P>
                     </Div>
-                    <Div
-                        width="100%"
-                        css="padding-left: 35%; justify-content: right; align-items:center; margin-bottom: 8px; "
-                    >
-                        <P
-                            z="1.5rem"
-                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #454442e0;     background-color: #00000061;"
-                        >
-                            Hi
-                        </P>
-                    </Div>
-                    <Div
-                        width="100%"
-                        css="padding-right: 35%; justify-content: left; margin-bottom: 8px; align-items: center;"
-                    >
-                        <Avatar
-                            src={data.avatar}
-                            alt={data.fullName}
-                            gender={data.gender}
-                            radius="50%"
-                            css="min-width: 17px; width: 17px; height: 17px; margin-right: 4px; margin-top: 3px;"
-                        />
-                        <P
-                            z="1.5rem"
-                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
-                        >
-                            What's up?
-                        </P>
-                    </Div>
-                    <Div
-                        width="100%"
-                        css="margin-bottom: 5px; padding-left: 35%; justify-content: right; align-items:center; "
-                    >
-                        <P
-                            z="1.5rem"
-                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #454442e0;     background-color: #00000061;"
-                        >
-                            I'm good
-                        </P>
-                    </Div>
-                    <Div
-                        width="100%"
-                        css="padding-left: 35%; justify-content: right; align-items:center ;margin-bottom: 8px; "
-                    >
-                        <P
-                            z="1.5rem"
-                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #454442e0;     background-color: #00000061;"
-                        >
-                            How about you?
-                        </P>
-                    </Div>
-                    <Div
-                        width="100%"
-                        css="margin-bottom: 5px; padding-right: 35%; justify-content: left;  align-items: center;"
-                    >
-                        <Avatar
-                            src={data.avatar}
-                            alt={data.fullName}
-                            gender={data.gender}
-                            radius="50%"
-                            css="min-width: 17px; width: 17px; height: 17px; margin-right: 4px; margin-top: 3px;"
-                        />
-                        <P
-                            z="1.5rem"
-                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
-                        >
-                            I'm doing well
-                        </P>
-                    </Div>
-                    <Div
-                        width="100%"
-                        css="padding-right: 35%; justify-content: left; margin-bottom: 8px; align-items: center;"
-                    >
-                        <Avatar
-                            src={data.avatar}
-                            alt={data.fullName}
-                            gender={data.gender}
-                            radius="50%"
-                            css="min-width: 17px; width: 17px; height: 17px; margin-right: 4px; margin-top: 3px;"
-                        />
-                        <P
-                            z="1.5rem"
-                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
-                        >
-                            Is your work ok?
-                        </P>
-                    </Div>
-                    <Div
-                        width="100%"
-                        css="margin-bottom: 5px; padding-left: 35%; justify-content: right; align-items:center ;"
-                    >
-                        <P
-                            z="1.5rem"
-                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
-                        >
-                            Year, Nothing change
-                        </P>
-                    </Div>{' '}
-                    <Div
-                        width="100%"
-                        css="margin-bottom: 5px; padding-left: 35%; justify-content: right; align-items:center ; "
-                    >
-                        <P
-                            z="1.5rem"
-                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
-                        >
-                            Year, Nothing change
-                        </P>
-                    </Div>{' '}
-                    <Div
-                        width="100%"
-                        css="margin-bottom: 5px; padding-left: 35%; justify-content: right; align-items:center ; "
-                    >
-                        <P
-                            z="1.5rem"
-                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
-                        >
-                            Year, Nothing change
-                        </P>
-                    </Div>{' '}
-                    <Div
-                        width="100%"
-                        css="margin-bottom: 5px; padding-left: 35%; justify-content: right; align-items:center ; "
-                    >
-                        <P
-                            z="1.5rem"
-                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
-                        >
-                            Year, Nothing change
-                        </P>
-                    </Div>{' '}
-                    <Div
-                        width="100%"
-                        css=" margin-bottom: 5px; padding-left: 35%; justify-content: right; align-items:center ; "
-                    >
-                        <P
-                            z="1.5rem"
-                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
-                        >
-                            Year, Nothing change
-                        </P>
-                    </Div>{' '}
-                    <Div
-                        width="100%"
-                        css="margin-bottom: 5px; padding-left: 35%; justify-content: right; align-items:center ;margin-bottom: 5px; "
-                    >
-                        <P
-                            z="1.5rem"
-                            css="width: auto; padding: 3px 12px 1px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
-                        >
-                            Year, Nothing change
-                        </P>
-                    </Div>
+                    {conversation[0]?.room.map((rc) => {
+                        if (rc._id === user.id) {
+                            return (
+                                <Div
+                                    key={rc.createdAt}
+                                    width="100%"
+                                    css="padding-right: 35%; justify-content: left; margin-bottom: 8px; align-items: center;"
+                                >
+                                    <Avatar
+                                        src={user.avatar}
+                                        alt={user.fullName}
+                                        gender={user.gender}
+                                        radius="50%"
+                                        css="min-width: 17px; width: 17px; height: 17px; margin-right: 4px; margin-top: 3px;"
+                                    />
+                                    <P
+                                        z="1.4rem"
+                                        css="width: auto; padding: 2px 12px 2px; border-radius: 12px; background-color: #353636; border: 1px solid #4e4d4b;"
+                                    >
+                                        {rc.text.t}
+                                    </P>
+                                </Div>
+                            );
+                        } else {
+                            return (
+                                <Div
+                                    key={rc.createdAt}
+                                    width="100%"
+                                    css="padding-left: 35%; justify-content: right; align-items:center; margin-bottom: 8px; "
+                                >
+                                    <P
+                                        z="1.4rem"
+                                        css="width: auto; padding: 2px 12px 2px; border-radius: 12px; background-color: #353636; border: 1px solid #454442e0;     background-color: #00000061;"
+                                    >
+                                        {rc.text.t}
+                                    </P>
+                                </Div>
+                            );
+                        }
+                    })}
                 </Div>
                 <Div
                     width="100%"

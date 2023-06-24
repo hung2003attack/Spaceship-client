@@ -282,6 +282,7 @@ const Send: React.FC<{
                             <ListAccounts
                                 key={r._id}
                                 data={r}
+                                userId={userId}
                                 colorText={colorText}
                                 colorBg={colorBg}
                                 setMoreBar={setMoreBar}

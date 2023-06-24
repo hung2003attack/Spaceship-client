@@ -46,9 +46,9 @@ export const DivConversation = styled.div`
     border: 1px solid #1b1a1a;
     border-radius: 5px;
     background-color: #242424;
-    z-index: 1;
+    z-index: 8888;
     * {
-        font-family: Baloo2, sans-serif;
+        font-family: ZenKaku, sans-serif;
     }
 `;
 export const DivResultsConversation = styled.div`

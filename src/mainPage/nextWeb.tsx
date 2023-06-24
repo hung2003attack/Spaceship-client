@@ -54,6 +54,7 @@ import WarningBrowser from '~/reUsingComponents/ErrorBoudaries/Warning_browser';
 import CommonUtils from '~/utils/CommonUtils';
 import { PropsUser, PropsUserPer } from 'src/App';
 import { PropsBackGroundRedux } from '~/redux/background';
+import { PropsReloadRD, online } from '~/redux/reload';
 export const socket = io('http://localhost:3001', { transports: ['websocket'] });
 
 export interface PropsBg {
@@ -63,14 +64,13 @@ export interface PropsBg {
 }
 
 const Website: React.FC<{
-    setUserOnline: React.Dispatch<React.SetStateAction<string[]>>;
-    userOnline: string[];
     idUser: string[];
     dataUser: PropsUser;
     setDataUser: React.Dispatch<React.SetStateAction<PropsUser | undefined>>;
-}> = ({ setUserOnline, userOnline, idUser, dataUser, setDataUser }) => {
+}> = ({ idUser, dataUser, setDataUser }) => {
     const dispatch = useDispatch();
     const { colorText, colorBg } = useSelector((state: PropsBg) => state.persistedReducer.background);
+    const { userOnline } = useSelector((state: { reload: PropsReloadRD }) => state.reload);
 
     const [cookies, setCookie] = useCookies(['tks', 'k_user']);
     // const [darkShining, setDarkShining] = useState<boolean>(backgr);
@@ -146,10 +146,10 @@ const Website: React.FC<{
             socket.emit('sendId', userId);
             socket.on('user connectedd', (re) => {
                 console.log(`connected`, JSON.parse(re));
-                setUserOnline(JSON.parse(re));
+                dispatch(online(JSON.parse(re)));
             });
             socket.on('user disconnected', (re) => {
-                setUserOnline(JSON.parse(re));
+                dispatch(online(JSON.parse(re)));
                 console.log('user disconnected', JSON.parse(re));
             });
         } else {
@@ -385,8 +385,6 @@ const Website: React.FC<{
                                                         <Tools
                                                             dataUser={dataUser}
                                                             setDataUser={setDataUser}
-                                                            userOnline={userOnline}
-                                                            setUserOnline={setUserOnline}
                                                             userId={userId}
                                                             colorText={colorText}
                                                             colorBg={colorBg}

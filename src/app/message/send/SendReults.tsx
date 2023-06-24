@@ -4,13 +4,19 @@ import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import { DivPos, Hname } from '~/reUsingComponents/styleComponents/styleComponents';
 import { Div, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { PropsRoomChat } from './Send';
+import { PropsReloadRD, onChat } from '~/redux/reload';
+import { useDispatch, useSelector } from 'react-redux';
 
 const ListAccounts: React.FC<{
     colorText: string;
     colorBg: number;
     setMoreBar: React.Dispatch<React.SetStateAction<boolean>>;
     data: PropsRoomChat;
-}> = ({ colorText, colorBg, setMoreBar, data }) => {
+    userId: string;
+}> = ({ colorText, colorBg, setMoreBar, data, userId }) => {
+    const dispatch = useDispatch();
+    const { userOnline } = useSelector((state: { reload: PropsReloadRD }) => state.reload);
+
     let time: string | number | NodeJS.Timeout | undefined;
     const handleTouchStart = () => {
         time = setTimeout(() => {
@@ -25,7 +31,14 @@ const ListAccounts: React.FC<{
         console.log('no');
     };
     console.log(data, 'send room');
-
+    const who =
+        data.room._id === userId
+            ? 'You: '
+            : data.room.user.gender === 0
+            ? 'His: '
+            : data.room.user.gender === 1
+            ? 'Her: '
+            : 'SP: ';
     return (
         <>
             {data.user.map((rs) => (
@@ -34,6 +47,7 @@ const ListAccounts: React.FC<{
                     onTouchMove={handleTouchMove}
                     onTouchStart={handleTouchStart}
                     onTouchEnd={handleTouchEnd}
+                    onClick={() => dispatch(onChat({ id_room: data._id, user: rs }))}
                     width="100%"
                     css={`
                         height: 50px;
@@ -57,27 +71,26 @@ const ListAccounts: React.FC<{
                 >
                     <Avatar
                         src={rs.avatar}
-                        gender={0}
+                        gender={rs.gender}
                         radius="50%"
                         css="min-width: 40px; width: 40px; height: 40px; margin: 3px 5px; "
                     />
-                    <DivPos
-                        bottom="2px"
-                        left="32px"
-                        size="10px"
-                        css="color: #149314; padding: 2px; background-color: #1c1b1b;"
-                    >
-                        <TyOnlineI />
-                    </DivPos>
+                    {userOnline.includes(rs.id) && (
+                        <DivPos
+                            bottom="2px"
+                            left="32px"
+                            size="10px"
+                            css="color: #149314; padding: 2px; background-color: #1c1b1b;"
+                        >
+                            <TyOnlineI />
+                        </DivPos>
+                    )}
                     <Div width="72%" wrap="wrap">
                         <Hname>{rs.fullName}</Hname>
                         <Div width="80%" css="align-items: center;">
-                            <Avatar
-                                src={data.room.user.avatar}
-                                gender={0}
-                                radius="50%"
-                                css="min-width: 17px; width: 17px; height: 17px; margin-right: 5px;"
-                            />
+                            <P css="min-width: 21px; width: 17px; height: 17px; margin-right: 5px; font-size: 1.1rem; margin-top: 3px;">
+                                {who}
+                            </P>
                             <P
                                 z="1.2rem"
                                 css="width: 100%; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; margin-top: 3px; "

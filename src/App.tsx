@@ -97,12 +97,11 @@ function App() {
     const dispatch = useDispatch();
     const { idUser, errorServer } = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow);
     const { setting, personalPage } = useSelector((state: any) => state.hideShow);
-    const { chat } = useSelector((state: { reload: PropsReloadRD }) => state.reload);
+    const { chat, userOnline } = useSelector((state: { reload: PropsReloadRD }) => state.reload);
     const { colorText, colorBg } = useSelector((state: PropsBg) => state.persistedReducer.background);
     const [userData, setUserData] = useState<PropsUserPer[]>([]);
 
     const [userFirst, setUserFirst] = useState<PropsUser>();
-    const [userOnline, setUserOnline] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
     const token = cookies.tks;
@@ -367,18 +366,12 @@ function App() {
                 />
                 {userFirst && (
                     <>
-                        <Website
-                            userOnline={userOnline}
-                            setUserOnline={setUserOnline}
-                            idUser={idUser}
-                            dataUser={userFirst}
-                            setDataUser={setUserFirst}
-                        />
+                        <Website idUser={idUser} dataUser={userFirst} setDataUser={setUserFirst} />
                         {(setting || personalPage) && <DivOpacity onClick={handleClick} />}
                         <Message dataUser={userFirst} userOnline={userOnline} />
                         {chat?.map((room) => (
                             <Conversation
-                                key={room.id}
+                                key={room.id_room}
                                 colorText={colorText}
                                 colorBg={colorBg}
                                 data={room}
