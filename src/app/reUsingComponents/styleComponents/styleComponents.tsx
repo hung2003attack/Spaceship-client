@@ -201,3 +201,6 @@ export const DivLoading = styled.div`
         }
     }
 `;
+export const CallName = (gender: number) => {
+    return gender === 0 ? 'Him' : gender === 1 ? 'Her' : 'Cuy';
+};

@@ -45,13 +45,55 @@ export default function LogicConversation(id_room: string, id_others: string, id
     const uploadRef = useRef<{ link: string; type: string }[]>([]);
 
     const offset = useRef<number>(0);
-    const limit = 5;
+    const limit = 10;
     useEffect(() => {
         ERef.current.scrollTop = ERef.current.scrollHeight;
         async function fetchChat() {
-            const res = await sendChatAPi.getChat(token, id_room, id_others, limit, offset.current);
-            setConversation(res);
-            console.log(res, 'chat');
+            const res: {
+                id_us: string[];
+                status: string;
+                background: string;
+                room: [
+                    {
+                        _id: string;
+                        text: {
+                            t: string;
+                            icon: string;
+                        };
+                        imageOrVideos: { v: string; icon: string }[];
+                        createdAt: string;
+                    },
+                ];
+                createdAt: string;
+            }[] = await sendChatAPi.getChat(token, id_room, id_others, limit, offset.current);
+            const newData: any = await new Promise((resolve, reject) => {
+                try {
+                    res[0].room.map(async (rs, index1) => {
+                        const dd = await new Promise((resolve, reject) => {
+                            try {
+                                rs.imageOrVideos.map(async (fl, index2) => {
+                                    const buffer = await sendChatAPi.getFile(token, fl.v);
+
+                                    const base64 = CommonUtils.convertBase64Gridfs(buffer.file);
+                                    res[0].room[index1].imageOrVideos[
+                                        index2
+                                    ].v = `data:${buffer.type};base64,${base64}`;
+                                    if (index2 + 1 === rs.imageOrVideos.length) resolve(res);
+                                });
+                            } catch (error) {
+                                reject(error);
+                            }
+                        });
+                        if (index1 + 1 === res[0].room.length) resolve(res);
+                    });
+                } catch (error) {
+                    reject(error);
+                }
+            });
+            console.log(newData, 'newData');
+
+            setConversation(newData);
+            // console.log(res, 'chat');
         }
         fetchChat();
     }, []);

@@ -16,16 +16,19 @@ export const DivIconSend = styled.div`
     }
 `;
 export const DivSend = styled.div`
-    flex-direction: column;
+    width: 100%;
     height: 100%;
+    flex-direction: column;
     position: fixed;
     background-color: #202124;
-    width: 320px;
     right: 0px;
     z-index: 101;
     top: 0px;
     transition: var(--transition-03s);
     box-shadow: 0 0 10px;
+    @media (min-width: 360px) {
+        width: 360px;
+    }
 `;
 export const DivResults = styled.div`
     width: 100%;
@@ -38,17 +41,20 @@ export const DivResults = styled.div`
     }
 `;
 export const DivConversation = styled.div`
-    width: 320px;
+    width: 100%;
     height: 93%;
     position: fixed;
     bottom: 0;
     right: 0;
     border: 1px solid #1b1a1a;
     border-radius: 5px;
-    background-color: #242424;
+    background-color: #202124;
     z-index: 8888;
     * {
         font-family: ZenKaku, sans-serif;
+    }
+    @media (min-width: 360px) {
+        width: 360px;
     }
 `;
 export const DivResultsConversation = styled.div`
@@ -56,5 +62,6 @@ export const DivResultsConversation = styled.div`
     height: 100%;
     position: relative;
     padding: 10px;
+    background-color: transparent;
     color: ${(props) => props.color};
 `;

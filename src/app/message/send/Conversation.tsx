@@ -2,7 +2,7 @@ import { Div, Img, Input, P } from '~/reUsingComponents/styleComponents/styleDef
 import { DivConversation, DivResultsConversation } from './styleSed';
 import { DotI, ImageBayI, ProfileCircelI, SendOPTI, UndoI } from '~/assets/Icons/Icons';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
-import { Hname } from '~/reUsingComponents/styleComponents/styleComponents';
+import { CallName, Hname } from '~/reUsingComponents/styleComponents/styleComponents';
 import dataEmoji from '@emoji-mart/data/sets/14/facebook.json';
 import Picker from '@emoji-mart/react';
 import { useEffect, useRef, useState } from 'react';
@@ -12,6 +12,7 @@ import { Player } from 'video-react';
 import { PropsUser } from 'src/App';
 import { offChat } from '~/redux/reload';
 import sendChatAPi from '~/restAPI/requestServers/accountRequest/sendChatAPi';
+import CommonUtils from '~/utils/CommonUtils';
 
 const Conversation: React.FC<{
     colorText: string;
@@ -44,8 +45,14 @@ const Conversation: React.FC<{
     } = LogicConversation(id_room, user.id, dataFirst.id);
 
     console.log(value);
-
-    console.log(upload, 'upload');
+    const [base64File, setBase64File] = useState<any>();
+    console.log(conversation, 'conversation22');
+    const relative =
+        conversation[0]?.status === 'isFriend'
+            ? `You and ${CallName(user.gender)} are each other of friend`
+            : conversation[0]?.status === 'isNotFriend'
+            ? `You and ${CallName(user.gender)} are not friend`
+            : '';
 
     return (
         <DivConversation>
@@ -59,7 +66,7 @@ const Conversation: React.FC<{
                         position: absolute;
                         top: 10px;
                         left: 0;
-                        background-color: #242424;
+                        background-color: #202124;
                     `}
                 >
                     <Div
@@ -110,15 +117,15 @@ const Conversation: React.FC<{
                         css="align-items: center; justify-content: center; margin-top: 80px; margin-bottom: 40px;"
                     >
                         <P z="1.3rem" align="center" css="width: 100%; margin: 8px 0; ">
-                            {conversation[0]?.status === 'isFriend'
-                                ? 'You and her were each other of friend'
-                                : 'You and her are each other of friends'}
+                            {relative}
                         </P>
                         <Div css="align-items: center; justify-content: center; padding: 3px 8px; background-color: #333333; border-radius: 8px; border: 1px solid #52504d; cursor: var(--pointer)">
                             <ProfileCircelI /> <Hname css="margin: 0 5px; width: fit-content;">View profile</Hname>
                         </Div>
                     </Div>
                     {conversation[0]?.room.map((rc) => {
+                        console.log(rc.imageOrVideos[0]);
+
                         if (rc._id === user.id) {
                             return (
                                 <Div
@@ -143,18 +150,41 @@ const Conversation: React.FC<{
                             );
                         } else {
                             return (
-                                <Div
-                                    key={rc.createdAt}
-                                    width="100%"
-                                    css="padding-left: 35%; justify-content: right; align-items:center; margin-bottom: 8px; "
-                                >
-                                    <P
-                                        z="1.4rem"
-                                        css="width: auto; padding: 2px 12px 2px; border-radius: 12px; background-color: #353636; border: 1px solid #454442e0;     background-color: #00000061;"
+                                <div key={rc.createdAt}>
+                                    <Div
+                                        width="100%"
+                                        css="padding-left: 35%; justify-content: right; align-items:center; margin-bottom: 8px; "
                                     >
-                                        {rc.text.t}
-                                    </P>
-                                </Div>
+                                        <P
+                                            z="1.4rem"
+                                            css="width: auto; padding: 2px 12px 2px; border-radius: 12px; background-color: #353636; border: 1px solid #454442e0;     background-color: #00000061;"
+                                        >
+                                            {rc.text.t}
+                                        </P>
+                                    </Div>
+                                    <Div wrap="wrap" css=" justify-content: end; padding-left: 33%;">
+                                        {rc.imageOrVideos.map((fl, index) => {
+                                            console.log(fl, index);
+
+                                            return (
+                                                <>
+                                                    <Div
+                                                        key={index}
+                                                        css={`
+                                                            min-width: 79px;
+                                                            width: 79px;
+                                                            border-radius: 5px;
+                                                            border: 1px solid #4e4e4e;
+                                                            ${upload.length - 1 === index && 'flex-grow: 1;'}
+                                                        `}
+                                                    >
+                                                        <Img src={fl.v} radius="5px" />
+                                                    </Div>{' '}
+                                                </>
+                                            );
+                                        })}
+                                    </Div>
+                                </div>
                             );
                         }
                     })}
@@ -162,7 +192,7 @@ const Conversation: React.FC<{
                 <Div
                     width="100%"
                     wrap="wrap"
-                    css=" height: auto; align-items: center; justify-content: center; background-color: #242424; div#emojiCon{width: 100%}"
+                    css=" height: auto; align-items: center; justify-content: center; background-color:#202124;; div#emojiCon{width: 100%}"
                 >
                     <Div width="100%" wrap="wrap" css="position: relative;">
                         {upload.length > 0 && (
