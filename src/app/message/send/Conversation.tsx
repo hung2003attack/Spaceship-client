@@ -13,6 +13,7 @@ import { PropsUser } from 'src/App';
 import { offChat } from '~/redux/reload';
 import sendChatAPi from '~/restAPI/requestServers/accountRequest/sendChatAPi';
 import CommonUtils from '~/utils/CommonUtils';
+import FileConversation from './File';
 
 const Conversation: React.FC<{
     colorText: string;
@@ -47,6 +48,7 @@ const Conversation: React.FC<{
     console.log(value);
     const [base64File, setBase64File] = useState<any>();
     console.log(conversation, 'conversation22');
+    const [dataImage, setDataImage] = useState<any>();
     const relative =
         conversation[0]?.status === 'isFriend'
             ? `You and ${CallName(user.gender)} are each other of friend`
@@ -123,13 +125,11 @@ const Conversation: React.FC<{
                             <ProfileCircelI /> <Hname css="margin: 0 5px; width: fit-content;">View profile</Hname>
                         </Div>
                     </Div>
-                    {conversation[0]?.room.map((rc) => {
-                        console.log(rc.imageOrVideos[0]);
-
+                    {conversation[0]?.room.map((rc, index) => {
                         if (rc._id === user.id) {
                             return (
                                 <Div
-                                    key={rc.createdAt}
+                                    key={rc.text.t + index}
                                     width="100%"
                                     css="padding-right: 35%; justify-content: left; margin-bottom: 8px; align-items: center;"
                                 >
@@ -150,7 +150,7 @@ const Conversation: React.FC<{
                             );
                         } else {
                             return (
-                                <div key={rc.createdAt}>
+                                <div key={rc.text.t + index}>
                                     <Div
                                         width="100%"
                                         css="padding-left: 35%; justify-content: right; align-items:center; margin-bottom: 8px; "
@@ -162,27 +162,19 @@ const Conversation: React.FC<{
                                             {rc.text.t}
                                         </P>
                                     </Div>
-                                    <Div wrap="wrap" css=" justify-content: end; padding-left: 33%;">
-                                        {rc.imageOrVideos.map((fl, index) => {
-                                            console.log(fl, index);
-
-                                            return (
-                                                <>
-                                                    <Div
-                                                        key={index}
-                                                        css={`
-                                                            min-width: 79px;
-                                                            width: 79px;
-                                                            border-radius: 5px;
-                                                            border: 1px solid #4e4e4e;
-                                                            ${upload.length - 1 === index && 'flex-grow: 1;'}
-                                                        `}
-                                                    >
-                                                        <Img src={fl.v} radius="5px" />
-                                                    </Div>{' '}
-                                                </>
-                                            );
-                                        })}
+                                    <Div css="padding-left: 23%;">
+                                        <Div
+                                            width="100%"
+                                            wrap="wrap"
+                                            css={`
+                                                justify-content: end;
+                                                ${rc.imageOrVideos.length > 2 && 'background-color: #ca64b8;'}
+                                            `}
+                                        >
+                                            {rc.imageOrVideos.map((fl, index) => (
+                                                <FileConversation key={fl.v} token={token} v={fl.v} icon={fl.icon} />
+                                            ))}
+                                        </Div>
                                     </Div>
                                 </div>
                             );

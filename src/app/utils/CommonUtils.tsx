@@ -37,7 +37,7 @@ class CommonUtils {
             console.log(error);
         }
     }
-    convertBase64Gridfs(file: any) {
+    convertBase64Gridfs = (file: any) => {
         try {
             if (file?.type === 'Buffer') {
                 const imageBase64 = Buffer.from(file).toString('base64');
@@ -47,6 +47,6 @@ class CommonUtils {
         } catch (error) {
             console.log(error);
         }
-    }
+    };
 }
 export default new CommonUtils();

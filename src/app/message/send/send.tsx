@@ -37,7 +37,7 @@ export interface PropsRoomChat {
         imageOrVideos: string[];
         seenBy: string[];
         createdAt: string;
-        user: { avatar: any; fullName: string; gender: number; id: string };
+        // user: { avatar: any; fullName: string; gender: number; id: string };
     };
 }
 
@@ -68,7 +68,7 @@ const Send: React.FC<{
                 sc.user.map((us) => {
                     if (us?.avatar) us.avatar = CommonUtils.convertBase64(us.avatar);
                 });
-                if (sc.room.user?.avatar) sc.room.user.avatar = CommonUtils.convertBase64(sc.room.user.avatar);
+                // if (sc.room.user?.avatar) sc.room.user.avatar = CommonUtils.convertBase64(sc.room.user.avatar);
             });
             setRooms(res);
             console.log(res, 'get Room');
