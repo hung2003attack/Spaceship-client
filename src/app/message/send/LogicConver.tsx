@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useDispatch } from 'react-redux';
 import { setTrueErrorServer } from '~/redux/hideShow';
@@ -10,7 +10,6 @@ import CommonUtils from '~/utils/CommonUtils';
 export default function LogicConversation(id_room: string, id_others: string, id_you: string) {
     const dispatch = useDispatch();
     const [cookies, setCookies] = useCookies(['k_user', 'tks']);
-    const ERef = useRef<any>();
 
     const userId = cookies.k_user;
     const token = cookies.tks;
@@ -46,8 +45,8 @@ export default function LogicConversation(id_room: string, id_others: string, id
 
     const offset = useRef<number>(0);
     const limit = 50;
+
     useEffect(() => {
-        ERef.current.scrollTop = ERef.current.scrollHeight;
         async function fetchChat() {
             const res: {
                 id_us: string[];
@@ -221,6 +220,6 @@ export default function LogicConversation(id_room: string, id_others: string, id
         dispatch,
         conversation,
         token,
-        ERef,
+        userId,
     };
 }

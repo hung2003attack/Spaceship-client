@@ -8,7 +8,7 @@ import { DivPos } from '../styleComponents/styleComponents';
 import 'moment/locale/vi';
 import { useSelector } from 'react-redux';
 
-interface PropsLanguage {
+export interface PropsLanguage {
     persistedReducer: {
         language: {
             sn: string;

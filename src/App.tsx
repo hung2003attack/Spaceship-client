@@ -93,6 +93,9 @@ const Authentication = React.lazy(() => import('~/Authentication/Auth'));
 const Website = React.lazy(() => import('./mainPage/nextWeb'));
 const Message = React.lazy(() => import('~/Message/message'));
 function App() {
+    const [currentPage, setCurrentPage] = useState<number>(() => {
+        return JSON.parse(localStorage.getItem('currentPage') || '{}').currentWeb;
+    });
     const [cookies, setCookie] = useCookies(['tks', 'k_user', 'sn']);
     const dispatch = useDispatch();
     const { idUser, errorServer } = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow);
@@ -375,6 +378,7 @@ function App() {
                                 colorText={colorText}
                                 colorBg={colorBg}
                                 data={room}
+                                currentPage={currentPage}
                                 dataFirst={userFirst}
                             />
                         ))}
