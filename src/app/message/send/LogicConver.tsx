@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useDispatch } from 'react-redux';
+import DateTime from '~/reUsingComponents/CurrentDateTime';
 import { setTrueErrorServer } from '~/redux/hideShow';
 import sendChatAPi from '~/restAPI/requestServers/accountRequest/sendChatAPi';
 import sendChatAPI from '~/restAPI/requestServers/accountRequest/sendChatAPi';
@@ -26,7 +27,13 @@ export default function LogicConversation(id_room: string, id_others: string, id
                         t: string;
                         icon: string;
                     };
-                    imageOrVideos: { v: string; icon: string }[];
+                    imageOrVideos: {
+                        v: string;
+                        type?: string;
+                        icon: string;
+                    }[];
+                    sending?: boolean;
+                    seenBy: string[];
                     createdAt: string;
                 },
             ];
@@ -59,7 +66,12 @@ export default function LogicConversation(id_room: string, id_others: string, id
                             t: string;
                             icon: string;
                         };
-                        imageOrVideos: { v: string; icon: string }[];
+                        imageOrVideos: {
+                            v: string;
+                            type?: string;
+                            icon: string;
+                        }[];
+                        seenBy: string[];
                         createdAt: string;
                     },
                 ];
@@ -96,8 +108,20 @@ export default function LogicConversation(id_room: string, id_others: string, id
     };
     const handleSend = async (e: any) => {
         if (value || upload.length > 0) {
+            const images = upload.map((i) => {
+                return { v: i.link, type: 'image', icon: '' };
+            });
+            const chat = {
+                createdAt: DateTime(),
+                imageOrVideos: images,
+                seenBy: [],
+                text: { t: value, icon: '' },
+                sending: true,
+                _id: userId,
+            };
+            conversation[0].room.push(chat);
+            setupload([]);
             console.log(value, upload, 'value', fileUpload.length);
-            const d: any = document.getElementById('formss');
             const formData = new FormData();
             formData.append('value', value);
             formData.append('id_room', id_room);
@@ -116,19 +140,16 @@ export default function LogicConversation(id_room: string, id_others: string, id
                             t: string;
                             icon: string;
                         };
+                        seenBy: string[];
                         imageOrVideos: { v: string; icon: string }[];
                         createdAt: string;
                     },
                 ];
                 createdAt: string;
             } = await sendChatAPI.send(token, formData);
-            const imageOrVideos: any = [];
-            for (let up of upload) {
-                imageOrVideos.push({ v: up, icon: '' });
-            }
-            res.room[0].imageOrVideos = imageOrVideos;
-            setConversation([...conversation, res]);
+            if (res) conversation[0].room[conversation[0].room.length - 1].sending = false;
             console.log(res, 'send here');
+            setConversation([...conversation]);
         }
     };
     console.log(conversation, 'conversation');

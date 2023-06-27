@@ -65,7 +65,19 @@ const Conversation: React.FC<{
             ? `You and ${CallName(user.gender)} are not friend`
             : '';
     useEffect(() => {
-        ERef.current.scrollTop = ERef.current.scrollHeight;
+        const observer = new MutationObserver((mutationsList) => {
+            ERef.current.scrollTop = ERef.current.scrollHeight;
+        });
+
+        // Configure and start observing the element
+        const observerConfig = {
+            attributes: true,
+            attributeFilter: ['style'],
+            subtree: true,
+            childList: true,
+        };
+        observer.observe(ERef.current, observerConfig);
+        // Optional: Call the observer's callback function immediately to get the initial scroll height
     }, []);
     const handleTime = (dateTime: string, type: string) => {
         const convert = moment(dateTime).format('HH:mm:ss YYYY-MM-DD');
@@ -82,15 +94,16 @@ const Conversation: React.FC<{
         }
     };
     const handleWatchMore = (e: any) => {
+        e.stopPropagation();
         if (e.target.getAttribute('class').includes('chatTime')) {
             e.target.classList.remove('chatTime');
         } else {
             e.target.classList.add('chatTime');
         }
-
-        // e.target.classList.remove('chatTime');
         console.log(e.target.getAttribute('class'));
     };
+
+    const handleScroll = () => {};
     let startOfDay: string;
     return (
         <DivConversation>
@@ -147,6 +160,7 @@ const Conversation: React.FC<{
                             }
                         }
                     `}
+                    onScroll={() => handleScroll}
                     onClick={() => setEmoji(false)}
                 >
                     <Div
@@ -190,22 +204,32 @@ const Conversation: React.FC<{
                                             padding-left: ${rc.imageOrVideos.length <= 1 ? '35%' : '20%'};
                                             margin-bottom: 8px;
                                             justify-content: right;
+                                            .chatTime {
+                                                .dateTime {
+                                                    display: block;
+                                                }
+                                            }
                                         `}
                                     >
                                         <Div
-                                            wrap="wrap"
+                                            display="block"
+                                            className="noTouch"
                                             css={`
-                                                ${rc.imageOrVideos.length < 1 ? 'display: block;' : ''}
                                                 position: relative;
                                                 justify-content: right;
-                                                ${rc.imageOrVideos.length > 0 ? 'flex-grow: 1;' : ''}
+                                                ${rc.imageOrVideos.length < 1 ? 'display: block;' : 'flex-grow: 1;'}
+                                                ${rc.text.t &&
+                                                `&::after {display: block; content: ''; width: 100%; height: ${
+                                                    rc.imageOrVideos.length > 0 ? '10%' : '100%'
+                                                }; position: absolute; top: 0;left: 0;}`}
                                             `}
+                                            onClick={handleWatchMore}
                                         >
                                             {rc.text.t && (
-                                                <Div width="100%" wrap="wrap" css="justify-content: end;">
+                                                <Div css="justify-content: end;">
                                                     <P
                                                         z="1.4rem"
-                                                        css="width: auto; padding: 0px 12px 3px; border-radius: 7px; border-top-left-radius: 13px; border-bottom-left-radius: 13px; background-color: #353636; border: 1px solid #4e4d4b;"
+                                                        css="width: fit-content; margin: 0; padding: 2px 12px 4px; border-radius: 7px; border-top-left-radius: 13px; border-bottom-left-radius: 13px; background-color: #353636; border: 1px solid #4e4d4b;"
                                                     >
                                                         {rc.text.t}
                                                     </P>
@@ -219,6 +243,18 @@ const Conversation: React.FC<{
                                                         css={`
                                                             position: relative;
                                                             justify-content: end;
+                                                            .roomOfChat {
+                                                                position: fixed;
+                                                                width: 100%;
+                                                                height: 100%;
+                                                                top: 0;
+                                                                left: 0;
+                                                                background-color: #171718;
+                                                                z-index: 1;
+                                                                img {
+                                                                    object-fit: contain;
+                                                                }
+                                                            }
                                                             ${rc.imageOrVideos.length > 2 &&
                                                             'background-color: #ca64b8;'}
                                                         `}
@@ -227,6 +263,7 @@ const Conversation: React.FC<{
                                                             <FileConversation
                                                                 key={fl.v}
                                                                 token={token}
+                                                                type={fl?.type}
                                                                 v={fl.v}
                                                                 icon={fl.icon}
                                                                 ERef={ERef}
@@ -235,21 +272,42 @@ const Conversation: React.FC<{
                                                     </Div>
                                                 </Div>
                                             )}
-
-                                            {/* {rc.imageOrVideos.length > 0 ? (
-                                                <P css="width: 100%; font-size: 1rem; margin-right: 5px; text-align: right;">
-                                                    {handleTime(rc.createdAt, 'hour')}, {handleTime(rc.createdAt, 'date')}
-                                                </P>
+                                            {rc.sending ? (
+                                                <P>sending...</P>
                                             ) : (
                                                 <>
-                                                    <P css=" font-size: 1rem; margin-left: 5px; position: absolute; left: -105px; top: 4px;">
-                                                        {handleTime(rc.createdAt, 'date')}
-                                                    </P>
-                                                    <P css="width: 100%; font-size: 1rem; margin-right: 5px; text-align: right;">
-                                                        {handleTime(rc.createdAt, 'hour')}
-                                                    </P>
+                                                    {rc.imageOrVideos.length > 0 ? (
+                                                        <P
+                                                            css={`
+                                                                display: ${!rc.text.t ? 'block' : 'none'};
+                                                                width: 100%;
+                                                                font-size: 1rem;
+                                                                margin-right: 5px;
+                                                                text-align: right;
+                                                            `}
+                                                            className="dateTime"
+                                                        >
+                                                            {handleTime(rc.createdAt, 'hour')},{' '}
+                                                            {handleTime(rc.createdAt, 'date')}
+                                                        </P>
+                                                    ) : (
+                                                        <>
+                                                            <P
+                                                                className="dateTime"
+                                                                css="display: none; font-size: 1rem; margin-left: 5px; position: absolute; left: -105px; top: 5px;"
+                                                            >
+                                                                {handleTime(rc.createdAt, 'date')}
+                                                            </P>
+                                                            <P
+                                                                className="dateTime"
+                                                                css="display: none; width: 100%; font-size: 1rem; margin-right: 5px; text-align: right;"
+                                                            >
+                                                                {handleTime(rc.createdAt, 'hour')}
+                                                            </P>
+                                                        </>
+                                                    )}
                                                 </>
-                                            )} */}
+                                            )}
                                         </Div>
                                     </Div>
                                 ) : (
@@ -300,7 +358,7 @@ const Conversation: React.FC<{
                                                 {rc.text.t && (
                                                     <P
                                                         z="1.4rem"
-                                                        css="width: fit-content; padding: 0px 12px 3px; border-radius: 7px; border-top-right-radius: 13px; border-bottom-right-radius: 13px; background-color: #353636; border: 1px solid #4e4d4b;"
+                                                        css="width: fit-content; padding: 2px 12px 4px; border-radius: 7px; border-top-right-radius: 13px; border-bottom-right-radius: 13px; background-color: #353636; border: 1px solid #4e4d4b;"
                                                     >
                                                         {rc.text.t}
                                                     </P>
@@ -331,6 +389,7 @@ const Conversation: React.FC<{
                                                             {rc.imageOrVideos.map((fl, index) => (
                                                                 <FileConversation
                                                                     key={fl.v}
+                                                                    type={fl?.type}
                                                                     token={token}
                                                                     v={fl.v}
                                                                     icon={fl.icon}
@@ -358,7 +417,7 @@ const Conversation: React.FC<{
                                                     <>
                                                         <P
                                                             className="dateTime"
-                                                            css="display: none; font-size: 1rem; margin-left: 5px; position: absolute; right: -83px; top: 4px;"
+                                                            css="display: none; font-size: 1rem; margin-left: 5px; position: absolute; right: -83px; top: 5px;"
                                                         >
                                                             {handleTime(rc.createdAt, 'date')}
                                                         </P>
@@ -386,6 +445,7 @@ const Conversation: React.FC<{
                     <Div width="100%" wrap="wrap" css="position: relative;">
                         {upload.length > 0 && (
                             <Div
+                                width="100%"
                                 wrap="wrap"
                                 css={`
                                     margin-left: 21%;
@@ -405,7 +465,7 @@ const Conversation: React.FC<{
                                             width: 79px;
                                             border-radius: 5px;
                                             border: 1px solid #4e4e4e;
-                                            ${upload.length - 1 === index && 'flex-grow: 1;'}
+                                            flex-grow: 1;
                                         `}
                                         onTouchMove={handleTouchMove}
                                         onTouchStart={handleTouchStart}

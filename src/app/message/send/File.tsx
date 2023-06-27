@@ -3,23 +3,34 @@ import { Div, Img } from '~/reUsingComponents/styleComponents/styleDefault';
 import sendChatAPi from '~/restAPI/requestServers/accountRequest/sendChatAPi';
 import CommonUtils from '~/utils/CommonUtils';
 
-const FileConversation: React.FC<{ token: string; v: string; icon: string; ERef: any }> = ({
+const FileConversation: React.FC<{ token: string; type?: string; v: string; icon: string; ERef: any }> = ({
     token,
+    type = '',
     v,
     icon,
     ERef,
 }) => {
     const [data, setData] = useState<any>('');
+    console.log(type, 'type yes');
+
     async function fechFile(f: string) {
-        const buffer = await sendChatAPi.getFile(token, f);
-        const base64 = CommonUtils.convertBase64Gridfs(buffer.file);
-        setData(`data:${buffer.type};base64,${base64}`);
-        ERef.current.scrollTop = ERef.current.scrollHeight;
+        if (!type) {
+            const buffer = await sendChatAPi.getFile(token, f);
+            const base64 = CommonUtils.convertBase64Gridfs(buffer.file);
+            setData(`data:${buffer.type};base64,${base64}`);
+        }
     }
 
     useEffect(() => {
-        fechFile(v);
+        if (!type) {
+            console.log(type, 'type');
+            fechFile(v);
+        } else {
+            console.log(type, 'type ---');
+            setData(v);
+        }
     }, []);
+
     const handleRoom = (e: any) => {
         e.stopPropagation();
         if (e.target.getAttribute('class').includes('roomOfChat')) {
@@ -49,7 +60,7 @@ const FileConversation: React.FC<{ token: string; v: string; icon: string; ERef:
             `}
             onClick={handleRoom}
         >
-            {data && <Img id="roomImageChat" src={data} radius="5px" />}
+            {data && <Img id="roomImageChat" src={data} radius="5px" onClick={(e) => e.stopPropagation()} />}
         </Div>
     );
 };
