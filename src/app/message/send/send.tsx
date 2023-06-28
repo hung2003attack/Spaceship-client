@@ -20,6 +20,7 @@ import Conversation from './Conversation';
 import sendChatAPi from '~/restAPI/requestServers/accountRequest/sendChatAPi';
 import { useCookies } from 'react-cookie';
 import CommonUtils from '~/utils/CommonUtils';
+import { socket } from 'src/mainPage/nextWeb';
 
 export interface PropsRoomChat {
     _id: any;
@@ -74,6 +75,9 @@ const Send: React.FC<{
             console.log(res, 'get Room');
         }
         fetchRoom();
+        socket.on(`${userId}roomChat`, (data: string) => {
+            fetchRoom();
+        });
     }, []);
 
     const handleUndo = () => {};

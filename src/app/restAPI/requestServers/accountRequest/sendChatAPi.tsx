@@ -21,10 +21,17 @@ class SendChat {
             console.log(error);
         }
     };
-    getChat = async (token: string, id_room: string, id_other: string, limit: number, offset: number) => {
+    getChat = async (
+        token: string,
+        id_room: string | undefined,
+        id_other: string,
+        limit: number,
+        offset: number,
+        of?: boolean,
+    ) => {
         try {
             const Axios = refreshToken.axiosJWTs(token);
-            const res = await Axios.get('/SN/sendChat/getChat', { params: { id_room, id_other, limit, offset } });
+            const res = await Axios.get('/SN/sendChat/getChat', { params: { id_room, id_other, limit, offset, of } });
 
             return res.data;
         } catch (error) {

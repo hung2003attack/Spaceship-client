@@ -10,27 +10,6 @@ const FileConversation: React.FC<{ token: string; type?: string; v: string; icon
     icon,
     ERef,
 }) => {
-    const [data, setData] = useState<any>('');
-    console.log(type, 'type yes');
-
-    async function fechFile(f: string) {
-        if (!type) {
-            const buffer = await sendChatAPi.getFile(token, f);
-            const base64 = CommonUtils.convertBase64Gridfs(buffer.file);
-            setData(`data:${buffer.type};base64,${base64}`);
-        }
-    }
-
-    useEffect(() => {
-        if (!type) {
-            console.log(type, 'type');
-            fechFile(v);
-        } else {
-            console.log(type, 'type ---');
-            setData(v);
-        }
-    }, []);
-
     const handleRoom = (e: any) => {
         e.stopPropagation();
         if (e.target.getAttribute('class').includes('roomOfChat')) {
@@ -60,7 +39,7 @@ const FileConversation: React.FC<{ token: string; type?: string; v: string; icon
             `}
             onClick={handleRoom}
         >
-            {data && <Img id="roomImageChat" src={data} radius="5px" onClick={(e) => e.stopPropagation()} />}
+            <Img id="roomImageChat" src={v} radius="5px" onClick={(e) => e.stopPropagation()} />
         </Div>
     );
 };

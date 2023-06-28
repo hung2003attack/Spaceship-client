@@ -1,11 +1,16 @@
+import moment from 'moment';
+import 'moment/locale/vi';
 import { useState } from 'react';
-import { DotI, ProfileI, TyOnlineI } from '~/assets/Icons/Icons';
+import { PropsReloadRD, onChat } from '~/redux/reload';
+import { useDispatch, useSelector } from 'react-redux';
+
+import Languages from '~/reUsingComponents/languages';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import { DivPos, Hname } from '~/reUsingComponents/styleComponents/styleComponents';
 import { Div, P } from '~/reUsingComponents/styleComponents/styleDefault';
+
+import { DotI, ProfileI, TyOnlineI } from '~/assets/Icons/Icons';
 import { PropsRoomChat } from './Send';
-import { PropsReloadRD, onChat } from '~/redux/reload';
-import { useDispatch, useSelector } from 'react-redux';
 
 const ListAccounts: React.FC<{
     colorText: string;
@@ -16,6 +21,8 @@ const ListAccounts: React.FC<{
 }> = ({ colorText, colorBg, setMoreBar, data, userId }) => {
     const dispatch = useDispatch();
     const { userOnline } = useSelector((state: { reload: PropsReloadRD }) => state.reload);
+
+    const { lg } = Languages();
 
     let time: string | number | NodeJS.Timeout | undefined;
     const handleTouchStart = () => {
@@ -30,13 +37,20 @@ const ListAccounts: React.FC<{
         clearTimeout(time);
         console.log('no');
     };
-    console.log(data, 'send room');
-
     return (
         <>
             {data.user.map((rs) => {
                 const who =
-                    data.room._id === userId ? 'You: ' : rs.gender === 0 ? 'His: ' : rs.gender === 1 ? 'Her: ' : 'SP: ';
+                    data.room._id === userId
+                        ? 'You: '
+                        : rs.gender === 0
+                        ? 'Him: '
+                        : rs.gender === 1
+                        ? 'Her: '
+                        : 'Cuy: ';
+                const Time = moment(moment(data.room.createdAt).format('YYYY-MM-DD HH:mm:ss'), 'YYYY-MM-DD HH:mm:ss')
+                    .locale(lg)
+                    .fromNow();
                 return (
                     <Div
                         key={rs.id}
@@ -93,7 +107,9 @@ const ListAccounts: React.FC<{
                                 >
                                     {data.room.text.t}
                                 </P>
-                                <P z="1.2rem">3h</P>
+                                <P z="1rem" css="width: 100%; margin-top: 5px; margin-left: 10px">
+                                    {Time}
+                                </P>
                             </Div>
                         </Div>
                         <Div

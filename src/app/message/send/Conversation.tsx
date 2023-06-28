@@ -18,19 +18,20 @@ import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { PropsLanguage } from '~/reUsingComponents/ErrorBoudaries/Warning_browser';
 import 'moment/locale/vi';
+import Languages from '~/reUsingComponents/languages';
+import { setIdUser } from '~/redux/hideShow';
 
 const Conversation: React.FC<{
     colorText: string;
     colorBg: number;
     data: {
-        id_room: string;
+        id_room: string | undefined;
         user: { id: string; avatar: any; fullName: string; gender: number };
     };
     dataFirst: PropsUser;
     currentPage: number;
 }> = ({ colorText, colorBg, dataFirst, data, currentPage }) => {
-    const language = useSelector((state: PropsLanguage) => state.persistedReducer.language);
-    const lg = currentPage === 1 ? language.sn : currentPage === 2 ? language.l : language.w;
+    const { lg } = Languages();
     const id_room = data.id_room;
     const user = data.user;
     const {
@@ -50,39 +51,44 @@ const Conversation: React.FC<{
         conversation,
         token,
         userId,
+        fetchChat,
+        loading,
+        cRef,
     } = LogicConversation(id_room, user.id, dataFirst.id);
     const ERef = useRef<any>();
     const Diff = useRef<number>(1);
 
-    console.log(value);
-    console.log(conversation, 'conversation22');
     const [dataImage, setDataImage] = useState<any>();
     const [watchMore, setWatchMore] = useState<boolean>(false);
     const relative =
-        conversation[0]?.status === 'isFriend'
+        conversation?.status === 'isFriend'
             ? `You and ${CallName(user.gender)} are each other of friend`
-            : conversation[0]?.status === 'isNotFriend'
+            : conversation?.status === 'isNotFriend'
             ? `You and ${CallName(user.gender)} are not friend`
             : '';
-    useEffect(() => {
-        const observer = new MutationObserver((mutationsList) => {
-            ERef.current.scrollTop = ERef.current.scrollHeight;
-        });
+    let top: number;
 
-        // Configure and start observing the element
-        const observerConfig = {
-            attributes: true,
-            attributeFilter: ['style'],
-            subtree: true,
-            childList: true,
-        };
-        observer.observe(ERef.current, observerConfig);
+    useEffect(() => {
+        // ERef.current.scrollTop = top;
+        // const observer = new MutationObserver((mutationsList) => {
+        //     console.log(ERef.current.scrollTop, ERef.current.scrollHeight, '===', top, cRef.current);
+        //     if (cRef.current === 7) ERef.current.scrollTop = ERef.current.scrollHeight;
+        // });
+        // // Configure and start observing the element
+        // const observerConfig = {
+        //     attributes: true,
+        //     attributeFilter: ['style'],
+        //     subtree: true,
+        //     childList: true,
+        // };
+        // observer.observe(ERef.current, observerConfig);
+        // ERef.current.addEventListener('scroll', handleScroll);
+        // return () => {
+        //     ERef.current?.removeEventListener('scroll', handleScroll);
+        // };
         // Optional: Call the observer's callback function immediately to get the initial scroll height
     }, []);
     const handleTime = (dateTime: string, type: string) => {
-        const convert = moment(dateTime).format('HH:mm:ss YYYY-MM-DD');
-
-        // moment(convert, 'HH:mm:ss YYYY-MM-DD').locale(lg).fromNow();/
         if (type === 'hour') {
             const newDateTime = moment(dateTime).locale(lg).format('LT');
             return newDateTime;
@@ -100,11 +106,27 @@ const Conversation: React.FC<{
         } else {
             e.target.classList.add('chatTime');
         }
-        console.log(e.target.getAttribute('class'));
     };
 
-    const handleScroll = () => {};
+    const handleScroll = () => {
+        // const { scrollTop, clientHeight, scrollHeight } = ERef.current;
+        // const scrollBottom = scrollHeight - scrollTop - clientHeight;
+        // console.log(scrollBottom, scrollTop, clientHeight, scrollHeight);
+        // if (scrollBottom + clientHeight >= scrollHeight - 250 && !loading) {
+        //     top = scrollBottom;
+        //     if (cRef.current !== 2) fetchChat(true);
+        // }
+    };
     let startOfDay: string;
+    const handleProfile = () => {
+        const id_oth: string[] = [];
+        conversation?.id_us.map((id) => {
+            if (id !== userId) id_oth.push(id);
+        });
+        dispatch(setIdUser(id_oth));
+    };
+    console.log(conversation, 'cc');
+
     return (
         <DivConversation>
             <DivResultsConversation color="#e4e4e4">
@@ -171,11 +193,16 @@ const Conversation: React.FC<{
                         <P z="1.3rem" align="center" css="width: 100%; margin: 8px 0; ">
                             {relative}
                         </P>
-                        <Div css="align-items: center; justify-content: center; padding: 3px 8px; background-color: #333333; border-radius: 8px; border: 1px solid #52504d; cursor: var(--pointer)">
+                        <Div
+                            css="align-items: center; justify-content: center; padding: 3px 8px; background-color: #333333; border-radius: 8px; border: 1px solid #52504d; cursor: var(--pointer)"
+                            onClick={handleProfile}
+                        >
                             <ProfileCircelI /> <Hname css="margin: 0 5px; width: fit-content;">View profile</Hname>
                         </Div>
                     </Div>
-                    {conversation[0]?.room.map((rc, index) => {
+                    {conversation?.room.map((rc, index) => {
+                        console.log('there you are', rc);
+
                         let listDateTime;
                         if (startOfDay) {
                             const dayOld = moment(startOfDay, 'HH:mm:ss YYYY-MM-DD');
@@ -261,7 +288,7 @@ const Conversation: React.FC<{
                                                     >
                                                         {rc.imageOrVideos.map((fl, index) => (
                                                             <FileConversation
-                                                                key={fl.v}
+                                                                key={fl._id}
                                                                 token={token}
                                                                 type={fl?.type}
                                                                 v={fl.v}
@@ -272,7 +299,7 @@ const Conversation: React.FC<{
                                                     </Div>
                                                 </Div>
                                             )}
-                                            {rc.sending ? (
+                                            {rc?.sending ? (
                                                 <P>sending...</P>
                                             ) : (
                                                 <>
@@ -388,7 +415,7 @@ const Conversation: React.FC<{
                                                         >
                                                             {rc.imageOrVideos.map((fl, index) => (
                                                                 <FileConversation
-                                                                    key={fl.v}
+                                                                    key={fl.v + index}
                                                                     type={fl?.type}
                                                                     token={token}
                                                                     v={fl.v}
@@ -417,7 +444,7 @@ const Conversation: React.FC<{
                                                     <>
                                                         <P
                                                             className="dateTime"
-                                                            css="display: none; font-size: 1rem; margin-left: 5px; position: absolute; right: -83px; top: 5px;"
+                                                            css="display: none; font-size: 1rem; margin-left: 5px; position: absolute; right: -105px; top: 5px;"
                                                         >
                                                             {handleTime(rc.createdAt, 'date')}
                                                         </P>

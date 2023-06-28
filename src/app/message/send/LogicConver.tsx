@@ -1,89 +1,103 @@
 import { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useDispatch } from 'react-redux';
-import DateTime from '~/reUsingComponents/CurrentDateTime';
-import { setTrueErrorServer } from '~/redux/hideShow';
+
+import userAPI from '~/restAPI/requestServers/accountRequest/userAPI';
 import sendChatAPi from '~/restAPI/requestServers/accountRequest/sendChatAPi';
 import sendChatAPI from '~/restAPI/requestServers/accountRequest/sendChatAPi';
-import userAPI from '~/restAPI/requestServers/accountRequest/userAPI';
 import CommonUtils from '~/utils/CommonUtils';
 
-export default function LogicConversation(id_room: string, id_others: string, id_you: string) {
-    const dispatch = useDispatch();
-    const [cookies, setCookies] = useCookies(['k_user', 'tks']);
+import DateTime from '~/reUsingComponents/CurrentDateTime';
+import { setTrueErrorServer } from '~/redux/hideShow';
+import CookiesF from '~/reUsingComponents/cookies';
 
-    const userId = cookies.k_user;
-    const token = cookies.tks;
+interface PropsChat {
+    id_us: string[];
+    status: string;
+    background: string;
+    room: {
+        _id: string;
+        text: {
+            t: string;
+            icon: string;
+        };
+        imageOrVideos: {
+            v: string;
+            type?: string;
+            icon: string;
+            _id: string;
+        }[];
+        sending?: boolean;
+        seenBy: string[];
+        createdAt: string;
+    }[];
+    createdAt: string;
+}
+export default function LogicConversation(id_room: string | undefined, id_others: string, id_you: string) {
+    const dispatch = useDispatch();
+    const { userId, token } = CookiesF();
+
+    const cRef = useRef<number>(0);
     const mRef = useRef<any>(0);
-    const [conversation, setConversation] = useState<
-        {
-            id_us: string[];
-            status: string;
-            background: string;
-            room: [
-                {
-                    _id: string;
-                    text: {
-                        t: string;
-                        icon: string;
-                    };
-                    imageOrVideos: {
-                        v: string;
-                        type?: string;
-                        icon: string;
-                    }[];
-                    sending?: boolean;
-                    seenBy: string[];
-                    createdAt: string;
-                },
-            ];
-            createdAt: string;
-        }[]
-    >([]);
+    const offset = useRef<number>(0);
+    const fileRef = useRef<any>([]);
+    const limit = 25;
 
     const [value, setValue] = useState<string>('');
     const [emoji, setEmoji] = useState<boolean>(false);
-    const [upload, setupload] = useState<{ link: any; type: string }[]>([]);
     const [option, setOption] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+
     const [fileUpload, setFileUpload] = useState<any>([]);
-    const fileRef = useRef<any>([]);
-
+    const [upload, setupload] = useState<{ link: any; type: string }[]>([]);
     const uploadRef = useRef<{ link: string; type: string }[]>([]);
+    const chatRef = useRef<PropsChat>();
 
-    const offset = useRef<number>(0);
-    const limit = 50;
-
-    useEffect(() => {
-        async function fetchChat() {
-            const res: {
-                id_us: string[];
-                status: string;
-                background: string;
-                room: [
-                    {
-                        _id: string;
-                        text: {
-                            t: string;
-                            icon: string;
+    const [conversation, setConversation] = useState<PropsChat>();
+    async function fetchChat(of?: boolean) {
+        setLoading(true);
+        cRef.current = 2;
+        const res: any = await sendChatAPi.getChat(token, id_room, id_others, limit, offset.current, of);
+        if (res) {
+            const newData: any = await new Promise(async (resolve, reject) => {
+                const modifiedData = { ...res };
+                await Promise.all(
+                    modifiedData.room.map(async (rr: any, index1: number) => {
+                        await Promise.all(
+                            rr.imageOrVideos.map(async (fl: { v: string; icon: string }, index2: number) => {
+                                const buffer = await sendChatAPi.getFile(token, fl.v);
+                                const base64 = CommonUtils.convertBase64Gridfs(buffer.file);
+                                modifiedData.room[index1].imageOrVideos[
+                                    index2
+                                ].v = `data:${buffer.type};base64,${base64}`;
+                            }),
+                        );
+                    }),
+                );
+                resolve(modifiedData);
+            });
+            if (newData) {
+                if (of) {
+                    cRef.current = 8;
+                    if (newData.room.length > 0 && chatRef.current) {
+                        chatRef.current = {
+                            ...chatRef.current,
+                            room: [...newData.room.reverse(), ...chatRef.current.room],
                         };
-                        imageOrVideos: {
-                            v: string;
-                            type?: string;
-                            icon: string;
-                        }[];
-                        seenBy: string[];
-                        createdAt: string;
-                    },
-                ];
-                createdAt: string;
-            }[] = await sendChatAPi.getChat(token, id_room, id_others, limit, offset.current);
-
-            // console.log(newData, 'newData');
-
-            setConversation(res);
-            // console.log(res, 'chat');
+                    }
+                } else {
+                    newData.room = newData.room.reverse();
+                    chatRef.current = newData;
+                    cRef.current = 7;
+                }
+                offset.current += limit;
+            }
+            setConversation(chatRef.current);
+            setLoading(false);
         }
-        fetchChat();
+    }
+    useEffect(() => {
+        if (id_room) fetchChat();
     }, []);
     useEffect(() => {
         return clearInterval(mRef.current);
@@ -104,12 +118,11 @@ export default function LogicConversation(id_room: string, id_others: string, id
     };
     const handleTouchEnd = () => {
         clearTimeout(time);
-        console.log('no');
     };
     const handleSend = async (e: any) => {
         if (value || upload.length > 0) {
             const images = upload.map((i) => {
-                return { v: i.link, type: 'image', icon: '' };
+                return { v: i.link, type: 'image', icon: '', _id: String(Math.random()) };
             });
             const chat = {
                 createdAt: DateTime(),
@@ -119,12 +132,11 @@ export default function LogicConversation(id_room: string, id_others: string, id
                 sending: true,
                 _id: userId,
             };
-            conversation[0].room.push(chat);
+            if (conversation) conversation.room.push(chat);
             setupload([]);
-            console.log(value, upload, 'value', fileUpload.length);
             const formData = new FormData();
             formData.append('value', value);
-            formData.append('id_room', id_room);
+            if (id_room) formData.append('id_room', id_room);
             formData.append('id_others', id_others);
             for (let i = 0; i < fileUpload.length; i++) {
                 formData.append('files', fileUpload[i]);
@@ -147,12 +159,13 @@ export default function LogicConversation(id_room: string, id_others: string, id
                 ];
                 createdAt: string;
             } = await sendChatAPI.send(token, formData);
-            if (res) conversation[0].room[conversation[0].room.length - 1].sending = false;
-            console.log(res, 'send here');
-            setConversation([...conversation]);
+            console.log(res);
+            if (res && conversation) {
+                conversation.room[conversation.room.length - 1].sending = false;
+                setConversation(conversation);
+            }
         }
     };
-    console.log(conversation, 'conversation');
 
     const handleImageUpload = async (e: any) => {
         uploadRef.current = [];
@@ -242,5 +255,8 @@ export default function LogicConversation(id_room: string, id_others: string, id
         conversation,
         token,
         userId,
+        fetchChat,
+        loading,
+        cRef,
     };
 }

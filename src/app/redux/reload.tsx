@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export interface PropsReloadRD {
     people: number;
-    chat: { id_room: string; user: { id: string; avatar: any; fullName: string; gender: number } }[];
+    chat: { id_room: string | undefined; user: { id: string; avatar: any; fullName: string; gender: number } }[];
     userOnline: string[];
 }
 const initialState: PropsReloadRD = {

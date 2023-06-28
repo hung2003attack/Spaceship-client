@@ -268,7 +268,10 @@ export default function LogicView(
             });
         }
     };
-    const handleMessenger = async (data: { id: string; fullName: string; avatar: any; gender: number }) => {
+    const handleMessenger = async (data: {
+        id_room: string;
+        user: { id: string; fullName: string; avatar: any; gender: number };
+    }) => {
         dispatch(onChat(data));
         console.log('handleMessenger');
     };
@@ -602,10 +605,13 @@ export default function LogicView(
                 name: 'Messenger',
                 onClick: () =>
                     handleMessenger({
-                        id: dataUser.id,
-                        avatar: dataUser.avatar,
-                        fullName: dataUser.fullName,
-                        gender: dataUser.gender,
+                        id_room: '',
+                        user: {
+                            id: dataUser.id,
+                            avatar: dataUser.avatar,
+                            fullName: dataUser.fullName,
+                            gender: dataUser.gender,
+                        },
                     }),
             },
             id_fl === userId
@@ -649,10 +655,13 @@ export default function LogicView(
                 name: 'Nhắn tin',
                 onClick: () =>
                     handleMessenger({
-                        id: dataUser.id,
-                        avatar: dataUser.avatar,
-                        fullName: dataUser.fullName,
-                        gender: dataUser.gender,
+                        id_room: '',
+                        user: {
+                            id: dataUser.id,
+                            avatar: dataUser.avatar,
+                            fullName: dataUser.fullName,
+                            gender: dataUser.gender,
+                        },
                     }),
             },
             id_fl === userId
