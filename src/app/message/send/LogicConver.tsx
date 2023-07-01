@@ -206,7 +206,6 @@ export default function LogicConversation(id_room: string | undefined, id_others
                         if (Number((file.size / 1024 / 1024).toFixed(1)) <= 8) {
                             // const base64: any = await CommonUtils.getBase64(file);
                             fileRef.current.push(file);
-
                             uploadRef.current.push({ link: URL.createObjectURL(file), type: 'image' });
                         } else {
                             const compressedFile: any = await CommonUtils.compress(file);

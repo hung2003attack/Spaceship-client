@@ -66,7 +66,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
     return (
         <>
             <DivForm top="12px">
-                <Form encType="multipart/form-data">
+                <Form method="post" encType="multipart/form-data">
                     <DivUpNews>
                         <DivOptions>
                             {displayEmoji && (

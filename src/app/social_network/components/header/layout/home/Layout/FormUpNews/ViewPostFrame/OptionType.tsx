@@ -15,9 +15,9 @@ const OptionType: React.FC<{
     column: number;
     setColumn: React.Dispatch<React.SetStateAction<number>>;
     setSelectType: React.Dispatch<React.SetStateAction<number>>;
-    full: number;
+    step: number;
     selectType: number;
-}> = ({ colorText, colorBg, file, setSelectType, setColumn, column, full, selectType }) => {
+}> = ({ colorText, colorBg, file, setSelectType, setColumn, column, step, selectType }) => {
     const postTypes: { name: string; id: number; column?: number }[] = [
         {
             name: 'Coverflow',
@@ -62,14 +62,14 @@ const OptionType: React.FC<{
                                 <Div
                                     css={`
                                         align-items: center;
-                                        ${full === 1 && selectType === 2
+                                        ${step === 1 && selectType === 2
                                             ? ' width: 50px; position: fixed; top: 50px; flex-direction: column; z-index: 9999; right: 4px; justify-content: center; div{background-color: #4e4343}'
                                             : ''}
                                     `}
                                 >
-                                    {!(full === 1 && selectType === 2) && t.name}
+                                    {!(step === 1 && selectType === 2) && t.name}
                                     <DivsetC
-                                        size={`${full === 1 && selectType === 2 ? '22px' : ''}`}
+                                        size={`${step === 1 && selectType === 2 ? '22px' : ''}`}
                                         onClick={() =>
                                             setColumn((pre) =>
                                                 file.length > 6
@@ -92,7 +92,7 @@ const OptionType: React.FC<{
                                     </DivsetC>
                                     {column}
                                     <DivsetC
-                                        size={`${full === 1 && selectType === 2 ? '22px' : ''}`}
+                                        size={`${step === 1 && selectType === 2 ? '22px' : ''}`}
                                         onClick={() =>
                                             setColumn((pre) => (pre < file.length && pre < 8 ? pre + 1 : pre))
                                         }

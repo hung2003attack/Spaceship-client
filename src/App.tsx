@@ -134,7 +134,6 @@ function App() {
             },
             first,
         );
-        console.log(res, first, 'ssss', res?.avatar);
         if (res?.avatar) {
             const av = CommonUtils.convertBase64(res.avatar);
             res.avatar = av;
@@ -144,7 +143,6 @@ function App() {
             const av = CommonUtils.convertBase64(res.background);
             res.background = av;
         }
-
         if (first) {
             setUserFirst(res);
         } else {
@@ -157,8 +155,6 @@ function App() {
     useEffect(() => {
         const search = async () => {
             const search = window.location.search;
-            console.log('search', search, idUser);
-
             if (search && idUser.length === 0) {
                 const id = search.split('id=');
                 const ids = [];

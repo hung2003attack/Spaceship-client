@@ -6,15 +6,13 @@ import { CookieSetOptions } from 'universal-cookie';
 import Cookies from 'universal-cookie';
 import { setNewsStart } from '~/redux/storeSocial_network/home';
 class HttpRequestHome {
-    setPost = async (accessToken: string, dispatch: Dispatch<AnyAction>) => {
-        dispatch(setNewsStart());
+    setPost = async (accessToken: string, formData: any) => {
         try {
+            console.log(formData);
+
             const axiosJWTss = refreshToken.axiosJWTs(accessToken);
-            const res = await axiosJWTss.get('/SN/home', {
-                withCredentials: true,
-            });
-            console.log(res, 'res Home');
-            // dispatch(getNewsCurrent(res.data));
+            const res = await axiosJWTss.post('/SN/home/setPost', formData);
+            return res.data;
         } catch (error) {
             console.log(error, 'dawfawfwa');
             const err: any = error as AxiosError;

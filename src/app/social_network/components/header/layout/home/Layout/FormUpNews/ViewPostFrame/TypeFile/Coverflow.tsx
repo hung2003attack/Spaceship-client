@@ -19,28 +19,28 @@ const Coverflow: React.FC<{
         type: string;
     }[];
     colorText: string;
-    full: number;
-    setFull: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ file, colorText, full, setFull }) => {
+    step: number;
+    setStep: React.Dispatch<React.SetStateAction<number>>;
+}> = ({ file, colorText, step, setStep }) => {
     return (
         <DivSwiper
             css={`
-                ${full === 1
+                ${step === 1
                     ? 'position: fixed; top: 0; left: 0; background-color: #090808; height: 100%; z-index: 12;'
                     : ''}
             `}
         >
-            {full !== 0 && (
+            {step !== 0 && (
                 <DivPos
                     size="20px"
                     top="-25px"
                     right="11.5px"
                     color={colorText}
-                    onClick={() => setFull(0)}
+                    onClick={() => setStep(0)}
                     css={`
-                        ${full > 0
+                        ${step > 0
                             ? `${
-                                  full > 1 ? 'background-color: #a1a1a18a;' : 'background-color: #0304048a;'
+                                  step > 1 ? 'background-color: #a1a1a18a;' : 'background-color: #0304048a;'
                               };position: fixed; top: 8px; right: 11.5px; color: #e2d2d2; font-size: 22px; z-index: 888; width: 35px; height: 35px;  transition: all 0.5s linear; `
                             : ''}
                     `}

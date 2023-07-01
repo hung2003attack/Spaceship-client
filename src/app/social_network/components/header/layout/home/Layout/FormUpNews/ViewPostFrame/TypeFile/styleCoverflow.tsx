@@ -23,3 +23,10 @@ export const DivSwiper = styled.div`
     }
     ${(props: { css?: string }) => props.css}
 `;
+export const InputT = styled.input`
+    width: 100%;
+    padding: 3px;
+    margin: 5px 0;
+    background-color: transparent;
+    color: aliceblue;
+`;

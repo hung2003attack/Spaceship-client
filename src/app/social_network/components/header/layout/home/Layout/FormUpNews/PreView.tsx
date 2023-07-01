@@ -49,10 +49,11 @@ const PreviewPost: React.FC<{
     dataText: PropsPreViewFormHome;
     token: string;
     userId: string;
-}> = ({ user, setPreView, colorText, colorBg, file, valueText, fontFamily, dataText, token, userId }) => {
+    upload: any;
+}> = ({ user, setPreView, colorText, colorBg, file, upload, valueText, fontFamily, dataText, token, userId }) => {
     const [selectType, setSelectType] = useState<number>(0);
     const [column, setColumn] = useState<number>(3);
-    const [full, setFull] = useState<number>(0);
+    const [step, setStep] = useState<number>(0);
     const images: string[] = [];
     const videos: string[] = [];
     let checkImg = false;
@@ -65,9 +66,39 @@ const PreviewPost: React.FC<{
         if (file[i].type === '!images' && checkImg === false) checkImg = true;
     }
     const handlePost = async () => {
+        if (file.length > 0 || valueText) {
+            let res;
+            const formData = new FormData();
+            formData.append('text', valueText);
+            formData.append('category', String(selectType));
+            formData.append('fontFamily', fontFamily.name + ' ' + fontFamily.type);
+            for (let fil of upload) {
+                formData.append('files', fil);
+            }
+            console.log(valueText, fontFamily);
+
+            switch (selectType) {
+                case 0:
+                    res = await HttpRequestHome.setPost(token, formData);
+                    break;
+                case 1:
+                    if (file.length > 2) res = await HttpRequestHome.setPost(token, formData);
+                    break;
+                case 2:
+                    res = await HttpRequestHome.setPost(token, formData);
+                    break;
+                default:
+                    break;
+            }
+            // if (selectType === 0) {
+            //     const res = await HttpRequestHome.setPost(token);
+            // }else if(){
+
+            // }
+            console.log(selectType, 'selectType');
+        }
         // const params = {}
-        // const res = await HttpRequestHome.setPost(token,userId,)
-        console.log(file);
+        console.log(file, valueText);
     };
     const setHVideo = ` .video-react.video-react-fluid {
                         height: 100%;
@@ -75,13 +106,13 @@ const PreviewPost: React.FC<{
                     }`;
     console.log('yess');
     const postTypes = [
-        <DefaultType colorText={colorText} file={file} full={full} setFull={setFull} />,
+        <DefaultType colorText={colorText} file={file} step={step} setStep={setStep} />,
         file.length > 3 ? (
-            <Coverflow colorText={colorText} file={file} full={full} setFull={setFull} />
+            <Coverflow colorText={colorText} file={file} step={step} setStep={setStep} />
         ) : (
             <P color="#c05d5d">Please select at least 3!</P>
         ),
-        <Grid colorText={colorText} file={file} column={column} full={full} setFull={setFull} />,
+        <Grid colorText={colorText} file={file} column={column} step={step} setStep={setStep} />,
     ];
     return (
         <>
@@ -97,7 +128,7 @@ const PreviewPost: React.FC<{
             >
                 {setPreView && (
                     <OptionType
-                        full={full}
+                        step={step}
                         selectType={selectType}
                         column={column}
                         setColumn={setColumn}
@@ -116,14 +147,14 @@ const PreviewPost: React.FC<{
                         position: relative;
                     `}
                 >
-                    {full === 0 && (
+                    {step === 0 && (
                         <DivPos
                             size="18px"
                             top="11px"
                             right="46.5px"
                             css="z-index: 1;"
                             color={colorText}
-                            onClick={() => setFull(1)}
+                            onClick={() => setStep(1)}
                         >
                             <FullScreenI />
                         </DivPos>
@@ -188,8 +219,8 @@ const PreviewPost: React.FC<{
                         width="100%"
                         css={`
                             position: relative;
-                            ${full === 1
-                                ? 'height: 100%; overflow-y: overlay; position: fixed; top: 0; left: 0; right: 0;  background-color: #1f2021; z-index: 8888;'
+                            ${step === 1
+                                ? 'height: 100%; overflow-y: overlay; position: fixed; top: 0; left: 0; right: 0;  background-color: #1f2021; z-index: 8888; @media(max-width: 769px){&::-webkit-scrollbar {width: 0px;}}'
                                 : ''}
                         `}
                     >

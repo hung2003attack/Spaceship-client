@@ -1,44 +1,28 @@
-import { Div, Img, P } from '~/reUsingComponents/styleComponents/styleDefault';
+import { Button, Div, Img, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { useState, useEffect } from 'react';
 import { Player } from 'video-react';
-import { FullScreenI, ScreenI } from '~/assets/Icons/Icons';
+import { ChangeI, FullScreenI, HeartMI, ScreenI, TitleI } from '~/assets/Icons/Icons';
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import { UndoI } from '~/assets/Icons/Icons';
+import LogicType from './logicType';
+import { InputT } from './styleCoverflow';
 
 const DefaultType: React.FC<{
     file: { link: string; type: string }[];
     colorText: string;
-    full: number;
-    setFull: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ file, colorText, full, setFull }) => {
-    const [moreFile, setMoreFile] = useState<number>(6);
-    const [cc, setCC] = useState<string>('');
-    const [wh, setWh] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
-    const handleFull = (e: any, link: string, width: number, height: number) => {
-        console.log(width, height);
-        setWh({ width: width, height: height });
-
-        if (
-            !e.target.getAttribute('class').includes('video-react-play-control') &&
-            !e.target.getAttribute('class').includes('video-react-volume-menu-button') &&
-            !e.target.getAttribute('class').includes('video-react-play-progress') &&
-            !e.target.getAttribute('class').includes('video-react-icon-fullscreen') &&
-            e.target.getAttribute('id') !== 'more'
-        ) {
-            setCC(link);
-            if (full === 0) {
-                setFull(3);
-            } else if (full === 1) {
-                setFull(2);
-            } else if (full === 2 && e.target.getAttribute('class').includes('aaa')) {
-                setFull(1);
-            }
-        }
-    };
+    step: number;
+    setStep: React.Dispatch<React.SetStateAction<number>>;
+}> = ({ file, colorText, step, setStep }) => {
+    const { moreFile, cc, handleStep, setMoreFile, ToolDefault, showTitle, update, setUpdate } = LogicType(
+        step,
+        setStep,
+        colorText,
+    );
     return (
         <Div
             width="100%"
             css={`
+                height: fit-content;
                 position: relative;
                 display: grid;
                 grid-template-columns: ${file.length === 1
@@ -46,55 +30,35 @@ const DefaultType: React.FC<{
                     : file.length === 4 || file.length === 2
                     ? '1fr 1fr'
                     : '1fr 1fr 1fr'};
+                ${step === 1 &&
+                `
+                grid-template-columns: 1fr;
+                @media (min-width: 400px) {
+                    grid-template-columns: 1fr 1fr;
+                }
+
                 @media (min-width: 769px) {
-                    ${full === 1 ? 'grid-template-columns: 1fr 1fr 1fr 1fr; gap: 2px;' : ''}
+                    grid-template-columns: 1fr 1fr 1fr 1fr; gap: 2px;
                 }
                 @media (min-width: 1240px) {
-                    ${full === 1 ? 'grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 3px;' : ''}
-                }
+                    grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 3px;
+                }`}
             `}
         >
-            {file.length > 4 && (
-                <>
-                    {full > 0 && (
-                        <DivPos
-                            size="20px"
-                            top="-25px"
-                            right="11.5px"
-                            color={colorText}
-                            onClick={() => setFull(0)}
-                            css={`
-                                ${full > 0
-                                    ? `${
-                                          full > 1 ? 'background-color: #a1a1a18a;' : 'background-color: #0304048a;'
-                                      };position: fixed; top: 8px; right: 11.5px; color: #e2d2d2; font-size: 22px; z-index: 888; width: 35px; height: 35px;  transition: all 0.5s linear; `
-                                    : ''}
-                            `}
-                        >
-                            <ScreenI />
-                        </DivPos>
-                    )}
-                    {full === 2 && (
-                        <DivPos
-                            size="20px"
-                            top="50px"
-                            right="11.5px"
-                            onClick={() => setFull(1)}
-                            css="position: fixed;  color: #e2d2d2; font-size: 22px; z-index: 888; width: 35px; height: 35px; background-color: #a1a1a18a; transition: all 0.5s linear; "
-                        >
-                            <UndoI />
-                        </DivPos>
-                    )}
-                </>
-            )}
+            <>
+                {step > 0 && ToolDefault(0)}
+                {step === 2 && ToolDefault(2)}
+                {step === 1 && ToolDefault(1)}
+            </>
             {file.map((f, index, arr) => {
-                if (full === 0 ? index < moreFile : true) {
+                if (step === 0 ? index < moreFile : true) {
                     return (
                         <>
                             <Div
                                 key={f.link}
                                 id="baby"
                                 className="aaa"
+                                wrap="wrap"
                                 width="100%"
                                 onClick={(e) => {
                                     const img = new Image();
@@ -103,7 +67,7 @@ const DefaultType: React.FC<{
                                         const width = img.width;
                                         const height = img.height;
                                         console.log(width, height);
-                                        handleFull(e, f.link, width, height);
+                                        handleStep(e, f.link, width, height);
                                     };
                                 }}
                                 css={`
@@ -112,20 +76,60 @@ const DefaultType: React.FC<{
                                     position: relative;
                                     justify-content: center;
                                     align-items: center;
+                                    ${showTitle && ' padding-bottom: 24px;'}
+                                    color: ${colorText};
                                     ${f.type === 'video' && file.length === 1 ? 'height: 580px;' : ''}
-                                    ${full > 1 && cc === f.link
+                                    ${step > 1 && cc === f.link
                                         ? `position: fixed; top: 0; left:0; z-index: 88; background-color: #0e0e0d; img,div.video-react-controls-enabled{object-fit: contain; margin: auto;}`
                                         : ''}
                                 `}
                             >
+                                {showTitle && step === 1 && (
+                                    <Div
+                                        wrap="wrap"
+                                        css={`
+                                            position: relative;
+                                            font-size: 1.5rem;
+                                            width: 100%;
+                                            padding: 5px 10px;
+                                            justify-content: center;
+                                            background-color: #424040;
+                                        `}
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <P css="">Tiki Dress price 150$</P>
+
+                                        <DivPos size="20px" top="5px" right="3px" onClick={() => setUpdate(index)}>
+                                            <ChangeI />
+                                        </DivPos>
+                                        {update === index && (
+                                            <Div width="100%" wrap="wrap" css="justify-content: center;">
+                                                <InputT
+                                                    onFocus={(e: any) => {
+                                                        e.target.value = 'Tiki Dress price 150$';
+                                                    }}
+                                                />
+                                                <Button color={colorText}>Change</Button>
+                                                <Button color={colorText} onClick={() => setUpdate(-1)}>
+                                                    Cancel
+                                                </Button>
+                                            </Div>
+                                        )}
+                                    </Div>
+                                )}
                                 {f.type === 'image' ? (
-                                    <Img src={f.link} id="baby" alt={f.link} />
+                                    <Div width="100%" css="height: 100%; position: relative;">
+                                        <Img src={f.link} id="baby" alt={f.link} />
+                                        <Div css="position: absolute; right: 10px; bottom: 90px; font-size: 25px; color: #d9d9d9;">
+                                            <HeartMI />
+                                        </Div>
+                                    </Div>
                                 ) : f.type === 'video' ? (
                                     <Player src={f.link} />
                                 ) : (
                                     ''
                                 )}
-                                {full === 0 && index + 1 >= moreFile && arr.length > moreFile && (
+                                {step === 0 && index + 1 >= moreFile && arr.length > moreFile && (
                                     <Div
                                         id="more"
                                         css={`
@@ -143,7 +147,7 @@ const DefaultType: React.FC<{
                                     </Div>
                                 )}
                             </Div>
-                            {full === 0 && index + 1 === file.length && file.length > 6 && (
+                            {step === 0 && index + 1 === file.length && file.length > 6 && (
                                 <Div
                                     key={index + 1}
                                     css={`

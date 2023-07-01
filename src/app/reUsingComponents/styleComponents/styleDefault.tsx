@@ -50,12 +50,11 @@ interface Propss {
 }
 export const Button = styled.button<Propss>`
     display: flex;
-    padding: ${(props) => props.padding || '2px 10px'};
+    padding: ${(props) => props.padding || '5px 10px'};
     background-color: ${(props) => props.bg || 'transparent'};
     color: ${(props) => props.color || '#fff'};
     cursor: var(--pointer);
     border-radius: 5px;
-    box-shadow: 0 0 1px #ffffff9c;
     font-size: ${(props) => props.size || '1.6rem'};
     font-weight: bold;
     ${(props) => props.css}

@@ -21,7 +21,8 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
     const [preView, setPreView] = useState<ReactNode>();
     const [upload, setupload] = useState<{ link: string; type: string }[]>([]);
     const [inputValue, setInputValue] = useState<any>('');
-    const uploadRef = useRef<{ link: string; type: string }[]>([]);
+    const uploadPre = useRef<{ link: string; type: string }[]>([]);
+    const uploadRef = useRef<any[]>([]);
     const [fontFamily, setFontFamily] = useState<{ name: string; type: string }>({
         name: 'Noto Sans',
         type: 'Straight',
@@ -40,7 +41,7 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
     console.log(form);
     let fileAmount = 15;
     const handleImageUpload = async (e: any) => {
-        uploadRef.current = [];
+        uploadPre.current = [];
         const file = e.target.files;
         const options = {
             maxSizeMB: 10,
@@ -64,7 +65,7 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
                         console.log(vid.duration);
 
                         vid.duration <= 15
-                            ? uploadRef.current.push({ link: url, type: 'video' })
+                            ? uploadPre.current.push({ link: url, type: 'video' })
                             : dispatch(setTrueErrorServer('Our length of the video must be less than 16 seconds!'));
                     };
                 } else if (
@@ -73,14 +74,20 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
                     file[i].type.includes('image/png')
                 ) {
                     try {
-                        const compressedFile: any = await CommonUtils.compress(file[i]);
-                        console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
-                        console.log(`compressedFile size ${(compressedFile.size / 1024 / 1024).toFixed(1)} MB`); // smaller than maxSizeMB
-                        const sizeImage = Number((compressedFile.size / 1024 / 1024).toFixed(1));
-                        if (sizeImage <= 8) {
-                            uploadRef.current.push({ link: URL.createObjectURL(compressedFile), type: 'image' });
+                        if (Number((file.size / 1024 / 1024).toFixed(1)) <= 8) {
+                            uploadRef.current.push(file[i]);
+                            uploadPre.current.push({ link: URL.createObjectURL(file), type: 'image' });
                         } else {
-                            dispatch(setTrueErrorServer(`${sizeImage}MB big than our limit is 8MB`));
+                            const compressedFile: any = await CommonUtils.compress(file[i]);
+                            console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
+                            console.log(`compressedFile size ${(compressedFile.size / 1024 / 1024).toFixed(1)} MB`); // smaller than maxSizeMB
+                            const sizeImage = Number((compressedFile.size / 1024 / 1024).toFixed(1));
+                            if (sizeImage <= 8) {
+                                uploadRef.current.push(compressedFile);
+                                uploadPre.current.push({ link: URL.createObjectURL(compressedFile), type: 'image' });
+                            } else {
+                                dispatch(setTrueErrorServer(`${sizeImage}MB big than our limit is 8MB`));
+                            }
                         }
                     } catch (error) {
                         console.log(error);
@@ -90,8 +97,8 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
                 }
             }
             const time = setInterval(() => {
-                if (uploadRef.current.length > 0) {
-                    setupload(uploadRef.current);
+                if (uploadPre.current.length > 0) {
+                    setupload(uploadPre.current);
                 }
                 console.log('no');
             }, 1000);
@@ -108,6 +115,7 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
     const handlePost = () => {
         setPreView(
             <PreviewPost
+                upload={uploadRef.current}
                 user={user}
                 setPreView={setPreView}
                 fontFamily={fontFamily}
