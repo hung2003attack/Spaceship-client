@@ -1,7 +1,7 @@
 import { Button, Div, Img, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { useState, useEffect } from 'react';
 import { Player } from 'video-react';
-import { ChangeI, FullScreenI, HeartMI, ScreenI, TitleI } from '~/assets/Icons/Icons';
+import { BackI, ChangeI, DotI, FullScreenI, HeartMI, ScreenI, ShareI, TitleI } from '~/assets/Icons/Icons';
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import { UndoI } from '~/assets/Icons/Icons';
 import LogicType from './logicType';
@@ -13,11 +13,18 @@ const DefaultType: React.FC<{
     step: number;
     setStep: React.Dispatch<React.SetStateAction<number>>;
 }> = ({ file, colorText, step, setStep }) => {
-    const { moreFile, cc, handleStep, setMoreFile, ToolDefault, showTitle, update, setUpdate } = LogicType(
-        step,
-        setStep,
-        colorText,
-    );
+    const {
+        moreFile,
+        cc,
+        handleStep,
+        setMoreFile,
+        ToolDefault,
+        showTitle,
+        update,
+        setUpdate,
+        showComment,
+        setShowComment,
+    } = LogicType(step, setStep, colorText);
     return (
         <Div
             width="100%"
@@ -120,9 +127,84 @@ const DefaultType: React.FC<{
                                 {f.type === 'image' ? (
                                     <Div width="100%" css="height: 100%; position: relative;">
                                         <Img src={f.link} id="baby" alt={f.link} />
-                                        <Div css="position: absolute; right: 10px; bottom: 90px; font-size: 25px; color: #d9d9d9;">
-                                            <HeartMI />
-                                        </Div>
+                                        {step >= 1 && (
+                                            <>
+                                                <Div
+                                                    css={`
+                                                        height: 100px;
+                                                        flex-direction: column;
+                                                        align-items: center;
+                                                        justify-content: space-evenly;
+                                                        position: absolute;
+                                                        right: 10px;
+                                                        bottom: 10%;
+                                                        font-size: 25px;
+                                                        color: #d9d9d9;
+                                                        background-color: #474747a8;
+                                                        padding: 5px;
+                                                        border-radius: 5px;
+                                                        .M.coment {
+                                                        }
+                                                    `}
+                                                >
+                                                    <Div>
+                                                        <HeartMI />
+                                                    </Div>
+                                                    <Div
+                                                        width="fit-content"
+                                                        css={`
+                                                            margin-top: 2px;
+                                                            height: fit-content;
+                                                            border-radius: 50%;
+                                                            border: 1px solid #dedede;
+                                                            font-size: 20px;
+                                                        `}
+                                                        onClick={() => setShowComment([...showComment, index])}
+                                                    >
+                                                        <DotI />
+                                                    </Div>
+                                                    <Div>
+                                                        <ShareI />
+                                                    </Div>
+                                                </Div>
+                                                {showComment.includes(index) && (
+                                                    <Div
+                                                        className="comment"
+                                                        wrap="wrap"
+                                                        css={`
+                                                            width: 100%;
+                                                            height: 100%;
+                                                            position: absolute;
+                                                            bottom: 0px;
+                                                            background-color: aliceblue;
+                                                        `}
+                                                        onClick={(e) => e.stopPropagation()}
+                                                    >
+                                                        <Div
+                                                            width="100%"
+                                                            css="height: 30px; align-items: center; justify-content: center;  background-color: #9a9a9a; "
+                                                        >
+                                                            <DivPos
+                                                                size="25px"
+                                                                top="3px"
+                                                                left="4px"
+                                                                onClick={() =>
+                                                                    setShowComment(() =>
+                                                                        showComment.filter((c) => c !== index),
+                                                                    )
+                                                                }
+                                                            >
+                                                                <BackI />
+                                                            </DivPos>
+                                                            <P z="1.5rem" css="">
+                                                                Comment
+                                                            </P>
+                                                        </Div>
+                                                        <Div></Div>
+                                                    </Div>
+                                                )}
+                                            </>
+                                        )}
                                     </Div>
                                 ) : f.type === 'video' ? (
                                     <Player src={f.link} />

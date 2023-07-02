@@ -4,10 +4,11 @@ import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 
 const LogicType = (step: number, setStep: React.Dispatch<React.SetStateAction<number>>, colorText: string) => {
     const [moreFile, setMoreFile] = useState<number>(6);
-    const [showTitle, setShowTitle] = useState<boolean>(false);
-    const [cc, setCC] = useState<string>('');
     const [update, setUpdate] = useState<number>(-1);
     const [wh, setWh] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
+    const [cc, setCC] = useState<string>('');
+    const [showTitle, setShowTitle] = useState<boolean>(false);
+    const [showComment, setShowComment] = useState<number[]>([]);
     const handleStep = (e: any, link: string, width: number, height: number) => {
         setWh({ width: width, height: height });
         if (e.target.getAttribute('class')) {
@@ -38,7 +39,10 @@ const LogicType = (step: number, setStep: React.Dispatch<React.SetStateAction<nu
                     top="-25px"
                     right="11.5px"
                     color={colorText}
-                    onClick={() => setStep(0)}
+                    onClick={() => {
+                        setStep(0);
+                        setShowTitle(false);
+                    }}
                     css={`
                         ${step > 0
                             ? `${
@@ -77,6 +81,17 @@ const LogicType = (step: number, setStep: React.Dispatch<React.SetStateAction<nu
             );
     };
 
-    return { moreFile, cc, handleStep, setMoreFile, ToolDefault, showTitle, update, setUpdate };
+    return {
+        moreFile,
+        cc,
+        handleStep,
+        setMoreFile,
+        ToolDefault,
+        showTitle,
+        update,
+        setUpdate,
+        showComment,
+        setShowComment,
+    };
 };
 export default LogicType;

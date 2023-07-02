@@ -20,7 +20,7 @@ import {
     IoLanguageOutline,
     IoArrowUndoCircleOutline,
 } from 'react-icons/io5';
-import { IoMdNotifications, IoIosSend } from 'react-icons/io';
+import { IoMdNotifications, IoIosSend, IoMdShareAlt, IoIosArrowRoundBack } from 'react-icons/io';
 import { BiBullseye, BiDotsHorizontalRounded, BiUser } from 'react-icons/bi';
 import { FcSignature } from 'react-icons/fc';
 import { SiExpertsexchange } from 'react-icons/si';
@@ -105,7 +105,7 @@ export const StraightI = () => <MdStraighten />;
 export const LockI = () => <BsClockHistory />;
 export const LikeI = () => <SlLike />;
 export const HeartI = () => <CiHeart />;
-export const ShareI = () => <CiPaperplane />;
+export const ShareI = () => <IoMdShareAlt />;
 export const Bullseye = () => <BiBullseye />;
 export const NextI = () => <MdOutlineNavigateNext />;
 export const BeforeI = () => <MdNavigateBefore />;
@@ -126,3 +126,4 @@ export const TyOnlineI = () => <BsFillCircleFill />;
 export const ImageBayI = () => <BsImage />;
 export const TitleI = () => <MdOutlineTitle />;
 export const ChangeI = () => <RiExchangeCnyFill />;
+export const BackI = () => <IoIosArrowRoundBack />;
