@@ -2,16 +2,19 @@ import styled from 'styled-components';
 
 export const DivPost = styled.div`
     width: 100%;
+    height: fit-content;
     display: flex;
     flex-direction: column;
-    margin-top: 50px;
     align-items: center;
-    justify-content: center;
-    margin-top: 75px;
     font-family: 'Noto Sans', sans-serif;
 
     @media (min-width: 520px) {
         width: 520px;
+    }
+    @media (max-width: 768px) {
+        &::-webkit-scrollbar {
+            width: 0px;
+        }
     }
 `;
 

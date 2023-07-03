@@ -66,7 +66,7 @@ const PreviewPost: React.FC<{
         if (file[i].type === '!images' && checkImg === false) checkImg = true;
     }
     const handlePost = async () => {
-        if (file.length > 0 || valueText) {
+        if (upload.length > 0 || valueText) {
             let res;
             const formData = new FormData();
             formData.append('text', valueText);
@@ -75,17 +75,17 @@ const PreviewPost: React.FC<{
             for (let fil of upload) {
                 formData.append('files', fil);
             }
-            console.log(valueText, fontFamily);
 
             switch (selectType) {
                 case 0:
-                    res = await HttpRequestHome.setPost(token, formData);
+                    console.log('text', valueText, 'file', upload, 'title', 'fontFamily', fontFamily);
+                    // res = await HttpRequestHome.setPost(token, formData);
                     break;
                 case 1:
-                    if (file.length > 2) res = await HttpRequestHome.setPost(token, formData);
+                    // if (upload.length > 2) res = await HttpRequestHome.setPost(token, formData);
                     break;
                 case 2:
-                    res = await HttpRequestHome.setPost(token, formData);
+                    // res = await HttpRequestHome.setPost(token, formData);
                     break;
                 default:
                     break;
@@ -106,7 +106,7 @@ const PreviewPost: React.FC<{
                     }`;
     console.log('yess');
     const postTypes = [
-        <DefaultType colorText={colorText} file={file} step={step} setStep={setStep} />,
+        <DefaultType colorText={colorText} file={file} step={step} setStep={setStep} upload={upload} />,
         file.length > 3 ? (
             <Coverflow colorText={colorText} file={file} step={step} setStep={setStep} />
         ) : (

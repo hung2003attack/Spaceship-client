@@ -22,7 +22,7 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
     const [upload, setupload] = useState<{ link: string; type: string }[]>([]);
     const [inputValue, setInputValue] = useState<any>('');
     const uploadPre = useRef<{ link: string; type: string }[]>([]);
-    const uploadRef = useRef<any[]>([]);
+    const uploadRef = useRef<{ file: Blob; title: string }[]>([]);
     const [fontFamily, setFontFamily] = useState<{ name: string; type: string }>({
         name: 'Noto Sans',
         type: 'Straight',
@@ -39,7 +39,7 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
         return clearInterval(mRef.current);
     }, [mRef.current]);
     console.log(form);
-    let fileAmount = 15;
+    let fileAmount = 25;
     const handleImageUpload = async (e: any) => {
         uploadPre.current = [];
         const file = e.target.files;
@@ -75,7 +75,7 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
                 ) {
                     try {
                         if (Number((file.size / 1024 / 1024).toFixed(1)) <= 8) {
-                            uploadRef.current.push(file[i]);
+                            uploadRef.current.push({ file: file[i], title: '' });
                             uploadPre.current.push({ link: URL.createObjectURL(file), type: 'image' });
                         } else {
                             const compressedFile: any = await CommonUtils.compress(file[i]);
@@ -83,7 +83,7 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
                             console.log(`compressedFile size ${(compressedFile.size / 1024 / 1024).toFixed(1)} MB`); // smaller than maxSizeMB
                             const sizeImage = Number((compressedFile.size / 1024 / 1024).toFixed(1));
                             if (sizeImage <= 8) {
-                                uploadRef.current.push(compressedFile);
+                                uploadRef.current.push({ file: compressedFile, title: '' });
                                 uploadPre.current.push({ link: URL.createObjectURL(compressedFile), type: 'image' });
                             } else {
                                 dispatch(setTrueErrorServer(`${sizeImage}MB big than our limit is 8MB`));

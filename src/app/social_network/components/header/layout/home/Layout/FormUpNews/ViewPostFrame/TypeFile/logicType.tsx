@@ -5,12 +5,10 @@ import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 const LogicType = (step: number, setStep: React.Dispatch<React.SetStateAction<number>>, colorText: string) => {
     const [moreFile, setMoreFile] = useState<number>(6);
     const [update, setUpdate] = useState<number>(-1);
-    const [wh, setWh] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
     const [cc, setCC] = useState<string>('');
     const [showTitle, setShowTitle] = useState<boolean>(false);
     const [showComment, setShowComment] = useState<number[]>([]);
-    const handleStep = (e: any, link: string, width: number, height: number) => {
-        setWh({ width: width, height: height });
+    const handleStep = (e: any, link: string) => {
         if (e.target.getAttribute('class')) {
             if (
                 !e.target.getAttribute('class').includes('video-react-play-control') &&

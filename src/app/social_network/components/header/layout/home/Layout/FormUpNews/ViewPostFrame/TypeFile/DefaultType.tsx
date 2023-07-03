@@ -12,7 +12,8 @@ const DefaultType: React.FC<{
     colorText: string;
     step: number;
     setStep: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ file, colorText, step, setStep }) => {
+    upload: any;
+}> = ({ file, colorText, step, setStep, upload }) => {
     const {
         moreFile,
         cc,
@@ -25,6 +26,9 @@ const DefaultType: React.FC<{
         showComment,
         setShowComment,
     } = LogicType(step, setStep, colorText);
+    const [classify, setClassify] = useState<{ value: string; id: number }[]>([{ value: '', id: 0 }]);
+    console.log(classify);
+
     return (
         <Div
             width="100%"
@@ -68,14 +72,7 @@ const DefaultType: React.FC<{
                                 wrap="wrap"
                                 width="100%"
                                 onClick={(e) => {
-                                    const img = new Image();
-                                    img.src = f.link;
-                                    img.onload = () => {
-                                        const width = img.width;
-                                        const height = img.height;
-                                        console.log(width, height);
-                                        handleStep(e, f.link, width, height);
-                                    };
+                                    handleStep(e, f.link);
                                 }}
                                 css={`
                                     height: 100%;
@@ -83,7 +80,7 @@ const DefaultType: React.FC<{
                                     position: relative;
                                     justify-content: center;
                                     align-items: center;
-                                    ${showTitle && ' padding-bottom: 24px;'}
+                                    ${showTitle && step === 1 && 'padding-bottom: 24px;'}
                                     color: ${colorText};
                                     ${f.type === 'video' && file.length === 1 ? 'height: 580px;' : ''}
                                     ${step > 1 && cc === f.link
@@ -104,7 +101,9 @@ const DefaultType: React.FC<{
                                         `}
                                         onClick={(e) => e.stopPropagation()}
                                     >
-                                        <P css="">Tiki Dress price 150$</P>
+                                        <P css="height: 20px;">
+                                            {classify[index]?.id === index && classify[index]?.value}
+                                        </P>
 
                                         <DivPos size="20px" top="5px" right="3px" onClick={() => setUpdate(index)}>
                                             <ChangeI />
@@ -113,104 +112,132 @@ const DefaultType: React.FC<{
                                             <Div width="100%" wrap="wrap" css="justify-content: center;">
                                                 <InputT
                                                     onFocus={(e: any) => {
-                                                        e.target.value = 'Tiki Dress price 150$';
+                                                        // e.target.value = '';
+                                                    }}
+                                                    onChange={(e) => {
+                                                        console.log(e.target.value);
+                                                        let ok = false;
+                                                        classify.forEach((v) => {
+                                                            if (v.id === index) ok = true;
+                                                        });
+                                                        if (!ok) {
+                                                            setClassify([
+                                                                ...classify,
+                                                                { value: e.target.value, id: index },
+                                                            ]);
+                                                        } else {
+                                                            setClassify(() =>
+                                                                classify.map((v) => {
+                                                                    if (v.id === index) {
+                                                                        v.value = e.target.value;
+                                                                        return v;
+                                                                    }
+                                                                    return v;
+                                                                }),
+                                                            );
+                                                        }
+
+                                                        upload[index].title = e.target.value;
                                                     }}
                                                 />
-                                                <Button color={colorText}>Change</Button>
+                                                <Button color={colorText} onClick={() => setUpdate(-1)}>
+                                                    Disappear
+                                                </Button>
+                                                {/* <Button color={colorText}>Change</Button>
                                                 <Button color={colorText} onClick={() => setUpdate(-1)}>
                                                     Cancel
-                                                </Button>
+                                                </Button> */}
                                             </Div>
                                         )}
                                     </Div>
                                 )}
-                                {f.type === 'image' ? (
-                                    <Div width="100%" css="height: 100%; position: relative;">
+                                <Div width="100%" css="height: 100%; position: relative;">
+                                    {f.type === 'image' ? (
                                         <Img src={f.link} id="baby" alt={f.link} />
-                                        {step >= 1 && (
-                                            <>
-                                                <Div
-                                                    css={`
-                                                        height: 100px;
-                                                        flex-direction: column;
-                                                        align-items: center;
-                                                        justify-content: space-evenly;
-                                                        position: absolute;
-                                                        right: 10px;
-                                                        bottom: 10%;
-                                                        font-size: 25px;
-                                                        color: #d9d9d9;
-                                                        background-color: #474747a8;
-                                                        padding: 5px;
-                                                        border-radius: 5px;
-                                                        .M.coment {
-                                                        }
-                                                    `}
-                                                >
-                                                    <Div>
-                                                        <HeartMI />
-                                                    </Div>
-                                                    <Div
-                                                        width="fit-content"
-                                                        css={`
-                                                            margin-top: 2px;
-                                                            height: fit-content;
-                                                            border-radius: 50%;
-                                                            border: 1px solid #dedede;
-                                                            font-size: 20px;
-                                                        `}
-                                                        onClick={() => setShowComment([...showComment, index])}
-                                                    >
-                                                        <DotI />
-                                                    </Div>
-                                                    <Div>
-                                                        <ShareI />
-                                                    </Div>
+                                    ) : f.type === 'video' ? (
+                                        <Player src={f.link} />
+                                    ) : (
+                                        ''
+                                    )}
+                                    {step >= 1 && (
+                                        <>
+                                            <Div
+                                                css={`
+                                                    height: 100px;
+                                                    flex-direction: column;
+                                                    align-items: center;
+                                                    justify-content: space-evenly;
+                                                    position: absolute;
+                                                    right: 10px;
+                                                    bottom: 12%;
+                                                    font-size: 25px;
+                                                    color: #d9d9d9;
+                                                    background-color: #474747a8;
+                                                    padding: 5px;
+                                                    border-radius: 5px;
+                                                    .M.coment {
+                                                    }
+                                                `}
+                                            >
+                                                <Div>
+                                                    <HeartMI />
                                                 </Div>
-                                                {showComment.includes(index) && (
+                                                <Div
+                                                    width="fit-content"
+                                                    css={`
+                                                        margin-top: 2px;
+                                                        height: fit-content;
+                                                        border-radius: 50%;
+                                                        border: 1px solid #dedede;
+                                                        font-size: 20px;
+                                                    `}
+                                                    onClick={() => setShowComment([...showComment, index])}
+                                                >
+                                                    <DotI />
+                                                </Div>
+                                                <Div>
+                                                    <ShareI />
+                                                </Div>
+                                            </Div>
+                                            {showComment.includes(index) && (
+                                                <Div
+                                                    className="comment"
+                                                    wrap="wrap"
+                                                    css={`
+                                                        width: 100%;
+                                                        height: 100%;
+                                                        position: absolute;
+                                                        bottom: 0px;
+                                                        background-color: aliceblue;
+                                                    `}
+                                                    onClick={(e) => e.stopPropagation()}
+                                                >
                                                     <Div
-                                                        className="comment"
-                                                        wrap="wrap"
-                                                        css={`
-                                                            width: 100%;
-                                                            height: 100%;
-                                                            position: absolute;
-                                                            bottom: 0px;
-                                                            background-color: aliceblue;
-                                                        `}
-                                                        onClick={(e) => e.stopPropagation()}
+                                                        width="100%"
+                                                        css="height: 30px; align-items: center; justify-content: center;  background-color: #9a9a9a; "
                                                     >
-                                                        <Div
-                                                            width="100%"
-                                                            css="height: 30px; align-items: center; justify-content: center;  background-color: #9a9a9a; "
+                                                        <DivPos
+                                                            size="25px"
+                                                            top="3px"
+                                                            left="4px"
+                                                            onClick={() =>
+                                                                setShowComment(() =>
+                                                                    showComment.filter((c) => c !== index),
+                                                                )
+                                                            }
                                                         >
-                                                            <DivPos
-                                                                size="25px"
-                                                                top="3px"
-                                                                left="4px"
-                                                                onClick={() =>
-                                                                    setShowComment(() =>
-                                                                        showComment.filter((c) => c !== index),
-                                                                    )
-                                                                }
-                                                            >
-                                                                <BackI />
-                                                            </DivPos>
-                                                            <P z="1.5rem" css="">
-                                                                Comment
-                                                            </P>
-                                                        </Div>
-                                                        <Div></Div>
+                                                            <BackI />
+                                                        </DivPos>
+                                                        <P z="1.5rem" css="">
+                                                            Comment
+                                                        </P>
                                                     </Div>
-                                                )}
-                                            </>
-                                        )}
-                                    </Div>
-                                ) : f.type === 'video' ? (
-                                    <Player src={f.link} />
-                                ) : (
-                                    ''
-                                )}
+                                                    <Div></Div>
+                                                </Div>
+                                            )}
+                                        </>
+                                    )}
+                                </Div>
                                 {step === 0 && index + 1 >= moreFile && arr.length > moreFile && (
                                     <Div
                                         id="more"

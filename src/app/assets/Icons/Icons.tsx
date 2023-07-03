@@ -21,7 +21,7 @@ import {
     IoArrowUndoCircleOutline,
 } from 'react-icons/io5';
 import { IoMdNotifications, IoIosSend, IoMdShareAlt, IoIosArrowRoundBack } from 'react-icons/io';
-import { BiBullseye, BiDotsHorizontalRounded, BiUser } from 'react-icons/bi';
+import { BiBullseye, BiDotsHorizontalRounded, BiSolidSquareRounded, BiUser } from 'react-icons/bi';
 import { FcSignature } from 'react-icons/fc';
 import { SiExpertsexchange } from 'react-icons/si';
 import {
@@ -47,6 +47,7 @@ import {
     MdEditLocation,
     MdOutlineWork,
     MdOutlineTitle,
+    MdNightlightRound,
 } from 'react-icons/md';
 import { GoScreenFull, GoScreenNormal } from 'react-icons/go';
 import { FaPeopleArrows, FaAddressCard, FaUserFriends, FaBirthdayCake } from 'react-icons/fa';
@@ -56,6 +57,8 @@ import { CgProfile, CgWebsite } from 'react-icons/cg';
 import { VscPreview } from 'react-icons/vsc';
 import { CiHeart, CiPaperplane, CiSearch, CiWifiOff, CiWifiOn } from 'react-icons/ci';
 import { SlLike } from 'react-icons/sl';
+import { BiSolidColor } from 'react-icons/bi';
+
 export const ImageI = () => <IoImagesOutline />;
 
 export const FixI = () => <BsThreeDotsVertical />;
@@ -127,3 +130,6 @@ export const ImageBayI = () => <BsImage />;
 export const TitleI = () => <MdOutlineTitle />;
 export const ChangeI = () => <RiExchangeCnyFill />;
 export const BackI = () => <IoIosArrowRoundBack />;
+export const NightI = () => <MdNightlightRound />;
+export const ColorsI = () => <BiSolidColor />;
+export const SquareI = () => <BiSolidSquareRounded />;

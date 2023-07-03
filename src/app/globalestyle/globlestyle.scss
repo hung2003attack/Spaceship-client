@@ -34,6 +34,28 @@ body {
     overflow-y: overlay;
     height: var(--background);
 }
+html *::-webkit-scrollbar {
+    width: 0px;
+}
+
+html *::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgb(131 131 131 / 63%);
+}
+
+html *::-webkit-scrollbar-track {
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+@media (min-width: 767px) {
+    body {
+        html *::-webkit-scrollbar {
+            width: 7px;
+            height: 10px;
+            border-radius: 0;
+        }
+    }
+}
 #root {
     height: var(--background);
 }
@@ -103,22 +125,6 @@ img {
     height: 100%;
     object-fit: cover;
     background-repeat: no-repeat;
-}
-
-html *::-webkit-scrollbar {
-    width: 7px;
-    height: 10px;
-    border-radius: 0;
-}
-
-html *::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background-color: rgb(131 131 131 / 63%);
-}
-
-html *::-webkit-scrollbar-track {
-    border-radius: 0;
-    background-color: rgba(0, 0, 0, 0);
 }
 
 .Website {
