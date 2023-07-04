@@ -63,7 +63,7 @@ const OptionType: React.FC<{
                                     css={`
                                         align-items: center;
                                         ${step === 1 && selectType === 2
-                                            ? ' width: 50px; position: fixed; top: 95px; flex-direction: column; z-index: 9999; right: 4px; justify-content: center; div{background-color: #4e4343}'
+                                            ? ' width: 50px; position: fixed; top: 55px; flex-direction: column; z-index: 9999; right: 4px; justify-content: center; div{background-color: #4e4343}'
                                             : ''}
                                     `}
                                 >

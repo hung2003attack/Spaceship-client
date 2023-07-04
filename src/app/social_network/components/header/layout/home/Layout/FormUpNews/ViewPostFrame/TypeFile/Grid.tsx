@@ -15,8 +15,9 @@ const Grid: React.FC<{
     step: number;
     setStep: React.Dispatch<React.SetStateAction<number>>;
     colorText: string;
-}> = ({ column, file, step, setStep, colorText }) => {
-    const [bg, setBg] = useState<string>('#1b1919');
+    bg: string;
+    setBg: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ column, file, step, setStep, colorText, bg, setBg }) => {
     const {
         moreFile,
         cc,
@@ -51,7 +52,7 @@ const Grid: React.FC<{
             width="100%"
             css={`
                 margin: 4px 0;
-                background-color: ${step === 1 && bg};
+                background-color: ${bg};
                 ${step === 1
                     ? 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 12; overflow-y: overlay;'
                     : ''}
@@ -64,7 +65,7 @@ const Grid: React.FC<{
                     display: grid;
                     gap: 2px;
                     border-radius: 5px;
-                    padding: 2px 9px 7px 9px;
+                    padding: 2px 9px;
                     grid-template-columns: ${file.length === 1 ? '1fr' : columns};
                 `}
             >
@@ -86,7 +87,7 @@ const Grid: React.FC<{
                         >
                             <ScreenI />
                         </DivPos>
-                        <DivPos css="position: fixed; transition: all 5s linear; top: 180px; right: 12.5px; font-size: 30px; flex-direction: column; z-index: 1;">
+                        <DivPos css="position: fixed; top: 140px; right: 12.5px; font-size: 30px; flex-direction: column; z-index: 1;">
                             <Div display="block" css="position: relative;">
                                 <Div
                                     css={`
@@ -121,10 +122,7 @@ const Grid: React.FC<{
                         </DivPos>
                     </>
                 )}
-                <>
-                    {step === 2 && ToolDefault(2)}
-                    {step === 1 && ToolDefault(1)}
-                </>
+                <>{step === 2 && ToolDefault(2)}</>
                 {file.map((f) => {
                     return (
                         <Div

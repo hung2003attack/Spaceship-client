@@ -23,6 +23,7 @@ import DefaultType from './ViewPostFrame/TypeFile/DefaultType';
 import OptionType from './ViewPostFrame/OptionType';
 import HttpRequestHome from '~/restAPI/requestServers/socialNetwork/home';
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
+import OpText from '~/reUsingComponents/Options/text';
 export interface PropsPreViewFormHome {
     time: {
         hour: string;
@@ -54,6 +55,9 @@ const PreviewPost: React.FC<{
     const [selectType, setSelectType] = useState<number>(0);
     const [column, setColumn] = useState<number>(3);
     const [step, setStep] = useState<number>(0);
+    const [bg, setBg] = useState<string>('#1b1919');
+    const font = fontFamily?.name + ' ' + fontFamily?.type;
+
     const images: string[] = [];
     const videos: string[] = [];
     let checkImg = false;
@@ -67,24 +71,44 @@ const PreviewPost: React.FC<{
     }
     const handlePost = async () => {
         if (upload.length > 0 || valueText) {
+            console.log('yes', selectType);
             let res;
             const formData = new FormData();
             formData.append('text', valueText);
             formData.append('category', String(selectType));
-            formData.append('fontFamily', fontFamily.name + ' ' + fontFamily.type);
+            formData.append('fontFamily', font);
             for (let fil of upload) {
-                formData.append('files', fil);
+                if (fil.title) {
+                    formData.append('files', fil.file, fil.title);
+                } else {
+                    formData.append('files', fil.file);
+                }
             }
 
             switch (selectType) {
                 case 0:
-                    console.log('text', valueText, 'file', upload, 'title', 'fontFamily', fontFamily);
-                    // res = await HttpRequestHome.setPost(token, formData);
+                    console.log('text', valueText, 'file', upload, 'title', 'fontFamily', font);
+                    res = await HttpRequestHome.setPost(token, formData);
+                    console.log(res, 'res');
+
                     break;
                 case 1:
+                    console.log('text', valueText, 'file', upload, 'fontFamily', font, 'coverflow');
                     // if (upload.length > 2) res = await HttpRequestHome.setPost(token, formData);
                     break;
                 case 2:
+                    console.log(
+                        'text',
+                        valueText,
+                        'file',
+                        upload,
+                        'fontFamily',
+                        font,
+                        'color-bg',
+                        bg,
+                        'column',
+                        column,
+                    );
                     // res = await HttpRequestHome.setPost(token, formData);
                     break;
                 default:
@@ -112,7 +136,7 @@ const PreviewPost: React.FC<{
         ) : (
             <P color="#c05d5d">Please select at least 3!</P>
         ),
-        <Grid colorText={colorText} file={file} column={column} step={step} setStep={setStep} />,
+        <Grid colorText={colorText} file={file} column={column} step={step} setStep={setStep} bg={bg} setBg={setBg} />,
     ];
     return (
         <>
@@ -201,6 +225,9 @@ const PreviewPost: React.FC<{
                         </Div>
                         <DivPos size="21px" top="4px" right="10px" color={colorText}>
                             <DotI />
+                            <Div css="position: relative;">
+                                <OpText />
+                            </Div>
                         </DivPos>
                     </Div>
 
@@ -209,7 +236,7 @@ const PreviewPost: React.FC<{
                             css={`
                                 font-size: 1.4rem;
                                 color: ${colorText};
-                                font-family: ${fontFamily?.name + ' ' + fontFamily?.type}, sans-serif;
+                                font-family: ${font}, sans-serif;
                             `}
                         >
                             {valueText}
