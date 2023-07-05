@@ -1,11 +1,11 @@
 import { Button, Div, Img, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { useState, useEffect } from 'react';
-import { Player } from 'video-react';
 import { BackI, ChangeI, DotI, FullScreenI, HeartMI, ScreenI, ShareI, TitleI } from '~/assets/Icons/Icons';
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import { UndoI } from '~/assets/Icons/Icons';
 import LogicType from './logicType';
 import { InputT } from './styleCoverflow';
+import Player from '~/reUsingComponents/Videos/Spaceship';
 
 const DefaultType: React.FC<{
     file: { link: string; type: string }[];

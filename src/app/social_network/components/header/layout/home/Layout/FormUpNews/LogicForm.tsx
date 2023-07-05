@@ -64,7 +64,7 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
                     vid.ondurationchange = function () {
                         console.log(vid.duration);
 
-                        vid.duration <= 15
+                        vid.duration <= 150
                             ? uploadPre.current.push({ link: url, type: 'video' })
                             : dispatch(setTrueErrorServer('Our length of the video must be less than 16 seconds!'));
                     };

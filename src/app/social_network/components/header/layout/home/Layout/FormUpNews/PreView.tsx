@@ -56,6 +56,10 @@ const PreviewPost: React.FC<{
     const [column, setColumn] = useState<number>(3);
     const [step, setStep] = useState<number>(0);
     const [bg, setBg] = useState<string>('#1b1919');
+    const [options, setOptions] = useState<boolean>(false);
+
+    const [typePrivate, setTypePrivate] = useState<{ id: number; name: string }[]>([]);
+    const [typeExpire, setTypeExpire] = useState<{ cate: number; name: string; value: number }>();
     const font = fontFamily?.name + ' ' + fontFamily?.type;
 
     const images: string[] = [];
@@ -71,49 +75,49 @@ const PreviewPost: React.FC<{
     }
     const handlePost = async () => {
         if (upload.length > 0 || valueText) {
-            console.log('yes', selectType);
+            console.log('Option text', 'private', typePrivate, 'Expire', typeExpire);
             let res;
-            const formData = new FormData();
-            formData.append('text', valueText);
-            formData.append('category', String(selectType));
-            formData.append('fontFamily', font);
-            for (let fil of upload) {
-                if (fil.title) {
-                    formData.append('files', fil.file, fil.title);
-                } else {
-                    formData.append('files', fil.file);
-                }
-            }
+            // const formData = new FormData();
+            // formData.append('text', valueText);
+            // formData.append('category', String(selectType));
+            // formData.append('fontFamily', font);
+            // for (let fil of upload) {
+            //     if (fil.title) {
+            //         formData.append('files', fil.file, fil.title);
+            //     } else {
+            //         formData.append('files', fil.file);
+            //     }
+            // }
 
-            switch (selectType) {
-                case 0:
-                    console.log('text', valueText, 'file', upload, 'title', 'fontFamily', font);
-                    res = await HttpRequestHome.setPost(token, formData);
-                    console.log(res, 'res');
+            // switch (selectType) {
+            //     case 0:
+            //         console.log('text', valueText, 'file', upload, 'title', 'fontFamily', font);
+            //         res = await HttpRequestHome.setPost(token, formData);
+            //         console.log(res, 'res');
 
-                    break;
-                case 1:
-                    console.log('text', valueText, 'file', upload, 'fontFamily', font, 'coverflow');
-                    // if (upload.length > 2) res = await HttpRequestHome.setPost(token, formData);
-                    break;
-                case 2:
-                    console.log(
-                        'text',
-                        valueText,
-                        'file',
-                        upload,
-                        'fontFamily',
-                        font,
-                        'color-bg',
-                        bg,
-                        'column',
-                        column,
-                    );
-                    // res = await HttpRequestHome.setPost(token, formData);
-                    break;
-                default:
-                    break;
-            }
+            //         break;
+            //     case 1:
+            //         console.log('text', valueText, 'file', upload, 'fontFamily', font, 'coverflow');
+            //         // if (upload.length > 2) res = await HttpRequestHome.setPost(token, formData);
+            //         break;
+            //     case 2:
+            //         console.log(
+            //             'text',
+            //             valueText,
+            //             'file',
+            //             upload,
+            //             'fontFamily',
+            //             font,
+            //             'color-bg',
+            //             bg,
+            //             'column',
+            //             column,
+            //         );
+            //         // res = await HttpRequestHome.setPost(token, formData);
+            //         break;
+            //     default:
+            //         break;
+            // }
             // if (selectType === 0) {
             //     const res = await HttpRequestHome.setPost(token);
             // }else if(){
@@ -223,11 +227,14 @@ const PreviewPost: React.FC<{
                                 </Span>
                             </P>
                         </Div>
-                        <DivPos size="21px" top="4px" right="10px" color={colorText}>
+                        <DivPos
+                            size="21px"
+                            top="4px"
+                            right="10px"
+                            color={colorText}
+                            onClick={() => setOptions(!options)}
+                        >
                             <DotI />
-                            <Div css="position: relative;">
-                                <OpText />
-                            </Div>
                         </DivPos>
                     </Div>
 
@@ -246,11 +253,20 @@ const PreviewPost: React.FC<{
                         width="100%"
                         css={`
                             position: relative;
+                            color: ${colorText};
                             ${step === 1
                                 ? 'height: 100%; overflow-y: overlay; position: fixed; top: 0; left: 0; right: 0;  background-color: #1f2021; z-index: 8888; @media(max-width: 769px){&::-webkit-scrollbar {width: 0px;}}'
-                                : ''}
+                                : ''};
                         `}
                     >
+                        {step < 1 && options && (
+                            <OpText
+                                typePrivate={typePrivate}
+                                setTypePrivate={setTypePrivate}
+                                typeExpire={typeExpire}
+                                setTypeExpire={setTypeExpire}
+                            />
+                        )}
                         {postTypes[selectType]}
                     </Div>
                     <Div
