@@ -3,7 +3,7 @@ import Picker from '@emoji-mart/react';
 import 'video-react/dist/video-react.css';
 import './formUpNews.scss';
 
-import { CloseI, PreviewI } from '~/assets/Icons/Icons';
+import { CloseI, LoadingI, PreviewI } from '~/assets/Icons/Icons';
 
 import { Player } from 'video-react';
 import {
@@ -20,7 +20,7 @@ import {
     Textarea,
 } from './styleFormUpNews';
 import { Button, Buttons, Div, H3, Img, P } from '~/reUsingComponents/styleComponents/styleDefault';
-import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
+import { DivLoading, DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import HoverTitle from '~/reUsingComponents/HandleHover/HoverTitle';
 import FontFamilys from '~/reUsingComponents/Font/FontFamilys';
 import { PropsPreViewFormHome } from './PreView';
@@ -62,6 +62,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
         buttonTwo,
         handlePost,
         preView,
+        loading,
     } = LogicForm(form, colorText, colorBg, user);
     return (
         <>
@@ -263,6 +264,11 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
                                         })}
                                     </Div>
                                 </>
+                            )}
+                            {loading && (
+                                <DivLoading>
+                                    <LoadingI />
+                                </DivLoading>
                             )}
                         </DivDataFake>
                     </DivUpNews>

@@ -151,9 +151,20 @@ const PreviewPost: React.FC<{
                     height: 100%;
                     overflow: overlay;
                     margin-top: 75px;
-                    ${file.length === 1 ? setHVideo : ''}
+                    position: relative;
+                    color: ${colorText};
+                    ${file.length === 1 ? setHVideo : ''};
                 `}
             >
+                {step < 1 && options && (
+                    <OpText
+                        setOptions={setOptions}
+                        typePrivate={typePrivate}
+                        setTypePrivate={setTypePrivate}
+                        typeExpire={typeExpire}
+                        setTypeExpire={setTypeExpire}
+                    />
+                )}
                 {setPreView && (
                     <OptionType
                         step={step}
@@ -175,7 +186,7 @@ const PreviewPost: React.FC<{
                         position: relative;
                     `}
                 >
-                    {step === 0 && (
+                    {step === 0 && file.length > 0 && (
                         <DivPos
                             size="18px"
                             top="11px"
@@ -259,14 +270,6 @@ const PreviewPost: React.FC<{
                                 : ''};
                         `}
                     >
-                        {step < 1 && options && (
-                            <OpText
-                                typePrivate={typePrivate}
-                                setTypePrivate={setTypePrivate}
-                                typeExpire={typeExpire}
-                                setTypeExpire={setTypeExpire}
-                            />
-                        )}
                         {postTypes[selectType]}
                     </Div>
                     <Div

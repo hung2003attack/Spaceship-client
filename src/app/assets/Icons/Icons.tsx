@@ -12,6 +12,8 @@ import {
     BsGenderFemale,
     BsFillCircleFill,
     BsImage,
+    BsFillVolumeMuteFill,
+    BsFillVolumeDownFill,
 } from 'react-icons/bs';
 import {
     IoImagesOutline,
@@ -58,6 +60,8 @@ import { VscPreview } from 'react-icons/vsc';
 import { CiHeart, CiPaperplane, CiSearch, CiWifiOff, CiWifiOn } from 'react-icons/ci';
 import { SlLike } from 'react-icons/sl';
 import { BiSolidColor } from 'react-icons/bi';
+import { PiPlayFill } from 'react-icons/pi';
+import { HiMiniPause } from 'react-icons/hi2';
 
 export const ImageI = () => <IoImagesOutline />;
 
@@ -113,7 +117,6 @@ export const Bullseye = () => <BiBullseye />;
 export const NextI = () => <MdOutlineNavigateNext />;
 export const BeforeI = () => <MdNavigateBefore />;
 export const BanI = () => <MdNotInterested />;
-export const PlayI = () => <AiOutlinePlayCircle />;
 export const FullScreenI = () => <GoScreenFull />;
 export const ScreenI = () => <GoScreenNormal />;
 export const StarI = () => <AiOutlineStar />;
@@ -133,3 +136,7 @@ export const BackI = () => <IoIosArrowRoundBack />;
 export const NightI = () => <MdNightlightRound />;
 export const ColorsI = () => <BiSolidColor />;
 export const SquareI = () => <BiSolidSquareRounded />;
+export const PlayI = () => <PiPlayFill />;
+export const PauseI = () => <HiMiniPause />;
+export const VolumeOffI = () => <BsFillVolumeMuteFill />;
+export const VolumeOnI = () => <BsFillVolumeDownFill />;

@@ -204,8 +204,3 @@ export const DivLoading = styled.div`
 export const CallName = (gender: number) => {
     return gender === 0 ? 'Him' : gender === 1 ? 'Her' : 'Cuy';
 };
-export const Video = styled.video`
-    width: fit-content;
-    background-color: black;
-    cursor: var(--pointer);
-`;

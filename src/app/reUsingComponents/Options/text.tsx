@@ -4,6 +4,7 @@ import { CheckI } from '~/assets/Icons/Icons';
 import { DivPos } from '../styleComponents/styleComponents';
 
 const OpText: React.FC<{
+    setOptions: React.Dispatch<React.SetStateAction<boolean>>;
     typePrivate: { id: number; name: string }[];
     typeExpire: { cate: number; value: number } | undefined;
     setTypePrivate: React.Dispatch<
@@ -24,7 +25,7 @@ const OpText: React.FC<{
             | undefined
         >
     >;
-}> = ({ typeExpire, typePrivate, setTypeExpire, setTypePrivate }) => {
+}> = ({ typeExpire, typePrivate, setTypeExpire, setTypePrivate, setOptions }) => {
     const [more, setMore] = useState<number[]>([-1]);
     const [OpSelect, setOpSelect] = useState<string[]>([]);
     const [select, setSelect] = useState<number>(-1);
@@ -129,6 +130,9 @@ const OpText: React.FC<{
                 padding: 10px;
             `}
         >
+            <P css="width: 100%;" onClick={() => setOptions(false)}>
+                Thoat
+            </P>
             {option.map((rs, index, arr) => (
                 <Div
                     width="100%"

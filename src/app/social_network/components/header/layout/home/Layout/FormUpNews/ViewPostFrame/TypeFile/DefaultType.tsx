@@ -5,7 +5,7 @@ import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import { UndoI } from '~/assets/Icons/Icons';
 import LogicType from './logicType';
 import { InputT } from './styleCoverflow';
-import Player from '~/reUsingComponents/Videos/Spaceship';
+import Player from '~/reUsingComponents/Videos/Player';
 
 const DefaultType: React.FC<{
     file: { link: string; type: string }[];
@@ -27,7 +27,6 @@ const DefaultType: React.FC<{
         setShowComment,
     } = LogicType(step, setStep, colorText);
     const [classify, setClassify] = useState<{ value: string; id: number }[]>([{ value: '', id: 0 }]);
-    console.log(classify);
 
     return (
         <Div
@@ -84,7 +83,7 @@ const DefaultType: React.FC<{
                                     color: ${colorText};
                                     ${f.type === 'video' && file.length === 1 ? 'height: 580px;' : ''}
                                     ${step > 1 && cc === f.link
-                                        ? `position: fixed; top: 0; left:0; z-index: 88; background-color: #0e0e0d; img,div.video-react-controls-enabled{object-fit: contain; margin: auto;}`
+                                        ? `position: fixed; height: 100%; top: 0; left:0; z-index: 103; background-color: #0e0e0d; img,div.video-react-controls-enabled{object-fit: contain; margin: auto;}`
                                         : ''}
                                 `}
                             >
@@ -151,15 +150,15 @@ const DefaultType: React.FC<{
                                         )}
                                     </Div>
                                 )}
-                                <Div width="100%" css="height: 100%; position: relative;">
+                                <Div width="100%" css="height: 100%; position: relative; justify-content: center;">
                                     {f.type === 'image' ? (
                                         <Img src={f.link} id="baby" alt={f.link} />
                                     ) : f.type === 'video' ? (
-                                        <Player src={f.link} />
+                                        <Player src={f.link} step={step} />
                                     ) : (
                                         ''
                                     )}
-                                    {step >= 1 && (
+                                    {step === 1 && (
                                         <>
                                             <Div
                                                 css={`
