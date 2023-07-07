@@ -23,7 +23,7 @@ import {
     IoArrowUndoCircleOutline,
 } from 'react-icons/io5';
 import { IoMdNotifications, IoIosSend, IoMdShareAlt, IoIosArrowRoundBack } from 'react-icons/io';
-import { BiBullseye, BiDotsHorizontalRounded, BiSolidSquareRounded, BiUser } from 'react-icons/bi';
+import { BiBullseye, BiDotsHorizontalRounded, BiReset, BiSolidSquareRounded, BiUser } from 'react-icons/bi';
 import { FcSignature } from 'react-icons/fc';
 import { SiExpertsexchange } from 'react-icons/si';
 import {
@@ -51,9 +51,9 @@ import {
     MdOutlineTitle,
     MdNightlightRound,
 } from 'react-icons/md';
-import { GoScreenFull, GoScreenNormal } from 'react-icons/go';
+import { GoClockFill, GoScreenFull, GoScreenNormal } from 'react-icons/go';
 import { FaPeopleArrows, FaAddressCard, FaUserFriends, FaBirthdayCake } from 'react-icons/fa';
-import { RiDragMoveFill, RiExchangeCnyFill, RiMailSendLine, RiTyphoonLine } from 'react-icons/ri';
+import { RiChatPrivateFill, RiDragMoveFill, RiExchangeCnyFill, RiMailSendLine, RiTyphoonLine } from 'react-icons/ri';
 import { TbArrowNarrowLeft, TbGenderFemale, TbGenderMale, TbGridDots, TbTextResize } from 'react-icons/tb';
 import { CgProfile, CgWebsite } from 'react-icons/cg';
 import { VscPreview } from 'react-icons/vsc';
@@ -140,3 +140,6 @@ export const PlayI = () => <PiPlayFill />;
 export const PauseI = () => <HiMiniPause />;
 export const VolumeOffI = () => <BsFillVolumeMuteFill />;
 export const VolumeOnI = () => <BsFillVolumeDownFill />;
+export const ResetI = () => <BiReset />;
+export const PrivateI = () => <RiChatPrivateFill />;
+export const OclockI = () => <GoClockFill />;

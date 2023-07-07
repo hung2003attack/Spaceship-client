@@ -6,13 +6,16 @@ export const DivHeader = styled.div`
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 50px;
+    height: 40px;
     background-color: ${(props: { bg: number }) => (props.bg === 1 ? '#292a2d' : '')};
     position: fixed;
     top: 0;
     right: 0;
     z-index: 3;
     box-shadow: 0 0 4px #676464;
+    @media (min-width: 768px) {
+        height: 50px;
+    }
 `;
 export const DivWrapper = styled.div`
     width: 100%;
@@ -36,10 +39,13 @@ export const SpanX = styled.span`
     color: #aeaeae;
 `;
 export const ButtonSt = styled.button`
-    width: 50px;
+    width: 40px;
     height: 100%;
     background-color: transparent;
     position: relative;
+    @media (min-width: 768px) {
+        width: 50px;
+    }
 `;
 export const Plogo = styled.p`
     font-weight: bold;

@@ -11,7 +11,10 @@ export const Links = styled(Link)`
     color: #aeaeae;
     position: relative;
     &:hover {
-        background-color: ${(props: { bg: number }) => (props.bg === 1 ? ' #385d8c;' : ' #202124')};
+        border-bottom: 3px solid #3e75bc;
+        @media (min-width: 768px) {
+            border-bottom: 8px solid #3e75bc;
+        }
     }
 `;
 export const A = styled.a`

@@ -11,11 +11,12 @@ import {
     LockI,
     NextI,
     PlayI,
+    PrivateI,
     ScreenI,
     ShareI,
 } from '~/assets/Icons/Icons';
 import { Player } from 'video-react';
-import { DivAction, DivEmoji, DivWrapButton, SpanAmount } from './styleFormUpNews';
+import { DivAction, DivEmoji, DivWrapButton, SpanAmount, TextAreaPre, Textarea } from './styleFormUpNews';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Coverflow from './ViewPostFrame/TypeFile/Coverflow';
 import Grid from './ViewPostFrame/TypeFile/Grid';
@@ -57,17 +58,32 @@ const PreviewPost: React.FC<{
     const [step, setStep] = useState<number>(0);
     const [bg, setBg] = useState<string>('#1b1919');
     const [options, setOptions] = useState<boolean>(false);
+    const textA = useRef<any>();
 
     const [typePrivate, setTypePrivate] = useState<{ id: number; name: string }[]>([]);
     const [typeExpire, setTypeExpire] = useState<{ cate: number; name: string; value: number }>();
+    const [Imotions, setImotions] = useState<{ id: number; icon: string }[]>([
+        { id: 1, icon: '👍' },
+        { id: 2, icon: '❤️' },
+        { id: 3, icon: '😂' },
+        { id: 4, icon: '😍' },
+        { id: 5, icon: '😘' },
+        { id: 6, icon: '😱' },
+        { id: 7, icon: '😡' },
+    ]);
     const font = fontFamily?.name + ' ' + fontFamily?.type;
+
+    const [more, setMore] = useState<number[]>([-1]);
+    const [OpSelect, setOpSelect] = useState<string[]>([]);
 
     const images: string[] = [];
     const videos: string[] = [];
     let checkImg = false;
     useEffect(() => {
         // setColumn()
-    }, [file]);
+        textA.current.setAttribute('style', 'height: auto');
+        textA.current.setAttribute('style', `height: ${textA.current.scrollHeight}px`);
+    }, [valueText]);
     for (let i = 0; i < file.length; i++) {
         if (file[i].type === 'image') images.push(file[i].link);
         if (file[i].type === 'video') videos.push(file[i].link);
@@ -76,54 +92,64 @@ const PreviewPost: React.FC<{
     const handlePost = async () => {
         if (upload.length > 0 || valueText) {
             console.log('Option text', 'private', typePrivate, 'Expire', typeExpire);
-            let res;
-            // const formData = new FormData();
-            // formData.append('text', valueText);
-            // formData.append('category', String(selectType));
-            // formData.append('fontFamily', font);
-            // for (let fil of upload) {
-            //     if (fil.title) {
-            //         formData.append('files', fil.file, fil.title);
-            //     } else {
-            //         formData.append('files', fil.file);
-            //     }
-            // }
+            let newExpire;
+            if (typeExpire?.cate === 1 && typeExpire?.name === 'Minute') {
+                newExpire = typeExpire?.value * 60;
+            } else if (typeExpire?.cate === 2 && typeExpire?.name === 'Hour') {
+                newExpire = typeExpire?.value * 3600;
+            } else if (typeExpire?.cate === 3 && typeExpire?.name === 'Date') {
+                newExpire = typeExpire?.value * 86400;
+            } else if (typeExpire?.cate === 4 && typeExpire?.name === 'Month') {
+                newExpire = typeExpire?.value * 262974656;
+            } else if (typeExpire?.cate === 5 && typeExpire?.name === 'Year') {
+                newExpire = typeExpire?.value * 31536000;
+            }
 
-            // switch (selectType) {
-            //     case 0:
-            //         console.log('text', valueText, 'file', upload, 'title', 'fontFamily', font);
-            //         res = await HttpRequestHome.setPost(token, formData);
-            //         console.log(res, 'res');
+            let res: number | undefined;
+            const formData = new FormData();
+            formData.append('text', valueText);
+            formData.append('category', String(selectType));
+            formData.append('fontFamily', font);
+            formData.append('private', JSON.stringify(typePrivate));
+            formData.append('imotions', JSON.stringify(Imotions));
+            if (newExpire) formData.append('expire', String(newExpire));
+            for (let fil of upload) {
+                if (fil.title) {
+                    formData.append('files', fil.file, fil.title);
+                } else {
+                    formData.append('files', fil.file);
+                }
+            }
 
-            //         break;
-            //     case 1:
-            //         console.log('text', valueText, 'file', upload, 'fontFamily', font, 'coverflow');
-            //         // if (upload.length > 2) res = await HttpRequestHome.setPost(token, formData);
-            //         break;
-            //     case 2:
-            //         console.log(
-            //             'text',
-            //             valueText,
-            //             'file',
-            //             upload,
-            //             'fontFamily',
-            //             font,
-            //             'color-bg',
-            //             bg,
-            //             'column',
-            //             column,
-            //         );
-            //         // res = await HttpRequestHome.setPost(token, formData);
-            //         break;
-            //     default:
-            //         break;
-            // }
-            // if (selectType === 0) {
-            //     const res = await HttpRequestHome.setPost(token);
-            // }else if(){
+            switch (selectType) {
+                case 0:
+                    console.log('text', valueText, 'file', upload, 'title', 'fontFamily', font, Imotions);
+                    // res = await HttpRequestHome.setPost(token, formData);
+                    // console.log(res, 'res');
 
-            // }
-            console.log(selectType, 'selectType');
+                    break;
+                case 1:
+                    console.log('text', valueText, 'file', upload, 'fontFamily', font, 'coverflow');
+                    // if (upload.length > 2) res = await HttpRequestHome.setPost(token, formData);
+                    break;
+                case 2:
+                    console.log(
+                        'text',
+                        valueText,
+                        'file',
+                        upload,
+                        'fontFamily',
+                        font,
+                        'color-bg',
+                        bg,
+                        'column',
+                        column,
+                    );
+                    // res = await HttpRequestHome.setPost(token, formData);
+                    break;
+                default:
+                    break;
+            }
         }
         // const params = {}
         console.log(file, valueText);
@@ -142,6 +168,14 @@ const PreviewPost: React.FC<{
         ),
         <Grid colorText={colorText} file={file} column={column} step={step} setStep={setStep} bg={bg} setBg={setBg} />,
     ];
+    let privateA = false;
+    let privateI = false;
+    let privateC = false;
+    typePrivate.map((t) => {
+        if (t.id === 1) privateA = true;
+        if (t.id === 2) privateI = true;
+        if (t.id === 3) privateC = true;
+    });
     return (
         <>
             <Div
@@ -158,11 +192,17 @@ const PreviewPost: React.FC<{
             >
                 {step < 1 && options && (
                     <OpText
+                        more={more}
+                        setMore={setMore}
+                        OpSelect={OpSelect}
+                        setOpSelect={setOpSelect}
                         setOptions={setOptions}
                         typePrivate={typePrivate}
                         setTypePrivate={setTypePrivate}
                         typeExpire={typeExpire}
                         setTypeExpire={setTypeExpire}
+                        Imotions={Imotions}
+                        setImotions={setImotions}
                     />
                 )}
                 {setPreView && (
@@ -233,9 +273,7 @@ const PreviewPost: React.FC<{
                             <P css=" width: 52px; font-size: 1.1rem; color: #9a9a9a; display: flex; align-items: center; justify-content: space-around;">
                                 <LockI />
                                 <Span css="padding-top: 3px;">3h</Span>
-                                <Span>
-                                    <FriendI />
-                                </Span>
+                                <Span>{privateA ? <PrivateI /> : <FriendI />}</Span>
                             </P>
                         </Div>
                         <DivPos
@@ -250,15 +288,17 @@ const PreviewPost: React.FC<{
                     </Div>
 
                     <Div width="100%" css="padding: 5px 6px 10px 6px;">
-                        <P
+                        <TextAreaPre
+                            ref={textA}
+                            value={valueText}
                             css={`
-                                font-size: 1.4rem;
+                                padding: 5px;
                                 color: ${colorText};
+                                background-color: #292a2d;
                                 font-family: ${font}, sans-serif;
                             `}
-                        >
-                            {valueText}
-                        </P>
+                            readOnly
+                        />
                     </Div>
                     <Div
                         width="100%"
@@ -282,7 +322,6 @@ const PreviewPost: React.FC<{
                         <Div
                             css={`
                                 width: fint-content;
-                                background-color: #eeeeee4a;
                                 border-radius: 11px;
                                 margin: 8px;
                                 &:hover .emoji div {
@@ -293,18 +332,6 @@ const PreviewPost: React.FC<{
                                 }
                             `}
                         >
-                            <Div
-                                css="
-                                    z-index: 8;
-                                    @media (min-width: 350px) {
-                                        font-size: 2.1rem;
-                                    }
-                                    @media (min-width: 450px) {
-                                        font-size: 2.3rem;
-                                    }"
-                            >
-                                <Bullseye />
-                            </Div>
                             <Div className="emoji" css="margin-left: 2px; align-items: flex-end;">
                                 <DivEmoji index={7}>
                                     👍<SpanAmount>10</SpanAmount>
@@ -321,17 +348,6 @@ const PreviewPost: React.FC<{
                                 <DivEmoji index={3}>😘</DivEmoji>
                                 <DivEmoji index={2}>😱</DivEmoji>
                                 <DivEmoji index={1}>😡</DivEmoji>
-                            </Div>
-                            <Div
-                                css="
-                                    @media (min-width: 350px) {
-                                        font-size: 2rem;
-                                    }
-                                    @media (min-width: 450px) {
-                                        font-size: 2.3rem;
-                                    }"
-                            >
-                                <NextI />
                             </Div>
                         </Div>
                         {/* <DivEmoji>👍 20</DivEmoji>

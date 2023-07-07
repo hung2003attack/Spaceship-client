@@ -40,6 +40,7 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
     const handleImageUpload = async (e: any) => {
         setLoading(true);
         uploadPre.current = [];
+        uploadRef.current = [];
         const file = e.target.files;
         const options = {
             maxSizeMB: 10,
@@ -152,7 +153,7 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
     const handleDuration = (e: { target: any }) => {
         console.log(e.target, 'here');
     };
-    console.log(upload, 'upload');
+    console.log(upload, 'upload', inputValue);
     let imageL = 0;
     let videoL = 0;
     for (let i = 0; i < upload.length; i++) {

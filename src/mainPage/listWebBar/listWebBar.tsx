@@ -68,9 +68,36 @@ const ListWebBar: React.FC<Props> = ({
             </Div>
 
             <DivList>
-                <A css="min-width: 60px; width: 60px; height: 60px; padding: 15px; position: relative;" href="/">
-                    <img src={Images.logo} alt="d" />
-                </A>
+                <Div
+                    width="40px"
+                    css={`
+                        height: 40px;
+                        align-items: center;
+                        justify-content: space-evenly;
+                        border-radius: 50%;
+                        border: 1px solid #4457e9;
+                        @media (min-width: 768px) {
+                            width: 60px;
+                            height: 50%;
+                        }
+                    `}
+                >
+                    <A
+                        href="/"
+                        css={`
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 1rem;
+                            height: 100%;
+                            @media (min-width: 768px) {
+                                font-size: 1.3rem;
+                            }
+                        `}
+                    >
+                        NeGA
+                    </A>
+                </Div>
                 {elements()}
             </DivList>
         </Div>

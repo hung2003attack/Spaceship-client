@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Div, P } from '../styleComponents/styleDefault';
-import { CheckI } from '~/assets/Icons/Icons';
+import { BeforeI, CheckI, NextI, OclockI, PrivateI, ResetI, UndoIRegister } from '~/assets/Icons/Icons';
 import { DivPos } from '../styleComponents/styleComponents';
 
 const OpText: React.FC<{
@@ -25,11 +25,32 @@ const OpText: React.FC<{
             | undefined
         >
     >;
-}> = ({ typeExpire, typePrivate, setTypeExpire, setTypePrivate, setOptions }) => {
-    const [more, setMore] = useState<number[]>([-1]);
-    const [OpSelect, setOpSelect] = useState<string[]>([]);
-    const [select, setSelect] = useState<number>(-1);
-
+    setMore: React.Dispatch<React.SetStateAction<number[]>>;
+    more: number[];
+    setOpSelect: React.Dispatch<React.SetStateAction<string[]>>;
+    OpSelect: string[];
+    setImotions: React.Dispatch<
+        React.SetStateAction<
+            {
+                id: number;
+                icon: string;
+            }[]
+        >
+    >;
+    Imotions: { id: number; icon: string }[];
+}> = ({
+    typeExpire,
+    typePrivate,
+    setTypeExpire,
+    setTypePrivate,
+    setOptions,
+    setMore,
+    more,
+    setOpSelect,
+    OpSelect,
+    setImotions,
+    Imotions,
+}) => {
     const option = [
         {
             id: 1,
@@ -37,7 +58,19 @@ const OpText: React.FC<{
                 name: 'Private',
                 children: [
                     { id: 1, name: 'Post', value: 1 },
-                    { id: 2, name: 'Imotion 🙂', value: 2 },
+                    {
+                        id: 2,
+                        name: `Imotion ${Imotions.map((i) => i.icon).join(' ')}`,
+                        value: [
+                            { id: 1, icon: '👍' },
+                            { id: 2, icon: '❤️' },
+                            { id: 3, icon: '😂' },
+                            { id: 4, icon: '😍' },
+                            { id: 5, icon: '😘' },
+                            { id: 6, icon: '😱' },
+                            { id: 7, icon: '😡' },
+                        ],
+                    },
                     { id: 3, name: 'Comment', value: 3 },
                 ],
             },
@@ -75,6 +108,12 @@ const OpText: React.FC<{
             },
         },
     ];
+
+    const handleReset = () => {
+        setOpSelect([]);
+        setTypeExpire(undefined);
+        setTypePrivate([]);
+    };
     const handleFirst = (rs: any, child: any) => {
         //Private
         if (rs.id === 1 && typeof child.value === 'number') {
@@ -101,10 +140,22 @@ const OpText: React.FC<{
                 });
             }
 
-            if (typePrivate.includes(child.value)) {
-                setTypePrivate(() => typePrivate.filter((t) => t.id !== child.value));
+            if (child.value === 1) {
+                typePrivate.push({ name: child.name, id: child.value });
+                setTypePrivate(() => typePrivate.filter((t) => t.id === child.value));
             } else {
-                setTypePrivate([...typePrivate, { name: child.name, id: child.value }]);
+                const newType = typePrivate.filter((t) => t.id !== 1);
+                let check = false;
+                newType.forEach((t) => {
+                    if (t.id === child.value) {
+                        check = true;
+                    }
+                });
+                if (check) {
+                    setTypePrivate(() => newType.filter((t) => t.id !== child.value));
+                } else {
+                    setTypePrivate([...newType, { name: child.name, id: child.value }]);
+                }
             }
         } else {
             if (OpSelect?.includes(child.id + `${rs.id}`)) {
@@ -130,9 +181,26 @@ const OpText: React.FC<{
                 padding: 10px;
             `}
         >
-            <P css="width: 100%;" onClick={() => setOptions(false)}>
-                Thoat
-            </P>
+            <Div width="100%" css="justify-content: space-between;">
+                <Div
+                    width="30px"
+                    css="height: 30px; font-size: 20px; align-items: center; justify-content: center;"
+                    onClick={() => setOptions(false)}
+                >
+                    <UndoIRegister />
+                </Div>
+                <Div width="50px" css="align-items: center; justify-content: space-evenly;">
+                    {typeExpire && <OclockI />}
+                    {typePrivate.length > 0 && <PrivateI />}
+                </Div>
+                <Div
+                    width="30px"
+                    css="height: 30px; font-size: 20px; align-items: center; justify-content: center;"
+                    onClick={handleReset}
+                >
+                    <ResetI />
+                </Div>
+            </Div>
             {option.map((rs, index, arr) => (
                 <Div
                     width="100%"
@@ -201,29 +269,74 @@ const OpText: React.FC<{
                                         <Div
                                             width="100%"
                                             wrap="wrap"
-                                            css="justify-content: center; background-color: #1c5689; padding: 8px; border-radius: 5px;"
+                                            css={`
+                                                justify-content: center;
+                                                background-color: ${typeof child.value[0] === 'number'
+                                                    ? '#1c5689'
+                                                    : '#5c5c5c'};
+                                                padding: 8px;
+                                                border-radius: 5px;
+                                            `}
                                         >
-                                            {child.value.map((s: number) => (
-                                                <P
-                                                    key={s}
-                                                    z="1.2rem"
-                                                    css={`
-                                                        width: 30px;
-                                                        height: 30px;
-                                                        display: flex;
-                                                        justify-content: center;
-                                                        align-items: center;
-                                                        box-shadow: 0 0 1px;
-                                                        ${typeExpire?.value === s && 'background-color:  #272727'};
-                                                    `}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setTypeExpire({ cate: child.id, name: child.name, value: s });
-                                                    }}
-                                                >
-                                                    {s}
-                                                </P>
-                                            ))}
+                                            {child.value.map((s: number | { id: number; icon: string }) =>
+                                                typeof s === 'number' ? (
+                                                    <P
+                                                        key={s}
+                                                        z="1.2rem"
+                                                        css={`
+                                                            width: 30px;
+                                                            height: 30px;
+                                                            display: flex;
+                                                            justify-content: center;
+                                                            align-items: center;
+                                                            box-shadow: 0 0 1px;
+                                                            ${typeExpire?.value === s &&
+                                                            typeExpire.cate === child.id &&
+                                                            'background-color:  #272727'};
+                                                        `}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+
+                                                            setTypeExpire({
+                                                                cate: child.id,
+                                                                name: child.name,
+                                                                value: s,
+                                                            });
+                                                        }}
+                                                    >
+                                                        {s}
+                                                    </P>
+                                                ) : (
+                                                    <Div
+                                                        key={s.id}
+                                                        width="30px"
+                                                        css={`
+                                                            height: 30px;
+                                                            justify-content: center;
+                                                            align-items: center;
+                                                            ${Imotions.some((i) => i.id === s.id) &&
+                                                            'background-color: #2f2f2f;'}
+                                                        `}
+                                                        onClick={() => {
+                                                            let checkH = false;
+                                                            Imotions.forEach((i) => {
+                                                                if (i.id === s.id) {
+                                                                    checkH = true;
+                                                                }
+                                                            });
+                                                            if (checkH) {
+                                                                setImotions(() =>
+                                                                    Imotions.filter((I) => I.id !== s.id),
+                                                                );
+                                                            } else {
+                                                                setImotions([...Imotions, s]);
+                                                            }
+                                                        }}
+                                                    >
+                                                        {s.icon}
+                                                    </Div>
+                                                ),
+                                            )}
                                         </Div>
                                     )}
                                     {OpSelect.includes(child.id + `${rs.id}`) && typeof child.value === 'number' && (

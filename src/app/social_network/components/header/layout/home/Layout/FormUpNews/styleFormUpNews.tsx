@@ -182,3 +182,11 @@ export const SpanAmount = styled.span`
         font-size: 1.6rem;
     }
 `;
+export const TextAreaPre = styled.textarea`
+    border: 0;
+    width: 100%;
+    height: fit-content;
+    font-size: 1.4rem;
+    outline: none;
+    ${(props: { css?: string }) => props.css}
+`;

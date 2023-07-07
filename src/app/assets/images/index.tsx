@@ -1,6 +1,6 @@
 import Female from './defaultAvatarFemale.jpg';
 import Male from './defaultAvatarMale.jpeg';
-import logo from './earth.png';
+import logo from './Screenshot 2023-07-07 075252.jpg';
 import lgbt from './lgbt.jpg';
 import dark from './dark.png';
 import light from './light.png';

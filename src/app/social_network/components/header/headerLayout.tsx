@@ -27,7 +27,7 @@ import { PropsBg } from 'src/mainPage/nextWeb';
 import { PropsTextHome } from './layout/Home/Home';
 import { PropsTextFriends } from './layout/MakingFriends/People';
 import { DivItems, Input } from './layout/MakingFriends/styleMakingFriends';
-import { Div } from '~/reUsingComponents/styleComponents/styleDefault';
+import { A, Div, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { people } from '~/redux/reload';
 import userAPI from '~/restAPI/requestServers/accountRequest/userAPI';
 import { useCookies } from 'react-cookie';
@@ -122,21 +122,21 @@ const Header: React.FC<{
             <DivHeader bg={colorBg}>
                 <DivWrapper
                     css={`
-                        ${searchC ? 'a{width: 0; display: none;}' : 'a{width: 70px;}'}
-                        #sett {
-                            display: ${searchC ? 'none' : 'block'};
-                        }
+                        color: ${colorText};
+                        justify-content: space-around;
                         @media (min-width: 650px) {
                             a {
-                                display: block;
-                                width: 120px;
+                                display: flex;
                             }
                             #sett {
                                 display: block;
                             }
                         }
                         #${border} {
-                            border-bottom: 8px solid #3e75bc;
+                            border-bottom: 3px solid #3e75bc;
+                            @media (min-width: 768px) {
+                                border-bottom: 8px solid #3e75bc;
+                            }
                         }
                         #logo {
                             display: none;
@@ -152,118 +152,163 @@ const Header: React.FC<{
                         }
                     `}
                 >
-                    <Hovertitle id="logo" title={logo} Tags={Alogo} href="/">
-                        <img src={Images.logo} alt="d" />
-                        {/* <Plogo>Universe</Plogo> */}
-                    </Hovertitle>
-                    {/* <Search colorBg={colorBg} colorText={colorText} title={search} location={location} /> */}
-                    <Hovertitle
-                        id="home"
-                        colorBg={colorBg}
-                        Tags={LinkHome}
-                        to="/SN/"
-                        children={<HomeI />}
-                        title={home.title}
-                        size="20px"
-                        color={colorText}
-                        onClick={() => setBorder('home')}
-                    />
-                    <Hovertitle
-                        id="exch"
-                        colorBg={colorBg}
-                        color={colorText}
-                        Tags={LinkExchange}
-                        to="/SN/exchange"
-                        title={exchange}
-                        children={<ExchangeI />}
-                        size="17px"
-                        onClick={() => setBorder('exch')}
-                    />
-                    <Hovertitle
-                        id="link"
-                        colorBg={colorBg}
-                        Tags={LinkCall}
-                        to="/SN/callVideo"
-                        children={<CameraI />}
-                        title={video}
-                        size="20px"
-                        color={colorText}
-                        onClick={() => setBorder('link')}
-                    />
-                    <Hovertitle
-                        id="people"
-                        colorBg={colorBg}
-                        Tags={LinkHome}
-                        to="/SN/people"
-                        children={<FriendI />}
-                        title={friends.title}
-                        size="20px"
-                        color={colorText}
-                        onClick={() => setBorder('people')}
-                        onDoubleClick={() => {
-                            dispatch(people(Math.random()));
-                        }}
-                        onTouchStart={() => dispatch(people(Math.random()))}
-                    />
                     <Div
-                        width="70px"
+                        width="40px"
                         css={`
-                            height: 100%;
+                            display: ${searchC ? 'flex' : 'none'};
+                            height: 80%;
                             align-items: center;
-                            justify-content: start;
-                            font-size: 20px;
-                            transition: all 0.5s linear;
-                            position: relative;
-                            padding: 5px;
-                            color: ${colorText};
-                            cursor: var(--pointer);
-                            @media (min-width: 768px) {
-                                &:hover {
-                                    background-color: #385d8c;
-                                }
+                            justify-content: space-evenly;
+                            border-radius: 50%;
+                            border: 1px solid #4457e9;
+                            @media (min-width: 380px) {
+                                display: flex;
                             }
-                            ${searchC
-                                ? 'width: 100%; input{display: block; width: 100%; height: 85%;} @media (min-width: 650px){width: 380px;}'
-                                : 'input{ width: 0%}'}
+                            @media (min-width: 768px) {
+                                width: 60px;
+                                height: 90%;
+                            }
                         `}
                     >
-                        {searchC && (
-                            <Search
-                                history={history}
-                                location={location}
-                                colorBg={colorBg}
-                                colorText={colorText}
-                                dataText={search.children}
-                                title={search.title}
-                            />
-                        )}
-
-                        <Div
+                        <A
+                            href="/"
                             css={`
-                                ${searchC
-                                    ? 'width: 16%; right: -4px '
-                                    : 'width: 100%; left: 50%; right: 50%; top: 50%; bottom: 50%; translate: -50% -50%;'};
-                                height: 75%;
-                                position: absolute;
+                                display: flex;
                                 align-items: center;
                                 justify-content: center;
-                                border-radius: 5px;
+                                font-size: 1rem;
+                                height: 100%;
+                                @media (min-width: 768px) {
+                                    font-size: 1.3rem;
+                                }
                             `}
-                            onClick={handleSearch}
                         >
-                            <SearchI />
+                            NeGA
+                        </A>
+                    </Div>
+                    {/* <Search colorBg={colorBg} colorText={colorText} title={search} location={location} /> */}
+                    <Div
+                        css={`
+                            height: 100%;
+                            ${searchC
+                                ? 'a{width: 0; display: none;}'
+                                : 'a{width: 57px;}@media (min-width: 550px){a{width: 70px;}}@media (min-width: 768px){a{width: 114px;}}'}
+                            #sett {
+                                display: ${searchC ? 'none' : 'block'};
+                            }
+                        `}
+                    >
+                        <Hovertitle
+                            id="home"
+                            colorBg={colorBg}
+                            Tags={LinkHome}
+                            to="/SN/"
+                            children={<HomeI />}
+                            title={home.title}
+                            size="20px"
+                            color={colorText}
+                            onClick={() => setBorder('home')}
+                        />
+                        <Hovertitle
+                            id="exch"
+                            colorBg={colorBg}
+                            color={colorText}
+                            Tags={LinkExchange}
+                            to="/SN/exchange"
+                            title={exchange}
+                            children={<ExchangeI />}
+                            size="17px"
+                            onClick={() => setBorder('exch')}
+                        />
+                        <Hovertitle
+                            id="link"
+                            colorBg={colorBg}
+                            Tags={LinkCall}
+                            to="/SN/callVideo"
+                            children={<CameraI />}
+                            title={video}
+                            size="20px"
+                            color={colorText}
+                            onClick={() => setBorder('link')}
+                        />
+                        <Hovertitle
+                            id="people"
+                            colorBg={colorBg}
+                            Tags={LinkHome}
+                            to="/SN/people"
+                            children={<FriendI />}
+                            title={friends.title}
+                            size="20px"
+                            color={colorText}
+                            onClick={() => setBorder('people')}
+                            onDoubleClick={() => {
+                                dispatch(people(Math.random()));
+                            }}
+                            onTouchStart={() => dispatch(people(Math.random()))}
+                        />
+                        <Div
+                            width="40px"
+                            css={`
+                                height: 100%;
+                                align-items: center;
+                                justify-content: start;
+                                font-size: 20px;
+                                transition: all 0.5s linear;
+                                position: relative;
+                                padding: 5px;
+                                color: ${colorText};
+                                cursor: var(--pointer);
+                                @media (min-width: 768px) {
+                                    width: 70px;
+                                    &:hover {
+                                        border-bottom: 3px solid #3e75bc;
+                                    }
+                                }
+                                ${searchC
+                                    ? 'width: 100%; input{display: block; width: 100%; height: 85%;} @media (min-width: 650px){width: 380px;}'
+                                    : 'input{ width: 0%}'}
+                            `}
+                        >
+                            {searchC && (
+                                <Search
+                                    history={history}
+                                    location={location}
+                                    colorBg={colorBg}
+                                    colorText={colorText}
+                                    dataText={search.children}
+                                    title={search.title}
+                                />
+                            )}
+
+                            <Div
+                                css={`
+                                    ${searchC
+                                        ? 'width: 16%; right: -4px '
+                                        : 'width: 100%; left: 50%; right: 50%; top: 50%; bottom: 50%; translate: -50% -50%;'};
+                                    height: 75%;
+                                    position: absolute;
+                                    align-items: center;
+                                    justify-content: center;
+                                    border-radius: 5px;
+                                `}
+                                onClick={handleSearch}
+                            >
+                                <SearchI />
+                            </Div>
                         </Div>
                     </Div>
-                    <Hovertitle
-                        id="sett"
-                        colorBg={colorBg}
-                        color={colorText}
-                        Tags={ButtonSt}
-                        children={<SettingI />}
-                        title={sett}
-                        onClick={handleSetting}
-                        size="25px"
-                    />
+                    <Div css="height: 100%;">
+                        <Hovertitle
+                            id="sett"
+                            colorBg={colorBg}
+                            color={colorText}
+                            Tags={ButtonSt}
+                            children={<SettingI />}
+                            title={sett}
+                            onClick={handleSetting}
+                            size="25px"
+                        />
+                    </Div>
                 </DivWrapper>
             </DivHeader>
             <Routes>
