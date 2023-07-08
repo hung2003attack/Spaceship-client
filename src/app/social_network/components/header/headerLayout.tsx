@@ -173,6 +173,7 @@ const Header: React.FC<{
                         <A
                             href="/"
                             css={`
+                                width: 40px !important;
                                 display: flex;
                                 align-items: center;
                                 justify-content: center;
@@ -190,11 +191,24 @@ const Header: React.FC<{
                     <Div
                         css={`
                             height: 100%;
-                            ${searchC
-                                ? 'a{width: 0; display: none;}'
-                                : 'a{width: 57px;}@media (min-width: 550px){a{width: 70px;}}@media (min-width: 768px){a{width: 114px;}}'}
+                            ${searchC ? 'a{width: 0; display: none;} ' : 'a{width: 57px;}'}
                             #sett {
                                 display: ${searchC ? 'none' : 'block'};
+                            }
+                            @media (min-width: 550px) {
+                                a {
+                                    ${searchC ? 'width: 50px; ' : 'width: 70px;'}
+                                }
+                            }
+                            @media (min-width: 768px) {
+                                a {
+                                    ${searchC ? 'width: 65px; ' : 'width: 100px;'}
+                                }
+                            }
+                            @media (min-width: 1202px) {
+                                a {
+                                    width: 110px;
+                                }
                             }
                         `}
                     >

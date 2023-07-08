@@ -80,9 +80,10 @@ const PreviewPost: React.FC<{
     const videos: string[] = [];
     let checkImg = false;
     useEffect(() => {
-        // setColumn()
-        textA.current.setAttribute('style', 'height: auto');
-        textA.current.setAttribute('style', `height: ${textA.current.scrollHeight}px`);
+        if (textA.current) {
+            textA.current.setAttribute('style', 'height: auto');
+            textA.current.setAttribute('style', `height: ${textA.current.scrollHeight}px`);
+        }
     }, [valueText]);
     for (let i = 0; i < file.length; i++) {
         if (file[i].type === 'image') images.push(file[i].link);
@@ -124,7 +125,7 @@ const PreviewPost: React.FC<{
             switch (selectType) {
                 case 0:
                     console.log('text', valueText, 'file', upload, 'title', 'fontFamily', font, Imotions);
-                    // res = await HttpRequestHome.setPost(token, formData);
+                    res = await HttpRequestHome.setPost(token, formData);
                     // console.log(res, 'res');
 
                     break;
@@ -288,17 +289,19 @@ const PreviewPost: React.FC<{
                     </Div>
 
                     <Div width="100%" css="padding: 5px 6px 10px 6px;">
-                        <TextAreaPre
-                            ref={textA}
-                            value={valueText}
-                            css={`
-                                padding: 5px;
-                                color: ${colorText};
-                                background-color: #292a2d;
-                                font-family: ${font}, sans-serif;
-                            `}
-                            readOnly
-                        />
+                        {valueText && (
+                            <TextAreaPre
+                                ref={textA}
+                                value={valueText}
+                                css={`
+                                    padding: 5px;
+                                    color: ${colorText};
+                                    background-color: #292a2d;
+                                    font-family: ${font}, sans-serif;
+                                `}
+                                readOnly
+                            />
+                        )}
                     </Div>
                     <Div
                         width="100%"
