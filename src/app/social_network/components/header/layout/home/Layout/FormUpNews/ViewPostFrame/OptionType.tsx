@@ -4,6 +4,7 @@ import { DivItemsType, DivsetC } from './styleOptionType';
 import OnlyImages from './TypeFile/Grid';
 import Coverflow from './TypeFile/Coverflow';
 import DefaultType from './TypeFile/DefaultType';
+import { useState } from 'react';
 
 const OptionType: React.FC<{
     colorText: string;
@@ -20,12 +21,16 @@ const OptionType: React.FC<{
 }> = ({ colorText, colorBg, file, setSelectType, setColumn, column, step, selectType }) => {
     const postTypes: { name: string; id: number; column?: number }[] = [
         {
-            name: 'Coverflow',
+            name: 'Swiper',
             id: 1,
         },
         { name: 'Grid-Columns: ', id: 2, column: 3 },
     ];
+    const [swiper, setSwiper] = useState<number>(0);
     console.log('I know that');
+    const select = (sl: number) => {
+        return selectType === sl;
+    };
 
     return (
         <Div
@@ -50,60 +55,63 @@ const OptionType: React.FC<{
             >
                 Pre-View your post here
             </Div>
-            {file.length > 0 && (
+            {file.length > 4 && (
                 <Div>
                     <Div css="font-size: 2rem; padding: 4px 7px;" onClick={() => setSelectType(0)}>
                         <BanI />
                     </Div>
                     <Div>
                         {postTypes.map((t) => (
-                            <DivItemsType key={t.name} onClick={() => setSelectType(t.id)}>
-                                {t.column ? (
-                                    <Div
-                                        css={`
-                                            align-items: center;
-                                            ${step === 1 && selectType === 2
-                                                ? ' width: 50px; position: fixed; top: 55px; flex-direction: column; z-index: 9999; right: 4px; justify-content: center; div{background-color: #4e4343}'
-                                                : ''}
-                                        `}
-                                    >
-                                        {!(step === 1 && selectType === 2) && t.name}
-                                        <DivsetC
-                                            size={`${step === 1 && selectType === 2 ? '22px' : ''}`}
-                                            onClick={() =>
-                                                setColumn((pre) =>
-                                                    file.length > 6
-                                                        ? pre > 3
-                                                            ? pre - 1
-                                                            : pre
-                                                        : file.length > 2
-                                                        ? pre > 2
-                                                            ? pre - 1
-                                                            : pre
-                                                        : file.length > 1
-                                                        ? pre > 1
-                                                            ? pre - 1
-                                                            : pre
-                                                        : 1,
-                                                )
-                                            }
+                            <>
+                                <DivItemsType key={t.name} onClick={() => setSelectType(t.id)}>
+                                    {t.column ? (
+                                        <Div
+                                            css={`
+                                                align-items: center;
+                                                ${step === 1 && select(2)
+                                                    ? ' width: 50px; position: fixed; top: 55px; flex-direction: column; z-index: 9999; right: 4px; justify-content: center; div{background-color: #4e4343}'
+                                                    : ''}
+                                            `}
                                         >
-                                            <BeforeI />
-                                        </DivsetC>
-                                        {column}
-                                        <DivsetC
-                                            size={`${step === 1 && selectType === 2 ? '22px' : ''}`}
-                                            onClick={() =>
-                                                setColumn((pre) => (pre < file.length && pre < 8 ? pre + 1 : pre))
-                                            }
-                                        >
-                                            <NextI />
-                                        </DivsetC>
-                                    </Div>
-                                ) : (
-                                    t.name
-                                )}
-                            </DivItemsType>
+                                            {!(step === 1 && select(2)) && t.name}
+                                            <DivsetC
+                                                size={`${step === 1 && selectType === 2 ? '22px' : ''}`}
+                                                onClick={() =>
+                                                    setColumn((pre) =>
+                                                        file.length > 6
+                                                            ? pre > 3
+                                                                ? pre - 1
+                                                                : pre
+                                                            : file.length > 2
+                                                            ? pre > 2
+                                                                ? pre - 1
+                                                                : pre
+                                                            : file.length > 1
+                                                            ? pre > 1
+                                                                ? pre - 1
+                                                                : pre
+                                                            : 1,
+                                                    )
+                                                }
+                                            >
+                                                <BeforeI />
+                                            </DivsetC>
+                                            {column}
+                                            <DivsetC
+                                                size={`${step === 1 && select(2) ? '22px' : ''}`}
+                                                onClick={() =>
+                                                    setColumn((pre) => (pre < file.length && pre < 8 ? pre + 1 : pre))
+                                                }
+                                            >
+                                                <NextI />
+                                            </DivsetC>
+                                        </Div>
+                                    ) : (
+                                        t.name
+                                    )}
+                                    {t.id === 1 && select(1) && <Div>hello world!</Div>}
+                                </DivItemsType>
+                            </>
                         ))}
                     </Div>
                 </Div>

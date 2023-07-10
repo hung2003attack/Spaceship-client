@@ -57,7 +57,7 @@ const Coverflow: React.FC<{
                     rotate: 0,
                     stretch: 0,
                     depth: 100,
-                    modifier: 3,
+                    modifier: 1,
                     slideShadows: true,
                 }}
                 pagination={{

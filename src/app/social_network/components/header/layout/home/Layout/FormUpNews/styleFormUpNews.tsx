@@ -151,10 +151,7 @@ export const DivEmoji = styled.div`
     transition: all 0.4s linear;
     z-index: ${(props: { index: number }) => props.index};
     @media (min-width: 350px) {
-        font-size: 1.3rem;
-    }
-    @media (min-width: 450px) {
-        font-size: 1.4rem;
+        font-size: 1.1rem;
     }
 `;
 export const DivAction = styled.div`
@@ -163,23 +160,17 @@ export const DivAction = styled.div`
     align-items: center;
     justify-content: center;
     padding: 4px 0;
+    font-size: 18px;
     cursor: pointer;
-    &:hover {
-        background-color: #323232;
-        border-radius: 5px;
+    @media (min-width: 768px) {
+        font-size: 25px;
     }
 `;
 export const SpanAmount = styled.span`
     display: none;
     font-size: 0.9rem;
     @media (min-width: 350px) {
-        font-size: 1.2rem;
-    }
-    @media (min-width: 450px) {
-        font-size: 1.3rem;
-    }
-    @media (min-width: 600px) {
-        font-size: 1.6rem;
+        font-size: 1rem;
     }
 `;
 export const TextAreaPre = styled.textarea`

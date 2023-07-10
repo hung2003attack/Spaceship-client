@@ -81,7 +81,7 @@ const DefaultType: React.FC<{
                                     align-items: center;
                                     ${showTitle && step === 1 && 'padding-bottom: 24px;'}
                                     color: ${colorText};
-                                    ${f.type === 'video' && file.length === 1 ? 'height: 580px;' : ''}
+                                    ${f.type === 'video' && file.length === 1 ? 'height: 510px;' : ''}
                                     ${step > 1 && cc === f.link
                                         ? `position: fixed; height: 100%; top: 0; left:0; z-index: 103; background-color: #0e0e0d; img,div.video-react-controls-enabled{object-fit: contain; margin: auto;}`
                                         : ''}

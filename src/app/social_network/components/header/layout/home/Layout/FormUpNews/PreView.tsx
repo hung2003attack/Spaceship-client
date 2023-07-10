@@ -106,7 +106,8 @@ const PreviewPost: React.FC<{
                 newExpire = typeExpire?.value * 31536000;
             }
 
-            let res: number | undefined;
+            let res: any;
+            let id_c: string[] = [];
             const formData = new FormData();
             formData.append('text', valueText);
             formData.append('category', String(selectType));
@@ -127,6 +128,8 @@ const PreviewPost: React.FC<{
                     console.log('text', valueText, 'file', upload, 'title', 'fontFamily', font, Imotions);
                     res = await HttpRequestHome.setPost(token, formData);
                     // console.log(res, 'res');
+                    console.log(res, 'res');
+                    id_c = res.id_c;
 
                     break;
                 case 1:
@@ -151,15 +154,12 @@ const PreviewPost: React.FC<{
                 default:
                     break;
             }
+            console.log(id_c, 'id_c');
+            if (id_c.length > 0) {
+                // const exp = await HttpRequestHome.exp(token, id_c, newExpire);
+            }
         }
-        // const params = {}
-        console.log(file, valueText);
     };
-    const setHVideo = ` .video-react.video-react-fluid {
-                        height: 100%;
-                        padding: 0 !important;
-                    }`;
-    console.log('yess');
     const postTypes = [
         <DefaultType colorText={colorText} file={file} step={step} setStep={setStep} upload={upload} />,
         file.length > 3 ? (
@@ -188,7 +188,6 @@ const PreviewPost: React.FC<{
                     margin-top: 75px;
                     position: relative;
                     color: ${colorText};
-                    ${file.length === 1 ? setHVideo : ''};
                 `}
             >
                 {step < 1 && options && (
@@ -225,6 +224,9 @@ const PreviewPost: React.FC<{
                         overflow: hidden;
                         background-color: ${colorBg === 1 ? '#292a2d' : ''};
                         position: relative;
+                        @media (min-width: 768px) {
+                            border-radius: 5px;
+                        }
                     `}
                 >
                     {step === 0 && file.length > 0 && (
@@ -298,6 +300,7 @@ const PreviewPost: React.FC<{
                                     color: ${colorText};
                                     background-color: #292a2d;
                                     font-family: ${font}, sans-serif;
+                                    resize: none;
                                 `}
                                 readOnly
                             />
@@ -327,10 +330,10 @@ const PreviewPost: React.FC<{
                                 width: fint-content;
                                 border-radius: 11px;
                                 margin: 8px;
-                                &:hover .emoji div {
+                                .emoji div {
                                     margin: 0 7px;
                                 }
-                                &:hover .emoji div span {
+                                .emoji div span {
                                     display: block;
                                 }
                             `}
@@ -368,8 +371,6 @@ const PreviewPost: React.FC<{
                             justify-content: space-evenly;
                             font-size: 2.4rem;
                             border-radius: 5px;
-                            border-top: 1px solid #555353de;
-                            border-bottom: 1px solid #555353de;
                             color: ${colorText};
                         `}
                     >
@@ -380,7 +381,7 @@ const PreviewPost: React.FC<{
                             <P css="font-size: 1.3rem;">...Comments</P>
                         </DivAction>
                         <DivAction>
-                            <P css="font-size: 1.2rem;">325</P> <ShareI />
+                            <ShareI />
                         </DivAction>
                     </Div>
 
