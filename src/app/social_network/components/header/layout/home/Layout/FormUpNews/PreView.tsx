@@ -21,13 +21,14 @@ import {
 import { Player } from 'video-react';
 import { DivAction, DivEmoji, DivWrapButton, SpanAmount, TextAreaPre, Textarea } from './styleFormUpNews';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Coverflow from './ViewPostFrame/TypeFile/Coverflow';
+import Coverflow from './ViewPostFrame/TypeFile/Swipers/Coverflow';
 import Grid from './ViewPostFrame/TypeFile/Grid';
 import DefaultType from './ViewPostFrame/TypeFile/DefaultType';
 import OptionType from './ViewPostFrame/OptionType';
 import HttpRequestHome from '~/restAPI/requestServers/socialNetwork/home';
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import OpText from '~/reUsingComponents/Options/text';
+import Dynamic from './ViewPostFrame/TypeFile/Swipers/Dynamic';
 export interface PropsPreViewFormHome {
     time: {
         hour: string;
@@ -57,13 +58,15 @@ const PreviewPost: React.FC<{
     upload: any;
 }> = ({ user, setPreView, colorText, colorBg, file, upload, valueText, fontFamily, dataText, token, userId }) => {
     const [selectType, setSelectType] = useState<number>(0);
+    const [selectChild, setSelectChild] = useState<number>(1);
+
     const [column, setColumn] = useState<number>(3);
     const [step, setStep] = useState<number>(0);
     const [bg, setBg] = useState<string>('#1b1919');
     const [options, setOptions] = useState<boolean>(false);
     const [showI, setShowI] = useState<{ id: number; icon: string } | undefined>();
     const [include, setInclude] = useState<boolean>(false);
-    const [showAc, setShowAc] = useState<boolean>(true);
+    const [showAc, setShowAc] = useState<boolean>(false);
     const [acEmo, setAcEmo] = useState<{ id: number; icon: React.ReactElement }>({ id: 1, icon: <LikeI /> });
     const textA = useRef<any>();
 
@@ -175,7 +178,10 @@ const PreviewPost: React.FC<{
     const postTypes = [
         <DefaultType colorText={colorText} file={file} step={step} setStep={setStep} upload={upload} />,
         file.length > 3 ? (
-            <Coverflow colorText={colorText} file={file} step={step} setStep={setStep} />
+            [
+                <Dynamic colorText={colorText} file={file} step={step} setStep={setStep} />,
+                <Coverflow colorText={colorText} file={file} step={step} setStep={setStep} />,
+            ][selectChild - 1]
         ) : (
             <P color="#c05d5d">Please select at least 3!</P>
         ),
@@ -208,7 +214,6 @@ const PreviewPost: React.FC<{
                 css={`
                     display: block;
                     height: 100%;
-                    overflow: overlay;
                     margin-top: 75px;
                     position: relative;
                     color: ${colorText};
@@ -423,17 +428,18 @@ const PreviewPost: React.FC<{
                                             background-color: #292a2d;
                                         `}
                                     >
-                                        {acList.map((a) => (
-                                            <Div
-                                                key={a.id}
-                                                onClick={() => {
-                                                    setAcEmo(a);
-                                                    setShowAc(false);
-                                                }}
-                                            >
-                                                {a.icon}
-                                            </Div>
-                                        ))}
+                                        {showAc &&
+                                            acList.map((a) => (
+                                                <Div
+                                                    key={a.id}
+                                                    onClick={() => {
+                                                        setAcEmo(a);
+                                                        setShowAc(false);
+                                                    }}
+                                                >
+                                                    {a.icon}
+                                                </Div>
+                                            ))}
                                     </Div>
                                 )}
                                 <Div

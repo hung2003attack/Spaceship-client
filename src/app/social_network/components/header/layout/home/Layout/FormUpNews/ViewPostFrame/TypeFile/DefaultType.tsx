@@ -4,8 +4,8 @@ import { BackI, ChangeI, DotI, FullScreenI, HeartMI, ScreenI, ShareI, TitleI } f
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import { UndoI } from '~/assets/Icons/Icons';
 import LogicType from './logicType';
-import { InputT } from './styleCoverflow';
 import Player from '~/reUsingComponents/Videos/Player';
+import { InputT } from './Swipers/styleSwipers';
 
 const DefaultType: React.FC<{
     file: { link: string; type: string }[];
@@ -113,7 +113,7 @@ const DefaultType: React.FC<{
                                                     onFocus={(e: any) => {
                                                         // e.target.value = '';
                                                     }}
-                                                    onChange={(e) => {
+                                                    onChange={(e: { target: { value: string } }) => {
                                                         console.log(e.target.value);
                                                         let ok = false;
                                                         classify.forEach((v) => {

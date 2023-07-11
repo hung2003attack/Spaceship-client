@@ -150,14 +150,14 @@ export const DivEmoji = styled.div<PropsEmo>`
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
+    font-size: 10px;
     margin-left: -6px;
     transition: all 0.4s linear;
     user-select: none;
     z-index: ${(props) => props.index};
     ${(props) => props.css};
     @media (min-width: 350px) {
-        font-size: 13rem;
+        font-size: 13px;
     }
     @media (min-width: 768px) {
         font-size: 15px;
@@ -174,7 +174,7 @@ export const DivAction = styled.div`
     position: relative;
     user-select: none;
     cursor: var(--pointer);
-  
+
     @media (min-width: 400px) {
         svg {
             font-size: 21px;

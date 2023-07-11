@@ -4,9 +4,10 @@ export const DivItemsType = styled.div`
     font-size: 1.4rem;
     padding: 4px;
     margin-right: 3px;
-    background-color: #5b5e62b8;
     border-radius: 5px;
+    background-color: #292a2d;
     cursor: var(--pointer);
+    ${(props: { css?: string }) => props.css}
 `;
 export const DivsetC = styled.div`
     display: flex;

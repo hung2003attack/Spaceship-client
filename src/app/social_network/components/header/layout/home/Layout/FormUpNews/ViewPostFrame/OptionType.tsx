@@ -1,8 +1,8 @@
 import { BanI, BeforeI, NextI } from '~/assets/Icons/Icons';
-import { Div } from '~/reUsingComponents/styleComponents/styleDefault';
+import { Div, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { DivItemsType, DivsetC } from './styleOptionType';
 import OnlyImages from './TypeFile/Grid';
-import Coverflow from './TypeFile/Coverflow';
+import Coverflow from './TypeFile/Swipers/Coverflow';
 import DefaultType from './TypeFile/DefaultType';
 import { useState } from 'react';
 
@@ -19,10 +19,33 @@ const OptionType: React.FC<{
     step: number;
     selectType: number;
 }> = ({ colorText, colorBg, file, setSelectType, setColumn, column, step, selectType }) => {
-    const postTypes: { name: string; id: number; column?: number }[] = [
+    const [children, setChildren] = useState<{ id: number; name: string }[]>();
+    const postTypes: { name: string; id: number; column?: number; children?: { id: number; name: string }[] }[] = [
         {
             name: 'Swiper',
             id: 1,
+            children: [
+                {
+                    id: 1,
+                    name: 'Dynamic',
+                },
+                {
+                    id: 2,
+                    name: 'Group skip',
+                },
+                {
+                    id: 3,
+                    name: 'Fade',
+                },
+                {
+                    id: 4,
+                    name: 'Cards',
+                },
+                {
+                    id: 5,
+                    name: 'Coverflow',
+                },
+            ],
         },
         { name: 'Grid-Columns: ', id: 2, column: 3 },
     ];
@@ -34,6 +57,7 @@ const OptionType: React.FC<{
 
     return (
         <Div
+            width="100%"
             wrap="wrap"
             css={`
                 align-items: center;
@@ -56,14 +80,23 @@ const OptionType: React.FC<{
                 Pre-View your post here
             </Div>
             {file.length > 4 && (
-                <Div>
+                <Div width="100%" css="padding: 5px;">
                     <Div css="font-size: 2rem; padding: 4px 7px;" onClick={() => setSelectType(0)}>
                         <BanI />
                     </Div>
                     <Div>
                         {postTypes.map((t) => (
                             <>
-                                <DivItemsType key={t.name} onClick={() => setSelectType(t.id)}>
+                                <DivItemsType
+                                    key={t.name}
+                                    onClick={() => {
+                                        setSelectType(t.id);
+                                        if (t.children) setChildren(t.children);
+                                    }}
+                                    css={`
+                                        ${selectType === t.id ? 'background-color: #5b5e62b8;' : ''}
+                                    `}
+                                >
                                     {t.column ? (
                                         <Div
                                             css={`
@@ -109,11 +142,19 @@ const OptionType: React.FC<{
                                     ) : (
                                         t.name
                                     )}
-                                    {t.id === 1 && select(1) && <Div>hello world!</Div>}
                                 </DivItemsType>
                             </>
                         ))}
                     </Div>
+                </Div>
+            )}
+            {select(1) && (
+                <Div width="100%" wrap="wrap" css="" onClick={(e) => e.stopPropagation()}>
+                    {children?.map((c) => (
+                        <P z="1.3rem" key={c.id} css="width: fit-content; padding: 5px; margin: 0 8px;">
+                            {c.name}
+                        </P>
+                    ))}
                 </Div>
             )}
         </Div>

@@ -11,7 +11,7 @@ import { Player } from 'video-react';
 import { Img } from '~/reUsingComponents/styleComponents/styleDefault';
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import { FullScreenI, PlayI, ScreenI } from '~/assets/Icons/Icons';
-import { DivSwiper } from './styleCoverflow';
+import { DivSwiper } from './styleSwipers';
 
 const Coverflow: React.FC<{
     file: {
