@@ -8,12 +8,15 @@ import {
     FriendI,
     FullScreenI,
     HeartI,
+    IconI,
+    LikeI,
     LockI,
     NextI,
     PlayI,
     PrivateI,
     ScreenI,
     ShareI,
+    SmileI,
 } from '~/assets/Icons/Icons';
 import { Player } from 'video-react';
 import { DivAction, DivEmoji, DivWrapButton, SpanAmount, TextAreaPre, Textarea } from './styleFormUpNews';
@@ -58,6 +61,10 @@ const PreviewPost: React.FC<{
     const [step, setStep] = useState<number>(0);
     const [bg, setBg] = useState<string>('#1b1919');
     const [options, setOptions] = useState<boolean>(false);
+    const [showI, setShowI] = useState<{ id: number; icon: string } | undefined>();
+    const [include, setInclude] = useState<boolean>(false);
+    const [showAc, setShowAc] = useState<boolean>(true);
+    const [acEmo, setAcEmo] = useState<{ id: number; icon: React.ReactElement }>({ id: 1, icon: <LikeI /> });
     const textA = useRef<any>();
 
     const [typePrivate, setTypePrivate] = useState<{ id: number; name: string }[]>([]);
@@ -71,6 +78,10 @@ const PreviewPost: React.FC<{
         { id: 6, icon: '😱' },
         { id: 7, icon: '😡' },
     ]);
+    const acList = [
+        { id: 1, icon: <LikeI /> },
+        { id: 2, icon: <HeartI /> },
+    ];
     const font = fontFamily?.name + ' ' + fontFamily?.type;
 
     const [more, setMore] = useState<number[]>([-1]);
@@ -82,7 +93,7 @@ const PreviewPost: React.FC<{
     useEffect(() => {
         if (textA.current) {
             textA.current.setAttribute('style', 'height: auto');
-            textA.current.setAttribute('style', `height: ${textA.current.scrollHeight}px`);
+            textA.current.setAttribute('style', `height: ${textA.current.scrollHeight - 20}px`);
         }
     }, [valueText]);
     for (let i = 0; i < file.length; i++) {
@@ -122,14 +133,15 @@ const PreviewPost: React.FC<{
                     formData.append('files', fil.file);
                 }
             }
+            console.log('private', typePrivate);
 
             switch (selectType) {
                 case 0:
                     console.log('text', valueText, 'file', upload, 'title', 'fontFamily', font, Imotions);
-                    res = await HttpRequestHome.setPost(token, formData);
+                    // res = await HttpRequestHome.setPost(token, formData);
                     // console.log(res, 'res');
                     console.log(res, 'res');
-                    id_c = res.id_c;
+                    // id_c = res.id_c;
 
                     break;
                 case 1:
@@ -177,6 +189,18 @@ const PreviewPost: React.FC<{
         if (t.id === 2) privateI = true;
         if (t.id === 3) privateC = true;
     });
+    let timeS: any;
+    const handleShowI = (e: any) => {
+        timeS = setTimeout(() => {
+            setInclude(true);
+        }, 500);
+    };
+    const handleClearI = () => {
+        clearTimeout(timeS);
+    };
+    const handleMoveI = (e: any) => {
+        console.log(e.target);
+    };
     return (
         <>
             <Div
@@ -189,6 +213,7 @@ const PreviewPost: React.FC<{
                     position: relative;
                     color: ${colorText};
                 `}
+                onClick={() => setInclude(false)}
             >
                 {step < 1 && options && (
                     <OpText
@@ -224,6 +249,7 @@ const PreviewPost: React.FC<{
                         overflow: hidden;
                         background-color: ${colorBg === 1 ? '#292a2d' : ''};
                         position: relative;
+                        border: 1px solid #353535;
                         @media (min-width: 768px) {
                             border-radius: 5px;
                         }
@@ -330,39 +356,24 @@ const PreviewPost: React.FC<{
                                 width: fint-content;
                                 border-radius: 11px;
                                 margin: 8px;
-                                .emoji div {
-                                    margin: 0 7px;
-                                }
-                                .emoji div span {
-                                    display: block;
+                                @media (min-width: 768px) {
+                                    &:hover .emoji div {
+                                        margin: 0 7px;
+                                    }
+                                    &:hover .emoji div span {
+                                        display: block;
+                                    }
                                 }
                             `}
                         >
                             <Div className="emoji" css="margin-left: 2px; align-items: flex-end;">
-                                <DivEmoji index={7}>
-                                    👍<SpanAmount>10</SpanAmount>
-                                </DivEmoji>
-                                <DivEmoji index={6}>
-                                    ❤️<SpanAmount>5</SpanAmount>
-                                </DivEmoji>
-                                <DivEmoji index={5}>
-                                    😂<SpanAmount>4</SpanAmount>
-                                </DivEmoji>
-                                <DivEmoji index={4}>
-                                    😍<SpanAmount>30</SpanAmount>
-                                </DivEmoji>
-                                <DivEmoji index={3}>😘</DivEmoji>
-                                <DivEmoji index={2}>😱</DivEmoji>
-                                <DivEmoji index={1}>😡</DivEmoji>
+                                {Imotions.map((i) => (
+                                    <DivEmoji key={i.id} index={i.id}>
+                                        {i.icon}
+                                    </DivEmoji>
+                                ))}
                             </Div>
                         </Div>
-                        {/* <DivEmoji>👍 20</DivEmoji>
-                        <DivEmoji>❤️ 5</DivEmoji>
-                        <DivEmoji>😂 30</DivEmoji>
-                        <DivEmoji>😍</DivEmoji>
-                        <DivEmoji>😘</DivEmoji>
-                        <DivEmoji>😱</DivEmoji>
-                        <DivEmoji>😡</DivEmoji> */}
                     </Div>
                     <Div
                         width="100%"
@@ -371,18 +382,121 @@ const PreviewPost: React.FC<{
                             justify-content: space-evenly;
                             font-size: 2.4rem;
                             border-radius: 5px;
+                            margin-bottom: 15px;
                             color: ${colorText};
                         `}
+                        onClick={(e) => e.stopPropagation()}
                     >
-                        <DivAction>
-                            <HeartI />
-                        </DivAction>
-                        <DivAction>
-                            <P css="font-size: 1.3rem;">...Comments</P>
-                        </DivAction>
-                        <DivAction>
-                            <ShareI />
-                        </DivAction>
+                        {Imotions.length > 0 && (
+                            <DivAction
+                                id="parent"
+                                onTouchStart={handleShowI}
+                                onTouchEnd={handleClearI}
+                                onClick={() => {
+                                    if (showI) {
+                                        setShowI(undefined);
+                                    } else {
+                                        Imotions.forEach((i) => {
+                                            if (i.id === acEmo.id) {
+                                                setShowI(i);
+                                            }
+                                        });
+                                    }
+                                }}
+                            >
+                                {showI?.icon || acEmo.icon}
+                                <Div
+                                    css="font-size: 15px; position: absolute; right: 5px;"
+                                    onClick={() => setShowAc(true)}
+                                >
+                                    <IconI />
+                                </Div>
+                                {showAc && (
+                                    <Div
+                                        css={`
+                                            width: 100%;
+                                            height: 100%;
+                                            position: absolute;
+                                            top: 3px;
+                                            justify-content: center;
+                                            align-items: center;
+                                            background-color: #292a2d;
+                                        `}
+                                    >
+                                        {acList.map((a) => (
+                                            <Div
+                                                key={a.id}
+                                                onClick={() => {
+                                                    setAcEmo(a);
+                                                    setShowAc(false);
+                                                }}
+                                            >
+                                                {a.icon}
+                                            </Div>
+                                        ))}
+                                    </Div>
+                                )}
+                                <Div
+                                    id="emoBar"
+                                    width="fit-content"
+                                    className="showI"
+                                    display="none"
+                                    css={`
+                                        position: absolute;
+                                        top: 0;
+                                        left: 0;
+                                        background-color: #292a2d;
+                                        padding: 5px 20px 8px;
+                                        border-radius: 50px;
+                                        ${include && 'display: flex; top: -92px;'}
+                                        div {
+                                            min-width: 40px;
+                                            height: 40px;
+                                            padding-top: 2px;
+                                            font-size: 28px;
+                                            margin: 0;
+                                            border-radius: 50%;
+                                            cursor: var(--pointer);
+                                        }
+                                        @media (min-width: 768px) {
+                                            &:hover {
+                                                #emoBar {
+                                                    display: flex;
+                                                    top: -92px;
+                                                }
+                                            }
+                                        }
+                                    `}
+                                >
+                                    {Imotions.map((i) => (
+                                        <DivEmoji
+                                            key={i.id}
+                                            css={`
+                                                ${i.id === 1 ? 'padding-bottom: 6px;' : ''}
+                                                ${showI?.id === i.id ? 'border: 1px solid #d6d6d6;' : ''}
+                                            `}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setShowI({ id: i.id, icon: i.icon });
+                                                setInclude(false);
+                                            }}
+                                        >
+                                            {i.icon}
+                                        </DivEmoji>
+                                    ))}
+                                </Div>
+                            </DivAction>
+                        )}
+                        {!typePrivate.some((t) => t.id === 3) && (
+                            <DivAction>
+                                <P css="font-size: 1.3rem;">...Comments</P>
+                            </DivAction>
+                        )}
+                        {!typePrivate.some((t) => t.id === 4) && (
+                            <DivAction>
+                                <ShareI />
+                            </DivAction>
+                        )}
                     </Div>
 
                     {setPreView && (

@@ -23,7 +23,7 @@ import {
     IoArrowUndoCircleOutline,
 } from 'react-icons/io5';
 import { IoMdNotifications, IoIosSend, IoMdShareAlt, IoIosArrowRoundBack } from 'react-icons/io';
-import { BiBullseye, BiDotsHorizontalRounded, BiReset, BiSolidSquareRounded, BiUser } from 'react-icons/bi';
+import { BiBullseye, BiDotsHorizontalRounded, BiLike, BiReset, BiSolidSquareRounded, BiUser } from 'react-icons/bi';
 import { FcSignature } from 'react-icons/fc';
 import { SiExpertsexchange } from 'react-icons/si';
 import {
@@ -36,6 +36,7 @@ import {
     AiOutlinePlayCircle,
     AiOutlineStar,
     AiFillHeart,
+    AiOutlineLike,
 } from 'react-icons/ai';
 import { GiBurningBook, GiEarthAmerica, GiNewspaper } from 'react-icons/gi';
 import {
@@ -52,7 +53,7 @@ import {
     MdNightlightRound,
 } from 'react-icons/md';
 import { GoClockFill, GoScreenFull, GoScreenNormal } from 'react-icons/go';
-import { FaPeopleArrows, FaAddressCard, FaUserFriends, FaBirthdayCake } from 'react-icons/fa';
+import { FaPeopleArrows, FaAddressCard, FaUserFriends, FaBirthdayCake, FaRegSmileBeam } from 'react-icons/fa';
 import { RiChatPrivateFill, RiDragMoveFill, RiExchangeCnyFill, RiMailSendLine, RiTyphoonLine } from 'react-icons/ri';
 import { TbArrowNarrowLeft, TbGenderFemale, TbGenderMale, TbGridDots, TbTextResize } from 'react-icons/tb';
 import { CgProfile, CgWebsite } from 'react-icons/cg';
@@ -110,7 +111,7 @@ export const IconI = () => <BsEmojiSmileFill />;
 export const ItalicI = () => <BsTypeItalic />;
 export const StraightI = () => <MdStraighten />;
 export const LockI = () => <BsClockHistory />;
-export const LikeI = () => <SlLike />;
+export const LikeI = () => <AiOutlineLike />;
 export const HeartI = () => <CiHeart />;
 export const ShareI = () => <IoMdShareAlt />;
 export const Bullseye = () => <BiBullseye />;
@@ -143,3 +144,4 @@ export const VolumeOnI = () => <BsFillVolumeDownFill />;
 export const ResetI = () => <BiReset />;
 export const PrivateI = () => <RiChatPrivateFill />;
 export const OclockI = () => <GoClockFill />;
+export const SmileI = () => <FaRegSmileBeam />;

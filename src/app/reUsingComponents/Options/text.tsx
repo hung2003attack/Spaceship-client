@@ -72,6 +72,7 @@ const OpText: React.FC<{
                         ],
                     },
                     { id: 3, name: 'Comment', value: 3 },
+                    { id: 4, name: 'Share', value: 4 },
                 ],
             },
         },
@@ -176,7 +177,7 @@ const OpText: React.FC<{
                 width: 100%;
                 height: 100%;
                 overflow-y: overlay;
-                background-color: #2a2a2a;
+                background-color: #292a2d;
                 z-index: 10;
                 padding: 10px;
             `}

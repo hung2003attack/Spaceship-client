@@ -141,7 +141,11 @@ export const DivWrapButton = styled.div`
     justify-content: space-evenly;
     margin: 10px 0;
 `;
-export const DivEmoji = styled.div`
+interface PropsEmo {
+    index?: number;
+    css?: string;
+}
+export const DivEmoji = styled.div<PropsEmo>`
     width: 100%;
     display: flex;
     align-items: center;
@@ -149,9 +153,15 @@ export const DivEmoji = styled.div`
     font-size: 1rem;
     margin-left: -6px;
     transition: all 0.4s linear;
-    z-index: ${(props: { index: number }) => props.index};
+    user-select: none;
+    z-index: ${(props) => props.index};
+    ${(props) => props.css};
     @media (min-width: 350px) {
-        font-size: 1.1rem;
+        font-size: 13rem;
+    }
+    @media (min-width: 768px) {
+        font-size: 15px;
+        /* margin-left: -10px; */
     }
 `;
 export const DivAction = styled.div`
@@ -161,9 +171,27 @@ export const DivAction = styled.div`
     justify-content: center;
     padding: 4px 0;
     font-size: 18px;
-    cursor: pointer;
+    position: relative;
+    user-select: none;
+    cursor: var(--pointer);
+  
+    @media (min-width: 400px) {
+        svg {
+            font-size: 21px;
+        }
+        font-size: 18px;
+    }
+    @media (min-width: 600px) {
+        svg {
+            font-size: 23px;
+        }
+        font-size: 19px;
+    }
     @media (min-width: 768px) {
-        font-size: 25px;
+        svg {
+            font-size: 25px;
+        }
+        font-size: 20px;
     }
 `;
 export const SpanAmount = styled.span`
