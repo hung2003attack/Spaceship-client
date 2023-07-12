@@ -1,12 +1,16 @@
 import styled from 'styled-components';
 
 export const DivSwiper = styled.div`
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     .swiper-slide,
     swiper-slide {
-        width: 33.2% !important;
+        width: 34% !important;
+    }
+    .swiper {
+        width: 100%;
     }
     .swiper,
     swiper-container {
@@ -15,8 +19,8 @@ export const DivSwiper = styled.div`
     }
     .swiper-pagination {
         top: unset !important;
-        bottom: -1px;
-        height: 1px !important;
+        bottom: -10px !important;
+        height: 10px !important;
     }
     .swiper-wrapper {
         align-items: center;
@@ -30,3 +34,4 @@ export const InputT = styled.input`
     background-color: transparent;
     color: aliceblue;
 `;
+export const InputC = styled.input``;

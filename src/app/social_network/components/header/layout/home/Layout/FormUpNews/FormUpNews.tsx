@@ -196,6 +196,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
                                     onKeyUp={handleOnKeyup}
                                     onChange={handleGetValue}
                                     placeholder={textarea}
+                                    BoBg="transparent"
                                 ></Textarea>
                             </Div>
                             {upload.length > 0 && (

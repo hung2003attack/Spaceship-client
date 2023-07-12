@@ -91,8 +91,9 @@ export const DivDataFake = styled.div`
     flex-wrap: wrap;
 `;
 interface PorpsTextarea {
-    bg: string;
+    bg?: string;
     font?: string;
+    BoBg?: string;
 }
 
 export const Textarea = styled.textarea<PorpsTextarea>`
@@ -105,11 +106,11 @@ export const Textarea = styled.textarea<PorpsTextarea>`
     margin-bottom: 10px;
     overflow: hidden;
     resize: none;
-    border: 1px solid transparent;
+    border: 1px solid ${(props) => props.BoBg};
     border-radius: 5px;
     outline: none;
     color: ${(props) => props.color};
-    background-color: ${(props: { bg: string }) => props.bg};
+    background-color: ${(props) => props.bg};
     font-family: ${(props) => props.font}, sans-serif;
     &::placeholder {
         color: white;

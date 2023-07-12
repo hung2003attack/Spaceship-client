@@ -29,6 +29,8 @@ import HttpRequestHome from '~/restAPI/requestServers/socialNetwork/home';
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import OpText from '~/reUsingComponents/Options/text';
 import Dynamic from './ViewPostFrame/TypeFile/Swipers/Dynamic';
+import Fade from './ViewPostFrame/TypeFile/Swipers/Fade';
+import Cards from './ViewPostFrame/TypeFile/Swipers/Cards';
 export interface PropsPreViewFormHome {
     time: {
         hour: string;
@@ -180,6 +182,8 @@ const PreviewPost: React.FC<{
         file.length > 3 ? (
             [
                 <Dynamic colorText={colorText} file={file} step={step} setStep={setStep} />,
+                <Fade colorText={colorText} file={file} step={step} setStep={setStep} />,
+                <Cards colorText={colorText} file={file} step={step} setStep={setStep} />,
                 <Coverflow colorText={colorText} file={file} step={step} setStep={setStep} />,
             ][selectChild - 1]
         ) : (
@@ -239,6 +243,8 @@ const PreviewPost: React.FC<{
                     <OptionType
                         step={step}
                         selectType={selectType}
+                        selectChild={selectChild}
+                        setSelectChild={setSelectChild}
                         column={column}
                         setColumn={setColumn}
                         setSelectType={setSelectType}
@@ -340,6 +346,7 @@ const PreviewPost: React.FC<{
                     <Div
                         width="100%"
                         css={`
+                            justify-content: center;
                             position: relative;
                             color: ${colorText};
                             ${step === 1

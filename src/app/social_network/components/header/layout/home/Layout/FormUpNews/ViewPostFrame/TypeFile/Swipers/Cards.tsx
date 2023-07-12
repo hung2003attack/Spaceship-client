@@ -1,20 +1,18 @@
-import { Pagination } from 'swiper';
 import React, { useRef, useState } from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles
 import 'swiper/css';
-import 'swiper/css/pagination';
+import 'swiper/css/effect-cards';
+// import required modules
+import { EffectCards } from 'swiper';
 import { Div, Img } from '~/reUsingComponents/styleComponents/styleDefault';
 import Player from '~/reUsingComponents/Videos/Player';
-import { DivSwiper } from './styleSwipers';
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import { ScreenI } from '~/assets/Icons/Icons';
 
-// import required modules
-
-const Dynamic: React.FC<{
+const Cards: React.FC<{
     file: {
         link: string;
         type: string;
@@ -25,7 +23,21 @@ const Dynamic: React.FC<{
 }> = ({ file, colorText, step, setStep }) => {
     return (
         <>
-            <Div width="100%">
+            <Div
+                display="block"
+                width="50%"
+                css={`
+                    .swiper-wrapper {
+                        align-items: center;
+                        img {
+                            object-fit: contain;
+                            background-color: aliceblue;
+                        }
+                    }
+                    height: fit-content;
+                    margin: auto;
+                `}
+            >
                 {step !== 0 && (
                     <DivPos
                         size="20px"
@@ -44,19 +56,13 @@ const Dynamic: React.FC<{
                         <ScreenI />
                     </DivPos>
                 )}
-                <Swiper
-                    pagination={{
-                        dynamicBullets: true,
-                    }}
-                    modules={[Pagination]}
-                    className="mySwiper"
-                >
+                <Swiper effect={'cards'} loop={true} grabCursor={true} modules={[EffectCards]} className="mySwiper">
                     {file.map((f) => (
                         <SwiperSlide key={f.link}>
                             {f.type === 'image' ? (
-                                <Img src={f.link} id="baby" alt={f.link} radius="5px" />
+                                <Img src={f.link} alt={f.link} radius="5px" />
                             ) : f.type === 'video' ? (
-                                <Player src={f.link} step={step} />
+                                <Player src={f.link} step={step} height="100%" />
                             ) : (
                                 ''
                             )}
@@ -67,4 +73,4 @@ const Dynamic: React.FC<{
         </>
     );
 };
-export default Dynamic;
+export default Cards;
