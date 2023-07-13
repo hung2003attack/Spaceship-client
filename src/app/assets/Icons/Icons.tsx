@@ -14,6 +14,7 @@ import {
     BsImage,
     BsFillVolumeMuteFill,
     BsFillVolumeDownFill,
+    BsFillCameraFill,
 } from 'react-icons/bs';
 import {
     IoImagesOutline,
@@ -96,7 +97,6 @@ export const DotI = () => <BiDotsHorizontalRounded />;
 export const FriendI = () => <FaUserFriends />;
 export const PeopleI = () => <MdEmojiPeople />;
 export const UserI = () => <BiUser />;
-export const CameraI = () => <BsFillCameraVideoFill />;
 export const SendOPTI = () => <IoIosSend />;
 export const LoadingI = () => <AiOutlineLoading />;
 export const ResTartI = () => <MdRestartAlt />;
@@ -130,7 +130,7 @@ export const HeartMI = () => <AiFillHeart />;
 export const FollowI = () => <GiBurningBook />;
 export const ProfileCircelI = () => <CgProfile />;
 export const TyOnlineI = () => <BsFillCircleFill />;
-export const ImageBayI = () => <BsImage />;
+export const CameraI = () => <BsFillCameraFill />;
 export const TitleI = () => <MdOutlineTitle />;
 export const ChangeI = () => <RiExchangeCnyFill />;
 export const BackI = () => <IoIosArrowRoundBack />;

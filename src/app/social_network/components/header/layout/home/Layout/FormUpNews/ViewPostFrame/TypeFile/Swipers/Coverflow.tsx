@@ -125,8 +125,8 @@ const Coverflow: React.FC<{
                 coverflowEffect={{
                     rotate: 0,
                     stretch: 0,
-                    depth: 100,
-                    modifier: 3,
+                    depth: 120,
+                    modifier: 1,
                     slideShadows: true,
                 }}
                 pagination={true}
@@ -141,9 +141,9 @@ const Coverflow: React.FC<{
                         <SwiperSlide key={f.link}>
                             {f.type === 'image' ? (
                                 <Div
+                                    width="100%"
                                     css={`
                                         img {
-                                            object-fit: contain;
                                             z-index: 1;
                                         }
                                         div {
@@ -155,14 +155,13 @@ const Coverflow: React.FC<{
                                                 display: flex;
                                             }
                                             background-color: #292a2d;
-                                            ${step === 1 ? 'width: 520px; height: 380px;' : ''}
                                         }
                                     `}
                                 >
                                     {step === 1 && (
                                         <Div
+                                            width="100%"
                                             css={`
-                                                width: 520px;
                                                 height: 100%;
                                                 position: absolute;
                                                 top: 0;
@@ -173,99 +172,106 @@ const Coverflow: React.FC<{
                                             `}
                                         ></Div>
                                     )}
-                                    <Div
-                                        css={`
-                                            ${step === 1 ? 'width: 520px;' : 'width: 100%;'}
-                                            position: absolute;
-                                            flex-wrap: wrap;
-                                            overflow: hidden;
-                                            bottom: 0;
-                                            z-index: 2;
-                                            background-color: #0000008c;
-                                            padding: 10px;
-                                        `}
-                                    >
-                                        {showTitle.length > 0 && !showTitle.includes(index) && (
-                                            <Div onClick={() => setShowTitle([...showTitle, index])}>
-                                                <TitleI />
-                                            </Div>
-                                        )}
-                                        {showTitle.includes(index) && (
-                                            <>
-                                                <Input
-                                                    placeholder="Title"
-                                                    color={colorText}
-                                                    onChange={(e) => handleGetTitle(e, index)}
-                                                />
-                                                <Textarea
-                                                    color={colorText}
-                                                    bg="transparent"
-                                                    placeholder="Content"
-                                                    onKeyUp={handleOnKeyup}
-                                                    onChange={(e) => handleGetContent(e, index)}
-                                                />
-                                                <Buttons
-                                                    text={[
-                                                        {
-                                                            text: 'Save',
-                                                            css: 'color: #247f76;',
-                                                        },
-                                                        {
-                                                            text: 'Cancel',
-                                                            css: 'color: #ac5b5b;',
-                                                            onClick: () => {
-                                                                let check = false;
-                                                                showTitle.forEach((s) => {
-                                                                    if (s === index) {
-                                                                        check = true;
-                                                                    }
-                                                                });
-                                                                if (check) {
-                                                                    setShowTitle(() =>
-                                                                        showTitle.filter((s) => s !== index),
-                                                                    );
-                                                                } else {
-                                                                    setShowTitle([...showTitle, index]);
-                                                                }
-                                                            },
-                                                        },
-                                                    ]}
-                                                />
-                                            </>
-                                        )}
-                                        {title.map((t) => {
-                                            return t.id === index ? (
-                                                <Hname
-                                                    key={index}
-                                                    css={`
-                                                        width: 100%;
-                                                        ${step === 1 ? 'font-size: 1.6rem;' : 'font-size: 1.4rem;'}
-                                                    `}
-                                                >
-                                                    {t.title}
-                                                </Hname>
-                                            ) : (
-                                                ''
-                                            );
-                                        })}
-                                        {content.map((t) => {
-                                            return t.id === index ? (
-                                                <P
-                                                    key={index}
-                                                    css={`
-                                                        ${(!more.includes(index) || step !== 1) &&
-                                                        ' overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;'}
-                                                        ${step === 1 ? 'font-size: 1.4rem' : 'font-size: 1rem;'}
-                                                    `}
-                                                >
-                                                    {t.title}
-                                                </P>
-                                            ) : (
-                                                ''
-                                            );
-                                        })}
+                                    {showTitle.length > 0 && (
+                                        <Div
+                                            width="100%"
+                                            css={`
+                                                position: absolute;
+                                                flex-wrap: wrap;
+                                                overflow: hidden;
+                                                bottom: 0;
+                                                z-index: 2;
+                                                background-color: #0000008c;
+                                                padding: 10px;
+                                            `}
+                                        >
+                                            {showTitle.length > 0 && !showTitle.includes(index) && (
+                                                <Div onClick={() => setShowTitle([...showTitle, index])}>
+                                                    <TitleI />
+                                                </Div>
+                                            )}
 
-                                        {/* <Span
+                                            {showTitle.includes(index) && step === 1 && (
+                                                <>
+                                                    <Input
+                                                        placeholder="Title"
+                                                        color={colorText}
+                                                        onChange={(e) => handleGetTitle(e, index)}
+                                                    />
+                                                    <Textarea
+                                                        color={colorText}
+                                                        bg="transparent"
+                                                        placeholder="Content"
+                                                        onKeyUp={handleOnKeyup}
+                                                        onChange={(e) => handleGetContent(e, index)}
+                                                    />
+                                                    <Buttons
+                                                        text={[
+                                                            {
+                                                                text: 'Save',
+                                                                css: 'color: #247f76;',
+                                                            },
+                                                            {
+                                                                text: 'Cancel',
+                                                                css: 'color: #ac5b5b;',
+                                                                onClick: () => {
+                                                                    let check = false;
+                                                                    showTitle.forEach((s) => {
+                                                                        if (s === index) {
+                                                                            check = true;
+                                                                        }
+                                                                    });
+                                                                    if (check) {
+                                                                        setShowTitle(() =>
+                                                                            showTitle.filter((s) => s !== index),
+                                                                        );
+                                                                    } else {
+                                                                        setShowTitle([...showTitle, index]);
+                                                                    }
+                                                                },
+                                                            },
+                                                        ]}
+                                                    />
+
+                                                    {title.map((t) => {
+                                                        return t.id === index ? (
+                                                            <Hname
+                                                                key={index}
+                                                                css={`
+                                                                    width: 100%;
+                                                                    ${step === 1
+                                                                        ? 'font-size: 1.6rem;'
+                                                                        : 'font-size: 1.4rem;'}
+                                                                `}
+                                                            >
+                                                                {t.title}
+                                                            </Hname>
+                                                        ) : (
+                                                            ''
+                                                        );
+                                                    })}
+                                                    {content.map((t) => {
+                                                        return t.id === index ? (
+                                                            <P
+                                                                key={index}
+                                                                css={`
+                                                                    ${(!more.includes(index) || step !== 1) &&
+                                                                    ' overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;'}
+                                                                    ${step === 1
+                                                                        ? 'font-size: 1.4rem'
+                                                                        : 'font-size: 1rem;'}
+                                                                `}
+                                                            >
+                                                                {t.title}
+                                                            </P>
+                                                        ) : (
+                                                            ''
+                                                        );
+                                                    })}
+                                                </>
+                                            )}
+
+                                            {/* <Span
                                             css={`
                                                 padding: 4px 0;
                                                 ${step === 1 ? 'font-size: 1.4rem' : 'font-size: 1.2rem;'}
@@ -285,7 +291,9 @@ const Coverflow: React.FC<{
                                         >
                                             {more.includes(index) ? 'Ẩn bớt' : 'Xem thêm'}
                                         </Span> */}
-                                    </Div>
+                                        </Div>
+                                    )}
+
                                     <Img src={f.link} id="baby" alt={f.link} radius="5px" />
                                 </Div>
                             ) : f.type === 'video' ? (

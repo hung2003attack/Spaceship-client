@@ -210,3 +210,16 @@ export const TextAreaPre = styled.textarea`
     outline: none;
     ${(props: { css?: string }) => props.css}
 `;
+export const DivComment = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    @media (max-width: 550px) {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 7;
+    }
+`;

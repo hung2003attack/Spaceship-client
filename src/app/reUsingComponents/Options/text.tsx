@@ -73,6 +73,7 @@ const OpText: React.FC<{
                     },
                     { id: 3, name: 'Comment', value: 3 },
                     { id: 4, name: 'Share', value: 4 },
+                    { id: 5, name: 'Anonymous comment', value: 5 },
                 ],
             },
         },
@@ -125,11 +126,7 @@ const OpText: React.FC<{
                 setOpSelect(() => {
                     const d = newData.filter((v) => {
                         if (child.id === 1) {
-                            if (v === 2 + `${rs.id}`) {
-                            } else if (v === 3 + `${rs.id}`) {
-                            } else {
-                                return v;
-                            }
+                            if (v === 1 + `${rs.id}`) return v;
                         } else {
                             if (v === 1 + `${rs.id}`) {
                             } else {
@@ -341,7 +338,7 @@ const OpText: React.FC<{
                                         </Div>
                                     )}
                                     {OpSelect.includes(child.id + `${rs.id}`) && typeof child.value === 'number' && (
-                                        <DivPos top="5px" left="90px" color="#61ff61;">
+                                        <DivPos top="5px" left="150px" color="#61ff61;">
                                             <CheckI />
                                         </DivPos>
                                     )}

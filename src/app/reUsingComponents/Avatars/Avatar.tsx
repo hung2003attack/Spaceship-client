@@ -21,6 +21,7 @@ interface _Avatar {
     css?: string;
     profile?: boolean;
     onTouchMove?: (args: any) => void;
+    children?: React.ReactElement;
 }
 
 const Avatar = forwardRef((props: _Avatar, ref: any) => {
@@ -36,19 +37,24 @@ const Avatar = forwardRef((props: _Avatar, ref: any) => {
             ? Images.defaultAvatarMale
             : gender === 1
             ? Images.defaultAvatarFemale
+            : gender === 11
+            ? Images.anonymousMale
+            : gender === 12
+            ? Images.anonymousFemale
             : Images.defaultAvataLgbt,
         onClick,
         onTouchMove,
         css,
         profile = false,
+        children,
     } = props;
     const dispatch = useDispatch();
     const [idUser] = useSelector((state: { hideShow: InitialStateHideShow }) => state.hideShow.idUser);
     const [avatar, setAvatar] = useState<boolean>(false);
-    const [avatarFallback, setAvatarFallback] = useState<string>(() => {
-        return !src ? Fallback : src;
-    });
-
+    const [avatarFallback, setAvatarFallback] = useState<string>('');
+    useEffect(() => {
+        setAvatarFallback(!src ? Fallback : src);
+    }, [Fallback, src]);
     const [repetitions, setRepetitions] = useState<number>(0);
     const handleErrorImage = () => {
         console.log('err');
@@ -69,11 +75,13 @@ const Avatar = forwardRef((props: _Avatar, ref: any) => {
     const handleOpentProfile = () => {
         if (profile) dispatch(setIdUser([id]));
     };
+    console.log(src, gender, Fallback, alt, avatarFallback);
 
     return avatar ? (
         <FaUserCircle />
     ) : (
         <DivImg id={idH} width={width} css={css} {...events} ref={ref}>
+            {children}
             <Img
                 src={src || avatarFallback}
                 alt={alt}

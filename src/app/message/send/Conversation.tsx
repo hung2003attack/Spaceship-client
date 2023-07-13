@@ -1,6 +1,6 @@
 import { Div, Img, Input, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import { DivConversation, DivResultsConversation } from './styleSed';
-import { DotI, ImageBayI, ProfileCircelI, SendOPTI, UndoI } from '~/assets/Icons/Icons';
+import { DotI, CameraI, ProfileCircelI, SendOPTI, UndoI } from '~/assets/Icons/Icons';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import { CallName, Hname } from '~/reUsingComponents/styleComponents/styleComponents';
 import dataEmoji from '@emoji-mart/data/sets/14/facebook.json';
@@ -527,7 +527,7 @@ const Conversation: React.FC<{
                                         hidden
                                     />
                                     <Label htmlFor="uploadCon" color={colorText}>
-                                        <ImageBayI />
+                                        <CameraI />
                                     </Label>
                                 </form>
                             </Div>

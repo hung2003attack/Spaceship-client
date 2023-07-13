@@ -3,7 +3,7 @@ import Picker from '@emoji-mart/react';
 import 'video-react/dist/video-react.css';
 import './formUpNews.scss';
 
-import { CloseI, LoadingI, PreviewI } from '~/assets/Icons/Icons';
+import { CameraI, CloseI, LoadingI, PreviewI } from '~/assets/Icons/Icons';
 
 import { Player } from 'video-react';
 import {
@@ -141,7 +141,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
                                         hidden
                                     />
                                     <Label htmlFor="upload" color={colorText}>
-                                        🖼️
+                                        <CameraI />
                                     </Label>
                                 </DivItems>
 

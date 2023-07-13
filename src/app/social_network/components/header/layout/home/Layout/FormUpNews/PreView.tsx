@@ -31,6 +31,7 @@ import OpText from '~/reUsingComponents/Options/text';
 import Dynamic from './ViewPostFrame/TypeFile/Swipers/Dynamic';
 import Fade from './ViewPostFrame/TypeFile/Swipers/Fade';
 import Cards from './ViewPostFrame/TypeFile/Swipers/Cards';
+import Comment from './Comment';
 export interface PropsPreViewFormHome {
     time: {
         hour: string;
@@ -59,19 +60,26 @@ const PreviewPost: React.FC<{
     userId: string;
     upload: any;
 }> = ({ user, setPreView, colorText, colorBg, file, upload, valueText, fontFamily, dataText, token, userId }) => {
+    // Select type of post
     const [selectType, setSelectType] = useState<number>(0);
+    // select children of swiper
     const [selectChild, setSelectChild] = useState<number>(1);
-
+    // column
     const [column, setColumn] = useState<number>(3);
-    const [step, setStep] = useState<number>(0);
     const [bg, setBg] = useState<string>('#1b1919');
+    // steps of feature
+    const [step, setStep] = useState<number>(0);
+    // show option of post
     const [options, setOptions] = useState<boolean>(false);
-    const [showI, setShowI] = useState<{ id: number; icon: string } | undefined>();
     const [include, setInclude] = useState<boolean>(false);
     const [showAc, setShowAc] = useState<boolean>(false);
+    const [showComment, setShowComment] = useState<boolean>(false);
+
+    const [showI, setShowI] = useState<{ id: number; icon: string } | undefined>();
     const [acEmo, setAcEmo] = useState<{ id: number; icon: React.ReactElement }>({ id: 1, icon: <LikeI /> });
     const textA = useRef<any>();
 
+    // options of post
     const [typePrivate, setTypePrivate] = useState<{ id: number; name: string }[]>([]);
     const [typeExpire, setTypeExpire] = useState<{ cate: number; name: string; value: number }>();
     const [Imotions, setImotions] = useState<{ id: number; icon: string }[]>([
@@ -501,7 +509,7 @@ const PreviewPost: React.FC<{
                             </DivAction>
                         )}
                         {!typePrivate.some((t) => t.id === 3) && (
-                            <DivAction>
+                            <DivAction onClick={() => setShowComment(true)}>
                                 <P css="font-size: 1.3rem;">...Comments</P>
                             </DivAction>
                         )}
@@ -511,7 +519,7 @@ const PreviewPost: React.FC<{
                             </DivAction>
                         )}
                     </Div>
-
+                    {showComment && <Comment colorText={colorText} setShowComment={setShowComment} />}
                     {setPreView && (
                         <DivWrapButton>
                             <Button

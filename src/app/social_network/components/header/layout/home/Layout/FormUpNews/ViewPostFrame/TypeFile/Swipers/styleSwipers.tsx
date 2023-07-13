@@ -7,7 +7,7 @@ export const DivSwiper = styled.div`
     justify-content: center;
     .swiper-slide,
     swiper-slide {
-        width: 34% !important;
+        width: 33.2% !important;
     }
     .swiper {
         width: 100%;
@@ -34,4 +34,4 @@ export const InputT = styled.input`
     background-color: transparent;
     color: aliceblue;
 `;
-export const InputC = styled.input``;
+export const TextA = styled.input``;

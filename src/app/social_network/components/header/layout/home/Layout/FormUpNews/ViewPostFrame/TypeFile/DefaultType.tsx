@@ -249,7 +249,10 @@ const DefaultType: React.FC<{
                                             justify-content: center;
                                             background-color: #6d6f7273;
                                         `}
-                                        onClick={() => setMoreFile((pre) => pre + 6)}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setMoreFile((pre) => pre + 6);
+                                        }}
                                     >
                                         <P>More</P>
                                     </Div>
