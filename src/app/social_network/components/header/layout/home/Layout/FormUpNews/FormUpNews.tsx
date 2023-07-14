@@ -63,6 +63,8 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
         handlePost,
         preView,
         loading,
+        dataCentered,
+        setDataCentered,
     } = LogicForm(form, colorText, colorBg, user);
     return (
         <>
@@ -136,7 +138,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
                                         id="upload"
                                         type="file"
                                         name="file[]"
-                                        onChange={handleImageUpload}
+                                        onChange={(e) => handleImageUpload(e)}
                                         multiple
                                         hidden
                                     />

@@ -112,7 +112,7 @@ const Player: React.FC<{ src: string; step: number; height?: string }> = ({ src,
         <Div
             width="100%"
             css={`
-                height: ${height};
+                height: ${height || '100%'};
                 justify-content: center;
                 position: relative;
                 overflow: hidden;

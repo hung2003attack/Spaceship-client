@@ -4,6 +4,7 @@ import { PropsUserHome } from '../../Home';
 import {
     BanI,
     Bullseye,
+    CameraI,
     DotI,
     FriendI,
     FullScreenI,
@@ -19,7 +20,16 @@ import {
     SmileI,
 } from '~/assets/Icons/Icons';
 import { Player } from 'video-react';
-import { DivAction, DivEmoji, DivWrapButton, SpanAmount, TextAreaPre, Textarea } from './styleFormUpNews';
+import {
+    DivAction,
+    DivEmoji,
+    DivItems,
+    DivWrapButton,
+    Label,
+    SpanAmount,
+    TextAreaPre,
+    Textarea,
+} from './styleFormUpNews';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Coverflow from './ViewPostFrame/TypeFile/Swipers/Coverflow';
 import Grid from './ViewPostFrame/TypeFile/Grid';
@@ -32,6 +42,7 @@ import Dynamic from './ViewPostFrame/TypeFile/Swipers/Dynamic';
 import Fade from './ViewPostFrame/TypeFile/Swipers/Fade';
 import Cards from './ViewPostFrame/TypeFile/Swipers/Cards';
 import Comment from './Comment';
+import Centered from './ViewPostFrame/TypeFile/Swipers/Centered';
 export interface PropsPreViewFormHome {
     time: {
         hour: string;
@@ -59,7 +70,30 @@ const PreviewPost: React.FC<{
     token: string;
     userId: string;
     upload: any;
-}> = ({ user, setPreView, colorText, colorBg, file, upload, valueText, fontFamily, dataText, token, userId }) => {
+
+    dataCenteredPre: {
+        id: number;
+        data: {
+            link: string;
+            type: string;
+        }[];
+    }[];
+    handleImageUpload: (e: any, addMore?: boolean) => Promise<void>;
+}> = ({
+    user,
+    setPreView,
+    colorText,
+    colorBg,
+    file,
+    upload,
+    valueText,
+    fontFamily,
+    dataText,
+    token,
+    userId,
+    handleImageUpload,
+    dataCenteredPre,
+}) => {
     // Select type of post
     const [selectType, setSelectType] = useState<number>(0);
     // select children of swiper
@@ -193,6 +227,14 @@ const PreviewPost: React.FC<{
                 <Fade colorText={colorText} file={file} step={step} setStep={setStep} />,
                 <Cards colorText={colorText} file={file} step={step} setStep={setStep} />,
                 <Coverflow colorText={colorText} file={file} step={step} setStep={setStep} />,
+                <Centered
+                    colorText={colorText}
+                    file={file}
+                    step={step}
+                    setStep={setStep}
+                    handleImageUpload={handleImageUpload}
+                    dataCenteredPre={dataCenteredPre}
+                />,
             ][selectChild - 1]
         ) : (
             <P color="#c05d5d">Please select at least 3!</P>
@@ -261,6 +303,19 @@ const PreviewPost: React.FC<{
                         file={file}
                     />
                 )}
+                {/* <Div
+                    width="100%"
+                    css={`
+                        height: 25px;
+                        border-left: 1px solid #353535;
+                        border-right: 1px solid #353535;
+                        border-top: 1px solid #353535;
+                        border-bottom: 1px solid #525150;
+                        border-top-left-radius: 5px;
+                        border-top-right-radius: 5px;
+                        background-color: #292a2d;
+                    `}
+                ></Div> */}
                 <Div
                     wrap="wrap"
                     css={`
@@ -270,10 +325,46 @@ const PreviewPost: React.FC<{
                         position: relative;
                         border: 1px solid #353535;
                         @media (min-width: 768px) {
-                            border-radius: 5px;
+                            border-bottom-left-radius: 5px;
+                            border-bottom-right-radius: 5px;
                         }
                     `}
                 >
+                    {selectType === 1 && selectChild === 5 && (
+                        <DivPos
+                            size="18px"
+                            top="25px"
+                            right="19px"
+                            css={`
+                                z-index: 1;
+                                label {
+                                    font-size: 1.3rem;
+                                }
+                                div {
+                                    width: fit-content;
+                                }
+                                @media (min-width: 370px) {
+                                    top: 2px;
+                                    right: 77px;
+                                }
+                            `}
+                            color={colorText}
+                        >
+                            <DivItems>
+                                <input
+                                    id="uploadCen"
+                                    type="file"
+                                    name="file[]"
+                                    onChange={(e) => handleImageUpload(e, true)}
+                                    multiple
+                                    hidden
+                                />
+                                <Label htmlFor="uploadCen" color={colorText}>
+                                    Thêm Hàng
+                                </Label>
+                            </DivItems>
+                        </DivPos>
+                    )}
                     {step === 0 && file.length > 0 && (
                         <DivPos
                             size="18px"
@@ -358,7 +449,7 @@ const PreviewPost: React.FC<{
                             position: relative;
                             color: ${colorText};
                             ${step === 1
-                                ? 'height: 100%; overflow-y: overlay; position: fixed; top: 0; left: 0; right: 0;  background-color: #1f2021; z-index: 8888; @media(max-width: 769px){&::-webkit-scrollbar {width: 0px;}}'
+                                ? 'height: 100%; overflow-y: overlay; position: fixed; top: 0; left: 0; right: 0; align-items: center;  background-color: #1f2021; z-index: 8888; @media(max-width: 769px){&::-webkit-scrollbar {width: 0px;}}'
                                 : ''};
                         `}
                     >

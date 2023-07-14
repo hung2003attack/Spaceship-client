@@ -91,7 +91,7 @@ const Login: React.FC<{
                 const data = await authHttpRequest.postLogin(params, setCookies);
                 console.log('res', data);
 
-                if (data.errCode === 0) setErrText('Account is not exist or password wrong!');
+                if (!data.user) setErrText('Account is not exist or password wrong!');
             }
         } catch (e) {
             console.log('errorLogin', e);

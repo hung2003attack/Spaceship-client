@@ -27,6 +27,22 @@ const DefaultType: React.FC<{
         setShowComment,
     } = LogicType(step, setStep, colorText);
     const [classify, setClassify] = useState<{ value: string; id: number }[]>([{ value: '', id: 0 }]);
+    const [heightV, setHeightV] = useState<string>('');
+    useEffect(() => {
+        setHeightV('');
+        if (file[0].type === ' image') {
+            var img = new Image();
+            img.src = file[0].link; // Thay đường dẫn bằng đường dẫn hình ảnh thực tế
+
+            img.addEventListener('load', function () {
+                var imageHeight = img.naturalHeight;
+                var imageWidth = img.naturalWidth;
+                console.log('Chiều cao: ' + imageHeight);
+                console.log('Chiều rộng: ' + imageWidth);
+            });
+        } else {
+        }
+    }, [file]);
 
     return (
         <Div
@@ -61,6 +77,23 @@ const DefaultType: React.FC<{
                 {step === 1 && ToolDefault(1)}
             </>
             {file.map((f, index, arr) => {
+                if (f.type === 'video' && !heightV) {
+                    var video = document.createElement('video');
+                    video.src = file[0].link; // Thay đường dẫn bằng đường dẫn video thực tế
+
+                    video.addEventListener('loadedmetadata', function () {
+                        var videoHeight = video.videoHeight;
+                        var videoWidth = video.videoWidth;
+                        if (videoHeight - videoWidth > 400) {
+                            setHeightV('550px');
+                        } else {
+                            setHeightV('auto');
+                        }
+                        console.log('Chiều cao: ' + videoHeight);
+                        console.log('Chiều rộng: ' + videoWidth);
+                    });
+                }
+                // check every 6 picture
                 if (step === 0 ? index < moreFile : true) {
                     return (
                         <>
@@ -79,9 +112,9 @@ const DefaultType: React.FC<{
                                     position: relative;
                                     justify-content: center;
                                     align-items: center;
-                                    ${showTitle && step === 1 && 'padding-bottom: 24px;'}
+                                    ${showTitle && step === 1 && 'padding-bottom: 24px'};
                                     color: ${colorText};
-                                    ${f.type === 'video' && file.length === 1 ? 'height: 510px;' : ''}
+                                    height: ${heightV};
                                     ${step > 1 && cc === f.link
                                         ? `position: fixed; height: 100%; top: 0; left:0; z-index: 103; background-color: #0e0e0d; img,div.video-react-controls-enabled{object-fit: contain; margin: auto;}`
                                         : ''}

@@ -8,8 +8,8 @@ export const DivPost = styled.div`
     align-items: center;
     font-family: 'Noto Sans', sans-serif;
 
-    @media (min-width: 520px) {
-        width: 520px;
+    @media (min-width: 580px) {
+        width: 580px;
     }
     @media (max-width: 768px) {
         &::-webkit-scrollbar {

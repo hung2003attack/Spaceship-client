@@ -84,21 +84,23 @@ const Coverflow: React.FC<{
                     : ''}
             `}
         >
-            <DivPos
-                size="20px"
-                top="50px"
-                right="11.5px"
-                onClick={() => {
-                    if (showTitle.length > 0) {
-                        setShowTitle([]);
-                    } else {
-                        setShowTitle(TList);
-                    }
-                }}
-                css="position: fixed;  color: #e2d2d2; font-size: 22px; z-index: 888; width: 35px; height: 35px; background-color: #0304048a; transition: all 0.5s linear; "
-            >
-                <TitleI />
-            </DivPos>
+            {step === 1 && (
+                <DivPos
+                    size="20px"
+                    top="50px"
+                    right="11.5px"
+                    onClick={() => {
+                        if (showTitle.length > 0) {
+                            setShowTitle([]);
+                        } else {
+                            setShowTitle(TList);
+                        }
+                    }}
+                    css="position: fixed;  color: #e2d2d2; font-size: 22px; z-index: 888; width: 35px; height: 35px; background-color: #0304048a; transition: all 0.5s linear; "
+                >
+                    <TitleI />
+                </DivPos>
+            )}
             {step !== 0 && (
                 <DivPos
                     size="20px"

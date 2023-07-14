@@ -75,7 +75,6 @@ const Avatar = forwardRef((props: _Avatar, ref: any) => {
     const handleOpentProfile = () => {
         if (profile) dispatch(setIdUser([id]));
     };
-    console.log(src, gender, Fallback, alt, avatarFallback);
 
     return avatar ? (
         <FaUserCircle />

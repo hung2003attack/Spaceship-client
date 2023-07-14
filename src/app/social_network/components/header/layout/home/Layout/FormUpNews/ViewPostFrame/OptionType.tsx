@@ -55,6 +55,10 @@ const OptionType: React.FC<{
                     id: 4,
                     name: 'Coverflow',
                 },
+                {
+                    id: 5,
+                    name: 'Centered',
+                },
             ],
         },
         { name: 'Grid-Columns: ', id: 2, column: 3 },
@@ -166,6 +170,7 @@ const OptionType: React.FC<{
                                 padding: 5px;
                                 margin: 0 8px;
                                 border-radius: 5px;
+                                cursor: var(--pointer);
                                 ${selectChild === c.id ? 'background-color: #525252;' : ''}
                             `}
                             onClick={() => setSelectChild(c.id)}

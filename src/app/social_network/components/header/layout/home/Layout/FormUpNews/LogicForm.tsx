@@ -20,8 +20,18 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
     const [preView, setPreView] = useState<ReactNode>();
     const [upload, setupload] = useState<{ link: string; type: string }[]>([]);
     const [inputValue, setInputValue] = useState<any>('');
+
     const uploadPre = useRef<{ link: string; type: string }[]>([]);
+    // upload submit
     const uploadRef = useRef<{ file: Blob; title: string }[]>([]);
+    // add data when select type centered of swiper for submit
+    const [dataCentered, setDataCentered] = useState<{ id: number; data: { file: Blob; title: string }[] }[]>([]);
+    const CenteredRef = useRef<{ id: number; data: { file: Blob; title: string }[] }[]>([]);
+    // preView
+    const [dataCenteredPre, setDataCenteredPre] = useState<{ id: number; data: { link: string; type: string }[] }[]>(
+        [],
+    );
+    const CenteredPreRef = useRef<{ id: number; data: { link: string; type: string }[] }[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [fontFamily, setFontFamily] = useState<{ name: string; type: string }>({
         name: 'Noto Sans',
@@ -37,7 +47,13 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
 
     console.log(form);
     let fileAmount = 25;
-    const handleImageUpload = async (e: any) => {
+    const handleImageUpload = async (e: any, addMore?: boolean) => {
+        e.stopPropagation();
+        console.log(addMore, 'addMore');
+        if (addMore) {
+            CenteredRef.current.push({ id: 1, data: uploadRef.current });
+            CenteredPreRef.current.push({ id: 1, data: uploadPre.current });
+        }
         setLoading(true);
         uploadPre.current = [];
         uploadRef.current = [];
@@ -111,6 +127,13 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
             if (uploadPre.current.length > 0) {
                 setupload(uploadPre.current);
             }
+            if (addMore) {
+                CenteredRef.current.push({ id: 2, data: uploadRef.current });
+                CenteredPreRef.current.push({ id: 2, data: uploadPre.current });
+                setDataCentered(CenteredRef.current);
+                setDataCenteredPre(CenteredPreRef.current);
+            }
+
             console.log('no');
         } else {
             dispatch(setTrueErrorServer(`You can only select ${fileAmount} file at most!`));
@@ -136,6 +159,8 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
                 dataText={dataTextPreView}
                 token={token}
                 userId={userId}
+                dataCenteredPre={dataCenteredPre}
+                handleImageUpload={handleImageUpload}
             />,
         );
     };
@@ -186,5 +211,7 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
         handlePost,
         preView,
         loading,
+        dataCentered,
+        setDataCentered,
     };
 }
