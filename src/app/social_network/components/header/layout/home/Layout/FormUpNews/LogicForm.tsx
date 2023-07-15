@@ -25,13 +25,15 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
     // upload submit
     const uploadRef = useRef<{ file: Blob; title: string }[]>([]);
     // add data when select type centered of swiper for submit
-    const [dataCentered, setDataCentered] = useState<{ id: number; data: { file: Blob; title: string }[] }[]>([]);
-    const CenteredRef = useRef<{ id: number; data: { file: Blob; title: string }[] }[]>([]);
+    const [dataCentered, setDataCentered] = useState<
+        { id: number; columns: number; data: { file: Blob; title: string }[] }[]
+    >([]);
+    const CenteredRef = useRef<{ id: number; columns: number; data: { file: Blob; title: string }[] }[]>([]);
     // preView
-    const [dataCenteredPre, setDataCenteredPre] = useState<{ id: number; data: { link: string; type: string }[] }[]>(
-        [],
-    );
-    const CenteredPreRef = useRef<{ id: number; data: { link: string; type: string }[] }[]>([]);
+    const [dataCenteredPre, setDataCenteredPre] = useState<
+        { id: number; columns: number; data: { link: string; type: string }[] }[]
+    >([]);
+    const CenteredPreRef = useRef<{ id: number; columns: number; data: { link: string; type: string }[] }[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [fontFamily, setFontFamily] = useState<{ name: string; type: string }>({
         name: 'Noto Sans',
@@ -50,10 +52,6 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
     const handleImageUpload = async (e: any, addMore?: boolean) => {
         e.stopPropagation();
         console.log(addMore, 'addMore');
-        if (addMore) {
-            CenteredRef.current.push({ id: 1, data: uploadRef.current });
-            CenteredPreRef.current.push({ id: 1, data: uploadPre.current });
-        }
         setLoading(true);
         uploadPre.current = [];
         uploadRef.current = [];
@@ -124,12 +122,15 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
                 uploadPre.current.push(newDa[0]);
                 uploadRef.current.push(newDa[1]);
             }
-            if (uploadPre.current.length > 0) {
+            if (!addMore) {
                 setupload(uploadPre.current);
-            }
-            if (addMore) {
-                CenteredRef.current.push({ id: 2, data: uploadRef.current });
-                CenteredPreRef.current.push({ id: 2, data: uploadPre.current });
+            } else {
+                CenteredRef.current.push({ id: CenteredRef.current.length + 1, columns: 4, data: uploadRef.current });
+                CenteredPreRef.current.push({
+                    id: CenteredPreRef.current.length + 1,
+                    columns: 4,
+                    data: uploadPre.current,
+                });
                 setDataCentered(CenteredRef.current);
                 setDataCenteredPre(CenteredPreRef.current);
             }
@@ -159,8 +160,12 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
                 dataText={dataTextPreView}
                 token={token}
                 userId={userId}
-                dataCenteredPre={dataCenteredPre}
                 handleImageUpload={handleImageUpload}
+                dataCentered={dataCentered}
+                setDataCentered={setDataCentered}
+                dataCenteredPre={dataCenteredPre}
+                setDataCenteredPre={setDataCenteredPre}
+                handlePostPre={handlePost}
             />,
         );
     };
@@ -211,7 +216,5 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
         handlePost,
         preView,
         loading,
-        dataCentered,
-        setDataCentered,
     };
 }

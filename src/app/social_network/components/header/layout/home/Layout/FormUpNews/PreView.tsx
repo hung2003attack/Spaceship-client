@@ -69,15 +69,52 @@ const PreviewPost: React.FC<{
     dataText: PropsPreViewFormHome;
     token: string;
     userId: string;
-    upload: any;
+    upload: {
+        file: Blob;
+        title: string;
+    }[];
 
+    dataCentered: {
+        id: number;
+        columns: number;
+        data: {
+            file: Blob;
+            title: string;
+        }[];
+    }[];
+    setDataCentered: React.Dispatch<
+        React.SetStateAction<
+            {
+                id: number;
+                columns: number;
+                data: {
+                    file: Blob;
+                    title: string;
+                }[];
+            }[]
+        >
+    >;
     dataCenteredPre: {
         id: number;
+        columns: number;
         data: {
             link: string;
             type: string;
         }[];
     }[];
+    setDataCenteredPre: React.Dispatch<
+        React.SetStateAction<
+            {
+                id: number;
+                columns: number;
+                data: {
+                    link: string;
+                    type: string;
+                }[];
+            }[]
+        >
+    >;
+    handlePostPre: () => void;
     handleImageUpload: (e: any, addMore?: boolean) => Promise<void>;
 }> = ({
     user,
@@ -92,12 +129,18 @@ const PreviewPost: React.FC<{
     token,
     userId,
     handleImageUpload,
+    dataCentered,
+    setDataCentered,
     dataCenteredPre,
+    setDataCenteredPre,
+    handlePostPre,
 }) => {
     // Select type of post
     const [selectType, setSelectType] = useState<number>(0);
     // select children of swiper
     const [selectChild, setSelectChild] = useState<number>(1);
+    const [showColumn, setShowColumn] = useState<boolean>(false);
+
     // column
     const [column, setColumn] = useState<number>(3);
     const [bg, setBg] = useState<string>('#1b1919');
@@ -143,6 +186,13 @@ const PreviewPost: React.FC<{
             textA.current.setAttribute('style', `height: ${textA.current.scrollHeight - 20}px`);
         }
     }, [valueText]);
+    useEffect(() => {
+        if (selectType === 1 && selectChild === 5 && dataCentered.length === 0) {
+            setDataCentered([{ id: 1, columns: 4, data: upload }]);
+            setDataCenteredPre([{ id: 1, columns: 4, data: file }]);
+            // handlePostPre()
+        }
+    }, [selectChild]);
     for (let i = 0; i < file.length; i++) {
         if (file[i].type === 'image') images.push(file[i].link);
         if (file[i].type === 'video') videos.push(file[i].link);
@@ -233,7 +283,11 @@ const PreviewPost: React.FC<{
                     step={step}
                     setStep={setStep}
                     handleImageUpload={handleImageUpload}
+                    showColumn={showColumn}
+                    dataCentered={dataCentered}
+                    setDataCentered={setDataCentered}
                     dataCenteredPre={dataCenteredPre}
+                    setDataCenteredPre={setDataCenteredPre}
                 />,
             ][selectChild - 1]
         ) : (
@@ -331,39 +385,68 @@ const PreviewPost: React.FC<{
                     `}
                 >
                     {selectType === 1 && selectChild === 5 && (
-                        <DivPos
-                            size="18px"
-                            top="25px"
-                            right="19px"
-                            css={`
-                                z-index: 1;
-                                label {
-                                    font-size: 1.3rem;
-                                }
-                                div {
-                                    width: fit-content;
-                                }
-                                @media (min-width: 370px) {
-                                    top: 2px;
-                                    right: 77px;
-                                }
-                            `}
-                            color={colorText}
-                        >
-                            <DivItems>
-                                <input
-                                    id="uploadCen"
-                                    type="file"
-                                    name="file[]"
-                                    onChange={(e) => handleImageUpload(e, true)}
-                                    multiple
-                                    hidden
-                                />
-                                <Label htmlFor="uploadCen" color={colorText}>
-                                    Thêm Hàng
-                                </Label>
-                            </DivItems>
-                        </DivPos>
+                        <>
+                            {dataCenteredPre.length < 3 && (
+                                <DivPos
+                                    size="18px"
+                                    top="25px"
+                                    right="19px"
+                                    css={`
+                                        z-index: 1;
+                                        label {
+                                            font-size: 1.3rem;
+                                        }
+                                        div {
+                                            width: fit-content;
+                                        }
+                                        @media (min-width: 370px) {
+                                            top: 2px;
+                                            right: 77px;
+                                        }
+                                    `}
+                                    color={colorText}
+                                >
+                                    <DivItems>
+                                        <input
+                                            id="uploadCen"
+                                            type="file"
+                                            name="file[]"
+                                            onChange={(e) => handleImageUpload(e, true)}
+                                            multiple
+                                            hidden
+                                        />
+                                        <Label htmlFor="uploadCen" color={colorText}>
+                                            Thêm Hàng
+                                        </Label>
+                                    </DivItems>
+                                </DivPos>
+                            )}
+                            <DivPos
+                                size="18px"
+                                top="30px"
+                                right="105px"
+                                css={`
+                                    z-index: 1;
+                                    p {
+                                        font-size: 1.3rem;
+                                        padding: 2px;
+                                    }
+
+                                    @media (min-width: 370px) {
+                                        top: 32px;
+                                        right: 88px;
+                                    }
+                                    @media (min-width: 450px) {
+                                        top: 6px;
+                                        right: 165px;
+                                    }
+                                `}
+                                color={colorText}
+                                onClick={() => setShowColumn(!showColumn)}
+                            >
+                                <P>Columns</P>
+                            </DivPos>
+                        </>
                     )}
                     {step === 0 && file.length > 0 && (
                         <DivPos

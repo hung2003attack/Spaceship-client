@@ -7,7 +7,7 @@ import 'swiper/css';
 
 // import required modules
 import { Pagination } from 'swiper';
-import { Div, Img } from '~/reUsingComponents/styleComponents/styleDefault';
+import { Div, Img, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import Player from '~/reUsingComponents/Videos/Player';
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import { ScreenI } from '~/assets/Icons/Icons';
@@ -22,19 +22,70 @@ const Centered: React.FC<{
     setStep: React.Dispatch<React.SetStateAction<number>>;
     handleImageUpload: (e: any, addMore: boolean) => Promise<void>;
 
+    showColumn: boolean;
+    dataCentered: {
+        id: number;
+        columns: number;
+        data: {
+            file: Blob;
+            title: string;
+        }[];
+    }[];
+    setDataCentered: React.Dispatch<
+        React.SetStateAction<
+            {
+                id: number;
+                columns: number;
+                data: {
+                    file: Blob;
+                    title: string;
+                }[];
+            }[]
+        >
+    >;
     dataCenteredPre: {
         id: number;
+        columns: number;
         data: {
             link: string;
             type: string;
         }[];
     }[];
-}> = ({ file, colorText, step, setStep, handleImageUpload, dataCenteredPre }) => {
+    setDataCenteredPre: React.Dispatch<
+        React.SetStateAction<
+            {
+                id: number;
+                columns: number;
+                data: {
+                    link: string;
+                    type: string;
+                }[];
+            }[]
+        >
+    >;
+}> = ({
+    file,
+    colorText,
+    step,
+    setStep,
+    handleImageUpload,
+    dataCentered,
+    setDataCentered,
+    dataCenteredPre,
+    setDataCenteredPre,
+    showColumn,
+}) => {
     const [qt, setQt] = useState<number>(4);
-    console.log(dataCenteredPre);
-
+    const [atFirst, setQtFirst] = useState<number>(4);
+    const [atSecond, setQtSecond] = useState<number>(4);
+    const [atThird, setQtThird] = useState<number>(4);
+    console.log(dataCenteredPre, showColumn, '[[');
+    let cld: number[] = [];
+    for (let i = 1; i <= file.length; i++) {
+        if (i >= 4) cld.push(i);
+    }
     return (
-        <Div width="100%" wrap="wrap" css="height: fit-content; .swiper{ width: 100%;}">
+        <Div width="100%" wrap="wrap" css="height: fit-content; .mySwiper{ width: 100%; margin: 5px;}">
             {step !== 0 && (
                 <DivPos
                     size="20px"
@@ -53,58 +104,79 @@ const Centered: React.FC<{
                     <ScreenI />
                 </DivPos>
             )}
-            {dataCenteredPre.length > 0 ? (
-                dataCenteredPre.map((dt) => (
-                    <Swiper
-                        key={dt.id}
-                        slidesPerView={qt}
-                        spaceBetween={10}
-                        centeredSlides={true}
-                        pagination={{
-                            clickable: true,
-                        }}
-                        className="mySwiper"
-                    >
-                        {dt.data.map((f) => {
-                            return (
-                                <SwiperSlide key={f.link}>
-                                    {f.type === 'image' ? (
-                                        <Img src={f.link} alt={f.link} radius="5px" />
-                                    ) : f.type === 'video' ? (
-                                        <Player src={f.link} step={step} height="100%" />
-                                    ) : (
-                                        ''
-                                    )}
-                                </SwiperSlide>
-                            );
-                        })}
-                    </Swiper>
-                ))
-            ) : (
-                <Swiper
-                    slidesPerView={qt}
-                    spaceBetween={10}
-                    centeredSlides={true}
-                    pagination={{
-                        clickable: true,
-                    }}
-                    className="mySwiper"
-                >
-                    {file.map((f) => {
-                        return (
-                            <SwiperSlide key={f.link}>
-                                {f.type === 'image' ? (
-                                    <Img src={f.link} alt={f.link} radius="5px" />
-                                ) : f.type === 'video' ? (
-                                    <Player src={f.link} step={step} height="100%" />
-                                ) : (
-                                    ''
-                                )}
-                            </SwiperSlide>
-                        );
-                    })}
-                </Swiper>
-            )}
+
+            {dataCenteredPre.map((dt) => {
+                let cls: number[] = [];
+                for (let i = 1; i <= dt.data.length; i++) {
+                    if (i >= 4) cls.push(i);
+                }
+                console.log(cls);
+
+                return (
+                    <Div key={dt.id} width="100%" wrap="wrap">
+                        {showColumn && (
+                            <Div css="padding: 2px 4px;">
+                                {cls.map((c) => (
+                                    <P
+                                        key={c}
+                                        z="1.3rem"
+                                        css={`
+                                            padding: 1px 7px;
+                                            border: 1px solid #5a5853;
+                                            border-radius: 5px;
+                                            margin: 0 2px;
+                                            ${qt === c ? 'background-color: #505356;' : ''};
+                                        `}
+                                        onClick={() => {
+                                            // setDataCentered(() =>
+                                            //     dataCentered.map((dc) => {
+                                            //         if (dc.id === dt.id) {
+                                            //             dc.columns = c;
+                                            //         }
+                                            //         return dc;
+                                            //     }),
+                                            // );
+                                            // setDataCenteredPre(() =>
+                                            //     dataCenteredPre.map((dc) => {
+                                            //         if (dc.id === dt.id) {
+                                            //             dc.columns = c;
+                                            //         }
+                                            //         return dc;
+                                            //     }),
+                                            // );
+                                        }}
+                                    >
+                                        {c}
+                                    </P>
+                                ))}
+                            </Div>
+                        )}
+                        <Swiper
+                            slidesPerView={dt.columns}
+                            spaceBetween={5}
+                            centeredSlides={true}
+                            pagination={{
+                                clickable: true,
+                            }}
+                            className="mySwiper"
+                        >
+                            {dt.data.map((f) => {
+                                return (
+                                    <SwiperSlide key={f.link}>
+                                        {f.type === 'image' ? (
+                                            <Img src={f.link} alt={f.link} radius="5px" />
+                                        ) : f.type === 'video' ? (
+                                            <Player src={f.link} step={step} height="100%" />
+                                        ) : (
+                                            ''
+                                        )}
+                                    </SwiperSlide>
+                                );
+                            })}
+                        </Swiper>
+                    </Div>
+                );
+            })}
             {/* <Swiper
                 slidesPerView={qt}
                 spaceBetween={10}

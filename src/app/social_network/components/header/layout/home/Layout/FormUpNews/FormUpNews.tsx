@@ -63,9 +63,8 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
         handlePost,
         preView,
         loading,
-        dataCentered,
-        setDataCentered,
     } = LogicForm(form, colorText, colorBg, user);
+
     return (
         <>
             <DivForm top="12px">
