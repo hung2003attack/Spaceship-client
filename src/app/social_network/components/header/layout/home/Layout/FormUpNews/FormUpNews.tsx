@@ -23,7 +23,7 @@ import { Button, Buttons, Div, H3, Img, P } from '~/reUsingComponents/styleCompo
 import { DivLoading, DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import HoverTitle from '~/reUsingComponents/HandleHover/HoverTitle';
 import FontFamilys from '~/reUsingComponents/Font/FontFamilys';
-import { PropsPreViewFormHome } from './PreView';
+import PreviewPost, { PropsPreViewFormHome } from './PreView';
 import LogicForm from './LogicForm';
 import { PropsUserHome } from '../../Home';
 export interface PropsFormHome {
@@ -49,26 +49,29 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
         handleImageUpload,
         fontFamily,
         inputValue,
+        setInputValue,
         handleOnKeyup,
         handleGetValue,
         textarea,
         setFontFamily,
         setDisplayFontText,
-        setInputValue,
-        upload,
-        cart,
-        handleAbolish,
-        buttonOne,
-        buttonTwo,
-        handlePost,
-        preView,
+        uploadPre,
         loading,
+        uploadRef,
+        dataTextPreView,
+        token,
+        userId,
+        dataCentered,
+        setDataCentered,
+        dataCenteredPre,
+        setDataCenteredPre,
+        handleClear,
     } = LogicForm(form, colorText, colorBg, user);
 
     return (
         <>
             <DivForm top="12px">
-                <Form method="post" encType="multipart/form-data">
+                <Form method="post" encType="multipart/form-data" id="formPosthome">
                     <DivUpNews>
                         <DivOptions>
                             {displayEmoji && (
@@ -107,7 +110,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
                             <Div
                                 css={`
                                     width: 100%;
-                                    height: 40px;
+                                    height: 30px;
                                     flex-wrap: wrap;
                                     padding: 0 7px;
                                     margin-top: 5px;
@@ -115,6 +118,10 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
                                     background-color: #43464c;
                                     border-radius: 10px;
                                     justify-content: space-evenly;
+                                    border: 1px solid #6a6a6a;
+                                    @media (min-width: 500px) {
+                                        height: 35px;
+                                    }
                                 `}
                             >
                                 <DivItems
@@ -200,7 +207,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
                                     BoBg="transparent"
                                 ></Textarea>
                             </Div>
-                            {upload.length > 0 && (
+                            {/* {upload.length > 0 && (
                                 <>
                                     <Div
                                         width="100%"
@@ -266,16 +273,36 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
                                         })}
                                     </Div>
                                 </>
-                            )}
+                            )} */}
                             {loading && (
                                 <DivLoading>
                                     <LoadingI />
                                 </DivLoading>
                             )}
+                            {(inputValue || uploadPre.length > 0) && (
+                                <PreviewPost
+                                    upload={uploadRef.current}
+                                    user={user}
+                                    fontFamily={fontFamily}
+                                    colorText={colorText}
+                                    colorBg={colorBg}
+                                    file={uploadPre}
+                                    valueText={inputValue}
+                                    dataText={dataTextPreView}
+                                    token={token}
+                                    userId={userId}
+                                    handleImageUpload={handleImageUpload}
+                                    dataCentered={dataCentered}
+                                    setDataCentered={setDataCentered}
+                                    dataCenteredPre={dataCenteredPre}
+                                    setDataCenteredPre={setDataCenteredPre}
+                                    handleClear={handleClear}
+                                />
+                            )}
                         </DivDataFake>
                     </DivUpNews>
                 </Form>
-                {(inputValue || upload.length > 0) && (
+                {/* {(inputValue || upload.length > 0) && (
                     <DivWrapButton>
                         <Button size="1.5rem" padding="5px 15px;" bg="#d94755" onClick={handleAbolish}>
                             {buttonOne}
@@ -284,9 +311,9 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
                             {buttonTwo}
                         </Button>
                     </DivWrapButton>
-                )}
+                )} */}
             </DivForm>
-            {preView}
+            {/* {preView} */}
         </>
     );
 };

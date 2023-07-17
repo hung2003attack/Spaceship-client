@@ -54,7 +54,6 @@ export interface PropsPreViewFormHome {
 }
 const PreviewPost: React.FC<{
     user?: PropsUserHome;
-    setPreView?: React.Dispatch<React.SetStateAction<React.ReactNode>>;
     colorText: string;
     colorBg: number;
     file: {
@@ -73,7 +72,7 @@ const PreviewPost: React.FC<{
         file: Blob;
         title: string;
     }[];
-
+    handleImageUpload: (e: any, addMore?: boolean) => Promise<void>;
     dataCentered: {
         id: number;
         columns: number;
@@ -114,11 +113,9 @@ const PreviewPost: React.FC<{
             }[]
         >
     >;
-    handlePostPre: () => void;
-    handleImageUpload: (e: any, addMore?: boolean) => Promise<void>;
+    handleClear: () => void;
 }> = ({
     user,
-    setPreView,
     colorText,
     colorBg,
     file,
@@ -133,7 +130,7 @@ const PreviewPost: React.FC<{
     setDataCentered,
     dataCenteredPre,
     setDataCenteredPre,
-    handlePostPre,
+    handleClear,
 }) => {
     // Select type of post
     const [selectType, setSelectType] = useState<number>(0);
@@ -190,9 +187,10 @@ const PreviewPost: React.FC<{
         if (selectType === 1 && selectChild === 5 && dataCentered.length === 0) {
             setDataCentered([{ id: 1, columns: 4, data: upload }]);
             setDataCenteredPre([{ id: 1, columns: 4, data: file }]);
-            // handlePostPre()
         }
+        console.log(dataCentered, 'ataCentered', dataCenteredPre);
     }, [selectChild]);
+
     for (let i = 0; i < file.length; i++) {
         if (file[i].type === 'image') images.push(file[i].link);
         if (file[i].type === 'video') videos.push(file[i].link);
@@ -295,6 +293,7 @@ const PreviewPost: React.FC<{
         ),
         <Grid colorText={colorText} file={file} column={column} step={step} setStep={setStep} bg={bg} setBg={setBg} />,
     ];
+    // show icion private
     let privateA = false;
     let privateI = false;
     let privateC = false;
@@ -312,9 +311,7 @@ const PreviewPost: React.FC<{
     const handleClearI = () => {
         clearTimeout(timeS);
     };
-    const handleMoveI = (e: any) => {
-        console.log(e.target);
-    };
+
     return (
         <>
             <Div
@@ -343,7 +340,7 @@ const PreviewPost: React.FC<{
                         setImotions={setImotions}
                     />
                 )}
-                {setPreView && (
+                {file.length > 0 && (
                     <OptionType
                         step={step}
                         selectType={selectType}
@@ -378,9 +375,8 @@ const PreviewPost: React.FC<{
                         background-color: ${colorBg === 1 ? '#292a2d' : ''};
                         position: relative;
                         border: 1px solid #353535;
-                        @media (min-width: 768px) {
-                            border-bottom-left-radius: 5px;
-                            border-bottom-right-radius: 5px;
+                        @media (min-width: 580px) {
+                            border-radius: 5px;
                         }
                     `}
                 >
@@ -693,24 +689,25 @@ const PreviewPost: React.FC<{
                             </DivAction>
                         )}
                     </Div>
-                    {showComment && <Comment colorText={colorText} setShowComment={setShowComment} />}
-                    {setPreView && (
-                        <DivWrapButton>
-                            <Button
-                                size="1.5rem"
-                                padding="5px 15px;"
-                                bg="#d94755"
-                                onClick={() => {
-                                    if (setPreView) setPreView('');
-                                }}
-                            >
-                                {dataText.buttonFirst}
-                            </Button>
-                            <Button size="1.5rem" padding="5px 14px" bg="#2e54c6" onClick={handlePost}>
-                                {dataText.buttonTwo}
-                            </Button>
-                        </DivWrapButton>
+                    {showComment && (
+                        <Comment colorText={colorText} anony={typePrivate} setShowComment={setShowComment} />
                     )}
+                    <DivWrapButton>
+                        <Button
+                            type="button"
+                            size="1.5rem"
+                            padding="5px 15px;"
+                            bg="#d94755"
+                            onClick={() => {
+                                handleClear();
+                            }}
+                        >
+                            {dataText.buttonFirst}
+                        </Button>
+                        <Button size="1.5rem" padding="5px 14px" bg="#2e54c6" onClick={handlePost}>
+                            {dataText.buttonTwo}
+                        </Button>
+                    </DivWrapButton>
                 </Div>
             </Div>
         </>

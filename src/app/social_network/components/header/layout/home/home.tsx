@@ -80,6 +80,7 @@ const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
                         margin-top: 18px;
                         border-radius: 10px;
                         background-color: #494c54cf;
+                        border: 1px solid #6a6a6a;
                         z-index: 1;
                     `}
                     onClick={handleOpenForm}

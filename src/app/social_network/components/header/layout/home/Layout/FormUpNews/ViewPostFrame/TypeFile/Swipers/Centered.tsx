@@ -85,7 +85,11 @@ const Centered: React.FC<{
         if (i >= 4) cld.push(i);
     }
     return (
-        <Div width="100%" wrap="wrap" css="height: fit-content; .mySwiper{ width: 100%; margin: 5px;}">
+        <Div
+            width="100%"
+            wrap="wrap"
+            css="height: 100%; .mySwiper{ width: 100%; margin: 5px; img{ user-select: none;}}"
+        >
             {step !== 0 && (
                 <DivPos
                     size="20px"
@@ -113,7 +117,7 @@ const Centered: React.FC<{
                 console.log(cls);
 
                 return (
-                    <Div key={dt.id} width="100%" wrap="wrap">
+                    <Div key={dt.id} width="100%" wrap="wrap" css="height: fit-content;">
                         {showColumn && (
                             <Div css="padding: 2px 4px;">
                                 {cls.map((c) => (
@@ -125,25 +129,26 @@ const Centered: React.FC<{
                                             border: 1px solid #5a5853;
                                             border-radius: 5px;
                                             margin: 0 2px;
-                                            ${qt === c ? 'background-color: #505356;' : ''};
+                                            cursor: var(--pointer);
+                                            ${dt.columns === c ? 'background-color: #505356;' : ''};
                                         `}
                                         onClick={() => {
-                                            // setDataCentered(() =>
-                                            //     dataCentered.map((dc) => {
-                                            //         if (dc.id === dt.id) {
-                                            //             dc.columns = c;
-                                            //         }
-                                            //         return dc;
-                                            //     }),
-                                            // );
-                                            // setDataCenteredPre(() =>
-                                            //     dataCenteredPre.map((dc) => {
-                                            //         if (dc.id === dt.id) {
-                                            //             dc.columns = c;
-                                            //         }
-                                            //         return dc;
-                                            //     }),
-                                            // );
+                                            setDataCentered(() =>
+                                                dataCentered.map((dc) => {
+                                                    if (dc.id === dt.id) {
+                                                        dc.columns = c;
+                                                    }
+                                                    return dc;
+                                                }),
+                                            );
+                                            setDataCenteredPre(() =>
+                                                dataCenteredPre.map((dc) => {
+                                                    if (dc.id === dt.id) {
+                                                        dc.columns = c;
+                                                    }
+                                                    return dc;
+                                                }),
+                                            );
                                         }}
                                     >
                                         {c}

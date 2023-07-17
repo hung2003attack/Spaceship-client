@@ -17,11 +17,10 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
     const [displayEmoji, setdisplayEmoji] = useState<boolean>(false);
     const [displayFontText, setDisplayFontText] = useState<boolean>(false);
 
-    const [preView, setPreView] = useState<ReactNode>();
-    const [upload, setupload] = useState<{ link: string; type: string }[]>([]);
-    const [inputValue, setInputValue] = useState<any>('');
+    const [uploadPre, setuploadPre] = useState<{ link: string; type: string }[]>([]);
+    const [inputValue, setInputValue] = useState<string>('');
 
-    const uploadPre = useRef<{ link: string; type: string }[]>([]);
+    const uploadPreRef = useRef<{ link: string; type: string }[]>([]);
     // upload submit
     const uploadRef = useRef<{ file: Blob; title: string }[]>([]);
     // add data when select type centered of swiper for submit
@@ -33,12 +32,18 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
     const [dataCenteredPre, setDataCenteredPre] = useState<
         { id: number; columns: number; data: { link: string; type: string }[] }[]
     >([]);
-    const CenteredPreRef = useRef<{ id: number; columns: number; data: { link: string; type: string }[] }[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [fontFamily, setFontFamily] = useState<{ name: string; type: string }>({
         name: 'Noto Sans',
         type: 'Straight',
     });
+    const handleClear = () => {
+        setInputValue('');
+        setuploadPre([]);
+        setDataCentered([]);
+        const form: any = document.getElementById('formPostHome');
+        form.reset();
+    };
 
     const { textarea, buttonOne, buttonTwo, preView: dataTextPreView } = form;
 
@@ -53,17 +58,15 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
         e.stopPropagation();
         console.log(addMore, 'addMore');
         setLoading(true);
-        uploadPre.current = [];
+        uploadPreRef.current = [];
         uploadRef.current = [];
         const file = e.target.files;
         const options = {
             maxSizeMB: 10,
         };
 
-        if (file.length > 0 && file.length < fileAmount) {
+        if (file.length < fileAmount) {
             for (let i = 0; i < file.length; i++) {
-                console.log(file[i], 'file');
-
                 const newDa: any = await new Promise(async (resolve, reject) => {
                     if (
                         file[i].type.includes('video/mp4') ||
@@ -79,7 +82,7 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
                         vid.ondurationchange = function () {
                             console.log(vid.duration);
 
-                            vid.duration <= 150
+                            vid.duration <= 15
                                 ? resolve([
                                       { link: url, type: 'video' },
                                       { file: file[i], title: '' },
@@ -94,7 +97,7 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
                         try {
                             if (Number((file.size / 1024 / 1024).toFixed(1)) <= 8) {
                                 uploadRef.current.push({ file: file[i], title: '' });
-                                uploadPre.current.push({ link: URL.createObjectURL(file), type: 'image' });
+                                uploadPreRef.current.push({ link: URL.createObjectURL(file), type: 'image' });
                             } else {
                                 const compressedFile: any = await CommonUtils.compress(file[i]);
                                 const sizeImage = Number((compressedFile.size / 1024 / 1024).toFixed(1));
@@ -119,20 +122,24 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
                 });
                 // console.log(newDa, 'newDa');
 
-                uploadPre.current.push(newDa[0]);
+                uploadPreRef.current.push(newDa[0]);
                 uploadRef.current.push(newDa[1]);
             }
             if (!addMore) {
-                setupload(uploadPre.current);
+                setuploadPre(uploadPreRef.current);
             } else {
-                CenteredRef.current.push({ id: CenteredRef.current.length + 1, columns: 4, data: uploadRef.current });
-                CenteredPreRef.current.push({
-                    id: CenteredPreRef.current.length + 1,
-                    columns: 4,
-                    data: uploadPre.current,
-                });
-                setDataCentered(CenteredRef.current);
-                setDataCenteredPre(CenteredPreRef.current);
+                setDataCentered([
+                    ...dataCentered,
+                    { id: dataCentered.length + 1, columns: 4, data: uploadRef.current },
+                ]);
+                setDataCenteredPre([
+                    ...dataCenteredPre,
+                    {
+                        id: dataCenteredPre.length + 1,
+                        columns: 4,
+                        data: uploadPreRef.current,
+                    },
+                ]);
             }
 
             console.log('no');
@@ -140,34 +147,12 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
             dispatch(setTrueErrorServer(`You can only select ${fileAmount} file at most!`));
         }
         setLoading(false);
+        e.target.reset();
     };
 
     const handleAbolish = () => {
-        setupload([]);
+        setuploadPre([]);
         setInputValue('');
-    };
-    const handlePost = () => {
-        setPreView(
-            <PreviewPost
-                upload={uploadRef.current}
-                user={user}
-                setPreView={setPreView}
-                fontFamily={fontFamily}
-                colorText={colorText}
-                colorBg={colorBg}
-                file={upload}
-                valueText={inputValue}
-                dataText={dataTextPreView}
-                token={token}
-                userId={userId}
-                handleImageUpload={handleImageUpload}
-                dataCentered={dataCentered}
-                setDataCentered={setDataCentered}
-                dataCenteredPre={dataCenteredPre}
-                setDataCenteredPre={setDataCenteredPre}
-                handlePostPre={handlePost}
-            />,
-        );
     };
 
     const handleEmojiSelect = (e: any) => {
@@ -183,11 +168,11 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
     const handleDuration = (e: { target: any }) => {
         console.log(e.target, 'here');
     };
-    console.log(upload, 'upload', inputValue);
+    console.log(uploadPre, 'uploadPre', inputValue);
     let imageL = 0;
     let videoL = 0;
-    for (let i = 0; i < upload.length; i++) {
-        upload[i].type === 'image' ? imageL++ : videoL++;
+    for (let i = 0; i < uploadPre.length; i++) {
+        uploadPre[i].type === 'image' ? imageL++ : videoL++;
     }
     const cart: { type: ReactNode; amount: number }[] = [
         { type: <ImageI />, amount: imageL },
@@ -202,19 +187,22 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
         handleImageUpload,
         fontFamily,
         inputValue,
+        setInputValue,
         handleOnKeyup,
         handleGetValue,
         textarea,
         setFontFamily,
         setDisplayFontText,
-        setInputValue,
-        upload,
-        cart,
-        handleAbolish,
-        buttonOne,
-        buttonTwo,
-        handlePost,
-        preView,
+        uploadPre,
         loading,
+        uploadRef,
+        dataTextPreView,
+        token,
+        userId,
+        dataCentered,
+        setDataCentered,
+        dataCenteredPre,
+        setDataCenteredPre,
+        handleClear,
     };
 }

@@ -30,7 +30,7 @@ const DefaultType: React.FC<{
     const [heightV, setHeightV] = useState<string>('');
     useEffect(() => {
         setHeightV('');
-        if (file[0].type === ' image') {
+        if (file[0]?.type === ' image') {
             var img = new Image();
             img.src = file[0].link; // Thay đường dẫn bằng đường dẫn hình ảnh thực tế
 
@@ -77,7 +77,7 @@ const DefaultType: React.FC<{
                 {step === 1 && ToolDefault(1)}
             </>
             {file.map((f, index, arr) => {
-                if (f.type === 'video' && !heightV) {
+                if (f?.type === 'video' && !heightV) {
                     var video = document.createElement('video');
                     video.src = file[0].link; // Thay đường dẫn bằng đường dẫn video thực tế
 
@@ -98,13 +98,13 @@ const DefaultType: React.FC<{
                     return (
                         <>
                             <Div
-                                key={f.link}
+                                key={f?.link}
                                 id="baby"
                                 className="aaa"
                                 wrap="wrap"
                                 width="100%"
                                 onClick={(e) => {
-                                    handleStep(e, f.link);
+                                    handleStep(e, f?.link);
                                 }}
                                 css={`
                                     height: 100%;
@@ -115,7 +115,7 @@ const DefaultType: React.FC<{
                                     ${showTitle && step === 1 && 'padding-bottom: 24px'};
                                     color: ${colorText};
                                     height: ${heightV};
-                                    ${step > 1 && cc === f.link
+                                    ${step > 1 && cc === f?.link
                                         ? `position: fixed; height: 100%; top: 0; left:0; z-index: 103; background-color: #0e0e0d; img,div.video-react-controls-enabled{object-fit: contain; margin: auto;}`
                                         : ''}
                                 `}
@@ -184,10 +184,10 @@ const DefaultType: React.FC<{
                                     </Div>
                                 )}
                                 <Div width="100%" css="height: 100%; position: relative; justify-content: center;">
-                                    {f.type === 'image' ? (
-                                        <Img src={f.link} id="baby" alt={f.link} />
-                                    ) : f.type === 'video' ? (
-                                        <Player src={f.link} step={step} />
+                                    {f?.type === 'image' ? (
+                                        <Img src={f?.link} id="baby" alt={f?.link} />
+                                    ) : f?.type === 'video' ? (
+                                        <Player src={f?.link} step={step} />
                                     ) : (
                                         ''
                                     )}

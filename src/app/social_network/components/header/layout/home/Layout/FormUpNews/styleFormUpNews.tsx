@@ -19,9 +19,11 @@ export const DivUpNews = styled.div`
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-    padding: 5px;
     align-items: center;
     justify-content: center;
+    @media (min-width: 580px) {
+        padding: 5px;
+    }
 `;
 
 export const Input = styled.input`
@@ -63,22 +65,22 @@ interface PropsDivItems {
     bg?: string;
 }
 export const DivItems = styled.div<PropsDivItems>`
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.8rem;
+    font-size: 18px;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 2rem;
     display: flex;
     margin: 0 5px;
     background-color: ${(props) => props.bg};
     color: ${(props) => props.color};
     position: ${(props) => props.position};
-    @media (min-width: 310px) {
-        font-size: 2rem;
+    @media (min-width: 500px) {
+        font-size: 22px;
+        width: 35px;
     }
     @media (min-width: 600px) {
         font-size: 2.4rem;
@@ -86,9 +88,11 @@ export const DivItems = styled.div<PropsDivItems>`
 `;
 export const DivDataFake = styled.div`
     width: 100%;
-    margin: 5px;
     display: flex;
     flex-wrap: wrap;
+    @media (min-width: 580px) {
+        margin: 5px;
+    }
 `;
 interface PorpsTextarea {
     bg?: string;

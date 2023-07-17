@@ -5,10 +5,14 @@ import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import { useState } from 'react';
 
-const Comment: React.FC<{ setShowComment: React.Dispatch<React.SetStateAction<boolean>>; colorText: string }> = ({
-    setShowComment,
-    colorText,
-}) => {
+const Comment: React.FC<{
+    anony: {
+        id: number;
+        name: string;
+    }[];
+    setShowComment: React.Dispatch<React.SetStateAction<boolean>>;
+    colorText: string;
+}> = ({ anony, setShowComment, colorText }) => {
     const [anonymous, setAnonymous] = useState<boolean>(false);
     const [activate, setActivate] = useState<number>(1);
     const handleComment = () => {
@@ -88,7 +92,7 @@ const Comment: React.FC<{ setShowComment: React.Dispatch<React.SetStateAction<bo
                         `}
                         onClick={handleComment}
                     >
-                        {anonymous ? (
+                        {anonymous && anony.some((a) => a.id === 5) ? (
                             <Div
                                 css={`
                                     position: absolute;
