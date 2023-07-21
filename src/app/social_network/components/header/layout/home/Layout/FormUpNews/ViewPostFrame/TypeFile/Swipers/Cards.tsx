@@ -25,7 +25,7 @@ const Cards: React.FC<{
         <>
             <Div
                 display="block"
-                width="50%"
+                width="42%"
                 css={`
                     .swiper-wrapper {
                         align-items: center;
@@ -36,6 +36,7 @@ const Cards: React.FC<{
                     }
                     height: fit-content;
                     margin: auto;
+                    ${step === 1 ? '@media (min-width: 825px) {width: 350px}' : ''};
                 `}
             >
                 {step !== 0 && (

@@ -16,8 +16,8 @@ const OptionType: React.FC<{
     column: number;
     setColumn: React.Dispatch<React.SetStateAction<number>>;
     setSelectType: React.Dispatch<React.SetStateAction<number>>;
-    setSelectChild: React.Dispatch<React.SetStateAction<number>>;
-    selectChild: number;
+    setSelectChild: React.Dispatch<React.SetStateAction<{ id: number; name: string }>>;
+    selectChild: { id: number; name: string };
     step: number;
     selectType: number;
 }> = ({
@@ -42,7 +42,6 @@ const OptionType: React.FC<{
                     id: 1,
                     name: 'Dynamic',
                 },
-
                 {
                     id: 2,
                     name: 'Fade',
@@ -62,6 +61,7 @@ const OptionType: React.FC<{
             ],
         },
         { name: 'Grid-Columns: ', id: 2, column: 3 },
+        { name: 'Circle', id: 3 },
     ];
     const [swiper, setSwiper] = useState<number>(0);
     console.log('I know that');
@@ -171,9 +171,9 @@ const OptionType: React.FC<{
                                 margin: 0 8px;
                                 border-radius: 5px;
                                 cursor: var(--pointer);
-                                ${selectChild === c.id ? 'background-color: #525252;' : ''}
+                                ${selectChild.id === c.id ? 'background-color: #525252;' : ''}
                             `}
-                            onClick={() => setSelectChild(c.id)}
+                            onClick={() => setSelectChild(c)}
                         >
                             {c.name}
                         </P>

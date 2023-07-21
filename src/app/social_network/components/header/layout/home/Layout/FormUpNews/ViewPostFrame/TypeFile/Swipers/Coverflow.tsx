@@ -84,23 +84,6 @@ const Coverflow: React.FC<{
                     : ''}
             `}
         >
-            {step === 1 && (
-                <DivPos
-                    size="20px"
-                    top="50px"
-                    right="11.5px"
-                    onClick={() => {
-                        if (showTitle.length > 0) {
-                            setShowTitle([]);
-                        } else {
-                            setShowTitle(TList);
-                        }
-                    }}
-                    css="position: fixed;  color: #e2d2d2; font-size: 22px; z-index: 888; width: 35px; height: 35px; background-color: #0304048a; transition: all 0.5s linear; "
-                >
-                    <TitleI />
-                </DivPos>
-            )}
             {step !== 0 && (
                 <DivPos
                     size="20px"
@@ -122,7 +105,6 @@ const Coverflow: React.FC<{
             <Swiper
                 effect={'coverflow'}
                 grabCursor={true}
-                slidesPerView={'auto'}
                 loop={true}
                 coverflowEffect={{
                     rotate: 0,
@@ -132,6 +114,7 @@ const Coverflow: React.FC<{
                     slideShadows: true,
                 }}
                 pagination={true}
+                slidesPerView={'auto'}
                 speed={1000}
                 autoplay={{ delay: 1000 }}
                 modules={[Autoplay, EffectCoverflow, Pagination]}

@@ -207,7 +207,7 @@ const Header: React.FC<{
                             }
                             @media (min-width: 1202px) {
                                 a {
-                                    width: 110px;
+                                    width: 129px;
                                 }
                             }
                         `}

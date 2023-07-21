@@ -36,7 +36,7 @@ export interface PropsFormHome {
 interface PropsFormUpNews {
     colorText: string;
     colorBg: number;
-    user?: PropsUserHome;
+    user: PropsUserHome;
     form: PropsFormHome;
 }
 const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user }) => {
@@ -71,7 +71,7 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
     return (
         <>
             <DivForm top="12px">
-                <Form method="post" encType="multipart/form-data" id="formPosthome">
+                <Form method="post" encType="multipart/form-data">
                     <DivUpNews>
                         <DivOptions>
                             {displayEmoji && (

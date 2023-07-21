@@ -39,7 +39,7 @@ import {
     AiFillHeart,
     AiOutlineLike,
 } from 'react-icons/ai';
-import { GiBurningBook, GiEarthAmerica, GiNewspaper } from 'react-icons/gi';
+import { GiBurningBook, GiEarthAfricaEurope, GiEarthAmerica, GiEarthAsiaOceania, GiNewspaper } from 'react-icons/gi';
 import {
     MdWorkOutline,
     MdEmojiPeople,
@@ -80,7 +80,6 @@ export const UndoI = () => <IoArrowUndoCircleOutline />;
 export const SearchI = () => <CiSearch />;
 export const OnlineI = () => <CiWifiOn />;
 export const OfflineI = () => <CiWifiOff />;
-export const EarthI = () => <GiEarthAmerica />;
 
 export const EyemI = () => <AiOutlineEye />;
 export const EyedI = () => <AiOutlineEyeInvisible />;
@@ -145,3 +144,4 @@ export const ResetI = () => <BiReset />;
 export const PrivateI = () => <RiChatPrivateFill />;
 export const OclockI = () => <GoClockFill />;
 export const SmileI = () => <FaRegSmileBeam />;
+export const EarthI = () => <GiEarthAsiaOceania />;

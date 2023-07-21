@@ -4,7 +4,7 @@ import { DivPost } from './styleHome';
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
-import HttpRequestHome from '~/restAPI/requestServers/socialNetwork/home';
+import HomeAPI from '~/restAPI/requestServers/socialNetwork/homeAPI';
 import FormUpNews, { PropsFormHome } from './Layout/FormUpNews/FormUpNews';
 import Posts from './Layout/DataPosts/Posts';
 import HttpRequestUser from '~/restAPI/requestServers/accountRequest/userAPI';
@@ -40,17 +40,6 @@ const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
     const userId = cookies.k_user;
 
     const { userBar, form } = home;
-
-    useEffect(() => {
-        async function fetchData() {
-            // You can await here
-            const data: any = await HttpRequestHome.news(token, dispatch);
-            if (data?.status === 9999) dispatch(setTrueErrorServer(''));
-            // ...
-        }
-        fetchData();
-    }, []);
-    // socket.on('connect', () => {
 
     console.log('nooo');
 
@@ -143,7 +132,7 @@ const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
                     </Div>
                 </Div>
                 <FormUpNews form={form} colorBg={colorBg} colorText={colorText} user={dataUser} />
-                <Posts colorBg={colorBg} colorText={colorText} />
+                <Posts user={dataUser} colorBg={colorBg} colorText={colorText} />
             </DivPost>
         </Div>
     );

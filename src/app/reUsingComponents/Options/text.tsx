@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { Div, P } from '../styleComponents/styleDefault';
 import { BeforeI, CheckI, NextI, OclockI, PrivateI, ResetI, UndoIRegister } from '~/assets/Icons/Icons';
 import { DivPos } from '../styleComponents/styleComponents';
+import LogicText from './logicText';
 
 const OpText: React.FC<{
     setOptions: React.Dispatch<React.SetStateAction<boolean>>;
-    typePrivate: { id: number; name: string }[];
+    valuePrivacy: { id: number; name: string }[];
     typeExpire: { cate: number; value: number } | undefined;
-    setTypePrivate: React.Dispatch<
+    setValuePrivacy: React.Dispatch<
         React.SetStateAction<
             {
                 id: number;
@@ -38,11 +39,35 @@ const OpText: React.FC<{
         >
     >;
     Imotions: { id: number; icon: string }[];
+    ImotionsDel: {
+        id: number;
+        icon: string;
+    }[];
+    setImotionsDel: React.Dispatch<
+        React.SetStateAction<
+            {
+                id: number;
+                icon: string;
+            }[]
+        >
+    >;
+    valueSeePost: {
+        id: number;
+        name: string;
+        icon: React.ReactElement;
+    };
+    setValueSeePost: React.Dispatch<
+        React.SetStateAction<{
+            id: number;
+            name: string;
+            icon: React.ReactElement;
+        }>
+    >;
 }> = ({
     typeExpire,
-    typePrivate,
+    valuePrivacy,
     setTypeExpire,
-    setTypePrivate,
+    setValuePrivacy,
     setOptions,
     setMore,
     more,
@@ -50,120 +75,24 @@ const OpText: React.FC<{
     OpSelect,
     setImotions,
     Imotions,
+    ImotionsDel,
+    setImotionsDel,
+    valueSeePost,
+    setValueSeePost,
 }) => {
-    const option = [
-        {
-            id: 1,
-            title: {
-                name: 'Private',
-                children: [
-                    { id: 1, name: 'Post', value: 1 },
-                    {
-                        id: 2,
-                        name: `Imotion ${Imotions.map((i) => i.icon).join(' ')}`,
-                        value: [
-                            { id: 1, icon: '👍' },
-                            { id: 2, icon: '❤️' },
-                            { id: 3, icon: '😂' },
-                            { id: 4, icon: '😍' },
-                            { id: 5, icon: '😘' },
-                            { id: 6, icon: '😱' },
-                            { id: 7, icon: '😡' },
-                        ],
-                    },
-                    { id: 3, name: 'Comment', value: 3 },
-                    { id: 4, name: 'Share', value: 4 },
-                    { id: 5, name: 'Anonymous comment', value: 5 },
-                ],
-            },
-        },
-        {
-            id: 2,
-            title: {
-                name: 'Expire',
-                children: [
-                    {
-                        id: 1,
-                        name: 'Minute',
-                        value: [
-                            5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28,
-                            29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 45, 46, 47, 48, 49, 50, 51, 52,
-                            53, 54, 55, 56, 57, 58, 59,
-                        ],
-                    },
-                    {
-                        id: 2,
-                        name: 'Hour',
-                        value: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
-                    },
-                    {
-                        id: 3,
-                        name: 'Date',
-                        value: [
-                            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-                            26, 27, 28, 29, 30,
-                        ],
-                    },
-                    { id: 4, name: 'Month', value: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
-                    { id: 5, name: 'Year', value: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] },
-                ],
-            },
-        },
-    ];
-
-    const handleReset = () => {
-        setOpSelect([]);
-        setTypeExpire(undefined);
-        setTypePrivate([]);
-    };
-    const handleFirst = (rs: any, child: any) => {
-        //Private
-        if (rs.id === 1 && typeof child.value === 'number') {
-            if (OpSelect?.includes(child.id + `${rs.id}`)) {
-                setOpSelect(() => OpSelect.filter((v) => v !== child.id + `${rs.id}`));
-            } else {
-                const newData = [...OpSelect, child.id + `${rs.id}`];
-                setOpSelect(() => {
-                    const d = newData.filter((v) => {
-                        if (child.id === 1) {
-                            if (v === 1 + `${rs.id}`) return v;
-                        } else {
-                            if (v === 1 + `${rs.id}`) {
-                            } else {
-                                return v;
-                            }
-                        }
-                    });
-                    return d;
-                });
-            }
-
-            if (child.value === 1) {
-                typePrivate.push({ name: child.name, id: child.value });
-                setTypePrivate(() => typePrivate.filter((t) => t.id === child.value));
-            } else {
-                const newType = typePrivate.filter((t) => t.id !== 1);
-                let check = false;
-                newType.forEach((t) => {
-                    if (t.id === child.value) {
-                        check = true;
-                    }
-                });
-                if (check) {
-                    setTypePrivate(() => newType.filter((t) => t.id !== child.value));
-                } else {
-                    setTypePrivate([...newType, { name: child.name, id: child.value }]);
-                }
-            }
-        } else {
-            if (OpSelect?.includes(child.id + `${rs.id}`)) {
-                setOpSelect(() => OpSelect.filter((v) => v !== child.id + `${rs.id}`));
-            } else {
-                setOpSelect([...OpSelect, child.id + `${rs.id}`]);
-            }
-        }
-        //Private and Expire
-    };
+    const { option, handleReset, handleFirst, handleImotion } = LogicText(
+        valuePrivacy,
+        setTypeExpire,
+        setValuePrivacy,
+        setOpSelect,
+        OpSelect,
+        setImotions,
+        Imotions,
+        ImotionsDel,
+        setImotionsDel,
+        valueSeePost,
+        setValueSeePost,
+    );
     return (
         <Div
             display="block"
@@ -189,7 +118,7 @@ const OpText: React.FC<{
                 </Div>
                 <Div width="50px" css="align-items: center; justify-content: space-evenly;">
                     {typeExpire && <OclockI />}
-                    {typePrivate.length > 0 && <PrivateI />}
+                    {valuePrivacy.length > 0 && <PrivateI />}
                 </Div>
                 <Div
                     width="30px"
@@ -224,8 +153,7 @@ const OpText: React.FC<{
                             }
                         }}
                     >
-                        {rs.title.name +
-                            (rs.id === 2 && typeExpire ? ' -- ' + rs.title.children[typeExpire.cate - 1].name : '')}
+                        {rs.title.name}
                     </P>
                     {more.includes(rs.id) && (
                         <Div
@@ -259,88 +187,55 @@ const OpText: React.FC<{
                                         `}
                                         onClick={() => handleFirst(rs, child)}
                                     >
-                                        {child.name +
-                                            ' ' +
-                                            (rs.id === 2 && typeExpire?.cate === child.id ? typeExpire?.value : '')}
+                                        {child.name}
                                     </P>
-                                    {OpSelect.includes(child.id + `${rs.id}`) && Array.isArray(child.value) && (
+                                    {Array.isArray(child.icon) ? (
                                         <Div
                                             width="100%"
                                             wrap="wrap"
                                             css={`
                                                 justify-content: center;
-                                                background-color: ${typeof child.value[0] === 'number'
+                                                background-color: ${typeof child.icon[0] === 'number'
                                                     ? '#1c5689'
                                                     : '#5c5c5c'};
                                                 padding: 8px;
                                                 border-radius: 5px;
                                             `}
                                         >
-                                            {child.value.map((s: number | { id: number; icon: string }) =>
-                                                typeof s === 'number' ? (
-                                                    <P
-                                                        key={s}
-                                                        z="1.2rem"
-                                                        css={`
-                                                            width: 30px;
-                                                            height: 30px;
-                                                            display: flex;
-                                                            justify-content: center;
-                                                            align-items: center;
-                                                            box-shadow: 0 0 1px;
-                                                            ${typeExpire?.value === s &&
-                                                            typeExpire.cate === child.id &&
-                                                            'background-color:  #272727'};
-                                                        `}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-
-                                                            setTypeExpire({
-                                                                cate: child.id,
-                                                                name: child.name,
-                                                                value: s,
-                                                            });
-                                                        }}
-                                                    >
-                                                        {s}
-                                                    </P>
-                                                ) : (
-                                                    <Div
-                                                        key={s.id}
-                                                        width="30px"
-                                                        css={`
-                                                            height: 30px;
-                                                            justify-content: center;
-                                                            align-items: center;
-                                                            ${Imotions.some((i) => i.id === s.id) &&
-                                                            'background-color: #2f2f2f;'}
-                                                        `}
-                                                        onClick={() => {
-                                                            let checkH = false;
-                                                            Imotions.forEach((i) => {
-                                                                if (i.id === s.id) {
-                                                                    checkH = true;
-                                                                }
-                                                            });
-                                                            if (checkH) {
-                                                                setImotions(() =>
-                                                                    Imotions.filter((I) => I.id !== s.id),
-                                                                );
-                                                            } else {
-                                                                setImotions([...Imotions, s]);
-                                                            }
-                                                        }}
-                                                    >
-                                                        {s.icon}
-                                                    </Div>
-                                                ),
-                                            )}
+                                            {child.icon.map((s: { id: number; icon: string }, index, arr) => (
+                                                <Div
+                                                    key={s.id}
+                                                    width="30px"
+                                                    css={`
+                                                        height: 30px;
+                                                        justify-content: center;
+                                                        align-items: center;
+                                                        ${Imotions.some((i) => i.id === s.id) &&
+                                                        'background-color: #2f2f2f;'}
+                                                        ${index === 0 &&
+                                                        'border-top-left-radius: 5px; border-bottom-left-radius: 5px'};
+                                                        ${index === arr.length - 1 &&
+                                                        'border-top-right-radius: 5px; border-bottom-right-radius: 5px'};
+                                                    `}
+                                                    onClick={() => handleImotion(s)}
+                                                >
+                                                    {s.icon}
+                                                </Div>
+                                            ))}
                                         </Div>
-                                    )}
-                                    {OpSelect.includes(child.id + `${rs.id}`) && typeof child.value === 'number' && (
-                                        <DivPos top="5px" left="150px" color="#61ff61;">
-                                            <CheckI />
-                                        </DivPos>
+                                    ) : (
+                                        <>
+                                            {valuePrivacy.some((p) => p.id === child.id) && rs.id === 1 && (
+                                                <DivPos top="5px" left="150px" color="#61ff61;">
+                                                    <CheckI />
+                                                </DivPos>
+                                            )}
+                                            {valueSeePost.id === child.id && rs.id === 2 && (
+                                                <DivPos top="5px" left="150px" color="#61ff61;">
+                                                    <CheckI />
+                                                </DivPos>
+                                            )}
+                                        </>
                                     )}
                                 </Div>
                             ))}

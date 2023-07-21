@@ -21,6 +21,7 @@ import { PropsTitleP } from './mainPage/personalPage/layout/Title';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import Conversation from '~/Message/Send/Conversation';
 import { PropsReloadRD } from '~/redux/reload';
+import Player from '~/reUsingComponents/Videos/Player';
 const DivOpacity = styled.div`
     width: 100%;
     height: 100%;
@@ -345,7 +346,6 @@ function App() {
         }
 
 `;
-
     if (token && k_user) {
         return (
             <Suspense

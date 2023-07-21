@@ -7,12 +7,11 @@ import { PropsFormHome } from './FormUpNews';
 import { PropsUserHome } from '../../Home';
 import CommonUtils from '~/utils/CommonUtils';
 import { useCookies } from 'react-cookie';
+import CookiesF from '~/reUsingComponents/cookies';
 
 export default function LogicForm(form: PropsFormHome, colorText: string, colorBg: number, user?: PropsUserHome) {
     const dispatch = useDispatch();
-    const [cookies] = useCookies(['tks', 'k_user']);
-    const token = cookies.tks;
-    const userId = cookies.k_user;
+    const { userId, token } = CookiesF();
 
     const [displayEmoji, setdisplayEmoji] = useState<boolean>(false);
     const [displayFontText, setDisplayFontText] = useState<boolean>(false);
@@ -41,8 +40,10 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
         setInputValue('');
         setuploadPre([]);
         setDataCentered([]);
-        const form: any = document.getElementById('formPostHome');
-        form.reset();
+        const inpuFile: any = document.getElementById('upload');
+        console.log(inpuFile, 'inpuFile');
+
+        if (inpuFile) inpuFile.value = '';
     };
 
     const { textarea, buttonOne, buttonTwo, preView: dataTextPreView } = form;
@@ -147,7 +148,6 @@ export default function LogicForm(form: PropsFormHome, colorText: string, colorB
             dispatch(setTrueErrorServer(`You can only select ${fileAmount} file at most!`));
         }
         setLoading(false);
-        e.target.reset();
     };
 
     const handleAbolish = () => {

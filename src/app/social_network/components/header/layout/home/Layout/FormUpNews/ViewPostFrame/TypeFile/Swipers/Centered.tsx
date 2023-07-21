@@ -10,7 +10,7 @@ import { Pagination } from 'swiper';
 import { Div, Img, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import Player from '~/reUsingComponents/Videos/Player';
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
-import { ScreenI } from '~/assets/Icons/Icons';
+import { CloseI, ScreenI } from '~/assets/Icons/Icons';
 
 const Centered: React.FC<{
     file: {
@@ -22,7 +22,7 @@ const Centered: React.FC<{
     setStep: React.Dispatch<React.SetStateAction<number>>;
     handleImageUpload: (e: any, addMore: boolean) => Promise<void>;
 
-    showColumn: boolean;
+    ColumnCentered: boolean;
     dataCentered: {
         id: number;
         columns: number;
@@ -63,6 +63,7 @@ const Centered: React.FC<{
             }[]
         >
     >;
+    setColumnCen: React.Dispatch<React.SetStateAction<number>>;
 }> = ({
     file,
     colorText,
@@ -73,13 +74,9 @@ const Centered: React.FC<{
     setDataCentered,
     dataCenteredPre,
     setDataCenteredPre,
-    showColumn,
+    ColumnCentered,
+    setColumnCen,
 }) => {
-    const [qt, setQt] = useState<number>(4);
-    const [atFirst, setQtFirst] = useState<number>(4);
-    const [atSecond, setQtSecond] = useState<number>(4);
-    const [atThird, setQtThird] = useState<number>(4);
-    console.log(dataCenteredPre, showColumn, '[[');
     let cld: number[] = [];
     for (let i = 1; i <= file.length; i++) {
         if (i >= 4) cld.push(i);
@@ -118,7 +115,7 @@ const Centered: React.FC<{
 
                 return (
                     <Div key={dt.id} width="100%" wrap="wrap" css="height: fit-content;">
-                        {showColumn && (
+                        {ColumnCentered && (
                             <Div css="padding: 2px 4px;">
                                 {cls.map((c) => (
                                     <P
@@ -133,6 +130,7 @@ const Centered: React.FC<{
                                             ${dt.columns === c ? 'background-color: #505356;' : ''};
                                         `}
                                         onClick={() => {
+                                            setColumnCen(c);
                                             setDataCentered(() =>
                                                 dataCentered.map((dc) => {
                                                     if (dc.id === dt.id) {
@@ -154,6 +152,15 @@ const Centered: React.FC<{
                                         {c}
                                     </P>
                                 ))}
+                                <Div
+                                    css="align-items: center; cursor: var(--pointer); font-size: 20px; padding: 1px 3px;"
+                                    onClick={() => {
+                                        setDataCentered(() => dataCentered.filter((d) => d.id !== dt.id));
+                                        setDataCenteredPre(() => dataCenteredPre.filter((d) => d.id !== dt.id));
+                                    }}
+                                >
+                                    <CloseI />
+                                </Div>
                             </Div>
                         )}
                         <Swiper

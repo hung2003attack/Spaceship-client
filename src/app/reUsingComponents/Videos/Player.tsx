@@ -3,7 +3,7 @@ import { Div, P } from '../styleComponents/styleDefault';
 import { DivControls, Input, Progress, Video } from './styleVideos';
 import { FullScreenI, PauseI, PlayI, VolumeOffI, VolumeOnI } from '~/assets/Icons/Icons';
 
-const Player: React.FC<{ src: string; step: number; height?: string }> = ({ src, step, height }) => {
+const Player: React.FC<{ src: string; step?: number; height?: string }> = ({ src, step, height }) => {
     const video = useRef<any>();
     const progress = useRef<any>();
     const [showTime, setShowTime] = useState<number>(0);

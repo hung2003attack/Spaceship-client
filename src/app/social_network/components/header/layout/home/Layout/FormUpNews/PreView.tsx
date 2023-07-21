@@ -6,6 +6,7 @@ import {
     Bullseye,
     CameraI,
     DotI,
+    EarthI,
     FriendI,
     FullScreenI,
     HeartI,
@@ -35,7 +36,7 @@ import Coverflow from './ViewPostFrame/TypeFile/Swipers/Coverflow';
 import Grid from './ViewPostFrame/TypeFile/Grid';
 import DefaultType from './ViewPostFrame/TypeFile/DefaultType';
 import OptionType from './ViewPostFrame/OptionType';
-import HttpRequestHome from '~/restAPI/requestServers/socialNetwork/home';
+import HomeAPI from '~/restAPI/requestServers/socialNetwork/homeAPI';
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
 import OpText from '~/reUsingComponents/Options/text';
 import Dynamic from './ViewPostFrame/TypeFile/Swipers/Dynamic';
@@ -43,6 +44,8 @@ import Fade from './ViewPostFrame/TypeFile/Swipers/Fade';
 import Cards from './ViewPostFrame/TypeFile/Swipers/Cards';
 import Comment from './Comment';
 import Centered from './ViewPostFrame/TypeFile/Swipers/Centered';
+import Circle from './ViewPostFrame/TypeFile/Circle';
+import LogicPreView from './LogicPreView';
 export interface PropsPreViewFormHome {
     time: {
         hour: string;
@@ -53,7 +56,7 @@ export interface PropsPreViewFormHome {
     buttonTwo: string;
 }
 const PreviewPost: React.FC<{
-    user?: PropsUserHome;
+    user: PropsUserHome;
     colorText: string;
     colorBg: number;
     file: {
@@ -133,184 +136,75 @@ const PreviewPost: React.FC<{
     handleClear,
 }) => {
     // Select type of post
-    const [selectType, setSelectType] = useState<number>(0);
-    // select children of swiper
-    const [selectChild, setSelectChild] = useState<number>(1);
-    const [showColumn, setShowColumn] = useState<boolean>(false);
-
-    // column
-    const [column, setColumn] = useState<number>(3);
-    const [bg, setBg] = useState<string>('#1b1919');
-    // steps of feature
-    const [step, setStep] = useState<number>(0);
-    // show option of post
-    const [options, setOptions] = useState<boolean>(false);
-    const [include, setInclude] = useState<boolean>(false);
-    const [showAc, setShowAc] = useState<boolean>(false);
-    const [showComment, setShowComment] = useState<boolean>(false);
-
-    const [showI, setShowI] = useState<{ id: number; icon: string } | undefined>();
-    const [acEmo, setAcEmo] = useState<{ id: number; icon: React.ReactElement }>({ id: 1, icon: <LikeI /> });
-    const textA = useRef<any>();
-
-    // options of post
-    const [typePrivate, setTypePrivate] = useState<{ id: number; name: string }[]>([]);
-    const [typeExpire, setTypeExpire] = useState<{ cate: number; name: string; value: number }>();
-    const [Imotions, setImotions] = useState<{ id: number; icon: string }[]>([
-        { id: 1, icon: '👍' },
-        { id: 2, icon: '❤️' },
-        { id: 3, icon: '😂' },
-        { id: 4, icon: '😍' },
-        { id: 5, icon: '😘' },
-        { id: 6, icon: '😱' },
-        { id: 7, icon: '😡' },
-    ]);
-    const acList = [
-        { id: 1, icon: <LikeI /> },
-        { id: 2, icon: <HeartI /> },
-    ];
-    const font = fontFamily?.name + ' ' + fontFamily?.type;
-
-    const [more, setMore] = useState<number[]>([-1]);
-    const [OpSelect, setOpSelect] = useState<string[]>([]);
-
-    const images: string[] = [];
-    const videos: string[] = [];
-    let checkImg = false;
-    useEffect(() => {
-        if (textA.current) {
-            textA.current.setAttribute('style', 'height: auto');
-            textA.current.setAttribute('style', `height: ${textA.current.scrollHeight - 20}px`);
-        }
-    }, [valueText]);
-    useEffect(() => {
-        if (selectType === 1 && selectChild === 5 && dataCentered.length === 0) {
-            setDataCentered([{ id: 1, columns: 4, data: upload }]);
-            setDataCenteredPre([{ id: 1, columns: 4, data: file }]);
-        }
-        console.log(dataCentered, 'ataCentered', dataCenteredPre);
-    }, [selectChild]);
-
-    for (let i = 0; i < file.length; i++) {
-        if (file[i].type === 'image') images.push(file[i].link);
-        if (file[i].type === 'video') videos.push(file[i].link);
-        if (file[i].type === '!images' && checkImg === false) checkImg = true;
-    }
-    const handlePost = async () => {
-        if (upload.length > 0 || valueText) {
-            console.log('Option text', 'private', typePrivate, 'Expire', typeExpire);
-            let newExpire;
-            if (typeExpire?.cate === 1 && typeExpire?.name === 'Minute') {
-                newExpire = typeExpire?.value * 60;
-            } else if (typeExpire?.cate === 2 && typeExpire?.name === 'Hour') {
-                newExpire = typeExpire?.value * 3600;
-            } else if (typeExpire?.cate === 3 && typeExpire?.name === 'Date') {
-                newExpire = typeExpire?.value * 86400;
-            } else if (typeExpire?.cate === 4 && typeExpire?.name === 'Month') {
-                newExpire = typeExpire?.value * 262974656;
-            } else if (typeExpire?.cate === 5 && typeExpire?.name === 'Year') {
-                newExpire = typeExpire?.value * 31536000;
-            }
-
-            let res: any;
-            let id_c: string[] = [];
-            const formData = new FormData();
-            formData.append('text', valueText);
-            formData.append('category', String(selectType));
-            formData.append('fontFamily', font);
-            formData.append('private', JSON.stringify(typePrivate));
-            formData.append('imotions', JSON.stringify(Imotions));
-            if (newExpire) formData.append('expire', String(newExpire));
-            for (let fil of upload) {
-                if (fil.title) {
-                    formData.append('files', fil.file, fil.title);
-                } else {
-                    formData.append('files', fil.file);
-                }
-            }
-            console.log('private', typePrivate);
-
-            switch (selectType) {
-                case 0:
-                    console.log('text', valueText, 'file', upload, 'title', 'fontFamily', font, Imotions);
-                    // res = await HttpRequestHome.setPost(token, formData);
-                    // console.log(res, 'res');
-                    console.log(res, 'res');
-                    // id_c = res.id_c;
-
-                    break;
-                case 1:
-                    console.log('text', valueText, 'file', upload, 'fontFamily', font, 'coverflow');
-                    // if (upload.length > 2) res = await HttpRequestHome.setPost(token, formData);
-                    break;
-                case 2:
-                    console.log(
-                        'text',
-                        valueText,
-                        'file',
-                        upload,
-                        'fontFamily',
-                        font,
-                        'color-bg',
-                        bg,
-                        'column',
-                        column,
-                    );
-                    // res = await HttpRequestHome.setPost(token, formData);
-                    break;
-                default:
-                    break;
-            }
-            console.log(id_c, 'id_c');
-            if (id_c.length > 0) {
-                // const exp = await HttpRequestHome.exp(token, id_c, newExpire);
-            }
-        }
-    };
-    const postTypes = [
-        <DefaultType colorText={colorText} file={file} step={step} setStep={setStep} upload={upload} />,
-        file.length > 3 ? (
-            [
-                <Dynamic colorText={colorText} file={file} step={step} setStep={setStep} />,
-                <Fade colorText={colorText} file={file} step={step} setStep={setStep} />,
-                <Cards colorText={colorText} file={file} step={step} setStep={setStep} />,
-                <Coverflow colorText={colorText} file={file} step={step} setStep={setStep} />,
-                <Centered
-                    colorText={colorText}
-                    file={file}
-                    step={step}
-                    setStep={setStep}
-                    handleImageUpload={handleImageUpload}
-                    showColumn={showColumn}
-                    dataCentered={dataCentered}
-                    setDataCentered={setDataCentered}
-                    dataCenteredPre={dataCenteredPre}
-                    setDataCenteredPre={setDataCenteredPre}
-                />,
-            ][selectChild - 1]
-        ) : (
-            <P color="#c05d5d">Please select at least 3!</P>
-        ),
-        <Grid colorText={colorText} file={file} column={column} step={step} setStep={setStep} bg={bg} setBg={setBg} />,
-    ];
-    // show icion private
-    let privateA = false;
-    let privateI = false;
-    let privateC = false;
-    typePrivate.map((t) => {
-        if (t.id === 1) privateA = true;
-        if (t.id === 2) privateI = true;
-        if (t.id === 3) privateC = true;
-    });
-    let timeS: any;
-    const handleShowI = (e: any) => {
-        timeS = setTimeout(() => {
-            setInclude(true);
-        }, 500);
-    };
-    const handleClearI = () => {
-        clearTimeout(timeS);
-    };
+    const {
+        selectType,
+        setSelectType,
+        selectChild,
+        setSelectChild,
+        ColumnCentered,
+        setColumnCentered,
+        columnCen,
+        setColumnCen,
+        column,
+        setColumn,
+        bg,
+        setBg,
+        step,
+        setStep,
+        options,
+        setOptions,
+        include,
+        setInclude,
+        showAc,
+        setShowAc,
+        showComment,
+        setShowComment,
+        showI,
+        setShowI,
+        acEmo,
+        setAcEmo,
+        textA,
+        valuePrivacy,
+        setValuePrivacy,
+        valueSeePost,
+        setValueSeePost,
+        typeExpire,
+        setTypeExpire,
+        Imotions,
+        setImotions,
+        ImotionsDel,
+        setImotionsDel,
+        font,
+        more,
+        setMore,
+        OpSelect,
+        setOpSelect,
+        images,
+        videos,
+        checkImg,
+        handlePost,
+        postTypes,
+        handleShowI,
+        handleClearI,
+        acList,
+    } = LogicPreView(
+        user,
+        colorText,
+        colorBg,
+        file,
+        upload,
+        valueText,
+        fontFamily,
+        dataText,
+        token,
+        userId,
+        handleImageUpload,
+        dataCentered,
+        setDataCentered,
+        dataCenteredPre,
+        setDataCenteredPre,
+        handleClear,
+    );
 
     return (
         <>
@@ -332,12 +226,16 @@ const PreviewPost: React.FC<{
                         OpSelect={OpSelect}
                         setOpSelect={setOpSelect}
                         setOptions={setOptions}
-                        typePrivate={typePrivate}
-                        setTypePrivate={setTypePrivate}
+                        valuePrivacy={valuePrivacy}
+                        setValuePrivacy={setValuePrivacy}
                         typeExpire={typeExpire}
                         setTypeExpire={setTypeExpire}
                         Imotions={Imotions}
                         setImotions={setImotions}
+                        ImotionsDel={ImotionsDel}
+                        setImotionsDel={setImotionsDel}
+                        valueSeePost={valueSeePost}
+                        setValueSeePost={setValueSeePost}
                     />
                 )}
                 {file.length > 0 && (
@@ -354,19 +252,7 @@ const PreviewPost: React.FC<{
                         file={file}
                     />
                 )}
-                {/* <Div
-                    width="100%"
-                    css={`
-                        height: 25px;
-                        border-left: 1px solid #353535;
-                        border-right: 1px solid #353535;
-                        border-top: 1px solid #353535;
-                        border-bottom: 1px solid #525150;
-                        border-top-left-radius: 5px;
-                        border-top-right-radius: 5px;
-                        background-color: #292a2d;
-                    `}
-                ></Div> */}
+                s{' '}
                 <Div
                     wrap="wrap"
                     css={`
@@ -380,12 +266,12 @@ const PreviewPost: React.FC<{
                         }
                     `}
                 >
-                    {selectType === 1 && selectChild === 5 && (
+                    {selectType === 1 && selectChild.id === 5 && (
                         <>
                             {dataCenteredPre.length < 3 && (
                                 <DivPos
                                     size="18px"
-                                    top="25px"
+                                    top="32px"
                                     right="19px"
                                     css={`
                                         z-index: 1;
@@ -396,7 +282,7 @@ const PreviewPost: React.FC<{
                                             width: fit-content;
                                         }
                                         @media (min-width: 370px) {
-                                            top: 2px;
+                                            top: 9px;
                                             right: 77px;
                                         }
                                     `}
@@ -438,7 +324,7 @@ const PreviewPost: React.FC<{
                                     }
                                 `}
                                 color={colorText}
-                                onClick={() => setShowColumn(!showColumn)}
+                                onClick={() => setColumnCentered(!ColumnCentered)}
                             >
                                 <P>Columns</P>
                             </DivPos>
@@ -491,7 +377,7 @@ const PreviewPost: React.FC<{
                             <P css=" width: 52px; font-size: 1.1rem; color: #9a9a9a; display: flex; align-items: center; justify-content: space-around;">
                                 <LockI />
                                 <Span css="padding-top: 3px;">3h</Span>
-                                <Span>{privateA ? <PrivateI /> : <FriendI />}</Span>
+                                <Span>{valueSeePost.icon}</Span>
                             </P>
                         </Div>
                         <DivPos
@@ -557,7 +443,7 @@ const PreviewPost: React.FC<{
                             `}
                         >
                             <Div className="emoji" css="margin-left: 2px; align-items: flex-end;">
-                                {Imotions.map((i) => (
+                                {Imotions.map((i, index, arr) => (
                                     <DivEmoji key={i.id} index={i.id}>
                                         {i.icon}
                                     </DivEmoji>
@@ -575,7 +461,7 @@ const PreviewPost: React.FC<{
                             margin-bottom: 15px;
                             color: ${colorText};
                         `}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e: any) => e.stopPropagation()}
                     >
                         {Imotions.length > 0 && (
                             <DivAction
@@ -614,17 +500,21 @@ const PreviewPost: React.FC<{
                                         `}
                                     >
                                         {showAc &&
-                                            acList.map((a) => (
-                                                <Div
-                                                    key={a.id}
-                                                    onClick={() => {
-                                                        setAcEmo(a);
-                                                        setShowAc(false);
-                                                    }}
-                                                >
-                                                    {a.icon}
-                                                </Div>
-                                            ))}
+                                            acList.map((a) => {
+                                                return Imotions.some((i) => i.id === a.id) ? (
+                                                    <Div
+                                                        key={a.id}
+                                                        onClick={() => {
+                                                            setAcEmo(a);
+                                                            setShowAc(false);
+                                                        }}
+                                                    >
+                                                        {a.icon}
+                                                    </Div>
+                                                ) : (
+                                                    ''
+                                                );
+                                            })}
                                     </Div>
                                 )}
                                 <Div
@@ -659,7 +549,7 @@ const PreviewPost: React.FC<{
                                         }
                                     `}
                                 >
-                                    {Imotions.map((i) => (
+                                    {Imotions.map((i, index, arr) => (
                                         <DivEmoji
                                             key={i.id}
                                             css={`
@@ -678,19 +568,19 @@ const PreviewPost: React.FC<{
                                 </Div>
                             </DivAction>
                         )}
-                        {!typePrivate.some((t) => t.id === 3) && (
+                        {!valuePrivacy.some((t) => t.id === 2) && (
                             <DivAction onClick={() => setShowComment(true)}>
                                 <P css="font-size: 1.3rem;">...Comments</P>
                             </DivAction>
                         )}
-                        {!typePrivate.some((t) => t.id === 4) && (
+                        {!valuePrivacy.some((t) => t.id === 3) && (
                             <DivAction>
                                 <ShareI />
                             </DivAction>
                         )}
                     </Div>
                     {showComment && (
-                        <Comment colorText={colorText} anony={typePrivate} setShowComment={setShowComment} />
+                        <Comment colorText={colorText} anony={valuePrivacy} setShowComment={setShowComment} />
                     )}
                     <DivWrapButton>
                         <Button
@@ -704,7 +594,7 @@ const PreviewPost: React.FC<{
                         >
                             {dataText.buttonFirst}
                         </Button>
-                        <Button size="1.5rem" padding="5px 14px" bg="#2e54c6" onClick={handlePost}>
+                        <Button type="button" size="1.5rem" padding="5px 14px" bg="#2e54c6" onClick={handlePost}>
                             {dataText.buttonTwo}
                         </Button>
                     </DivWrapButton>
