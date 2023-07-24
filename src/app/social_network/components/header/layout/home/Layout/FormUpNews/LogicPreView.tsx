@@ -38,7 +38,7 @@ import DefaultType from './ViewPostFrame/TypeFile/DefaultType';
 import OptionType from './ViewPostFrame/OptionType';
 import HomeAPI from '~/restAPI/requestServers/socialNetwork/homeAPI';
 import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
-import OpText from '~/reUsingComponents/Options/text';
+import OpText from '~/reUsingComponents/Options/OpFeature';
 import Dynamic from './ViewPostFrame/TypeFile/Swipers/Dynamic';
 import Fade from './ViewPostFrame/TypeFile/Swipers/Fade';
 import Cards from './ViewPostFrame/TypeFile/Swipers/Cards';
@@ -46,6 +46,7 @@ import Comment from './Comment';
 import Centered from './ViewPostFrame/TypeFile/Swipers/Centered';
 import Circle from './ViewPostFrame/TypeFile/Circle';
 import { PropsPreViewFormHome } from './PreView';
+import axios from 'axios';
 export default function LogicPreView(
     user: PropsUserHome,
     colorText: string,
@@ -109,6 +110,8 @@ export default function LogicPreView(
         >
     >,
     handleClear: () => void,
+    include: boolean,
+    setInclude: React.Dispatch<React.SetStateAction<boolean>>,
 ) {
     const [selectType, setSelectType] = useState<number>(0);
     // select children of swiper
@@ -126,10 +129,9 @@ export default function LogicPreView(
     const [step, setStep] = useState<number>(0);
     // show option of post
     const [options, setOptions] = useState<boolean>(false);
-    const [include, setInclude] = useState<boolean>(false);
     const [showAc, setShowAc] = useState<boolean>(false);
     const [showComment, setShowComment] = useState<boolean>(false);
-
+    const [actImotion, setActImotion] = useState<boolean>(false);
     const [showI, setShowI] = useState<{ id: number; icon: string } | undefined>();
     const [acEmo, setAcEmo] = useState<{ id: number; icon: React.ReactElement }>({ id: 1, icon: <LikeI /> });
     const textA = useRef<any>();
@@ -161,6 +163,7 @@ export default function LogicPreView(
 
     const [more, setMore] = useState<number[]>([-1]);
     const [OpSelect, setOpSelect] = useState<string[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const images: string[] = [];
     const videos: string[] = [];
@@ -186,6 +189,7 @@ export default function LogicPreView(
     }
     const handlePost = async () => {
         if (upload.length > 0 || valueText) {
+            setLoading(true);
             console.log('Option', selectType, 'private', valuePrivacy, 'Expire', typeExpire);
             let newExpire;
             if (typeExpire?.cate === 1 && typeExpire?.name === 'Minute') {
@@ -207,6 +211,7 @@ export default function LogicPreView(
             formData.append('category', String(selectType));
             formData.append('fontFamily', font);
             formData.append('privacy', JSON.stringify(valuePrivacy));
+            formData.append('act', JSON.stringify(acEmo.id));
             formData.append(
                 'whoSeePost',
                 JSON.stringify({
@@ -230,6 +235,7 @@ export default function LogicPreView(
                     }
                     console.log('text', valueText, 'file', upload, 'fontFamily', font, Imotions);
                     res = await HomeAPI.setPost(token, formData);
+                    setLoading(false);
                     console.log(res, 'res');
                     // id_c = res.id_c;
 
@@ -262,6 +268,7 @@ export default function LogicPreView(
                             }
                         });
                         res = await HomeAPI.setPost(token, formData);
+                        setLoading(false);
                         //     console.log(res, 'res');
                     } else {
                         for (let fil of upload) {
@@ -269,6 +276,7 @@ export default function LogicPreView(
                         }
                         console.log('text', valueText, 'file', upload, 'fontFamily', font, 'swiper', selectChild);
                         res = await HomeAPI.setPost(token, formData);
+                        setLoading(false);
                         console.log(res, 'res');
                     }
                     break;
@@ -288,6 +296,7 @@ export default function LogicPreView(
                     formData.append('BgColor', bg);
                     formData.append('columnOfGrid', JSON.stringify(column));
                     res = await HomeAPI.setPost(token, formData);
+                    setLoading(false);
                     break;
                 case 3:
                     for (let fil of upload) {
@@ -296,6 +305,7 @@ export default function LogicPreView(
                     console.log('text', valueText, 'file', upload, 'fontFamily', font, Imotions);
                     res = await HomeAPI.setPost(token, formData);
                     console.log(res, 'res');
+                    setLoading(false);
                     break;
                 default:
                     break;
@@ -337,11 +347,13 @@ export default function LogicPreView(
     console.log(ImotionsDel, 'ImotionsDel');
 
     // show icion private
-
+    useEffect(() => {
+        if (actImotion) setActImotion(false);
+    }, [include]);
     let timeS: any;
     const handleShowI = (e: any) => {
         timeS = setTimeout(() => {
-            setInclude(true);
+            setActImotion(true);
         }, 500);
     };
     const handleClearI = () => {
@@ -355,17 +367,12 @@ export default function LogicPreView(
         ColumnCentered,
         setColumnCentered,
         columnCen,
-        setColumnCen,
         column,
         setColumn,
-        bg,
-        setBg,
         step,
         setStep,
         options,
         setOptions,
-        include,
-        setInclude,
         showAc,
         setShowAc,
         showComment,
@@ -398,5 +405,9 @@ export default function LogicPreView(
         handleShowI,
         handleClearI,
         acList,
+        loading,
+        setLoading,
+        actImotion,
+        setActImotion,
     };
 }

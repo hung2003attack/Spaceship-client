@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { Div, P } from '../styleComponents/styleDefault';
 import { BeforeI, CheckI, NextI, OclockI, PrivateI, ResetI, UndoIRegister } from '~/assets/Icons/Icons';
 import { DivPos } from '../styleComponents/styleComponents';
-import LogicText from './logicText';
+import LogicText from './logicOpFeature';
 
-const OpText: React.FC<{
+const OpFeature: React.FC<{
     setOptions: React.Dispatch<React.SetStateAction<boolean>>;
     valuePrivacy: { id: number; name: string }[];
     typeExpire: { cate: number; value: number } | undefined;
@@ -246,4 +246,4 @@ const OpText: React.FC<{
         </Div>
     );
 };
-export default OpText;
+export default OpFeature;

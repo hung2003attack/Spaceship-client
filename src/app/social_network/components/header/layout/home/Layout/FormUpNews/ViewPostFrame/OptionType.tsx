@@ -78,20 +78,6 @@ const OptionType: React.FC<{
                 color: ${colorText};
             `}
         >
-            <Div
-                width="100%"
-                css={`
-                    display: block;
-                    color: ${colorText};
-                    text-align: center;
-                    font-size: 1.5rem;
-                    margin-bottom: 5px;
-                    padding: 5px;
-                    background-color: ${colorBg === 1 ? '#292a2d' : ''};
-                `}
-            >
-                Pre-View your post here
-            </Div>
             {file.length > 4 && (
                 <Div width="100%" css="padding: 5px;">
                     <Div css="font-size: 2rem; padding: 4px 7px;" onClick={() => setSelectType(0)}>

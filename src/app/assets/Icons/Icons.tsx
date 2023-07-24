@@ -38,6 +38,7 @@ import {
     AiOutlineStar,
     AiFillHeart,
     AiOutlineLike,
+    AiOutlineLoading3Quarters,
 } from 'react-icons/ai';
 import { GiBurningBook, GiEarthAfricaEurope, GiEarthAmerica, GiEarthAsiaOceania, GiNewspaper } from 'react-icons/gi';
 import {
@@ -145,3 +146,4 @@ export const PrivateI = () => <RiChatPrivateFill />;
 export const OclockI = () => <GoClockFill />;
 export const SmileI = () => <FaRegSmileBeam />;
 export const EarthI = () => <GiEarthAsiaOceania />;
+export const LoadingCircleI = () => <AiOutlineLoading3Quarters />;

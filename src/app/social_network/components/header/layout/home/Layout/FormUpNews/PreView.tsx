@@ -12,6 +12,8 @@ import {
     HeartI,
     IconI,
     LikeI,
+    LoadingCircleI,
+    LoadingI,
     LockI,
     NextI,
     PlayI,
@@ -37,8 +39,8 @@ import Grid from './ViewPostFrame/TypeFile/Grid';
 import DefaultType from './ViewPostFrame/TypeFile/DefaultType';
 import OptionType from './ViewPostFrame/OptionType';
 import HomeAPI from '~/restAPI/requestServers/socialNetwork/homeAPI';
-import { DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
-import OpText from '~/reUsingComponents/Options/text';
+import { DivLoading, DivPos } from '~/reUsingComponents/styleComponents/styleComponents';
+import OpFeature from '~/reUsingComponents/Options/OpFeature';
 import Dynamic from './ViewPostFrame/TypeFile/Swipers/Dynamic';
 import Fade from './ViewPostFrame/TypeFile/Swipers/Fade';
 import Cards from './ViewPostFrame/TypeFile/Swipers/Cards';
@@ -117,6 +119,8 @@ const PreviewPost: React.FC<{
         >
     >;
     handleClear: () => void;
+    include: boolean;
+    setInclude: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({
     user,
     colorText,
@@ -134,6 +138,8 @@ const PreviewPost: React.FC<{
     dataCenteredPre,
     setDataCenteredPre,
     handleClear,
+    include,
+    setInclude,
 }) => {
     // Select type of post
     const {
@@ -143,18 +149,12 @@ const PreviewPost: React.FC<{
         setSelectChild,
         ColumnCentered,
         setColumnCentered,
-        columnCen,
-        setColumnCen,
         column,
         setColumn,
-        bg,
-        setBg,
         step,
         setStep,
         options,
         setOptions,
-        include,
-        setInclude,
         showAc,
         setShowAc,
         showComment,
@@ -187,6 +187,10 @@ const PreviewPost: React.FC<{
         handleShowI,
         handleClearI,
         acList,
+        loading,
+        setLoading,
+        actImotion,
+        setActImotion,
     } = LogicPreView(
         user,
         colorText,
@@ -204,6 +208,8 @@ const PreviewPost: React.FC<{
         dataCenteredPre,
         setDataCenteredPre,
         handleClear,
+        include,
+        setInclude,
     );
 
     return (
@@ -217,10 +223,24 @@ const PreviewPost: React.FC<{
                     position: relative;
                     color: ${colorText};
                 `}
-                onClick={() => setInclude(false)}
             >
+                <Div
+                    width="100%"
+                    css={`
+                        display: block;
+                        color: ${colorText};
+                        text-align: center;
+                        font-size: 1.5rem;
+                        margin-bottom: 5px;
+                        padding: 5px;
+                        background-color: ${colorBg === 1 ? '#292a2d' : ''};
+                    `}
+                >
+                    Pre-View your post here
+                </Div>
+
                 {step < 1 && options && (
-                    <OpText
+                    <OpFeature
                         more={more}
                         setMore={setMore}
                         OpSelect={OpSelect}
@@ -252,7 +272,6 @@ const PreviewPost: React.FC<{
                         file={file}
                     />
                 )}
-                s{' '}
                 <Div
                     wrap="wrap"
                     css={`
@@ -462,10 +481,21 @@ const PreviewPost: React.FC<{
                             color: ${colorText};
                         `}
                         onClick={(e: any) => e.stopPropagation()}
+                        onTouchStart={(e) => e.stopPropagation()}
                     >
                         {Imotions.length > 0 && (
                             <DivAction
                                 id="parent"
+                                css={`
+                                    @media (min-width: 768px) {
+                                        &:hover {
+                                            #emoBar {
+                                                display: flex;
+                                                top: -50px;
+                                            }
+                                        }
+                                    }
+                                `}
                                 onTouchStart={handleShowI}
                                 onTouchEnd={handleClearI}
                                 onClick={() => {
@@ -529,7 +559,8 @@ const PreviewPost: React.FC<{
                                         background-color: #292a2d;
                                         padding: 5px 20px 8px;
                                         border-radius: 50px;
-                                        ${include && 'display: flex; top: -92px;'}
+                                        z-index: 7;
+                                        ${actImotion && 'display: flex; top: -50px;'};
                                         div {
                                             min-width: 40px;
                                             height: 40px;
@@ -538,14 +569,6 @@ const PreviewPost: React.FC<{
                                             margin: 0;
                                             border-radius: 50%;
                                             cursor: var(--pointer);
-                                        }
-                                        @media (min-width: 768px) {
-                                            &:hover {
-                                                #emoBar {
-                                                    display: flex;
-                                                    top: -92px;
-                                                }
-                                            }
                                         }
                                     `}
                                 >
@@ -559,7 +582,7 @@ const PreviewPost: React.FC<{
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 setShowI({ id: i.id, icon: i.icon });
-                                                setInclude(false);
+                                                setActImotion(false);
                                             }}
                                         >
                                             {i.icon}
@@ -583,20 +606,56 @@ const PreviewPost: React.FC<{
                         <Comment colorText={colorText} anony={valuePrivacy} setShowComment={setShowComment} />
                     )}
                     <DivWrapButton>
-                        <Button
-                            type="button"
-                            size="1.5rem"
-                            padding="5px 15px;"
-                            bg="#d94755"
-                            onClick={() => {
-                                handleClear();
-                            }}
-                        >
-                            {dataText.buttonFirst}
-                        </Button>
-                        <Button type="button" size="1.5rem" padding="5px 14px" bg="#2e54c6" onClick={handlePost}>
-                            {dataText.buttonTwo}
-                        </Button>
+                        {loading ? (
+                            <Div width="50%" css="position: relative;">
+                                <DivLoading
+                                    css={`
+                                        margin: 0;
+                                        font-size: 40px;
+                                    `}
+                                >
+                                    <LoadingCircleI />
+                                </DivLoading>
+                                <P
+                                    z="1rem"
+                                    css={`
+                                        width: fit-content;
+                                        height: fit-content;
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        right: 50%;
+                                        translate: -50% -50%;
+                                        bottom: 50%;
+                                    `}
+                                >
+                                    Posting
+                                </P>
+                            </Div>
+                        ) : (
+                            <>
+                                <Button
+                                    type="button"
+                                    size="1.5rem"
+                                    padding="5px 15px;"
+                                    bg="#d94755"
+                                    onClick={() => {
+                                        handleClear();
+                                    }}
+                                >
+                                    {dataText.buttonFirst}
+                                </Button>
+                                <Button
+                                    type="button"
+                                    size="1.5rem"
+                                    padding="5px 14px"
+                                    bg="#2e54c6"
+                                    onClick={handlePost}
+                                >
+                                    {dataText.buttonTwo}
+                                </Button>
+                            </>
+                        )}
                     </DivWrapButton>
                 </Div>
             </Div>

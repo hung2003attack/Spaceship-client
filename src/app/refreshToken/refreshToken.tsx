@@ -25,6 +25,8 @@ class refreshToken {
                     if (decodeToken.exp < date.getTime() / 1000 + 5) {
                         console.log(decodeToken.exp, date.getTime() / 1000 + 2, token, 'hhhh');
                         const data = await authHttpRequest.refreshToken();
+                        console.log(data.newAccessToken, 'newAccessToken');
+
                         if (data) {
                             const newToken = 'Bearer ' + data.newAccessToken;
                             cookies.set('tks', newToken, {

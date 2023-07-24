@@ -6,12 +6,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import HomeAPI from '~/restAPI/requestServers/socialNetwork/homeAPI';
 import FormUpNews, { PropsFormHome } from './Layout/FormUpNews/FormUpNews';
-import Posts from './Layout/DataPosts/Posts';
+import Posts, { PropsDataPosts } from './Layout/DataPosts/Posts';
 import HttpRequestUser from '~/restAPI/requestServers/accountRequest/userAPI';
 import { Div, H3, P } from '~/reUsingComponents/styleComponents/styleDefault';
 import Avatar from '~/reUsingComponents/Avatars/Avatar';
 import { socket } from 'src/mainPage/nextWeb';
 import { setTrueErrorServer } from '~/redux/hideShow';
+import CookiesF from '~/reUsingComponents/cookies';
+import homeAPI from '~/restAPI/requestServers/socialNetwork/homeAPI';
 
 console.log('eeeeeeeeeeeeeeeeeeeeeeeee');
 
@@ -33,23 +35,32 @@ interface PropsHome {
     home: PropsTextHome;
     dataUser: PropsUserHome;
 }
+
 const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
     const dispatch = useDispatch();
-    const [cookies] = useCookies(['tks', 'k_user']);
-    const token = cookies.tks;
-    const userId = cookies.k_user;
-
     const { userBar, form } = home;
-
-    console.log('nooo');
-
+    const [include, setInclude] = useState<boolean>(false); // show imotion of icon
     const [userList, setUserList] = useState();
     const [moveForm, setMoveForm] = useState<boolean>(false);
+    const [dataPosts, setDataPosts] = useState<PropsDataPosts[]>([]);
+    const { token } = CookiesF();
+    const offest = useRef<number>(0);
+    const limit = 5;
+    console.log('nooo');
+
     const handleOpenForm = () => {
         console.log('ok very good');
     };
+
+    useEffect(() => {
+        async function fetch() {
+            const data = await homeAPI.getPosts(token, limit, offest.current, 'friend');
+            setDataPosts(data);
+            console.log(data, 'fet');
+        }
+        fetch();
+    }, []);
     const minWidth1 = '400px';
-    const minWidth2 = '600px';
     const bgAther = colorBg === 1 ? '#17181af5' : colorBg;
     return (
         <Div
@@ -61,6 +72,8 @@ const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
                 justify-content: center;
                 background-color: ${bgAther};
             `}
+            onClick={() => setInclude(!include)}
+            onTouchStart={() => setInclude(!include)}
         >
             <DivPost>
                 <Div
@@ -131,8 +144,27 @@ const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
                         </P>
                     </Div>
                 </Div>
-                <FormUpNews form={form} colorBg={colorBg} colorText={colorText} user={dataUser} />
-                <Posts user={dataUser} colorBg={colorBg} colorText={colorText} />
+                <FormUpNews
+                    form={form}
+                    colorBg={colorBg}
+                    colorText={colorText}
+                    user={dataUser}
+                    include={include}
+                    setInclude={setInclude}
+                />
+                <Div display="block" css="margin: 20px 0;">
+                    {dataPosts.map((p) => (
+                        <Posts
+                            key={p._id}
+                            user={dataUser}
+                            colorBg={colorBg}
+                            colorText={colorText}
+                            dataPosts={p}
+                            include={include}
+                            setInclude={setInclude}
+                        />
+                    ))}
+                </Div>
             </DivPost>
         </Div>
     );

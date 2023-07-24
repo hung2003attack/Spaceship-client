@@ -38,8 +38,10 @@ interface PropsFormUpNews {
     colorBg: number;
     user: PropsUserHome;
     form: PropsFormHome;
+    include: boolean;
+    setInclude: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user }) => {
+const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user, include, setInclude }) => {
     const {
         displayEmoji,
         setdisplayEmoji,
@@ -207,73 +209,6 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
                                     BoBg="transparent"
                                 ></Textarea>
                             </Div>
-                            {/* {upload.length > 0 && (
-                                <>
-                                    <Div
-                                        width="100%"
-                                        css={`
-                                            font-size: 20px;
-                                            color: ${colorText};
-                                            align-items: center;
-                                            justify-content: space-between;
-                                            background-color: ${colorBg};
-                                            padding: 6px 0;
-                                            margin-bottom: 8px;
-                                        `}
-                                    >
-                                        {cart.map((c, index) => (
-                                            <Div
-                                                key={index}
-                                                width="49%"
-                                                wrap="wrap"
-                                                css={`
-                                                    align-items: center;
-                                                    justify-content: center;
-                                                    &:hover {
-                                                    }
-                                                `}
-                                            >
-                                                <Div
-                                                    width="100%"
-                                                    css="justify-content: center; background-color: #43464c; padding: 4px; border-radius: 5px;"
-                                                >
-                                                    {c.type}
-                                                </Div>
-                                                <P>{c.amount}</P>
-                                            </Div>
-                                        ))}
-                                    </Div>
-
-                                    <Div
-                                        id="videoOver"
-                                        css={`
-                                            width: 100%;
-                                            height: 430px;
-                                            justify-content: space-evenly;
-                                            overflow-y: overlay;
-                                            @media (min-width: 600px) {
-                                                height: 550px;
-                                            }
-                                            @media (min-width: 1300px) {
-                                                height: 500px;
-                                            }
-                                        `}
-                                        wrap="wrap"
-                                    >
-                                        {upload.map((e, index) => {
-                                            console.log(e);
-
-                                            if (e.type === 'image') {
-                                                return <Img key={index} src={e.link} alt={e.link} />;
-                                            } else if (e.type === 'video') {
-                                                return <Player key={e.link} src={e.link} />;
-                                            }
-
-                                            return <></>;
-                                        })}
-                                    </Div>
-                                </>
-                            )} */}
                             {loading && (
                                 <DivLoading>
                                     <LoadingI />
@@ -297,6 +232,8 @@ const FormUpNews: React.FC<PropsFormUpNews> = ({ form, colorText, colorBg, user 
                                     dataCenteredPre={dataCenteredPre}
                                     setDataCenteredPre={setDataCenteredPre}
                                     handleClear={handleClear}
+                                    include={include}
+                                    setInclude={setInclude}
                                 />
                             )}
                         </DivDataFake>

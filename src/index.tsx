@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Globalestyle from './app/globalestyle';
+import 'moment/locale/vi';
 import { Provider } from 'react-redux';
 import { store, persistor } from '~/redux/configStore';
 import { BrowserRouter as Router } from 'react-router-dom';

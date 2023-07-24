@@ -1,6 +1,6 @@
 import { HttpRequest } from '../httpRequest';
 import { Dispatch, AnyAction } from '@reduxjs/toolkit';
-import { AxiosError } from 'axios';
+import axios, { AxiosError, CancelTokenSource } from 'axios';
 import refreshToken from '~/refreshToken/refreshToken';
 import { CookieSetOptions } from 'universal-cookie';
 import Cookies from 'universal-cookie';
@@ -26,11 +26,12 @@ class HomeAPI {
             const axiosJWTss = refreshToken.axiosJWTs(accessToken);
             const res = await axiosJWTss.post('/SN/home/setPost', formData);
             return res.data;
-        } catch (error) {
-            console.log(error, 'dawfawfwa');
-            const err: any = error as AxiosError;
-            const errStatus = err.response?.data;
-            console.log(errStatus);
+        } catch (error: any) {
+            if (axios.isCancel(error)) {
+                console.log('Request canceled:', error.message);
+            } else {
+                console.error('Error:', error);
+            }
 
             // if (errStatus?.status === 0) window.location.href = '/';
         }
