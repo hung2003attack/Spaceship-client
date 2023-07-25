@@ -7,6 +7,7 @@ import { Img } from '../styleComponents/styleDefault';
 import { useDispatch, useSelector } from 'react-redux';
 import { DivImg } from '../styleComponents/styleComponents';
 import { InitialStateHideShow, onPersonalPage, onSetting, setIdUser } from '../../redux/hideShow';
+import CommonUtils from '~/utils/CommonUtils';
 
 interface _Avatar {
     idH?: string;
@@ -75,6 +76,7 @@ const Avatar = forwardRef((props: _Avatar, ref: any) => {
     const handleOpentProfile = () => {
         if (profile) dispatch(setIdUser([id]));
     };
+    console.log(src, 'src');
 
     return avatar ? (
         <FaUserCircle />

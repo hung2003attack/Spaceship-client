@@ -69,23 +69,24 @@ const Conversation: React.FC<{
     let top: number;
 
     useEffect(() => {
-        // ERef.current.scrollTop = top;
-        // const observer = new MutationObserver((mutationsList) => {
-        //     console.log(ERef.current.scrollTop, ERef.current.scrollHeight, '===', top, cRef.current);
-        //     if (cRef.current === 7) ERef.current.scrollTop = ERef.current.scrollHeight;
-        // });
-        // // Configure and start observing the element
-        // const observerConfig = {
-        //     attributes: true,
-        //     attributeFilter: ['style'],
-        //     subtree: true,
-        //     childList: true,
-        // };
-        // observer.observe(ERef.current, observerConfig);
-        // ERef.current.addEventListener('scroll', handleScroll);
-        // return () => {
-        //     ERef.current?.removeEventListener('scroll', handleScroll);
-        // };
+        ERef.current.scrollTop = top;
+        const observer = new MutationObserver((mutationsList) => {
+            console.log(ERef.current.scrollTop, ERef.current.scrollHeight, '===', top, cRef.current);
+        });
+        ERef.current.scrollTop = ERef.current.scrollHeight;
+
+        // Configure and start observing the element
+        const observerConfig = {
+            attributes: true,
+            attributeFilter: ['style'],
+            subtree: true,
+            childList: true,
+        };
+        observer.observe(ERef.current, observerConfig);
+        ERef.current.addEventListener('scroll', handleScroll);
+        return () => {
+            ERef.current?.removeEventListener('scroll', handleScroll);
+        };
         // Optional: Call the observer's callback function immediately to get the initial scroll height
     }, []);
     const handleTime = (dateTime: string, type: string) => {
@@ -109,13 +110,13 @@ const Conversation: React.FC<{
     };
 
     const handleScroll = () => {
-        // const { scrollTop, clientHeight, scrollHeight } = ERef.current;
-        // const scrollBottom = scrollHeight - scrollTop - clientHeight;
-        // console.log(scrollBottom, scrollTop, clientHeight, scrollHeight);
-        // if (scrollBottom + clientHeight >= scrollHeight - 250 && !loading) {
-        //     top = scrollBottom;
-        //     if (cRef.current !== 2) fetchChat(true);
-        // }
+        const { scrollTop, clientHeight, scrollHeight } = ERef.current;
+        const scrollBottom = scrollHeight - scrollTop - clientHeight;
+        console.log(scrollBottom, scrollTop, clientHeight, scrollHeight);
+        if (scrollBottom + clientHeight >= scrollHeight - 250 && !loading) {
+            top = scrollBottom;
+            if (cRef.current !== 2 && cRef.current !== 7) fetchChat(true);
+        }
     };
     let startOfDay: string;
     const handleProfile = () => {
@@ -200,9 +201,7 @@ const Conversation: React.FC<{
                             <ProfileCircelI /> <Hname css="margin: 0 5px; width: fit-content;">View profile</Hname>
                         </Div>
                     </Div>
-                    {conversation?.room.map((rc, index) => {
-                        console.log('there you are', rc);
-
+                    {conversation?.room.map((rc, index, arr) => {
                         let listDateTime;
                         if (startOfDay) {
                             const dayOld = moment(startOfDay, 'HH:mm:ss YYYY-MM-DD');

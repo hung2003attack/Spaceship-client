@@ -44,7 +44,7 @@ interface feel {
 }
 export interface PropsDataPosts {
     _id: string;
-    user: { avatar: Buffer; fullName: string; gender: number }[];
+    user: { Avatar: Buffer; fullName: string; gender: number }[];
     category: number;
     id_user: string;
     feel: feel;
@@ -137,6 +137,7 @@ interface PropsPosts {
 
 const Posts: React.FC<PropsPosts> = ({ user, colorBg, colorText, dataPosts, include, setInclude }) => {
     const { lg } = Languages();
+    const { userId } = CookiesF();
     const [showComment, setShowComment] = useState<boolean>(false);
     const [actImotion, setActImotion] = useState<boolean>(false);
     const [options, setOptions] = useState<boolean>(false);
@@ -146,7 +147,7 @@ const Posts: React.FC<PropsPosts> = ({ user, colorBg, colorText, dataPosts, incl
     });
     const [step, setStep] = useState<number>(0);
     const textA = useRef<any>();
-    const avatar = CommonUtils.convertBase64(dataPosts.user[0].avatar);
+    // const avatar = CommonUtils.convertBase64(dataPosts.user[0].avatar);
     let timeS: any;
     const handleShowI = (e: any) => {
         timeS = setTimeout(() => {
@@ -177,18 +178,21 @@ const Posts: React.FC<PropsPosts> = ({ user, colorBg, colorText, dataPosts, incl
             {options && (
                 <>
                     <P
-                        z="1.3rem"
+                        z="1.2rem"
                         css={`
                             width: 100%;
                             text-align: center;
                             background-color: #292a2d;
                             padding: 4px;
                             border: 1px solid #565451;
+                            @media (min-width: 580px) {
+                                font-size: 1.3rem;
+                            }
                         `}
                     >
                         This post created in {createdAt}
                     </P>
-                    <OpUpdate createdAt={createdAt} setOptions={setOptions} />
+                    {userId === dataPosts.id_user && <OpUpdate createdAt={createdAt} setOptions={setOptions} />}
                 </>
             )}
             <Div
@@ -226,7 +230,7 @@ const Posts: React.FC<PropsPosts> = ({ user, colorBg, colorText, dataPosts, incl
                     >
                         <Avatar
                             radius="50%"
-                            src={avatar}
+                            src={dataPosts.user[0].Avatar}
                             alt={dataPosts.user[0].fullName}
                             gender={dataPosts.user[0].gender}
                         />
@@ -293,7 +297,7 @@ const Posts: React.FC<PropsPosts> = ({ user, colorBg, colorText, dataPosts, incl
                 >
                     {/* {postTypes[selectType]} */}
                 </Div>
-                <Div
+                {/* <Div
                     css={`
                         width: 100%;
                         color: ${colorText};
@@ -315,7 +319,7 @@ const Posts: React.FC<PropsPosts> = ({ user, colorBg, colorText, dataPosts, incl
                             }
                         `}
                     ></Div>
-                </Div>
+                </Div> */}
                 <Div
                     width="100%"
                     css={`

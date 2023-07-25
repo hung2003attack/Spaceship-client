@@ -10,6 +10,8 @@ import CommonUtils from '~/utils/CommonUtils';
 import DateTime from '~/reUsingComponents/CurrentDateTime';
 import { setTrueErrorServer } from '~/redux/hideShow';
 import CookiesF from '~/reUsingComponents/cookies';
+import fileGridFS from '~/restAPI/requestServers/fileGridFS';
+import { socket } from 'src/mainPage/nextWeb';
 
 interface PropsChat {
     id_us: string[];
@@ -41,7 +43,7 @@ export default function LogicConversation(id_room: string | undefined, id_others
     const mRef = useRef<any>(0);
     const offset = useRef<number>(0);
     const fileRef = useRef<any>([]);
-    const limit = 25;
+    const limit = 20;
 
     const [value, setValue] = useState<string>('');
     const [emoji, setEmoji] = useState<boolean>(false);
@@ -54,7 +56,19 @@ export default function LogicConversation(id_room: string | undefined, id_others
     const chatRef = useRef<PropsChat>();
 
     const [conversation, setConversation] = useState<PropsChat>();
+    const [dataSent, setDataSent] = useState<
+        | {
+              createdAt: string;
+              imageOrVideos: any;
+              seenBy: string[];
+              text: { t: string; icon: string };
+              _id: string;
+          }
+        | undefined
+    >();
     async function fetchChat(of?: boolean) {
+        console.log('api');
+
         setLoading(true);
         cRef.current = 2;
         const res: any = await sendChatAPi.getChat(token, id_room, id_others, limit, offset.current, of);
@@ -65,11 +79,9 @@ export default function LogicConversation(id_room: string | undefined, id_others
                     modifiedData.room.map(async (rr: any, index1: number) => {
                         await Promise.all(
                             rr.imageOrVideos.map(async (fl: { v: string; icon: string }, index2: number) => {
-                                const buffer = await sendChatAPi.getFile(token, fl.v);
+                                const buffer = await fileGridFS.getFile(token, fl.v);
                                 const base64 = CommonUtils.convertBase64Gridfs(buffer.file);
-                                modifiedData.room[index1].imageOrVideos[
-                                    index2
-                                ].v = `data:${buffer.type};base64,${base64}`;
+                                modifiedData.room[index1].imageOrVideos[index2].v = base64;
                             }),
                         );
                     }),
@@ -98,7 +110,42 @@ export default function LogicConversation(id_room: string | undefined, id_others
     }
     useEffect(() => {
         if (id_room) fetchChat();
+        socket.on(
+            `${userId}roomChat`,
+            async (data: {
+                createdAt: string;
+                imageOrVideos: { v: string; icon: string }[];
+                seenBy: string[];
+                text: { t: string; icon: string };
+                _id: string;
+            }) => {
+                const newD: any = await new Promise(async (resolve, reject) => {
+                    try {
+                        await Promise.all(
+                            data.imageOrVideos.map(async (d, index) => {
+                                const buffer = await fileGridFS.getFile(token, d.v);
+                                const base64 = CommonUtils.convertBase64Gridfs(buffer.file);
+                                data.imageOrVideos[index].v = base64;
+                            }),
+                        );
+                        resolve(data);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+                setDataSent(newD);
+                console.log(newD, 'be sent by others');
+            },
+        );
     }, []);
+    console.log(conversation, 'con');
+
+    useEffect(() => {
+        if (dataSent) {
+            conversation?.room.push(dataSent);
+            setDataSent(undefined);
+        }
+    }, [dataSent]);
     useEffect(() => {
         return clearInterval(mRef.current);
     }, [mRef.current]);
@@ -121,10 +168,11 @@ export default function LogicConversation(id_room: string | undefined, id_others
     };
     const handleSend = async (e: any) => {
         if (value || upload.length > 0) {
+            setValue('');
             const images = upload.map((i) => {
                 return { v: i.link, type: 'image', icon: '', _id: String(Math.random()) };
             });
-            const chat = {
+            const chat: any = {
                 createdAt: DateTime(),
                 imageOrVideos: images,
                 seenBy: [],
@@ -134,6 +182,7 @@ export default function LogicConversation(id_room: string | undefined, id_others
             };
             if (conversation) conversation.room.push(chat);
             setupload([]);
+            uploadRef.current = [];
             const formData = new FormData();
             formData.append('value', value);
             if (id_room) formData.append('id_room', id_room);
@@ -162,13 +211,14 @@ export default function LogicConversation(id_room: string | undefined, id_others
             console.log(res);
             if (res && conversation) {
                 conversation.room[conversation.room.length - 1].sending = false;
-                setConversation(conversation);
+                setFileUpload([]);
             }
         }
     };
 
     const handleImageUpload = async (e: any) => {
         uploadRef.current = [];
+        fileRef.current = [];
         const files = e.target.files;
         const options = {
             maxSizeMB: 10,

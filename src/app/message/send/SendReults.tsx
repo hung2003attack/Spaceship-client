@@ -97,7 +97,14 @@ const ListAccounts: React.FC<{
                         )}
                         <Div width="72%" wrap="wrap">
                             <Hname>{rs.fullName}</Hname>
-                            <Div width="80%" css="align-items: center;">
+                            <Div
+                                width="80%"
+                                css={`
+                                    align-items: center;
+                                    position: relative;
+                                    ${data.room.seenBy.includes(userId) ? 'color: #eeeeee;' : ''};
+                                `}
+                            >
                                 <P css="min-width: 21px; width: 17px; height: 17px; margin-right: 5px; font-size: 1.1rem; margin-top: 3px;">
                                     {who}
                                 </P>
@@ -110,6 +117,21 @@ const ListAccounts: React.FC<{
                                 <P z="1rem" css="width: 100%; margin-top: 5px; margin-left: 10px">
                                     {Time}
                                 </P>
+                                <Div
+                                    width="15px"
+                                    css={`
+                                        position: absolute;
+                                        top: 4px;
+                                        right: -8px;
+                                        height: 15px;
+                                        border-radius: 50%;
+                                        font-size: 1.1rem;
+                                        justify-content: center;
+                                        background-color: #af5454;
+                                    `}
+                                >
+                                    3
+                                </Div>
                             </Div>
                         </Div>
                         <Div

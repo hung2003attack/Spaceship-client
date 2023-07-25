@@ -14,6 +14,8 @@ import { socket } from 'src/mainPage/nextWeb';
 import { setTrueErrorServer } from '~/redux/hideShow';
 import CookiesF from '~/reUsingComponents/cookies';
 import homeAPI from '~/restAPI/requestServers/socialNetwork/homeAPI';
+import fileGridFS from '~/restAPI/requestServers/fileGridFS';
+import CommonUtils from '~/utils/CommonUtils';
 
 console.log('eeeeeeeeeeeeeeeeeeeeeeeee');
 
@@ -54,9 +56,29 @@ const Home: React.FC<PropsHome> = ({ home, colorBg, colorText, dataUser }) => {
 
     useEffect(() => {
         async function fetch() {
-            const data = await homeAPI.getPosts(token, limit, offest.current, 'friend');
-            setDataPosts(data);
-            console.log(data, 'fet');
+            const data: PropsDataPosts[] = await homeAPI.getPosts(token, limit, offest.current, 'friend');
+            const newData: any = await new Promise(async (resolve, reject) => {
+                try {
+                    await Promise.all(
+                        data.map(async (n, index) => {
+                            n.user.map((u) => (u.Avatar = CommonUtils.convertBase64(u.Avatar)));
+                            if (n.category === 0) {
+                                n.content.options.default.map(async (d, index2) => {
+                                    if (d.file) {
+                                        const file = await fileGridFS.getFile(token, d.file);
+                                        data[index].content.options.default[index2].file = file;
+                                    }
+                                });
+                            }
+                        }),
+                    );
+                    resolve(data);
+                } catch (error) {
+                    reject(error);
+                }
+            });
+            console.log(newData, 'data post');
+            setDataPosts(newData);
         }
         fetch();
     }, []);

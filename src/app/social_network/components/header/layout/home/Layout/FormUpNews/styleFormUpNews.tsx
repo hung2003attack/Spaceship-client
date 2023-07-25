@@ -180,24 +180,24 @@ export const DivAction = styled.div`
     position: relative;
     user-select: none;
     cursor: var(--pointer);
+    svg {
+        font-size: 21px;
+    }
     ${(props: { css?: string }) => props.css};
     @media (min-width: 400px) {
-        svg {
-            font-size: 21px;
-        }
         font-size: 18px;
     }
     @media (min-width: 600px) {
         svg {
-            font-size: 23px;
+            font-size: 23.5px;
         }
-        font-size: 19px;
+        font-size: 17px;
     }
     @media (min-width: 768px) {
         svg {
             font-size: 25px;
         }
-        font-size: 20px;
+        font-size: 18px;
     }
 `;
 export const SpanAmount = styled.span`
