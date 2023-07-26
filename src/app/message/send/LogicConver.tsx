@@ -13,7 +13,7 @@ import CookiesF from '~/reUsingComponents/cookies';
 import fileGridFS from '~/restAPI/requestServers/fileGridFS';
 import { socket } from 'src/mainPage/nextWeb';
 
-interface PropsChat {
+export interface PropsChat {
     id_us: string[];
     status: string;
     background: string;

@@ -20,6 +20,7 @@ import { PropsLanguage } from '~/reUsingComponents/ErrorBoudaries/Warning_browse
 import 'moment/locale/vi';
 import Languages from '~/reUsingComponents/languages';
 import { setIdUser } from '~/redux/hideShow';
+import ItemsRoom from './ItemsConvers';
 
 const Conversation: React.FC<{
     colorText: string;
@@ -57,7 +58,7 @@ const Conversation: React.FC<{
     } = LogicConversation(id_room, user.id, dataFirst.id);
     const ERef = useRef<any>();
     const Diff = useRef<number>(1);
-
+    const check = useRef<number>(0);
     const [dataImage, setDataImage] = useState<any>();
     const [watchMore, setWatchMore] = useState<boolean>(false);
     const relative =
@@ -66,14 +67,20 @@ const Conversation: React.FC<{
             : conversation?.status === 'isNotFriend'
             ? `You and ${CallName(user.gender)} are not friend`
             : '';
-    let top: number;
-
     useEffect(() => {
-        ERef.current.scrollTop = top;
+        console.log(check.current, 'check');
+        ERef.current.scrollTop = -check.current;
+    }, [conversation]);
+    useEffect(() => {
+        // ERef.current.scrollTop = check.current;
+        console.log('ok', check.current);
         const observer = new MutationObserver((mutationsList) => {
-            console.log(ERef.current.scrollTop, ERef.current.scrollHeight, '===', top, cRef.current);
+            console.log(mutationsList, ERef.current.scrollTop, ERef.current.scrollHeight, '===', cRef.current);
+            mutationsList.forEach((m, index, arr) => {
+                if (arr.length === index + 1) {
+                }
+            });
         });
-        ERef.current.scrollTop = ERef.current.scrollHeight;
 
         // Configure and start observing the element
         const observerConfig = {
@@ -84,11 +91,13 @@ const Conversation: React.FC<{
         };
         observer.observe(ERef.current, observerConfig);
         ERef.current.addEventListener('scroll', handleScroll);
+
         return () => {
             ERef.current?.removeEventListener('scroll', handleScroll);
         };
         // Optional: Call the observer's callback function immediately to get the initial scroll height
     }, []);
+
     const handleTime = (dateTime: string, type: string) => {
         if (type === 'hour') {
             const newDateTime = moment(dateTime).locale(lg).format('LT');
@@ -111,14 +120,14 @@ const Conversation: React.FC<{
 
     const handleScroll = () => {
         const { scrollTop, clientHeight, scrollHeight } = ERef.current;
-        const scrollBottom = scrollHeight - scrollTop - clientHeight;
+        const scrollBottom = -scrollTop + clientHeight;
         console.log(scrollBottom, scrollTop, clientHeight, scrollHeight);
-        if (scrollBottom + clientHeight >= scrollHeight - 250 && !loading) {
-            top = scrollBottom;
-            if (cRef.current !== 2 && cRef.current !== 7) fetchChat(true);
+        if (scrollBottom >= scrollHeight - 250 && !loading) {
+            check.current = -scrollTop;
+            if (cRef.current !== 2) fetchChat(true);
         }
     };
-    let startOfDay: string;
+    let startOfDay: string = '';
     const handleProfile = () => {
         const id_oth: string[] = [];
         conversation?.id_us.map((id) => {
@@ -168,8 +177,8 @@ const Conversation: React.FC<{
                 <Div
                     ref={ERef}
                     width="100%"
-                    display="block"
                     css={`
+                        flex-direction: column-reverse;
                         padding-bottom: 10px;
                         ${emoji ? 'height: 150px;' : 'height: 95%;'}
                         overflow-y: overlay;
@@ -186,282 +195,56 @@ const Conversation: React.FC<{
                     onScroll={() => handleScroll}
                     onClick={() => setEmoji(false)}
                 >
-                    <Div
-                        width="100%"
-                        wrap="wrap"
-                        css="align-items: center; justify-content: center; margin-top: 80px; margin-bottom: 40px;"
-                    >
-                        <P z="1.3rem" align="center" css="width: 100%; margin: 8px 0; ">
-                            {relative}
-                        </P>
+                    <Div display="block">
                         <Div
-                            css="align-items: center; justify-content: center; padding: 3px 8px; background-color: #333333; border-radius: 8px; border: 1px solid #52504d; cursor: var(--pointer)"
-                            onClick={handleProfile}
+                            width="100%"
+                            wrap="wrap"
+                            css="align-items: center; justify-content: center; margin-top: 80px; margin-bottom: 40px;"
                         >
-                            <ProfileCircelI /> <Hname css="margin: 0 5px; width: fit-content;">View profile</Hname>
+                            <P z="1.3rem" align="center" css="width: 100%; margin: 8px 0; ">
+                                {relative}
+                            </P>
+                            <Div
+                                css="align-items: center; justify-content: center; padding: 3px 8px; background-color: #333333; border-radius: 8px; border: 1px solid #52504d; cursor: var(--pointer)"
+                                onClick={handleProfile}
+                            >
+                                <ProfileCircelI /> <Hname css="margin: 0 5px; width: fit-content;">View profile</Hname>
+                            </Div>
                         </Div>
-                    </Div>
-                    {conversation?.room.map((rc, index, arr) => {
-                        let listDateTime;
-                        if (startOfDay) {
-                            const dayOld = moment(startOfDay, 'HH:mm:ss YYYY-MM-DD');
-                            const dayNew = moment(rc.createdAt).format('HH:mm:ss YYYY-MM-DD');
-                            const r = moment(dayNew, 'HH:mm:ss YYYY-MM-DD');
-                            const diffInDays = r.diff(dayOld, 'days');
-                            if (diffInDays > 0) {
-                                Diff.current = 1;
-                                listDateTime = moment(rc.createdAt).locale(lg).format('MMMM Do YYYY, h:mm:ss a');
-                            } else {
-                                Diff.current = 0;
+                        {conversation?.room.map((rc, index, arr) => {
+                            let listDateTime;
+                            if (startOfDay) {
+                                const dayOld = moment(startOfDay, 'HH:mm:ss YYYY-MM-DD');
+                                const dayNew = moment(rc.createdAt).format('HH:mm:ss YYYY-MM-DD');
+                                const r = moment(dayNew, 'HH:mm:ss YYYY-MM-DD');
+                                const diffInDays = r.diff(dayOld, 'days');
+                                if (diffInDays > 0) {
+                                    Diff.current = 1;
+                                    listDateTime = moment(rc.createdAt).locale(lg).format('MMMM Do YYYY, h:mm:ss a');
+                                } else {
+                                    Diff.current = 0;
+                                }
                             }
-                        }
-                        if (Diff.current === 1) startOfDay = moment(rc.createdAt).format('HH:mm:ss YYYY-MM-DD');
-                        return (
-                            <div key={rc.text.t + index}>
-                                {listDateTime && (
-                                    <P z="1rem" css="text-align: center; margin: 10px 0;">
-                                        -----{listDateTime}-----
-                                    </P>
-                                )}
-                                {rc._id === userId ? (
-                                    <Div
-                                        width="100%"
-                                        css={`
-                                            padding-left: ${rc.imageOrVideos.length <= 1 ? '35%' : '20%'};
-                                            margin-bottom: 8px;
-                                            justify-content: right;
-                                            .chatTime {
-                                                .dateTime {
-                                                    display: block;
-                                                }
-                                            }
-                                        `}
-                                    >
-                                        <Div
-                                            display="block"
-                                            className="noTouch"
-                                            css={`
-                                                position: relative;
-                                                justify-content: right;
-                                                ${rc.imageOrVideos.length < 1 ? 'display: block;' : 'flex-grow: 1;'}
-                                                ${rc.text.t &&
-                                                `&::after {display: block; content: ''; width: 100%; height: ${
-                                                    rc.imageOrVideos.length > 0 ? '10%' : '100%'
-                                                }; position: absolute; top: 0;left: 0;}`}
-                                            `}
-                                            onClick={handleWatchMore}
-                                        >
-                                            {rc.text.t && (
-                                                <Div css="justify-content: end;">
-                                                    <P
-                                                        z="1.4rem"
-                                                        css="width: fit-content; margin: 0; padding: 2px 12px 4px; border-radius: 7px; border-top-left-radius: 13px; border-bottom-left-radius: 13px; background-color: #353636; border: 1px solid #4e4d4b;"
-                                                    >
-                                                        {rc.text.t}
-                                                    </P>
-                                                </Div>
-                                            )}
-                                            {rc.imageOrVideos.length > 0 && (
-                                                <Div css=" align-items: end; flex-grow: 1;">
-                                                    <Div
-                                                        width="100%"
-                                                        wrap="wrap"
-                                                        css={`
-                                                            position: relative;
-                                                            justify-content: end;
-                                                            .roomOfChat {
-                                                                position: fixed;
-                                                                width: 100%;
-                                                                height: 100%;
-                                                                top: 0;
-                                                                left: 0;
-                                                                background-color: #171718;
-                                                                z-index: 1;
-                                                                img {
-                                                                    object-fit: contain;
-                                                                }
-                                                            }
-                                                            ${rc.imageOrVideos.length > 2 &&
-                                                            'background-color: #ca64b8;'}
-                                                        `}
-                                                    >
-                                                        {rc.imageOrVideos.map((fl, index) => (
-                                                            <FileConversation
-                                                                key={fl._id}
-                                                                token={token}
-                                                                type={fl?.type}
-                                                                v={fl.v}
-                                                                icon={fl.icon}
-                                                                ERef={ERef}
-                                                            />
-                                                        ))}
-                                                    </Div>
-                                                </Div>
-                                            )}
-                                            {rc?.sending ? (
-                                                <P>sending...</P>
-                                            ) : (
-                                                <>
-                                                    {rc.imageOrVideos.length > 0 ? (
-                                                        <P
-                                                            css={`
-                                                                display: ${!rc.text.t ? 'block' : 'none'};
-                                                                width: 100%;
-                                                                font-size: 1rem;
-                                                                margin-right: 5px;
-                                                                text-align: right;
-                                                            `}
-                                                            className="dateTime"
-                                                        >
-                                                            {handleTime(rc.createdAt, 'hour')},{' '}
-                                                            {handleTime(rc.createdAt, 'date')}
-                                                        </P>
-                                                    ) : (
-                                                        <>
-                                                            <P
-                                                                className="dateTime"
-                                                                css="display: none; font-size: 1rem; margin-left: 5px; position: absolute; left: -105px; top: 5px;"
-                                                            >
-                                                                {handleTime(rc.createdAt, 'date')}
-                                                            </P>
-                                                            <P
-                                                                className="dateTime"
-                                                                css="display: none; width: 100%; font-size: 1rem; margin-right: 5px; text-align: right;"
-                                                            >
-                                                                {handleTime(rc.createdAt, 'hour')}
-                                                            </P>
-                                                        </>
-                                                    )}
-                                                </>
-                                            )}
-                                        </Div>
-                                    </Div>
-                                ) : (
-                                    <Div
-                                        key={rc.text.t + index}
-                                        wrap="wrap"
-                                        css={`
-                                            padding-right: ${rc.imageOrVideos.length <= 1 ? '35%' : '20%'};
-                                            justify-content: left;
-                                            align-items: center;
-                                            margin-bottom: 8px;
-                                        `}
-                                    >
-                                        <Div
-                                            css={`
-                                                ${rc.imageOrVideos.length < 1 ? 'display: flex;' : ''}
-                                                position: relative;
-                                                justify-content: left;
-                                                ${rc.imageOrVideos.length > 0 ? 'flex-grow: 1;' : ''}
-                                                .chatTime {
-                                                    .dateTime {
-                                                        display: block;
-                                                    }
-                                                }
-                                            `}
-                                        >
-                                            <Avatar
-                                                src={user.avatar}
-                                                alt={user.fullName}
-                                                gender={user.gender}
-                                                radius="50%"
-                                                css="min-width: 17px; width: 17px; height: 17px; margin-right: 4px; margin-top: 3px;"
-                                            />
-                                            <Div
-                                                width="100%"
-                                                display="block"
-                                                className="noTouch"
-                                                css={`
-                                                    position: relative;
-                                                    justify-content: start;
-                                                    ${rc.text.t &&
-                                                    `&::after {display: block; content: ''; width: 100%; height: ${
-                                                        rc.imageOrVideos.length > 0 ? '10%' : '100%'
-                                                    }; position: absolute; top: 0;left: 0;}`}
-                                                `}
-                                                onClick={handleWatchMore}
-                                            >
-                                                {rc.text.t && (
-                                                    <P
-                                                        z="1.4rem"
-                                                        css="width: fit-content; padding: 2px 12px 4px; border-radius: 7px; border-top-right-radius: 13px; border-bottom-right-radius: 13px; background-color: #353636; border: 1px solid #4e4d4b;"
-                                                    >
-                                                        {rc.text.t}
-                                                    </P>
-                                                )}
-                                                {rc.imageOrVideos.length > 0 && (
-                                                    <Div css=" align-items: start; ">
-                                                        <Div
-                                                            width="100%"
-                                                            wrap="wrap"
-                                                            css={`
-                                                                justify-content: end;
-                                                                .roomOfChat {
-                                                                    position: fixed;
-                                                                    width: 100%;
-                                                                    height: 100%;
-                                                                    top: 0;
-                                                                    left: 0;
-                                                                    background-color: #171718;
-                                                                    z-index: 1;
-                                                                    img {
-                                                                        object-fit: contain;
-                                                                    }
-                                                                }
-                                                                ${rc.imageOrVideos.length > 2 &&
-                                                                'background-color: #ca64b8;'}
-                                                            `}
-                                                        >
-                                                            {rc.imageOrVideos.map((fl, index) => (
-                                                                <FileConversation
-                                                                    key={fl.v + index}
-                                                                    type={fl?.type}
-                                                                    token={token}
-                                                                    v={fl.v}
-                                                                    icon={fl.icon}
-                                                                    ERef={ERef}
-                                                                />
-                                                            ))}
-                                                        </Div>
-                                                    </Div>
-                                                )}
-                                                {rc.imageOrVideos.length > 0 ? (
-                                                    <P
-                                                        className="dateTime"
-                                                        css={`
-                                                            display: ${!rc.text.t ? 'block' : 'none'};
-                                                            width: 100%;
-                                                            font-size: 1rem;
-                                                            margin-left: 5px;
-                                                            text-align: left;
-                                                        `}
-                                                    >
-                                                        {handleTime(rc.createdAt, 'hour')},{' '}
-                                                        {handleTime(rc.createdAt, 'date')}
-                                                    </P>
-                                                ) : (
-                                                    <>
-                                                        <P
-                                                            className="dateTime"
-                                                            css="display: none; font-size: 1rem; margin-left: 5px; position: absolute; right: -105px; top: 5px;"
-                                                        >
-                                                            {handleTime(rc.createdAt, 'date')}
-                                                        </P>
-                                                        <P
-                                                            className="dateTime"
-                                                            css="display: none; width: 100%; font-size: 1rem; margin-left: 5px; text-align: left;"
-                                                        >
-                                                            {handleTime(rc.createdAt, 'hour')}
-                                                        </P>
-                                                    </>
-                                                )}
-                                            </Div>
-                                        </Div>
-                                    </Div>
-                                )}
-                            </div>
-                        );
-                    })}
+                            if (Diff.current === 1) startOfDay = moment(rc.createdAt).format('HH:mm:ss YYYY-MM-DD');
+                            return (
+                                <ItemsRoom
+                                    key={rc.text.t + index}
+                                    rc={rc}
+                                    index={index}
+                                    listDateTime={listDateTime}
+                                    startOfDay={startOfDay}
+                                    Diff={Diff}
+                                    lg={lg}
+                                    userId={userId}
+                                    handleWatchMore={handleWatchMore}
+                                    ERef={ERef}
+                                    token={token}
+                                    handleTime={handleTime}
+                                    user={user}
+                                />
+                            );
+                        })}
+                    </Div>
                 </Div>
                 <Div
                     width="100%"
